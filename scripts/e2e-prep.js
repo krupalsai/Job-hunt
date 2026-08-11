@@ -1,0 +1,145 @@
+/* Drives the real page in a real browser. Run: node e2e.js
+   Checks the four things this app is for: explanations appear, the memory trick
+   appears, questions do not repeat, and weak areas are computed from answers. */
+const { chromium } = require('/opt/node22/lib/node_modules/playwright');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.join(__dirname, '..');
+const PORT = 8931;
+const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css'};
+const server = http.createServer((req,res)=>{
+  const file = req.url === '/' ? '/index.html' : req.url.split('?')[0];
+  const full = path.join(ROOT, file);
+  if(!full.startsWith(ROOT) || !fs.existsSync(full)){ res.writeHead(404); return res.end('nope'); }
+  res.writeHead(200, {'Content-Type': MIME[path.extname(full)] || 'text/plain'});
+  res.end(fs.readFileSync(full));
+});
+
+let pass = 0, fail = 0;
+function check(name, cond, detail){
+  if(cond){ pass++; console.log(`  ✅ ${name}`); }
+  else { fail++; console.log(`  ❌ ${name}${detail?`\n     ${detail}`:''}`); }
+}
+
+(async () => {
+  await new Promise(r=>server.listen(PORT, r));
+  const browser = await chromium.launch({
+    executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+    args: ['--no-sandbox'],
+  });
+  const page = await browser.newPage();
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
+  // The browser always asks for /favicon.ico; a 404 for it is the test server's
+  // doing, not the page's, and would otherwise mask a real error.
+  page.on('requestfailed', r => { if(!r.url().endsWith('/favicon.ico')) errors.push('request failed: ' + r.url()); });
+  const realErrors = () => errors.filter(e => !/favicon/i.test(e));
+
+  await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
+
+  console.log('\n── page loads ───────────────────────────────────────────');
+  check('no JavaScript errors on load', realErrors().length === 0, realErrors().join('\n     '));
+  check('all six tabs render', (await page.locator('#tabs button').count()) === 6);
+  check('"My Weak Areas" tab exists', await page.locator('#tabs button[data-tab="progress"]').isVisible());
+
+  console.log('\n── quiz: explanation + memory trick ─────────────────────');
+  await page.click('#tabs button[data-tab="quiz"]');
+  const bankText = await page.locator('#bank-count').textContent();
+  check('bank size is shown and is the full bank', /\/ 170 seen/.test(bankText), `got "${bankText}"`);
+  check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
+
+  await page.click('#start-quiz');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  const q1 = await page.locator('#q-text').textContent();
+  check('a question is displayed', q1.length > 10);
+  check('the question shows its subject', (await page.locator('#q-topic').textContent()).length > 2);
+  check('explanation is hidden before answering', (await page.locator('.explain').count()) === 0);
+
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  const whyText = await page.locator('.explain .why').textContent();
+  const trickText = await page.locator('.explain .trick').textContent();
+  check('an explanation appears after answering', whyText.length > 40, `len ${whyText.length}`);
+  check('a memory trick appears after answering', trickText.length > 15, `len ${trickText.length}`);
+  check('the correct option is highlighted', (await page.locator('#q-options .opt.correct').count()) === 1);
+  check('options lock after answering',
+    await page.locator('#q-options .opt').first().isDisabled());
+
+  console.log('\n── skipping still teaches ───────────────────────────────');
+  await page.click('#next-btn');
+  await page.click('#skip-btn');
+  await page.waitForSelector('.explain');
+  check('skipping also reveals the answer and the trick',
+    (await page.locator('.explain .trick').textContent()).length > 15);
+
+  console.log('\n── full run + weak-area analysis ────────────────────────');
+  // Finish the quiz answering the first option every time — deliberately bad,
+  // so weak areas have something real to report.
+  for(let i=0;i<12;i++){
+    if(await page.locator('#quiz-result').isVisible()) break;
+    if(await page.locator('#next-btn').isVisible()) { await page.click('#next-btn'); }
+    if(await page.locator('#quiz-result').isVisible()) break;
+    const opts = page.locator('#q-options .opt');
+    if(await opts.count()) await opts.first().click();
+  }
+  if(await page.locator('#next-btn').isVisible()) await page.click('#next-btn');
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+  check('a score is shown at the end', /\d+ \/ \d+/.test(await page.locator('#score-big').textContent()));
+  check('the result names which subjects cost marks',
+    (await page.locator('#result-insight').textContent()).length > 20);
+
+  await page.click('#review-toggle');
+  const reviewCount = await page.locator('#review-list .rev-item').count();
+  check('review lists every question of the set', reviewCount === 10, `got ${reviewCount}`);
+  check('review includes explanations',
+    (await page.locator('#review-list .explain').count()) === 10);
+
+  await page.click('#tabs button[data-tab="progress"]');
+  const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
+  check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
+  check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
+  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 10);
+  const focus = await page.locator('#focus-list').textContent();
+  check('weak-area verdict is stated (or honestly withheld)', focus.length > 30, focus);
+
+  console.log('\n── questions do not repeat ──────────────────────────────');
+  const firstIds = new Set();
+  await page.click('#tabs button[data-tab="quiz"]');
+  // Collect the question text of two fresh quizzes and compare.
+  async function runQuizCollect(){
+    const seen = [];
+    if(await page.locator('#quiz-result').isVisible()) await page.click('#retry-btn');
+    await page.click('#start-quiz');
+    await page.waitForSelector('#quiz-live:not(.hidden)');
+    for(let i=0;i<10;i++){
+      seen.push(await page.locator('#q-text').textContent());
+      const opts = page.locator('#q-options .opt');
+      await opts.first().click();
+      await page.click('#next-btn');
+      if(await page.locator('#quiz-result').isVisible()) break;
+    }
+    return seen;
+  }
+  const setA = await runQuizCollect();
+  const setB = await runQuizCollect();
+  setA.forEach(t=>firstIds.add(t));
+  const overlap = setB.filter(t=>firstIds.has(t)).length;
+  check('consecutive quizzes share no questions', overlap === 0, `${overlap} repeated`);
+
+  console.log('\n── progress survives a reload ───────────────────────────');
+  const before = await page.evaluate(()=>JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.click('#tabs button[data-tab="progress"]');
+  const after = parseInt(await page.locator('#stat-answered').textContent(), 10);
+  check('answered count persists across reload', after === before, `${before} → ${after}`);
+
+  check('still no JavaScript errors after the whole run', realErrors().length === 0, realErrors().join('\n     '));
+
+  await browser.close();
+  server.close();
+  console.log(`\n${fail === 0 ? '✅' : '❌'} ${pass} passed, ${fail} failed\n`);
+  process.exit(fail === 0 ? 0 : 1);
+})().catch(e=>{ console.error(e); server.close(); process.exit(1); });

@@ -1,0 +1,19 @@
+{
+  "name": "Job Tracker & Prep",
+  "short_name": "Job Tracker",
+  "description": "Government and PSU job deadlines, plus HAL MT/DT (CS) exam preparation with a 170-question practice bank.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

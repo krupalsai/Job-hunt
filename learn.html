@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Prep · Job Tracker</title>
+<meta name="description" content="HAL Management/Design Trainee (CS) preparation — syllabus, 4-week plan, timed strategy and a 170-question practice bank with explanations and weak-area analysis." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#0b1120" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<!-- Inline so there is no extra request and no 404 for a missing file. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1120'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%2322c55e' font-family='sans-serif' font-weight='bold'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E" />
+<style>
+  /* Palette matched to index.html so the tracker and the prep read as one app. */
+  :root{
+    color-scheme: dark;
+    --bg:#0b1120;
+    --panel:#131c31;
+    --panel-border:#1e293b;
+    --accent:#22c55e;
+    --accent-soft:#4ade80;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --dim:#64748b;
+    --good:#4ade80;
+    --bad:#f87171;
+    --warn:#f59e0b;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; font-family:-apple-system, system-ui, sans-serif;
+    background:var(--bg); color:var(--text); padding-bottom:60px;
+  }
+  header{
+    padding:16px 16px 12px; position:sticky; top:0;
+    background:#0b1120ee; backdrop-filter:blur(8px); z-index:10;
+    border-bottom:1px solid var(--panel-border);
+  }
+  .back{
+    display:inline-block; color:var(--dim); text-decoration:none;
+    font-size:12.5px; font-weight:600; margin-bottom:8px;
+  }
+  .back:hover{ color:var(--accent-soft); }
+  header h1{ font-size:20px; margin:0 0 3px; }
+  header .sub{ color:var(--dim); font-size:13px; }
+
+  nav{ display:flex; gap:8px; overflow-x:auto; padding:14px 16px; max-width:960px; margin:0 auto; }
+  nav button{
+    flex:0 0 auto; background:#1e293b; border:1px solid var(--panel-border);
+    color:var(--text); padding:8px 14px; border-radius:8px; font-size:13px;
+    font-weight:600; cursor:pointer; white-space:nowrap;
+  }
+  nav button.active{ background:var(--accent); color:var(--bg); border-color:transparent; }
+
+  main{ max-width:960px; margin:0 auto; padding:0 12px 40px; }
+  .card{
+    background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:12px; padding:16px 18px; margin-bottom:12px;
+  }
+  .card h2{ margin-top:0; font-size:15px; color:var(--accent-soft); }
+  .card h3{ font-size:13.5px; color:var(--text); margin-bottom:6px; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th,td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--panel-border); vertical-align:top; }
+  th{ color:var(--dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+  .pill{ display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
+  .p1{ background:#16a34a33; color:#4ade80; }
+  .p2{ background:#2563eb33; color:#60a5fa; }
+  .p3{ background:#47556933; color:#94a3b8; }
+  ul{ padding-left:18px; margin:6px 0; font-size:13.5px; line-height:1.65; }
+  .grid2{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media(min-width:700px){ .grid2{ grid-template-columns:1fr 1fr; } }
+  .muted{ color:var(--muted); font-size:12.5px; }
+
+  /* Quiz */
+  .quiz-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12.5px; color:var(--muted); }
+  .qtext{ font-size:15px; margin:10px 0 14px; line-height:1.5; }
+  .opt{
+    display:block; width:100%; text-align:left; background:#0f172a;
+    border:1px solid var(--panel-border); color:var(--text); padding:11px 13px;
+    border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:14px;
+  }
+  .opt:hover:not([disabled]){ border-color:var(--accent); }
+  .opt.correct{ border-color:var(--good); background:#16a34a26; }
+  .opt.wrong{ border-color:var(--bad); background:#dc262626; }
+  .opt[disabled]{ cursor:default; }
+  .quiz-actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+  button.primary{
+    background:var(--accent); color:var(--bg); border:none; padding:10px 18px;
+    border-radius:9px; font-weight:700; cursor:pointer; font-size:14px;
+  }
+  button.ghost{
+    background:transparent; color:var(--text); border:1px solid var(--panel-border);
+    padding:10px 18px; border-radius:9px; cursor:pointer; font-size:14px;
+  }
+  button.danger{
+    background:transparent; color:var(--bad); border:1px solid #dc262655;
+    padding:8px 14px; border-radius:9px; cursor:pointer; font-size:13px;
+  }
+  .progress-bar{ height:5px; background:#1e293b; border-radius:20px; overflow:hidden; margin-bottom:14px; }
+  .progress-fill{ height:100%; background:var(--accent); transition:width .2s ease; }
+  .result-big{ font-size:34px; font-weight:700; text-align:center; margin:8px 0 4px; }
+  .result-sub{ text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px; }
+  .tag-row{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 14px; }
+  .tag{
+    padding:5px 10px; border-radius:20px; font-size:12px;
+    border:1px solid var(--panel-border); background:#0f172a; cursor:pointer;
+  }
+  .tag.active{ background:var(--accent); color:var(--bg); font-weight:700; border-color:transparent; }
+  .hidden{ display:none !important; }
+  .rev-item{ border-bottom:1px solid var(--panel-border); padding:12px 0; font-size:13.5px; }
+  .rev-item .ans{ color:var(--muted); margin-top:4px; }
+
+  /* Explanation */
+  .explain{ margin-top:14px; border-radius:10px; padding:14px 16px; background:#0f172a; border:1px solid var(--panel-border); }
+  .explain .verdict{ font-weight:700; font-size:14px; margin-bottom:10px; }
+  .explain .lbl{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent-soft); font-weight:700; margin-bottom:3px; }
+  .explain .why{ font-size:13.5px; line-height:1.65; margin-bottom:12px; }
+  .explain .trick-box{ border-left:3px solid var(--warn); padding:8px 0 8px 12px; background:#f59e0b12; border-radius:0 8px 8px 0; }
+  .explain .trick-box .lbl{ color:var(--warn); }
+  .explain .trick{ font-size:13.5px; line-height:1.55; }
+
+  /* Rotation */
+  .rotate-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size:12.5px; color:var(--muted); background:#0f172a;
+    border:1px solid var(--panel-border); border-radius:9px; padding:8px 12px; margin-bottom:12px;
+  }
+  .rotate-bar strong{ color:var(--accent-soft); font-variant-numeric:tabular-nums; }
+  .rotate-bar.fresh{ border-color:#22c55e66; background:#16a34a1a; }
+
+  /* Weak areas */
+  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .stat{ background:#0f172a; border:1px solid var(--panel-border); border-radius:10px; padding:12px 8px; text-align:center; }
+  .stat .n{ font-size:21px; font-weight:700; }
+  .stat .l{ font-size:10.5px; color:var(--dim); margin-top:2px; line-height:1.3; }
+  .bar-row{ margin-bottom:14px; }
+  .bar-head{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; gap:8px; }
+  .bar-head .pct{ font-variant-numeric:tabular-nums; font-weight:700; white-space:nowrap; }
+  .bar-track{ height:7px; background:#1e293b; border-radius:20px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:20px; }
+  .bar-note{ font-size:11.5px; color:var(--dim); margin-top:4px; }
+  .focus-box{ border-left:3px solid var(--bad); background:#dc26261a; padding:10px 14px; border-radius:0 9px 9px 0; margin-bottom:12px; font-size:13.5px; line-height:1.65; }
+  .miss-item{ border-bottom:1px solid var(--panel-border); padding:12px 0; font-size:13.5px; }
+  .miss-item .mq{ margin-bottom:6px; }
+  .miss-item .mt{ font-size:12.5px; color:var(--warn); line-height:1.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="/">← Back to job list</a>
+  <h1>🧠 HAL MT/DT (CS) Prep</h1>
+  <div class="sub">160 MCQs · 150 minutes · no negative marking</div>
+</header>
+
+<nav id="tabs">
+  <button data-tab="overview" class="active">Overview</button>
+  <button data-tab="topics">Topics</button>
+  <button data-tab="schedule">4-Week Plan</button>
+  <button data-tab="strategy">Time Strategy</button>
+  <button data-tab="quiz">Quiz</button>
+  <button data-tab="progress">My Weak Areas</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="tab-section">
+    <div class="card">
+      <h2>Exam Snapshot</h2>
+      <table>
+        <tr><th>Format</th><td>160 MCQs in 150 minutes</td></tr>
+        <tr><th>Negative marking</th><td>None — attempt every question</td></tr>
+        <tr><th>Part I</th><td>General Awareness — 20 Qs / 20 marks</td></tr>
+        <tr><th>Part II</th><td>English &amp; Reasoning — 40 Qs / 40 marks</td></tr>
+        <tr><th>Part III</th><td>CS Technical Domain — 100 Qs / 100 marks</td></tr>
+        <tr><th>Difficulty</th><td>Easy–Moderate (1-mark GATE CS / ISRO SC / BEL-ECIL level)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Quick-Scoring: Part I &amp; II</h2>
+      <div class="grid2">
+        <div>
+          <h3>General Awareness (20)</h3>
+          <ul>
+            <li>15 min/day current affairs (last 6 months)</li>
+            <li>Static GK: PSU/defence/aerospace basics, Constitution, schemes &amp; awards</li>
+            <li>Recall-based — don't over-invest time</li>
+          </ul>
+        </div>
+        <div>
+          <h3>English &amp; Reasoning (40)</h3>
+          <ul>
+            <li>English: error spotting, synonyms/antonyms, sentence correction, one-word substitution</li>
+            <li>Skip long comprehension unless time allows — low ROI</li>
+            <li>Reasoning: series, coding-decoding, blood relations, syllogisms, direction sense</li>
+            <li>Target: &lt;30 sec/question with drilling</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px;">Rule of thumb: Part I + II should cost ~45–50 minutes, leaving ~100 minutes for the 100 technical questions.</p>
+    </div>
+    <div class="card">
+      <h2>Practice Sources</h2>
+      <ul>
+        <li>1-mark GATE CS PYQs (2010–2023), filtered to 1-markers</li>
+        <li>ISRO Scientist/Engineer CS PYQs — closest PSU pattern match</li>
+        <li>BEL/ECIL Technical Officer CS PYQs — good for speed drills</li>
+        <li>Made Easy / GATE Overflow topic-wise banks for formula numericals</li>
+        <li>Daily routine: 25 technical MCQs + 10 reasoning + 5 GK, timed</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TOPICS -->
+  <section id="topics" class="tab-section hidden">
+    <div class="card">
+      <h2>High-Weightage Technical Topics (100 marks)</h2>
+      <table>
+        <thead><tr><th>Subject</th><th>Priority</th><th>Key Sub-topics</th></tr></thead>
+        <tbody id="topics-body"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Formula Shortlist — memorise cold</h2>
+      <ul>
+        <li>Big-O ladder: 1 &lt; log n &lt; √n &lt; n &lt; n log n &lt; n² &lt; 2ⁿ &lt; n!</li>
+        <li>Round Robin turnaround/waiting time formulas</li>
+        <li>Subnetting: usable hosts = 2^(32−prefix) − 2</li>
+        <li>Average access time = hit time + miss rate × miss penalty</li>
+        <li>Address lines = log₂(memory size); 1K→10, 1M→20, 1G→30</li>
+        <li>Normal forms: 1NF atomic · 2NF no partial · 3NF no transitive · BCNF determinant is a key</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule" class="tab-section hidden">
+    <div class="card">
+      <h2>4-Week Day-by-Day Schedule</h2>
+      <table>
+        <thead><tr><th>Week</th><th>Focus</th><th>Daily Structure (5–6 hrs)</th></tr></thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+      <p class="muted" style="margin-top:10px;">Daily non-negotiables: 20 min current affairs, 20 min reasoning speed drill, error-log review.</p>
+    </div>
+  </section>
+
+  <!-- STRATEGY -->
+  <section id="strategy" class="tab-section hidden">
+    <div class="card">
+      <h2>Time Budget (150 min · 160 Qs)</h2>
+      <table>
+        <thead><tr><th>Section</th><th>Time Budget</th><th>Target Pace</th></tr></thead>
+        <tbody>
+          <tr><td>General Awareness (20)</td><td>~10 min</td><td>30 sec/Q</td></tr>
+          <tr><td>English &amp; Reasoning (40)</td><td>~35–40 min</td><td>~55 sec/Q</td></tr>
+          <tr><td>Technical CS (100)</td><td>~95–100 min</td><td>~57 sec/Q</td></tr>
+          <tr><td>Buffer</td><td>~5 min</td><td>Review skipped Qs</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Zero Negative Marking Tactics</h2>
+      <ul>
+        <li>Attempt 100% of questions — never leave one blank</li>
+        <li>Pass 1: answer everything you know instantly (&lt;20 sec); mark unsure ones</li>
+        <li>Pass 2: tackle marked/skipped questions</li>
+        <li>Final 2 minutes: blind-guess everything still blank</li>
+        <li>Never spend &gt;90 seconds on one question in pass one — flag and move on</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="tab-section hidden">
+    <div class="card" id="quiz-setup">
+      <h2>Practice Quiz</h2>
+      <div class="rotate-bar" id="rotate-bar">
+        <span id="rotate-text">Fresh set in <strong>10:00</strong></span>
+        <span id="bank-count" class="muted"></span>
+      </div>
+      <p class="muted" style="margin-top:-2px;">
+        Questions you have not seen come first. Ones you got wrong come back until you get them right.
+        Every answer shows why it is right and how to remember it.
+      </p>
+      <div class="tag-row" id="topic-tags"></div>
+      <div class="quiz-actions">
+        <button class="primary" id="start-quiz">Start Quiz</button>
+        <button class="ghost" id="drill-weak">Drill My Weak Areas</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="quiz-live">
+      <div class="quiz-top">
+        <span id="q-counter">Question 1 / 10</span>
+        <span id="q-topic" class="muted"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="qtext" id="q-text"></div>
+      <div id="q-options"></div>
+      <div id="explain-slot"></div>
+      <div class="quiz-actions">
+        <button class="ghost" id="skip-btn">Skip</button>
+        <button class="primary hidden" id="next-btn">Next →</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="quiz-result">
+      <div class="result-big" id="score-big"></div>
+      <div class="result-sub" id="score-sub"></div>
+      <div id="result-insight"></div>
+      <div class="quiz-actions" style="justify-content:center;">
+        <button class="primary" id="retry-btn">New Questions</button>
+        <button class="ghost" id="review-toggle">Review Answers</button>
+      </div>
+      <div id="review-list" class="hidden" style="margin-top:16px;"></div>
+    </div>
+  </section>
+
+  <!-- WEAK AREAS -->
+  <section id="progress" class="tab-section hidden">
+    <div class="card">
+      <h2>Where You Stand</h2>
+      <div class="stat-row">
+        <div class="stat"><div class="n" id="stat-answered">0</div><div class="l">Questions answered</div></div>
+        <div class="stat"><div class="n" id="stat-accuracy">—</div><div class="l">Overall accuracy</div></div>
+        <div class="stat"><div class="n" id="stat-coverage">0%</div><div class="l">Bank covered</div></div>
+      </div>
+      <p class="muted" id="stat-note" style="margin-top:12px;"></p>
+    </div>
+
+    <div class="card">
+      <h2>Focus Here First</h2>
+      <div id="focus-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>Accuracy by Subject</h2>
+      <div id="topic-bars"></div>
+    </div>
+
+    <div class="card">
+      <h2>Questions You Keep Missing</h2>
+      <p class="muted" style="margin-top:-4px;">Wrong more than once. The memory hook is repeated here — this is your error log.</p>
+      <div id="missed-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>Reset</h2>
+      <p class="muted" style="margin-top:-4px;">Clears every answer and weak-area record on this device. Cannot be undone.</p>
+      <button class="danger" id="reset-btn">Reset all my progress</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="/prep/hal-cs.js"></script>
+<script>
+/* ==========================================================================
+   Tabs
+   ========================================================================== */
+const tabs = document.querySelectorAll('#tabs button');
+tabs.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabs.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById(btn.dataset.tab).classList.remove('hidden');
+    if(btn.dataset.tab === 'progress') renderProgress();
+  });
+});
+
+/* ==========================================================================
+   Static content
+   ========================================================================== */
+const topicData = [
+  ["Data Structures & Algorithms","P1","Array/LinkedList ops, Stack-Queue applications, Tree traversals, BST properties, Graph BFS/DFS, sorting complexity"],
+  ["Operating Systems","P1","Process scheduling (FCFS/SJF/RR numericals), Deadlock (Banker's algo), Memory mgmt (paging/segmentation), Page replacement (LRU/FIFO), Semaphores/mutex"],
+  ["DBMS","P1","Normalization (1NF-BCNF), Keys, ER-to-relational mapping, SQL joins/aggregates, ACID, Indexing"],
+  ["Computer Networks","P2","OSI vs TCP/IP, IP addressing/subnetting, TCP vs UDP, Routing basics, HTTP/DNS/DHCP ports"],
+  ["Computer Organization (COA)","P2","Number system conversions, Pipelining hazards, Cache mapping, Addressing modes, Memory hierarchy"],
+  ["Theory of Computation","P3","DFA/NFA basics, Regular vs Context-free languages, Pumping lemma (conceptual), Chomsky hierarchy"],
+  ["Programming / C / OOP","P3","Output prediction, Pointers, OOP pillars, Recursion trace"],
+  ["Software Engineering","P3","SDLC models, Testing types (quick recall)"]
+];
+document.getElementById('topics-body').innerHTML = topicData.map(([subj,pri,sub])=>
+  `<tr><td><strong>${subj}</strong></td><td><span class="pill ${pri.toLowerCase()}">${pri}</span></td><td>${sub}</td></tr>`
+).join('');
+
+const scheduleData = [
+  ["Week 1","Foundation: DS, OS, DBMS basics","AM: 2h new topic (theory+examples) → PM: 1h topic MCQs (25-30 Qs) → Eve: 30 min Reasoning drill"],
+  ["Week 2","CN, COA, TOC + continued DS/OS/DBMS practice","AM: 2h new topic → PM: 1h mixed MCQs → Eve: 30 min English + 20 min GK"],
+  ["Week 3","Full syllabus revision + timed sectional tests","AM: 1.5h revision (formula sheets) → PM: 1 sectional mock (60 Qs/60 min) → Eve: error log review"],
+  ["Week 4","Full-length mocks + weak-area repair","Alternate days: full mock (160 Qs/150 min) → next day: review + fix weak topics. Last 2 days: light revision only"]
+];
+document.getElementById('schedule-body').innerHTML = scheduleData.map(([w,f,d])=>
+  `<tr><td><strong>${w}</strong></td><td>${f}</td><td>${d}</td></tr>`
+).join('');
+
+/* ==========================================================================
+   Bank indexing — a stable id per question, derived from its text, so progress
+   survives the bank being reordered or extended.
+   ========================================================================== */
+function qid(text){
+  let h = 0;
+  for(let i=0;i<text.length;i++){ h = ((h<<5) - h + text.charCodeAt(i)) | 0; }
+  return 'q' + (h >>> 0).toString(36);
+}
+const ALL = [];
+Object.keys(QUESTION_BANK).forEach(topic=>{
+  QUESTION_BANK[topic].forEach(item=>{ ALL.push({...item, topic, id: qid(item.q)}); });
+});
+
+/* ==========================================================================
+   Progress — localStorage only. No account, no server, nothing leaves the phone.
+   ========================================================================== */
+const STORE_KEY = 'jobhunt_prep_hal_cs_v1';
+const ROTATE_MS = 10 * 60 * 1000;   // "new questions every 10 minutes"
+
+function blankState(){
+  return { seen:{}, topics:{}, answered:0, correct:0, rotationAt: Date.now() + ROTATE_MS, rotations:0 };
+}
+let state;
+try{ state = JSON.parse(localStorage.getItem(STORE_KEY)) || blankState(); }
+catch(e){ state = blankState(); }
+state.seen = state.seen || {};
+state.topics = state.topics || {};
+state.answered = state.answered || 0;
+state.correct = state.correct || 0;
+if(!state.rotationAt) state.rotationAt = Date.now() + ROTATE_MS;
+
+function save(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch(e){ /* private mode / quota — the session still works, it just won't persist */ }
+}
+
+function recordAnswer(item, wasCorrect, skipped){
+  const s = state.seen[item.id] || {times:0, wrong:0, lastSeen:0};
+  s.times++;
+  s.lastSeen = Date.now();
+  if(!wasCorrect) s.wrong++;
+  else if(s.wrong > 0) s.wrong--;          // getting it right pays down the debt
+  state.seen[item.id] = s;
+
+  // Skips are recorded but excluded from accuracy — skipping is not the same as
+  // getting it wrong, and counting it as such would distort the weak-area maths.
+  if(!skipped){
+    const t = state.topics[item.topic] || {asked:0, correct:0};
+    t.asked++;
+    if(wasCorrect) t.correct++;
+    state.topics[item.topic] = t;
+    state.answered++;
+    if(wasCorrect) state.correct++;
+  }
+  save();
+}
+
+/* ==========================================================================
+   Selection — unseen first, then previously wrong, then longest since last seen.
+   This is what stops the same ten questions coming round every third attempt.
+   ========================================================================== */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+
+function weakTopicSet(minAttempts=4, threshold=0.6){
+  const weak = new Set();
+  Object.keys(state.topics).forEach(t=>{
+    const s = state.topics[t];
+    if(s.asked >= minAttempts && (s.correct/s.asked) < threshold) weak.add(t);
+  });
+  return weak;
+}
+
+function pickQuestions(pool, n, opts={}){
+  const now = Date.now();
+  const weak = opts.weak || new Set();
+  const scored = pool.map(item=>{
+    const s = state.seen[item.id];
+    let p;
+    if(!s){
+      p = 1000;                                     // unseen always wins
+    }else{
+      const ageMin = (now - s.lastSeen) / 60000;
+      p = (s.wrong * 150)                           // missed before → bring it back
+        + Math.min(ageMin, 2880) / 8                // and the longer ago, the better
+        - (s.times * 8);                            // stop drilling what you always get right
+    }
+    if(weak.has(item.topic)) p += 250;
+    return {item, p: p + Math.random() * 25};
+  });
+  scored.sort((a,b)=> b.p - a.p);
+  const slice = scored.slice(0, Math.min(pool.length, Math.max(n * 2, n + 6)));
+  return shuffle(slice.map(s=>s.item)).slice(0, n);
+}
+
+/* ==========================================================================
+   Fresh-set rotation
+   ========================================================================== */
+let rotationFresh = false;
+function tickRotation(){
+  const now = Date.now();
+  if(now >= state.rotationAt){
+    // Skip over whole periods missed while the tab was closed, rather than
+    // firing once per missed period.
+    const missed = Math.floor((now - state.rotationAt) / ROTATE_MS) + 1;
+    state.rotationAt += missed * ROTATE_MS;
+    state.rotations = (state.rotations || 0) + missed;
+    rotationFresh = true;
+    save();
+  }
+  const bar = document.getElementById('rotate-bar');
+  const txt = document.getElementById('rotate-text');
+  if(!bar || !txt) return;
+
+  if(rotationFresh){
+    bar.classList.add('fresh');
+    txt.innerHTML = '🔄 <strong>Fresh set ready</strong> — start a quiz for new questions';
+  }else{
+    bar.classList.remove('fresh');
+    const left = Math.max(0, state.rotationAt - now);
+    const m = Math.floor(left / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    txt.innerHTML = `🔄 Fresh set in <strong>${m}:${String(s).padStart(2,'0')}</strong>`;
+  }
+  document.getElementById('bank-count').textContent =
+    `${Object.keys(state.seen).length} / ${ALL.length} seen`;
+}
+setInterval(tickRotation, 1000);
+
+/* ==========================================================================
+   Quiz
+   ========================================================================== */
+let currentQuiz = [], currentIndex = 0, score = 0, answers = [];
+let selectedTopics = new Set(Object.keys(QUESTION_BANK));
+
+const tagRow = document.getElementById('topic-tags');
+Object.keys(QUESTION_BANK).forEach(topic=>{
+  const tag = document.createElement('div');
+  tag.className = 'tag active';
+  tag.textContent = `${topic} (${QUESTION_BANK[topic].length})`;
+  tag.addEventListener('click', ()=>{
+    if(selectedTopics.has(topic)){ selectedTopics.delete(topic); tag.classList.remove('active'); }
+    else { selectedTopics.add(topic); tag.classList.add('active'); }
+  });
+  tagRow.appendChild(tag);
+});
+
+function beginQuiz(pool, opts){
+  if(pool.length === 0){ alert("Select at least one topic."); return; }
+  currentQuiz = pickQuestions(pool, Math.min(10, pool.length), opts || {});
+  currentIndex = 0; score = 0; answers = [];
+  rotationFresh = false;
+  document.getElementById('quiz-setup').classList.add('hidden');
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-live').classList.remove('hidden');
+  renderQuestion();
+}
+
+document.getElementById('start-quiz').addEventListener('click', ()=>{
+  beginQuiz(ALL.filter(q=>selectedTopics.has(q.topic)), { weak: weakTopicSet() });
+});
+
+document.getElementById('drill-weak').addEventListener('click', ()=>{
+  const weak = weakTopicSet();
+  if(weak.size === 0){
+    // Say so rather than inventing a weakness out of two answers.
+    const missed = ALL.filter(q => (state.seen[q.id]||{}).wrong > 0);
+    if(missed.length === 0){
+      alert("Not enough data yet. Answer at least 4 questions in a subject and any weak areas will show up here — and in the 'My Weak Areas' tab.");
+      return;
+    }
+    beginQuiz(missed, {});
+    return;
+  }
+  beginQuiz(ALL.filter(q=>weak.has(q.topic)), { weak });
+});
+
+function renderQuestion(){
+  const item = currentQuiz[currentIndex];
+  document.getElementById('q-counter').textContent = `Question ${currentIndex+1} / ${currentQuiz.length}`;
+  document.getElementById('q-topic').textContent = item.topic;
+  document.getElementById('progress-fill').style.width = `${(currentIndex/currentQuiz.length)*100}%`;
+  document.getElementById('q-text').textContent = item.q;
+  document.getElementById('explain-slot').innerHTML = '';
+  const optsDiv = document.getElementById('q-options');
+  optsDiv.innerHTML = '';
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('skip-btn').classList.remove('hidden');
+
+  item.opts.forEach((opt, idx)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt;
+    b.addEventListener('click', ()=> selectAnswer(idx));
+    optsDiv.appendChild(b);
+  });
+}
+
+function explainHTML(item, isCorrect, skipped){
+  const verdict = skipped
+    ? `<span style="color:var(--muted)">Skipped — the answer is <strong style="color:var(--good)">${item.opts[item.correct]}</strong></span>`
+    : isCorrect
+      ? `<span style="color:var(--good)">✓ Correct</span>`
+      : `<span style="color:var(--bad)">✗ Not quite — the answer is <strong style="color:var(--good)">${item.opts[item.correct]}</strong></span>`;
+  return `<div class="explain">
+    <div class="verdict">${verdict}</div>
+    <div class="lbl">Why</div>
+    <div class="why">${item.why}</div>
+    <div class="trick-box">
+      <div class="lbl">Remember it</div>
+      <div class="trick">${item.trick}</div>
+    </div>
+  </div>`;
+}
+
+function selectAnswer(idx){
+  const item = currentQuiz[currentIndex];
+  document.querySelectorAll('#q-options .opt').forEach((b,i)=>{
+    b.disabled = true;
+    if(i === item.correct) b.classList.add('correct');
+    else if(i === idx) b.classList.add('wrong');
+  });
+  const isCorrect = idx === item.correct;
+  if(isCorrect) score++;
+  answers.push({...item, chosen:idx});
+  recordAnswer(item, isCorrect, false);
+  document.getElementById('explain-slot').innerHTML = explainHTML(item, isCorrect, false);
+  document.getElementById('skip-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+document.getElementById('skip-btn').addEventListener('click', ()=>{
+  const item = currentQuiz[currentIndex];
+  document.querySelectorAll('#q-options .opt').forEach((b,i)=>{
+    b.disabled = true;
+    if(i === item.correct) b.classList.add('correct');
+  });
+  answers.push({...item, chosen:-1});
+  recordAnswer(item, false, true);
+  // Skipping still shows the answer: a skipped question you never see the answer
+  // to is one you will skip again in the hall.
+  document.getElementById('explain-slot').innerHTML = explainHTML(item, false, true);
+  document.getElementById('skip-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+});
+
+document.getElementById('next-btn').addEventListener('click', ()=>{
+  currentIndex++;
+  if(currentIndex >= currentQuiz.length) showResult();
+  else renderQuestion();
+});
+
+function showResult(){
+  document.getElementById('quiz-live').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  document.getElementById('progress-fill').style.width = '100%';
+  const pct = Math.round((score/currentQuiz.length)*100);
+  document.getElementById('score-big').textContent = `${score} / ${currentQuiz.length}`;
+  document.getElementById('score-sub').textContent =
+    `${pct}% correct — no marks lost on wrong/skipped, just like the real exam.`;
+
+  const byTopic = {};
+  answers.forEach(a=>{
+    const t = byTopic[a.topic] || (byTopic[a.topic] = {n:0, ok:0});
+    t.n++; if(a.chosen === a.correct) t.ok++;
+  });
+  const lost = Object.entries(byTopic).filter(([,v]) => v.ok < v.n)
+    .sort((a,b)=> (a[1].ok/a[1].n) - (b[1].ok/b[1].n));
+  document.getElementById('result-insight').innerHTML = lost.length
+    ? `<div class="focus-box">Marks lost in this set: ${
+        lost.map(([t,v])=>`<strong>${t}</strong> ${v.ok}/${v.n}`).join(' · ')
+      }<br><span class="muted">Open <strong>My Weak Areas</strong> for the picture across every attempt, not just this one.</span></div>`
+    : `<div class="focus-box" style="border-left-color:var(--good); background:#16a34a1a">Clean sweep — nothing missed in this set.</div>`;
+
+  document.getElementById('review-list').innerHTML = answers.map(a=>{
+    const chosenText = a.chosen === -1 ? "Skipped" : a.opts[a.chosen];
+    const ok = a.chosen === a.correct;
+    return `<div class="rev-item">
+      <div><strong>[${a.topic}]</strong> ${a.q}</div>
+      <div class="ans">Your answer: <span style="color:${ok?'var(--good)':'var(--bad)'}">${chosenText}</span>${
+        ok ? '' : ` · Correct: <span style="color:var(--good)">${a.opts[a.correct]}</span>`}</div>
+      ${explainHTML(a, ok, a.chosen === -1)}
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('retry-btn').addEventListener('click', ()=>{
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-setup').classList.remove('hidden');
+  document.getElementById('review-list').classList.add('hidden');
+  tickRotation();
+});
+
+document.getElementById('review-toggle').addEventListener('click', ()=>{
+  document.getElementById('review-list').classList.toggle('hidden');
+});
+
+/* ==========================================================================
+   Weak-area analysis
+   ========================================================================== */
+const MIN_FOR_VERDICT = 4;   // below this a percentage is noise, not a signal
+
+function barColour(pct){
+  if(pct >= 75) return 'var(--good)';
+  if(pct >= 60) return 'var(--warn)';
+  return 'var(--bad)';
+}
+
+function renderProgress(){
+  const answered = state.answered;
+  const acc = answered ? Math.round((state.correct/answered)*100) : null;
+  const seenCount = Object.keys(state.seen).length;
+
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-accuracy').textContent = acc === null ? '—' : acc + '%';
+  document.getElementById('stat-coverage').textContent = Math.round((seenCount/ALL.length)*100) + '%';
+  document.getElementById('stat-note').textContent = answered
+    ? `${seenCount} of ${ALL.length} questions attempted at least once. Skipped questions are not counted in accuracy.`
+    : `Nothing recorded yet. Take a quiz and this page fills in — it needs at least ${MIN_FOR_VERDICT} answers in a subject before it will call anything a weak area.`;
+
+  const rows = Object.keys(QUESTION_BANK).map(topic=>{
+    const s = state.topics[topic] || {asked:0, correct:0};
+    const pct = s.asked ? Math.round((s.correct/s.asked)*100) : null;
+    return {topic, asked:s.asked, correct:s.correct, pct};
+  }).sort((a,b)=>{
+    if(a.pct === null && b.pct === null) return 0;
+    if(a.pct === null) return 1;          // untouched subjects sink to the bottom
+    if(b.pct === null) return -1;
+    return a.pct - b.pct;
+  });
+
+  document.getElementById('topic-bars').innerHTML = rows.map(r=>{
+    if(r.pct === null){
+      return `<div class="bar-row">
+        <div class="bar-head"><span>${r.topic}</span><span class="pct" style="color:var(--dim)">not attempted</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+        <div class="bar-note">No data — a blank subject is a risk too.</div>
+      </div>`;
+    }
+    const thin = r.asked < MIN_FOR_VERDICT;
+    return `<div class="bar-row">
+      <div class="bar-head"><span>${r.topic}</span><span class="pct" style="color:${thin?'var(--dim)':barColour(r.pct)}">${r.pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${r.pct}%; background:${thin?'#334155':barColour(r.pct)}"></div></div>
+      <div class="bar-note">${r.correct}/${r.asked} correct${thin?` — too few answers to judge yet (need ${MIN_FOR_VERDICT})`:''}</div>
+    </div>`;
+  }).join('');
+
+  const judged = rows.filter(r=>r.asked >= MIN_FOR_VERDICT);
+  const weak = judged.filter(r=>r.pct < 60);
+  const focusEl = document.getElementById('focus-list');
+  if(judged.length === 0){
+    focusEl.innerHTML = `<p class="muted">Not enough answers yet to name a weak area. Answer at least ${MIN_FOR_VERDICT} questions in a subject — guessing at a weakness from one or two answers would send you revising the wrong thing.</p>`;
+  }else if(weak.length === 0){
+    const worst = judged[0];
+    focusEl.innerHTML = `<p style="font-size:13.5px;line-height:1.65;">Nothing is below 60% yet. Your weakest judged subject is
+      <strong>${worst.topic}</strong> at ${worst.pct}% — that is where the next mark is cheapest.</p>`;
+  }else{
+    focusEl.innerHTML = `<div class="focus-box">
+      Below 60% — these are costing you marks:<br>
+      ${weak.map(w=>`<strong>${w.topic}</strong> — ${w.pct}% (${w.correct}/${w.asked})`).join('<br>')}
+    </div>
+    <p class="muted">Technical subjects carry 100 of the 160 marks, so a weak P1 subject (DS, OS, DBMS) costs far more than a weak P3 one. Use <strong>Drill My Weak Areas</strong> on the Quiz tab.</p>`;
+  }
+
+  const missed = ALL
+    .map(q=>({q, s: state.seen[q.id]}))
+    .filter(x=>x.s && x.s.wrong >= 2)
+    .sort((a,b)=> b.s.wrong - a.s.wrong)
+    .slice(0, 15);
+  document.getElementById('missed-list').innerHTML = missed.length
+    ? missed.map(({q,s})=>`<div class="miss-item">
+        <div class="mq"><strong>[${q.topic}]</strong> ${q.q}<br>
+          <span style="color:var(--good)">${q.opts[q.correct]}</span>
+          <span class="muted"> · missed ${s.wrong}×</span></div>
+        <div class="mt">💡 ${q.trick}</div>
+      </div>`).join('')
+    : `<p class="muted">Nothing here yet. A question lands on this list after you get it wrong twice — and drops off once you get it right.</p>`;
+}
+
+document.getElementById('reset-btn').addEventListener('click', ()=>{
+  if(!confirm("Delete all your prep progress on this device? This cannot be undone.")) return;
+  state = blankState();
+  save();
+  renderProgress();
+  tickRotation();
+});
+
+tickRotation();
+renderProgress();
+</script>
+
+</body>
+</html>
