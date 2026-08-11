@@ -51,4 +51,3 @@ Playwright is free and unmetered, rather than a Vercel function.
 
 Hand-curated rows (`ssc-`, `sccl-`, `tslprb-`, `iaf-`, `rrb-`, `hal-` prefixes)
 are never overwritten by ingestion.
-# Job-hunt
