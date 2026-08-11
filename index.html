@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Job Tracker</title>
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#0f172a" />
+<link rel="apple-touch-icon" href="/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, system-ui, sans-serif;
+    background: #0b1120; color: #e2e8f0; padding-bottom: 80px;
+  }
+  header {
+    padding: 20px 16px 14px; position: sticky; top: 0;
+    background: #0b1120ee; backdrop-filter: blur(8px); z-index: 10;
+    border-bottom: 1px solid #1e293b;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: #64748b; font-size: 13px; }
+  .tabs { display: flex; gap: 8px; margin-top: 14px; }
+  .tab {
+    flex: 1; text-align: center; padding: 8px; border-radius: 8px;
+    background: #1e293b; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .tab.active { background: #22c55e; color: #0b1120; }
+  .list { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .card {
+    background: #131c31; border: 1px solid #1e293b; border-radius: 12px; padding: 14px;
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .org { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
+  .post { font-size: 15px; font-weight: 600; margin: 3px 0 8px; }
+  .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .badge.NEW { background: #16a34a33; color: #4ade80; }
+  .badge.UPDATED { background: #2563eb33; color: #60a5fa; }
+  .badge.DEADLINE_APPROACHING { background: #dc262633; color: #f87171; }
+  .badge.CLOSED { background: #47556933; color: #94a3b8; }
+  .meta { font-size: 12.5px; color: #94a3b8; line-height: 1.7; }
+  .meta b { color: #cbd5e1; }
+  .links { display: flex; gap: 10px; margin-top: 10px; }
+  .links a {
+    font-size: 12.5px; color: #22c55e; text-decoration: none; font-weight: 600;
+  }
+  .empty { text-align: center; color: #475569; padding: 60px 20px; font-size: 14px; }
+  .install-banner {
+    margin: 12px; padding: 12px 14px; background: #16213c; border: 1px solid #22c55e55;
+    border-radius: 10px; font-size: 12.5px; color: #94a3b8; display: none;
+  }
+  .install-banner.show { display: block; }
+  .refresh {
+    position: fixed; bottom: 20px; right: 20px; background: #22c55e; color: #0b1120;
+    border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 20px;
+    box-shadow: 0 4px 14px #0008; cursor: pointer;
+  }
+  .est { font-size: 11px; color: #f59e0b; border: 1px solid #f59e0b55;
+         border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+  #lastUpdated.stale { color: #f59e0b; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎯 Job Tracker</h1>
+  <div class="sub" id="lastUpdated">Loading…</div>
+  <div class="tabs">
+    <div class="tab active" data-p="all">All</div>
+    <div class="tab" data-p="person1">B.Tech CSE</div>
+    <div class="tab" data-p="person2">Intermediate</div>
+  </div>
+</header>
+<a href="/learn.html" style="display:block;margin:12px;padding:12px 14px;background:#131c31;border:1px solid #22c55e55;border-radius:10px;color:#4ade80;text-decoration:none;font-size:13px;font-weight:600;">🧠 Diagnostic &amp; Adaptive Practice →</a>
+<div class="install-banner" id="installBanner">
+  📲 Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
+</div>
+<div class="list" id="list"><div class="empty">Loading jobs…</div></div>
+<button class="refresh" onclick="load()">↻</button>
+
+<script>
+const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
+
+let currentFilter = 'all';
+let allJobs = [];
+
+async function load() {
+  document.getElementById('list').innerHTML = '<div class="empty">Loading jobs…</div>';
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/jobs?select=*&order=is_estimated.asc,deadline.asc.nullslast`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  allJobs = await res.json();
+  const newest = allJobs.reduce((max, j) => {
+    const t = new Date(j.updated_at || j.last_checked_at || 0).getTime();
+    return t > max ? t : max;
+  }, 0);
+  const el = document.getElementById('lastUpdated');
+  if (!newest) {
+    el.textContent = 'Data age unknown';
+  } else {
+    const ageH = Math.floor((Date.now() - newest) / 3600000);
+    const when = new Date(newest).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+    // Say how stale it is out loud — a tracker that looks fresh while showing
+    // week-old deadlines is worse than one that admits its age.
+    el.textContent = 'Data from ' + when + (ageH >= 24 ? ` · ${Math.floor(ageH / 24)}d old` : ageH >= 1 ? ` · ${ageH}h old` : ' · just updated');
+    el.className = ageH >= 48 ? 'stale' : '';
+  }
+  render();
+}
+
+function render() {
+  const jobs = currentFilter === 'all' ? allJobs : allJobs.filter(j => j.profile === currentFilter);
+  const list = document.getElementById('list');
+  if (!jobs.length) { list.innerHTML = '<div class="empty">No jobs found.</div>'; return; }
+  list.innerHTML = jobs.map(j => `
+    <div class="card">
+      <div class="card-top">
+        <div>
+          <div class="org">${escapeHtml(j.organization)}</div>
+          <div class="post">${escapeHtml(j.post_name)}</div>
+        </div>
+        <span class="badge ${j.status}">${j.status.replace('_',' ')}</span>
+      </div>
+      <div class="meta">
+        ${j.eligibility ? `<div><b>Eligibility:</b> ${escapeHtml(j.eligibility)}</div>` : ''}
+        ${j.location ? `<div><b>Location:</b> ${escapeHtml(j.location)}</div>` : ''}
+        <div><b>${j.is_estimated ? 'Expected' : 'Deadline'}:</b> ${escapeHtml(j.deadline_text || 'TBA')}${j.is_estimated ? ' <span class="est">estimate</span>' : ''}</div>
+        ${j.pay_scale ? `<div><b>Pay:</b> ₹${escapeHtml(j.pay_scale)}</div>` : ''}
+      </div>
+      <div class="links">
+        ${j.notification_url ? `<a href="${j.notification_url}" target="_blank">📄 Notification</a>` : ''}
+        ${j.apply_url ? `<a href="${j.apply_url}" target="_blank">🔗 Portal</a>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentFilter = tab.dataset.p;
+    render();
+  });
+});
+
+if (!window.matchMedia('(display-mode: standalone)').matches) {
+  document.getElementById('installBanner').classList.add('show');
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
+load();
+</script>
+</body>
+</html>
