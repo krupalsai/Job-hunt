@@ -16,13 +16,15 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v1';
+const CACHE = 'jobhunt-v2';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
 const PREP_ASSETS = [
   '/learn.html',
   '/prep/hal-cs.js',
+  '/prep/lessons.js',
+  '/prep/sync.js',
   '/manifest.json',
   '/icon-192.svg',
 ];

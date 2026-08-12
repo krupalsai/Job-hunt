@@ -61,6 +61,17 @@
   .est { font-size: 11px; color: #f59e0b; border: 1px solid #f59e0b55;
          border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
   #lastUpdated.stale { color: #f59e0b; }
+  .qual { padding: 0 12px; font-size: 12.5px; color: #94a3b8; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .qual select { background:#131c31; color:#e2e8f0; border:1px solid #1e293b; border-radius:8px; padding:6px 8px; font-size:12.5px; }
+  .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
+                 border-top:1px solid #1e293b; padding-top:10px; }
+  .applied-q { font-size:12.5px; color:#94a3b8; }
+  .btn-y, .btn-n { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px;
+                   border:1px solid #1e293b; background:#0f172a; color:#e2e8f0; cursor:pointer; }
+  .btn-y.on { background:#22c55e; color:#0b1120; border-color:transparent; }
+  .applied-tag { font-size:11px; font-weight:700; color:#4ade80; }
+  .syllabus-link { display:inline-block; margin-top:8px; font-size:12.5px; font-weight:600;
+                   color:#4ade80; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -68,15 +79,25 @@
   <h1>🎯 Job Tracker</h1>
   <div class="sub" id="lastUpdated">Loading…</div>
   <div class="tabs">
-    <div class="tab active" data-p="all">All</div>
-    <div class="tab" data-p="person1">B.Tech CSE</div>
-    <div class="tab" data-p="person2">Intermediate</div>
+    <div class="tab active" data-p="eligible">Eligible for me</div>
+    <div class="tab" data-p="applied">Applied</div>
+    <div class="tab" data-p="all">All</div>
   </div>
 </header>
 <a href="/learn.html" style="display:block;margin:12px;padding:12px 14px;background:#131c31;border:1px solid #22c55e55;border-radius:10px;color:#4ade80;text-decoration:none;font-size:13px;font-weight:600;">
   🧠 HAL MT/DT (CS) Prep →
   <div style="color:#94a3b8;font-weight:400;font-size:12px;margin-top:3px;">Syllabus · 4-week plan · 170 questions with explanations · weak-area analysis</div>
 </a>
+<div class="qual">
+  <span>I am a</span>
+  <select id="qualSel">
+    <option value="">— pick your qualification —</option>
+    <option value="B.Tech CSE">B.Tech CSE</option>
+    <option value="Graduate">Graduate (any degree)</option>
+    <option value="Intermediate">Intermediate / 12th</option>
+  </select>
+  <span id="qualNote"></span>
+</div>
 <div class="install-banner" id="installBanner">
   📲 Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
 </div>
@@ -87,8 +108,82 @@
 const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
 
-let currentFilter = 'all';
+let currentFilter = 'eligible';
 let allJobs = [];
+let applied = {};          // job_id -> true
+let qualification = null;
+
+/* Device id, shared with the prep page so one person is one history. */
+const DEVICE_KEY = 'jobhunt_device_id';
+let deviceId = localStorage.getItem(DEVICE_KEY);
+if (!deviceId) {
+  deviceId = (crypto.randomUUID && crypto.randomUUID()) ||
+    ('id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+  localStorage.setItem(DEVICE_KEY, deviceId);
+}
+
+/* The ingestion writes profile as "B.Tech CSE" / "Graduate" / "Intermediate",
+   while the seeded rows use "person1" / "person2". Both are in the table right
+   now, so matching on either alone hides half the jobs — which is exactly what
+   the old tabs did to every newly ingested row. */
+const PROFILE_ALIASES = {
+  'person1': 'B.Tech CSE',
+  'person2': 'Intermediate',
+};
+const normProfile = p => PROFILE_ALIASES[p] || p || '';
+
+/* A B.Tech holder is eligible for anything asking for less. Eligibility is
+   inclusive downwards — the opposite would hide jobs you can actually apply
+   for, which is the more damaging mistake for someone job hunting. */
+const ELIGIBLE_FOR = {
+  'B.Tech CSE':   ['B.Tech CSE', 'Graduate', 'Intermediate'],
+  'Graduate':     ['Graduate', 'Intermediate'],
+  'Intermediate': ['Intermediate'],
+};
+
+function isEligible(job) {
+  if (!qualification) return true;               // nothing picked yet: show all
+  const allowed = ELIGIBLE_FOR[qualification] || [];
+  return allowed.indexOf(normProfile(job.profile)) !== -1;
+}
+
+async function saveProgress(payload) {
+  try {
+    await fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ device_id: deviceId }, payload)),
+    });
+  } catch (e) { /* offline: localStorage below still holds it */ }
+}
+
+function loadLocal() {
+  try { applied = JSON.parse(localStorage.getItem('jobhunt_applied')) || {}; } catch (e) { applied = {}; }
+  qualification = localStorage.getItem('jobhunt_qualification') || null;
+}
+function saveLocal() {
+  try {
+    localStorage.setItem('jobhunt_applied', JSON.stringify(applied));
+    if (qualification) localStorage.setItem('jobhunt_qualification', qualification);
+  } catch (e) {}
+}
+
+function setApplied(jobId, yes) {
+  if (yes) applied[jobId] = true; else delete applied[jobId];
+  saveLocal();
+  saveProgress({ action: 'applied', job_id: jobId, applied: !!yes });
+  render();
+}
+
+/* Which prep exists for which employer. Only claim a syllabus we actually
+   have — pointing someone at an empty page is worse than saying nothing. */
+function syllabusFor(job) {
+  const org = (job.organization || '').toLowerCase();
+  if (org.indexOf('hindustan aeronautics') !== -1 || org.indexOf('hal') === 0) {
+    return { url: '/learn.html', label: 'Study for this — HAL CS syllabus, lessons and 170 questions' };
+  }
+  return null;
+}
 
 async function load() {
   document.getElementById('list').innerHTML = '<div class="empty">Loading jobs…</div>';
@@ -115,9 +210,27 @@ async function load() {
 }
 
 function render() {
-  const jobs = currentFilter === 'all' ? allJobs : allJobs.filter(j => j.profile === currentFilter);
+  let jobs = allJobs;
+  if (currentFilter === 'eligible') jobs = allJobs.filter(isEligible);
+  else if (currentFilter === 'applied') jobs = allJobs.filter(j => applied[j.id]);
+
+  const note = document.getElementById('qualNote');
+  if (!qualification) {
+    note.textContent = 'pick one and this list narrows to what you can actually apply for';
+  } else {
+    const n = allJobs.filter(isEligible).length;
+    note.textContent = `${n} of ${allJobs.length} jobs match`;
+  }
+
   const list = document.getElementById('list');
-  if (!jobs.length) { list.innerHTML = '<div class="empty">No jobs found.</div>'; return; }
+  if (!jobs.length) {
+    list.innerHTML = '<div class="empty">' + (
+      currentFilter === 'applied' ? 'Nothing marked as applied yet.'
+      : currentFilter === 'eligible' && qualification ? 'No open jobs match ' + escapeHtml(qualification) + ' right now.'
+      : 'No jobs found.'
+    ) + '</div>';
+    return;
+  }
   list.innerHTML = jobs.map(j => `
     <div class="card">
       <div class="card-top">
@@ -137,8 +250,25 @@ function render() {
         ${j.notification_url ? `<a href="${j.notification_url}" target="_blank">📄 Notification</a>` : ''}
         ${j.apply_url ? `<a href="${j.apply_url}" target="_blank">🔗 Portal</a>` : ''}
       </div>
+      <div class="applied-row">
+        ${applied[j.id]
+          ? `<span class="applied-tag">✓ Applied</span>
+             <button class="btn-n" data-unapply="${j.id}">Undo</button>`
+          : `<span class="applied-q">Have you applied?</span>
+             <button class="btn-y" data-apply="${j.id}">Yes</button>`}
+      </div>
+      ${applied[j.id] && syllabusFor(j)
+        ? `<a class="syllabus-link" href="${syllabusFor(j).url}">📚 ${escapeHtml(syllabusFor(j).label)} →</a>`
+        : applied[j.id]
+          ? `<div class="applied-q" style="margin-top:8px;">No syllabus in the app for this one yet.</div>`
+          : ''}
     </div>
   `).join('');
+
+  list.querySelectorAll('[data-apply]').forEach(b =>
+    b.addEventListener('click', () => setApplied(b.dataset.apply, true)));
+  list.querySelectorAll('[data-unapply]').forEach(b =>
+    b.addEventListener('click', () => setApplied(b.dataset.unapply, false)));
 }
 
 function escapeHtml(s) {
@@ -154,6 +284,16 @@ document.querySelectorAll('.tab').forEach(tab => {
     render();
   });
 });
+
+document.getElementById('qualSel').addEventListener('change', (e) => {
+  qualification = e.target.value || null;
+  saveLocal();
+  saveProgress({ action: 'profile', qualification: qualification });
+  render();
+});
+
+loadLocal();
+if (qualification) document.getElementById('qualSel').value = qualification;
 
 if (!window.matchMedia('(display-mode: standalone)').matches) {
   document.getElementById('installBanner').classList.add('show');

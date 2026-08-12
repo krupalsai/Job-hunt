@@ -144,6 +144,34 @@
   .miss-item{ border-bottom:1px solid var(--panel-border); padding:12px 0; font-size:13.5px; }
   .miss-item .mq{ margin-bottom:6px; }
   .miss-item .mt{ font-size:12.5px; color:var(--warn); line-height:1.5; }
+
+  /* Learn path */
+  .ls-subject{ font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--dim);
+               font-weight:700; margin:16px 0 8px; }
+  .ls-subject:first-child{ margin-top:0; }
+  .ls-row{ display:flex; align-items:center; gap:10px; padding:12px 0;
+           border-bottom:1px solid var(--panel-border); cursor:pointer; }
+  .ls-row:last-child{ border-bottom:none; }
+  .ls-row.is-locked{ opacity:.45; cursor:default; }
+  .ls-row-main{ flex:1; min-width:0; }
+  .ls-title{ font-size:14px; font-weight:600; }
+  .ls-why{ font-size:12px; color:var(--dim); margin-top:3px; line-height:1.45; }
+  .ls-badge{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; }
+  .ls-badge.done{ background:#16a34a33; color:var(--good); }
+  .ls-badge.open{ background:#2563eb33; color:#60a5fa; }
+  .ls-badge.lock{ background:#47556933; color:var(--dim); }
+  .ls-meta{ font-size:11.5px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; margin-top:12px; }
+  .ls-main{ font-size:19px; margin:4px 0 14px; color:var(--text); }
+  .ls-h{ font-size:14px; color:var(--accent-soft); margin:18px 0 6px; }
+  .ls-p{ font-size:14px; line-height:1.7; margin:0 0 10px; }
+  .ls-l{ font-size:14px; line-height:1.7; }
+  .ls-c{ background:#0f172a; border:1px solid var(--panel-border); border-radius:8px;
+         padding:12px; font-size:12.5px; line-height:1.55; overflow-x:auto;
+         font-family:ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre; }
+  .ls-k{ border-left:3px solid var(--warn); background:#f59e0b12; border-radius:0 8px 8px 0;
+         padding:10px 12px; margin:14px 0 4px; font-size:13.5px; line-height:1.6; }
+  .ls-k span{ display:block; font-size:10px; text-transform:uppercase; letter-spacing:.6px;
+              color:var(--warn); font-weight:700; margin-bottom:3px; }
 </style>
 </head>
 <body>
@@ -159,6 +187,7 @@
   <button data-tab="topics">Topics</button>
   <button data-tab="schedule">4-Week Plan</button>
   <button data-tab="strategy">Time Strategy</button>
+  <button data-tab="learn">Learn from 0</button>
   <button data-tab="quiz">Quiz</button>
   <button data-tab="progress">My Weak Areas</button>
 </nav>
@@ -273,6 +302,22 @@
     </div>
   </section>
 
+  <!-- LEARN FROM 0 -->
+  <section id="learn" class="tab-section hidden">
+    <div id="learn-list">
+      <div class="card">
+        <h2>Learn from zero</h2>
+        <p class="muted" style="margin-top:-4px;">
+          Read a topic, then prove it. A topic stays locked until you have mastered the one
+          before it — so nothing arrives before the thing it depends on.
+        </p>
+        <div id="learn-progress" style="margin-top:12px;"></div>
+      </div>
+      <div class="card"><div id="learn-path"></div></div>
+    </div>
+    <div class="card hidden" id="learn-reader"></div>
+  </section>
+
   <!-- QUIZ -->
   <section id="quiz" class="tab-section hidden">
     <div class="card" id="quiz-setup">
@@ -357,6 +402,7 @@
 </main>
 
 <script src="/prep/hal-cs.js"></script>
+<script src="/prep/lessons.js"></script>
 <script>
 /* ==========================================================================
    Tabs
@@ -369,6 +415,7 @@ tabs.forEach(btn=>{
     document.querySelectorAll('.tab-section').forEach(s=>s.classList.add('hidden'));
     document.getElementById(btn.dataset.tab).classList.remove('hidden');
     if(btn.dataset.tab === 'progress') renderProgress();
+    if(btn.dataset.tab === 'learn' && window.renderLearnPath) window.renderLearnPath();
   });
 });
 
@@ -455,6 +502,11 @@ function recordAnswer(item, wasCorrect, skipped){
     if(wasCorrect) state.correct++;
   }
   save();
+
+  // Mirror to Supabase so the record exists somewhere other than this phone —
+  // that is what makes mentoring against real data possible. Fire-and-forget:
+  // localStorage above is the source of truth and the UI never waits on this.
+  if(window.recordAttemptRemote) window.recordAttemptRemote(item, wasCorrect, skipped);
 }
 
 /* ==========================================================================
@@ -552,7 +604,9 @@ Object.keys(QUESTION_BANK).forEach(topic=>{
 
 function beginQuiz(pool, opts){
   if(pool.length === 0){ alert("Select at least one topic."); return; }
-  currentQuiz = pickQuestions(pool, Math.min(10, pool.length), opts || {});
+  // A lesson check is shorter than a practice quiz, so the size is caller-set.
+  const want = (opts && opts.size) || 10;
+  currentQuiz = pickQuestions(pool, Math.min(want, pool.length), opts || {});
   currentIndex = 0; score = 0; answers = [];
   rotationFresh = false;
   document.getElementById('quiz-setup').classList.add('hidden');
@@ -669,6 +723,16 @@ function showResult(){
     const t = byTopic[a.topic] || (byTopic[a.topic] = {n:0, ok:0});
     t.n++; if(a.chosen === a.correct) t.ok++;
   });
+  // A lesson check reports mastery instead of the usual per-topic breakdown —
+  // the only thing that matters there is whether the next topic unlocked.
+  const lessonVerdict = window.finishLessonCheck
+    ? window.finishLessonCheck(score, currentQuiz.length) : null;
+  if(lessonVerdict){
+    document.getElementById('result-insight').innerHTML = lessonVerdict;
+    document.getElementById('review-list').innerHTML = reviewHtml();
+    return;
+  }
+
   const lost = Object.entries(byTopic).filter(([,v]) => v.ok < v.n)
     .sort((a,b)=> (a[1].ok/a[1].n) - (b[1].ok/b[1].n));
   document.getElementById('result-insight').innerHTML = lost.length
@@ -677,7 +741,11 @@ function showResult(){
       }<br><span class="muted">Open <strong>My Weak Areas</strong> for the picture across every attempt, not just this one.</span></div>`
     : `<div class="focus-box" style="border-left-color:var(--good); background:#16a34a1a">Clean sweep — nothing missed in this set.</div>`;
 
-  document.getElementById('review-list').innerHTML = answers.map(a=>{
+  document.getElementById('review-list').innerHTML = reviewHtml();
+}
+
+function reviewHtml(){
+  return answers.map(a=>{
     const chosenText = a.chosen === -1 ? "Skipped" : a.opts[a.chosen];
     const ok = a.chosen === a.correct;
     return `<div class="rev-item">
@@ -793,6 +861,9 @@ document.getElementById('reset-btn').addEventListener('click', ()=>{
 tickRotation();
 renderProgress();
 </script>
+
+<!-- Loaded last: it uses ALL, state and beginQuiz from the script above. -->
+<script src="/prep/sync.js"></script>
 
 </body>
 </html>
