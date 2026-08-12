@@ -51,7 +51,11 @@ function check(name, cond, detail){
   // The browser always asks for /favicon.ico; a 404 for it is the test server's
   // doing, not the page's, and would otherwise mask a real error.
   page.on('requestfailed', r => { if(!r.url().endsWith('/favicon.ico')) errors.push('request failed: ' + r.url()); });
-  const realErrors = () => errors.filter(e => !/favicon/i.test(e));
+  // The video embed is a third-party request. This sandbox has no route to
+  // YouTube, and the app must not depend on one either — a lesson has to be
+  // readable with the video dead. The embed URL itself is asserted separately.
+  const EXTERNAL = /youtube|ytimg|googlevideo/i;
+  const realErrors = () => errors.filter(e => !/favicon/i.test(e) && !EXTERNAL.test(e));
 
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
 
@@ -144,15 +148,28 @@ function check(name, cond, detail){
   const overlap = setB.filter(t=>firstIds.has(t)).length;
   check('consecutive quizzes share no questions', overlap === 0, `${overlap} repeated`);
 
-  console.log('\n── learn from zero ──────────────────────────────────────');
+  console.log('\n── learn: subjects first ────────────────────────────────');
   await page.click('#tabs button[data-tab="learn"]');
-  const rows = await page.locator('#learn-path .ls-row').count();
-  check('the learning path lists every lesson', rows === 17, `got ${rows}`);
-  check('only the first topic is unlocked at the start',
-    (await page.locator('#learn-path .ls-row.is-locked').count()) === rows - 1);
+  const subjectRows = await page.locator('#learn-path [data-subject]').count();
+  check('every subject is listed, not only the ones with lessons', subjectRows === 10, `got ${subjectRows}`);
+  const listing = await page.locator('#learn-path').textContent();
+  check('subjects without lessons say so honestly', /practice only|lessons being written/i.test(listing));
+
+  // Into a subject that has a path.
+  await page.locator('#learn-path [data-subject="Data Structures"]').click();
+  const lessonRows = await page.locator('#learn-path .ls-row').count();
+  check('the subject opens its own lesson list', lessonRows === 7, `got ${lessonRows}`);
+  check('only the first lesson of the subject is unlocked',
+    (await page.locator('#learn-path .ls-row.is-locked').count()) === lessonRows - 1);
+  check('there is a way back to all subjects', await page.locator('#ls-to-subjects').isVisible());
 
   await page.locator('#learn-path .ls-row').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
+  check('the lesson plays a video in the app',
+    (await page.locator('#learn-reader .ls-video-frame iframe').count()) === 1);
+  const src = await page.locator('#learn-reader .ls-video-frame iframe').getAttribute('src');
+  check('the video is a real embed, not an arbitrary iframe',
+    /^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}$/.test(src), src);
   const lessonText = await page.locator('#learn-reader').textContent();
   check('the lesson body is real teaching, not a stub', lessonText.length > 800, `${lessonText.length} chars`);
   check('the lesson has a key takeaway', (await page.locator('#learn-reader .ls-k').count()) >= 1);
@@ -164,7 +181,34 @@ function check(name, cond, detail){
   await page.click('#ls-check');
   await page.waitForSelector('#quiz-live:not(.hidden)');
   const checkCount = await page.locator('#q-counter').textContent();
-  check('a lesson check is 5 questions, not 10', /\/ 5$/.test(checkCount.trim()), checkCount);
+  check('the test is 5 questions, not 10', /\/ 5$/.test(checkCount.trim()), checkCount);
+
+  console.log('\n── lesson → test → practice ─────────────────────────────');
+  // Pass the test by picking the correct option each time, then confirm the
+  // practice step is offered and the next lesson unlocked.
+  for (let i = 0; i < 5; i++) {
+    const idx = await page.evaluate(() => currentQuiz[currentIndex].correct);
+    await page.locator('#q-options .opt').nth(idx).click();
+    await page.click('#next-btn');
+    if (await page.locator('#quiz-result').isVisible()) break;
+  }
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+  const verdict = await page.locator('#result-insight').textContent();
+  check('passing the test says the topic is mastered', /mastered/i.test(verdict), verdict.slice(0,120));
+  check('practice is offered straight after the test',
+    await page.locator('#ls-practice-now').count() === 1);
+
+  await page.click('#tabs button[data-tab="learn"]');
+  // Returning to Learn keeps you inside the subject you were studying rather
+  // than dumping you back at the top — so only navigate in if it did reset.
+  if (await page.locator('#learn-path [data-subject="Data Structures"]').count()) {
+    await page.locator('#learn-path [data-subject="Data Structures"]').click();
+  }
+  check('coming back to Learn keeps you in the subject you were in',
+    (await page.locator('#learn-path .ls-row').count()) === 7);
+  check('mastering a lesson unlocks the next one',
+    (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
+    `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
 
   console.log('\n── progress reaches the server ─────────────────────────');
   // Attempts are coalesced on a 1.5s timer so a 10-question quiz is one request

@@ -95,38 +95,50 @@
   window.addEventListener("online", flush);
   flush();
 
-  /* ── LEARN MODE ─────────────────────────────────────────────────────────
-     Progression rules, kept in one place so they are arguable rather than
-     scattered through the rendering code. */
-  const PASS_MARK = 4;      // out of
-  const CHECK_SIZE = 5;     // questions in a lesson check
+
+  /* ── LEARN: subject → lesson → video → test → practice ──────────────────
+     The path is subject-first because that is how the syllabus is organised
+     and how you decide what to study today. Inside a subject the order is
+     fixed: read (with a video if one exists), pass the test, then practise.
+     A topic does not unlock the next until it is mastered, so nothing arrives
+     before the thing it depends on. */
+  const PASS_MARK = 4;
+  const CHECK_SIZE = 5;
   const LESSON_KEY = "jobhunt_lessons";
 
   function readLessons() {
     try { return JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; }
     catch (e) { return {}; }
   }
-  function writeLessons(o) {
-    try { localStorage.setItem(LESSON_KEY, JSON.stringify(o)); } catch (e) {}
-  }
-
   function lessonState(key) {
     return readLessons()[key] || { read: false, mastered: false };
   }
   function setLessonState(key, patch) {
     const all = readLessons();
     all[key] = Object.assign(lessonState(key), patch);
-    writeLessons(all);
-    post({
-      action: "lesson", topic_key: key,
-      lesson_read: !!all[key].read, mastered: !!all[key].mastered,
-    }).catch(() => {});   // mirror only; the UI already moved on
+    try { localStorage.setItem(LESSON_KEY, JSON.stringify(all)); } catch (e) {}
+    post({ action: "lesson", topic_key: key,
+           lesson_read: !!all[key].read, mastered: !!all[key].mastered }).catch(() => {});
   }
 
-  /** A lesson is open if it is the first, or the one before it is mastered. */
-  function isUnlocked(i) {
-    if (i === 0) return true;
-    return lessonState(CURRICULUM[i - 1].key).mastered;
+  /* Every subject in the bank, whether or not it has lessons yet. Showing only
+     the three with a path would hide seven subjects that are still examined. */
+  function subjects() {
+    return Object.keys(QUESTION_BANK).map(name => {
+      const lessons = CURRICULUM.filter(l => l.subject === name);
+      return {
+        name,
+        lessons,
+        questions: (QUESTION_BANK[name] || []).length,
+        mastered: lessons.filter(l => lessonState(l.key).mastered).length,
+      };
+    });
+  }
+
+  /** Within a subject: the first lesson is open, and each next one opens when
+      the previous is mastered. */
+  function unlockedIn(list, i) {
+    return i === 0 || lessonState(list[i - 1].key).mastered;
   }
 
   const el = id => document.getElementById(id);
@@ -142,110 +154,194 @@
     return "";
   }
 
-  function renderPath() {
-    const host = el("learn-path");
-    if (!host) return;
+  /* Videos play inside the app rather than throwing you out to YouTube, where
+     the next thing autoplaying is not on your syllabus. Only youtube.com and
+     youtu.be ids are accepted — a lesson file is data, and data should not be
+     able to put an arbitrary iframe on the page. */
+  function videoHtml(v) {
+    if (!v || !v.url) return "";
+    const m = String(v.url).match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if (!m) return "";
+    return `<div class="ls-video">
+      <div class="ls-video-head">▶ ${esc(v.title || "Video explanation")}${
+        v.channel ? ` <span>· ${esc(v.channel)}</span>` : ""}${
+        v.length ? ` <span>· ${esc(v.length)}</span>` : ""}</div>
+      <div class="ls-video-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/${m[1]}"
+                title="${esc(v.title || "Video explanation")}" loading="lazy"
+                allow="accelerometer; encrypted-media; picture-in-picture"
+                allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>`;
+  }
 
-    const done = CURRICULUM.filter(l => lessonState(l.key).mastered).length;
+  let view = { level: "subjects", subject: null };
+
+  function render() {
+    if (!el("learn-path")) return;
+    if (view.level === "subjects") return renderSubjects();
+    if (view.level === "lessons") return renderLessons(view.subject);
+  }
+
+  function renderSubjects() {
+    el("learn-reader").classList.add("hidden");
+    el("learn-list").classList.remove("hidden");
+
+    const subs = subjects();
+    const totalLessons = CURRICULUM.length;
+    const totalMastered = CURRICULUM.filter(l => lessonState(l.key).mastered).length;
     el("learn-progress").innerHTML =
       `<div class="bar-track"><div class="bar-fill" style="width:${
-        Math.round(done / CURRICULUM.length * 100)}%;background:var(--accent)"></div></div>
-       <div class="bar-note">${done} of ${CURRICULUM.length} topics mastered</div>`;
+        totalLessons ? Math.round(totalMastered / totalLessons * 100) : 0}%;background:var(--accent)"></div></div>
+       <div class="bar-note">${totalMastered} of ${totalLessons} topics mastered</div>`;
 
-    let subject = "";
-    host.innerHTML = CURRICULUM.map((l, i) => {
-      const s = lessonState(l.key);
-      const open = isUnlocked(i);
-      const head = l.subject !== subject ? (subject = l.subject,
-        `<div class="ls-subject">${esc(l.subject)}</div>`) : "";
-      const badge = s.mastered ? `<span class="ls-badge done">mastered</span>`
-        : open ? `<span class="ls-badge open">${s.read ? "check yourself" : "start"}</span>`
-        : `<span class="ls-badge lock">locked</span>`;
-      return `${head}
-        <div class="ls-row ${open ? "" : "is-locked"}" data-i="${i}">
-          <div class="ls-row-main">
-            <div class="ls-title">${i + 1}. ${esc(l.title)}</div>
-            <div class="ls-why">${open ? esc(l.why) : "Master the topic above to unlock this."}</div>
-          </div>
-          ${badge}
-        </div>`;
+    el("learn-path").innerHTML = subs.map(s => {
+      const has = s.lessons.length > 0;
+      const done = has && s.mastered === s.lessons.length;
+      return `<div class="ls-row" data-subject="${esc(s.name)}">
+        <div class="ls-row-main">
+          <div class="ls-title">${esc(s.name)}</div>
+          <div class="ls-why">${
+            has ? `${s.lessons.length} lesson${s.lessons.length === 1 ? "" : "s"} · ${s.mastered} mastered · ${s.questions} questions`
+                : `${s.questions} questions · lessons being written`}</div>
+        </div>
+        <span class="ls-badge ${done ? "done" : has ? "open" : "lock"}">${
+          done ? "done" : has ? (s.mastered ? "continue" : "start") : "practice only"}</span>
+      </div>`;
     }).join("");
 
-    host.querySelectorAll(".ls-row").forEach(row => {
+    el("learn-path").querySelectorAll("[data-subject]").forEach(row => {
       row.addEventListener("click", () => {
-        const i = +row.dataset.i;
-        if (!isUnlocked(i)) return;
-        openLesson(i);
+        view = { level: "lessons", subject: row.dataset.subject };
+        render();
+        window.scrollTo(0, 0);
       });
     });
   }
 
-  function openLesson(i) {
-    const l = CURRICULUM[i];
+  function renderLessons(name) {
+    const s = subjects().find(x => x.name === name);
+    if (!s) { view = { level: "subjects" }; return render(); }
+
+    el("learn-progress").innerHTML =
+      `<button class="ghost" id="ls-to-subjects">← All subjects</button>`;
+
+    if (!s.lessons.length) {
+      // Be straight about it rather than showing an empty screen: the hourly
+      // run writes these, and practice is available in the meantime.
+      el("learn-path").innerHTML = `
+        <div class="ls-subject">${esc(name)}</div>
+        <p class="ls-p">No lessons written for this subject yet — the scheduled
+        run is working through them. The ${s.questions} questions are ready now,
+        and each one explains its answer, so practice still teaches.</p>
+        <button class="primary" id="ls-practice-only">Practise ${esc(name)}</button>`;
+      el("ls-practice-only").onclick = () => practiseSubject(name);
+    } else {
+      el("learn-path").innerHTML = `<div class="ls-subject">${esc(name)}</div>` +
+        s.lessons.map((l, i) => {
+          const st = lessonState(l.key);
+          const open = unlockedIn(s.lessons, i);
+          return `<div class="ls-row ${open ? "" : "is-locked"}" data-i="${i}">
+            <div class="ls-row-main">
+              <div class="ls-title">${i + 1}. ${esc(l.title)}${l.video ? ' <span class="ls-vtag">video</span>' : ""}</div>
+              <div class="ls-why">${open ? esc(l.why) : "Master the topic above to unlock this."}</div>
+            </div>
+            <span class="ls-badge ${st.mastered ? "done" : open ? "open" : "lock"}">${
+              st.mastered ? "mastered" : open ? (st.read ? "take the test" : "learn") : "locked"}</span>
+          </div>`;
+        }).join("") +
+        `<button class="ghost" id="ls-practice-all" style="margin-top:14px;">Practise ${esc(name)} without a lesson</button>`;
+
+      el("learn-path").querySelectorAll(".ls-row").forEach(row => {
+        row.addEventListener("click", () => {
+          const i = +row.dataset.i;
+          if (!unlockedIn(s.lessons, i)) return;
+          openLesson(name, i);
+        });
+      });
+      el("ls-practice-all").onclick = () => practiseSubject(name);
+    }
+    el("ls-to-subjects").onclick = () => { view = { level: "subjects" }; render(); window.scrollTo(0, 0); };
+  }
+
+  function openLesson(name, i) {
+    const list = subjects().find(x => x.name === name).lessons;
+    const l = list[i];
     el("learn-list").classList.add("hidden");
     el("learn-reader").classList.remove("hidden");
     el("learn-reader").innerHTML = `
-      <button class="ghost" id="ls-back">← All topics</button>
-      <div class="ls-meta">${esc(l.subject)} · about ${l.minutes} min</div>
+      <button class="ghost" id="ls-back">← ${esc(name)}</button>
+      <div class="ls-meta">${esc(l.subject)} · about ${l.minutes} min read</div>
       <h2 class="ls-main">${esc(l.title)}</h2>
+      ${videoHtml(l.video)}
       ${l.blocks.map(blockHtml).join("")}
       <div class="quiz-actions">
-        <button class="primary" id="ls-check">Check yourself — ${CHECK_SIZE} questions</button>
+        <button class="primary" id="ls-check">Take the test — ${CHECK_SIZE} questions</button>
       </div>
-      <p class="muted" style="margin-top:8px;">You need ${PASS_MARK} of ${CHECK_SIZE} to master this and unlock the next topic.</p>`;
+      <p class="muted" style="margin-top:8px;">${PASS_MARK} of ${CHECK_SIZE} masters this and unlocks the next topic. Practice comes after.</p>`;
     window.scrollTo(0, 0);
     setLessonState(l.key, { read: true });
-
-    el("ls-back").onclick = () => {
-      el("learn-reader").classList.add("hidden");
-      el("learn-list").classList.remove("hidden");
-      renderPath();
-    };
-    el("ls-check").onclick = () => startCheck(i);
+    el("ls-back").onclick = () => { view = { level: "lessons", subject: name }; render(); window.scrollTo(0, 0); };
+    el("ls-check").onclick = () => startCheck(name, i);
   }
 
-  /* The check reuses the quiz engine already in learn.html rather than
-     duplicating it — same explanations, same memory hooks, same recording. */
-  function startCheck(i) {
-    const l = CURRICULUM[i];
-    const pool = ALL.filter(q => q.topic === l.topic);
-    if (pool.length < CHECK_SIZE) {
-      alert("Not enough questions for this topic yet.");
-      return;
-    }
-    window.__lessonCheck = { index: i, key: l.key };
-    el("learn-reader").classList.add("hidden");
+  function gotoQuizTab() {
     document.querySelectorAll("#tabs button").forEach(b => b.classList.remove("active"));
     document.querySelector('#tabs button[data-tab="quiz"]').classList.add("active");
-    document.querySelectorAll(".tab-section").forEach(s => s.classList.add("hidden"));
+    document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
     el("quiz").classList.remove("hidden");
-    beginQuiz(pool, { weak: new Set(), size: CHECK_SIZE });
     window.scrollTo(0, 0);
   }
 
-  /** Called by showResult() in learn.html when a lesson check finishes. */
+  function startCheck(name, i) {
+    const list = subjects().find(x => x.name === name).lessons;
+    const l = list[i];
+    const pool = ALL.filter(q => q.topic === l.topic);
+    if (pool.length < CHECK_SIZE) { alert("Not enough questions for this topic yet."); return; }
+    window.__lessonCheck = { subject: name, index: i, key: l.key, title: l.title };
+    el("learn-reader").classList.add("hidden");
+    gotoQuizTab();
+    beginQuiz(pool, { weak: new Set(), size: CHECK_SIZE });
+  }
+
+  /** Practice — the step after the test. Longer, mixed, no gate. */
+  function practiseSubject(name) {
+    const pool = ALL.filter(q => q.topic === name);
+    if (!pool.length) { alert("No questions for this subject yet."); return; }
+    window.__lessonCheck = null;
+    gotoQuizTab();
+    beginQuiz(pool, { weak: weakTopicSet() });
+  }
+  window.practiseSubject = practiseSubject;
+
+  /** Called by showResult() in learn.html when a lesson test finishes. */
   window.finishLessonCheck = function (score, total) {
     const c = window.__lessonCheck;
     if (!c) return null;
     window.__lessonCheck = null;
     const passed = score >= PASS_MARK;
     if (passed) setLessonState(c.key, { mastered: true });
-    const l = CURRICULUM[c.index];
-    const next = CURRICULUM[c.index + 1];
+    const list = subjects().find(x => x.name === c.subject).lessons;
+    const next = list[c.index + 1];
+    setTimeout(() => {
+      const b = document.getElementById("ls-practice-now");
+      if (b) b.onclick = () => practiseSubject(c.subject);
+    }, 0);
     return passed
       ? `<div class="focus-box" style="border-left-color:var(--good);background:#16a34a1a">
-           <strong>${esc(l.title)} mastered</strong> — ${score}/${total}.
-           ${next ? `Next up: <strong>${esc(next.title)}</strong>, now unlocked.`
-                  : "That was the last topic in the path."}
+           <strong>${esc(c.title)} mastered</strong> — ${score}/${total}.
+           ${next ? `Next: <strong>${esc(next.title)}</strong>, now unlocked.`
+                  : `That completes ${esc(c.subject)}.`}
+           <div class="quiz-actions"><button class="primary" id="ls-practice-now">Now practise ${esc(c.subject)}</button></div>
          </div>`
       : `<div class="focus-box">
-           <strong>${score}/${total}</strong> — you need ${PASS_MARK} to master
-           <strong>${esc(l.title)}</strong>. Nothing is lost: read it again and
-           re-check. The explanations above show exactly what went wrong.
+           <strong>${score}/${total}</strong> — ${PASS_MARK} masters
+           <strong>${esc(c.title)}</strong>. Nothing is lost: read it again and
+           retake. The explanations below show exactly what went wrong.
          </div>`;
   };
 
-  window.renderLearnPath = renderPath;
-  document.addEventListener("DOMContentLoaded", renderPath);
-  if (document.readyState !== "loading") renderPath();
+  window.renderLearnPath = render;
+  document.addEventListener("DOMContentLoaded", render);
+  if (document.readyState !== "loading") render();
 })();

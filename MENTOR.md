@@ -16,7 +16,11 @@ you use the app  →  /api/progress  →  Supabase
 ## What the run may change
 
 - `prep/hal-cs.js` — add questions, especially in topics marked `weak`
-- `prep/lessons.js` — add lessons for subjects with no path yet
+- `prep/lessons.js` — add lessons for subjects with no path yet, and attach a
+  `video: {url, title, channel}` where one genuinely helps. **Verify every video
+  before adding it**: `curl -s "https://www.youtube.com/oembed?url=<watch-url>&format=json"`
+  returns the real title if it exists and fails if it does not. A dead embed is
+  worse than no video.
 - `prep/current-affairs.js` — refresh, because this is the one thing that
   genuinely goes stale
 - `prep/exams.js` — add an exam when the tracker shows one you are eligible for

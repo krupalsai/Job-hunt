@@ -26,6 +26,8 @@ const CURRICULUM = [
 {
   key: "ds-bigo", subject: "Data Structures", topic: "Data Structures",
   title: "Reading Big-O", minutes: 7,
+  video: {url:"https://www.youtube.com/watch?v=P5338HzZX7E",
+          title:"Big O Notation | Asymptotic Notation | GATECSE | DAA", channel:"THE GATEHUB"},
   why: "Every later claim — 'a BST search is O(log n)' — is noise until you can read this notation. Start here.",
   blocks: [
     {h: "What it actually measures"},
@@ -191,6 +193,8 @@ const CURRICULUM = [
 {
   key: "os-sched", subject: "Operating Systems", topic: "Operating Systems",
   title: "CPU Scheduling", minutes: 8,
+  video: {url:"https://www.youtube.com/watch?v=zFnrUVqtiOY",
+          title:"L-2.1: Process Scheduling Algorithms (Preemption vs Non-Preemption)", channel:"Gate Smashers"},
   why: "The most reliably examined OS topic, and the numericals are mechanical once you can draw a Gantt chart.",
   blocks: [
     {h: "The three numbers"},
@@ -214,6 +218,8 @@ const CURRICULUM = [
 {
   key: "os-deadlock", subject: "Operating Systems", topic: "Operating Systems",
   title: "Deadlock", minutes: 7,
+  video: {url:"https://www.youtube.com/watch?v=A46BUTxcNfw",
+          title:"Operating System Unit 3 One Shot — CPU Scheduling + Deadlock", channel:"Bitwise Learning"},
   why: "Four conditions, four strategies. Learn them as two lists and the questions answer themselves.",
   blocks: [
     {h: "The four necessary conditions"},
