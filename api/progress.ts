@@ -56,6 +56,45 @@ export default async function handler(req: any, res: any) {
   }
   const db = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
 
+  // ── GET ?summary=1: aggregate weak areas, no credentials ───────────────
+  // The scheduled mentor run has no Supabase key and no way to know a device
+  // id, so it reads the aggregate over plain HTTP. What this returns is topic
+  // names and accuracy percentages — no identifiers, no device ids, nothing
+  // about who you are. That is a deliberate trade: it is the minimum needed for
+  // the loop to work, and none of it is worth anything to anyone else.
+  if (req.method === "GET" && String(req.query?.summary ?? "") === "1") {
+    const { data, error } = await db.from("study_weak_areas")
+      .select("topic, answered, correct, accuracy, verdict, last_practised");
+    if (error) {
+      console.error("[progress] summary failed", error);
+      return res.status(500).json({ error: "Could not read progress." });
+    }
+    // Collapse devices together: one person, possibly two phones.
+    const byTopic: Record<string, any> = {};
+    for (const r of data ?? []) {
+      const t = byTopic[r.topic] || (byTopic[r.topic] = { topic: r.topic, answered: 0, correct: 0 });
+      t.answered += r.answered ?? 0;
+      t.correct  += r.correct ?? 0;
+    }
+    const topics = Object.values(byTopic).map((t: any) => {
+      const accuracy = t.answered ? Math.round(100 * t.correct / t.answered) : null;
+      return {
+        ...t, accuracy,
+        verdict: t.answered < 4 ? "unassessed"
+               : accuracy < 60 ? "weak"
+               : accuracy < 80 ? "developing" : "strong",
+      };
+    }).sort((a: any, b: any) => (a.accuracy ?? 999) - (b.accuracy ?? 999));
+
+    return res.status(200).json({
+      topics,
+      total_answered: topics.reduce((n: number, t: any) => n + t.answered, 0),
+      note: topics.length === 0
+        ? "No attempts recorded yet. Either nobody has used the app, or SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are unset in Vercel so writes are failing."
+        : undefined,
+    });
+  }
+
   // ── GET: hand a device its own state back ──────────────────────────────
   if (req.method === "GET") {
     const deviceId = req.query?.device_id;
