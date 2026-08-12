@@ -140,7 +140,10 @@
     if (!CURRENT_EXAM) return;
     const h1 = document.querySelector("header h1");
     const sub = document.querySelector("header .sub");
-    if (h1) h1.textContent = "🧠 " + CURRENT_EXAM.name;
+    // The short name, not the full one: "HAL MT/DT (Computer Science)" does not
+    // fit a 390px header and ellipsing it tells you nothing. The full name is
+    // one tap away in the drawer, next to the syllabus it belongs to.
+    if (h1) h1.textContent = "🧠 " + CURRENT_EXAM.short + " Prep";
     if (sub) {
       sub.textContent = CURRENT_EXAM.pattern;
       if (CURRENT_EXAM.negative) {
@@ -390,9 +393,10 @@
     if (el("ls-check")) el("ls-check").onclick = () => startCheck(name, i);
   }
 
+  /* One way to change section, owned by learn.html, so the bottom bar
+     highlights correctly no matter who did the navigating. */
   function gotoQuizTab() {
-    document.querySelectorAll("#tabs button").forEach(b => b.classList.remove("active"));
-    document.querySelector('#tabs button[data-tab="quiz"]').classList.add("active");
+    if (window.gotoSection) { window.gotoSection("quiz"); return; }
     document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
     el("quiz").classList.remove("hidden");
     window.scrollTo(0, 0);
@@ -453,10 +457,11 @@
     if (!l) return;
     const list = subjects().find(x => x.name === l.subject).lessons;
     const i = list.findIndex(x => x.key === key);
-    document.querySelectorAll("#tabs button").forEach(b => b.classList.remove("active"));
-    document.querySelector('#tabs button[data-tab="learn"]').classList.add("active");
-    document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
-    el("learn").classList.remove("hidden");
+    if (window.gotoSection) window.gotoSection("learn");
+    else {
+      document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
+      el("learn").classList.remove("hidden");
+    }
     view = { level: "lessons", subject: l.subject };
     // A day may point at a lesson still gated by an earlier one. Send them to
     // the subject rather than silently opening something out of order.

@@ -11,11 +11,48 @@ Live: https://krupal-job-tracker.vercel.app
 
 ---
 
+# Navigation (`nav.js`)
+
+The app is used on an Android phone in a browser, and it is built for that
+first. Both pages share one navigation, injected by `nav.js`:
+
+- **A bottom tab bar** — Jobs · Learn · Practice · Plan · Progress. Fixed to the
+  bottom, always visible, current destination highlighted with colour *and* a
+  bar above it. Five, not seven, and all five on screen at once: the prep page
+  used to carry seven tabs in a strip that scrolled off both edges, so the tab
+  you wanted was as often invisible as visible.
+- **A side drawer** behind the hamburger — the exam you are preparing for, a
+  link to each syllabus, every destination, and settings (qualification, reset
+  prep progress).
+- **An exam switcher in the header** — HAL CS and SSC CGL swap without editing
+  the URL. On `/learn.html` the title *is* the switcher; on `/` it is a chip.
+
+Sections of the prep page are addressable: `/learn.html?exam=ssc-cgl#quiz`
+opens SSC practice directly, which is how the job list links into it.
+
+Which exam you last chose is remembered in `jobhunt_current_exam` and every
+generated link carries it. On `/learn.html` the `?exam=` parameter is still the
+authority, because that page renders a syllabus and the header must never name
+one exam while the questions come from another.
+
+`npm run test:nav` drives all of this at 390x844 and fails on anything that
+needs horizontal scrolling or puts a tap target out of reach.
+
+---
+
 # Preparation (`/learn.html`)
 
 HAL **Management Trainee / Design Trainee (Computer Science)** — 160 MCQs,
-150 minutes, no negative marking. Six tabs: Overview, Topics, 4-Week Plan,
-Time Strategy, Quiz, My Weak Areas.
+150 minutes, no negative marking. Four destinations in the bottom bar — Learn,
+Practice, Plan, Progress — plus **Exam info** in the drawer, which holds what
+used to be the Overview, Topics and Time Strategy tabs.
+
+Exam info is generated from `prep/exams.js` rather than written for HAL: the
+snapshot, the per-section time budget and the exam-hall tactics all come from
+the exam being studied. That matters most for the tactics. "Attempt every
+question, never leave a blank" is right for HAL and would cost you marks on
+SSC CGL, which deducts 0.50 for a wrong answer — so the advice travels with the
+exam instead of sitting on a page both share.
 
 ## The quiz
 
@@ -82,15 +119,22 @@ network. `scripts/e2e-integration.js` asserts that split.
 
 ## Tests
 
-    npm test                  # all three, in order
+    npm test                  # all four, in order
     npm run test:bank         # bank shape, duplicates, missing explanations,
                               # and that the selection engine stops repeating
-    npm run test:prep         # drives Chromium through real quizzes (24 checks)
-    npm run test:integration  # the two halves as one app (16 checks)
+    npm run test:prep         # drives Chromium through real quizzes (75 checks)
+    npm run test:integration  # the two halves as one app (19 checks)
+    npm run test:nav          # the navigation at 390x844 (93 checks)
 
 `test:bank` fails on a question missing an explanation or a memory hook, on a
 duplicate, on an id collision, and on a selection engine that repeats within a
 session.
+
+`test:nav` runs at a phone viewport and treats layout as a correctness
+property: it fails if the page can scroll sideways (naming the element that
+caused it), if a tap target is under 44px or off screen, if a deep-linked
+section lands behind the sticky header, or if switching exam leaves HAL content
+on an SSC screen.
 
 ---
 

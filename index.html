@@ -9,27 +9,55 @@
 <link rel="apple-touch-icon" href="/icon-192.svg" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<!-- The bottom bar, the drawer and the exam switcher, shared with the prep page.
+     Deferred, so it runs after prep/exams.js at the foot of the body has
+     defined EXAMS, and so its stylesheet lands after the one below. -->
+<script src="/nav.js" defer></script>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
   body {
     margin: 0; font-family: -apple-system, system-ui, sans-serif;
-    background: #0b1120; color: #e2e8f0; padding-bottom: 80px;
+    background: #0b1120; color: #e2e8f0;
+    /* Cleared by nav.js too; stated here so the bottom bar never covers the
+       last job card during the moment before that stylesheet lands. */
+    padding-bottom: calc(74px + env(safe-area-inset-bottom));
   }
   header {
-    padding: 20px 16px 14px; position: sticky; top: 0;
+    padding: 10px 12px; position: sticky; top: 0;
     background: #0b1120ee; backdrop-filter: blur(8px); z-index: 10;
     border-bottom: 1px solid #1e293b;
   }
-  h1 { font-size: 20px; margin: 0 0 4px; }
-  .sub { color: #64748b; font-size: 13px; }
-  .tabs { display: flex; gap: 8px; margin-top: 14px; }
+  h1 { font-size: 17px; margin: 0 0 2px; }
+  .sub { color: #64748b; font-size: 11.5px; margin-top: 6px; }
+  .tabs { display: flex; gap: 7px; margin-top: 10px; }
   .tab {
-    flex: 1; text-align: center; padding: 8px; border-radius: 8px;
-    background: #1e293b; font-size: 13px; font-weight: 600; cursor: pointer;
+    flex: 1; min-height: 38px; padding: 0 6px; border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: #1e293b; font-size: 12px; font-weight: 600; cursor: pointer;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .tab.active { background: #22c55e; color: #0b1120; }
-  .list { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+  /* Card sections: a title, and where there is more behind it, a way through.
+     Borrowed from the app the screenshots came from — the shape, not the look. */
+  .sec { padding: 14px 12px 0; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .sec-head h2 { font-size: 12.5px; margin: 0; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
+  .view-all { background: none; border: 0; padding: 0; color: #4ade80; font: inherit;
+              font-size: 12px; font-weight: 700; cursor: pointer; }
+  /* Round icon tiles — the prep is four taps from here without scrolling. */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tile { display: flex; flex-direction: column; align-items: center; gap: 7px;
+          text-decoration: none; color: #cbd5e1; }
+  .tile-ico { width: 54px; height: 54px; border-radius: 50%; background: #131c31;
+              border: 1px solid #1e293b; color: #4ade80;
+              display: flex; align-items: center; justify-content: center; }
+  .tile-ico svg { width: 23px; height: 23px; }
+  .tile:active .tile-ico { background: #16a34a1f; border-color: #22c55e55; }
+  .tile-lbl { font-size: 10.5px; font-weight: 600; text-align: center; line-height: 1.25; }
+
+  .list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
   .card {
     background: #131c31; border: 1px solid #1e293b; border-radius: 12px; padding: 14px;
   }
@@ -54,15 +82,27 @@
   }
   .install-banner.show { display: block; }
   .refresh {
-    position: fixed; bottom: 20px; right: 20px; background: #22c55e; color: #0b1120;
-    border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 20px;
+    position: fixed; right: 16px; z-index: 55;
+    bottom: calc(74px + env(safe-area-inset-bottom));
+    background: #22c55e; color: #0b1120;
+    border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 19px;
     box-shadow: 0 4px 14px #0008; cursor: pointer;
   }
   .est { font-size: 11px; color: #f59e0b; border: 1px solid #f59e0b55;
          border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
   #lastUpdated.stale { color: #f59e0b; }
-  .qual { padding: 0 12px; font-size: 12.5px; color: #94a3b8; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .qual select { background:#131c31; color:#e2e8f0; border:1px solid #1e293b; border-radius:8px; padding:6px 8px; font-size:12.5px; }
+  /* The qualification picker itself lives in the drawer with the other
+     settings. This is the nudge on the list that opens it — without one, a
+     first-time visitor would never find the control that makes the list
+     theirs. */
+  .qual-prompt { margin: 12px 12px 0; padding: 11px 13px; border-radius: 10px;
+                 background: #131c31; border: 1px solid #22c55e55; color: #94a3b8;
+                 font-size: 12.5px; text-align: left; width: calc(100% - 24px);
+                 font-family: inherit; cursor: pointer; display: none; }
+  .qual-prompt.show { display: block; }
+  .qual-prompt b { color: #4ade80; }
+  .qual-note { padding: 8px 12px 0; font-size: 12px; color: #64748b; }
+  .hidden { display: none !important; }
   .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
                  border-top:1px solid #1e293b; padding-top:10px; }
   .applied-q { font-size:12.5px; color:#94a3b8; }
@@ -79,35 +119,53 @@
   .syllabus-sections { font-size:12px; color:#94a3b8; margin-top:4px; line-height:1.6; }
 </style>
 </head>
-<body>
+<body data-page="jobs">
 <header>
-  <h1>🎯 Job Tracker</h1>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1>🎯 Job Tracker</h1>
+    </div>
+    <button class="nav-exam-chip" id="exam-switch" aria-haspopup="dialog" aria-label="Switch exam">
+      <span id="exam-label">Exam</span><span class="nav-caret" aria-hidden="true">▾</span>
+    </button>
+  </div>
+  <!-- Its own full-width row rather than squeezed beside the exam chip. Chrome
+       on Android inflates small text in narrow blocks, which wrapped "· 2d old"
+       onto a second line — and the age is the part that matters. -->
   <div class="sub" id="lastUpdated">Loading…</div>
   <div class="tabs">
-    <div class="tab active" data-p="eligible">Eligible for me</div>
+    <div class="tab active" data-p="eligible">Eligible</div>
     <div class="tab" data-p="applied">Applied</div>
     <div class="tab" data-p="all">All</div>
   </div>
 </header>
-<a href="/learn.html" style="display:block;margin:12px;padding:12px 14px;background:#131c31;border:1px solid #22c55e55;border-radius:10px;color:#4ade80;text-decoration:none;font-size:13px;font-weight:600;">
-  🧠 HAL MT/DT (CS) Prep →
-  <div style="color:#94a3b8;font-weight:400;font-size:12px;margin-top:3px;">Syllabus · 4-week plan · 170 questions with explanations · weak-area analysis</div>
-</a>
-<div class="qual">
-  <span>I am a</span>
-  <select id="qualSel">
-    <option value="">— pick your qualification —</option>
-    <option value="B.Tech CSE">B.Tech CSE</option>
-    <option value="Graduate">Graduate (any degree)</option>
-    <option value="Intermediate">Intermediate / 12th</option>
-  </select>
-  <span id="qualNote"></span>
-</div>
+
+<button class="qual-prompt" id="qualPrompt">
+  <b>Tell the app what you studied</b><br>
+  and this list narrows to the jobs you can actually apply for. Tap to set it.
+</button>
+
+<section class="sec">
+  <div class="sec-head"><h2>Prep</h2></div>
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section class="sec">
+  <div class="sec-head">
+    <h2 id="jobsHead">Jobs</h2>
+    <button class="view-all" id="viewAll">View all</button>
+  </div>
+</section>
+<div class="qual-note" id="qualNote"></div>
+<div class="list" id="list"><div class="empty">Loading jobs…</div></div>
 <div class="install-banner" id="installBanner">
   📲 Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
 </div>
-<div class="list" id="list"><div class="empty">Loading jobs…</div></div>
-<button class="refresh" onclick="load()">↻</button>
+<button class="refresh" onclick="load()" aria-label="Refresh job list">↻</button>
 
 <script src="/prep/exams.js"></script>
 <script>
@@ -189,7 +247,7 @@ function syllabusFor(job) {
   if (!exam) return null;
   const marks = exam.sections.reduce((n, s) => n + s.marks, 0);
   return {
-    url: '/learn.html?exam=' + encodeURIComponent(exam.key),
+    url: '/learn.html?exam=' + encodeURIComponent(exam.key) + '#examinfo',
     label: 'Open the full ' + exam.short + ' syllabus',
     detail: exam.sections.map(s => s.name + ' (' + s.marks + ')').join(' · '),
     pattern: exam.pattern,
@@ -212,10 +270,15 @@ async function load() {
     el.textContent = 'Data age unknown';
   } else {
     const ageH = Math.floor((Date.now() - newest) / 3600000);
-    const when = new Date(newest).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
     // Say how stale it is out loud — a tracker that looks fresh while showing
-    // week-old deadlines is worse than one that admits its age.
-    el.textContent = 'Data from ' + when + (ageH >= 24 ? ` · ${Math.floor(ageH / 24)}d old` : ageH >= 1 ? ` · ${ageH}h old` : ' · just updated');
+    // week-old deadlines is worse than one that admits its age. It has to fit
+    // one line beside the exam chip, so today gets a time and older gets a
+    // date; the age suffix is the part that matters and it always shows.
+    const at = new Date(newest);
+    const when = ageH < 24
+      ? at.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
+      : at.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    el.textContent = 'Updated ' + when + (ageH >= 24 ? ` · ${Math.floor(ageH / 24)}d old` : ageH >= 1 ? ` · ${ageH}h old` : ' · just now');
     el.className = ageH >= 48 ? 'stale' : '';
   }
   render();
@@ -227,12 +290,18 @@ function render() {
   else if (currentFilter === 'applied') jobs = allJobs.filter(j => applied[j.id]);
 
   const note = document.getElementById('qualNote');
+  document.getElementById('qualPrompt').classList.toggle('show', !qualification);
   if (!qualification) {
-    note.textContent = 'pick one and this list narrows to what you can actually apply for';
+    note.textContent = '';
   } else {
     const n = allJobs.filter(isEligible).length;
-    note.textContent = `${n} of ${allJobs.length} jobs match`;
+    note.textContent = `${qualification} — ${n} of ${allJobs.length} jobs match`;
   }
+
+  document.getElementById('jobsHead').textContent =
+    currentFilter === 'applied' ? 'Applied' :
+    currentFilter === 'all' ? 'All jobs' : 'Eligible for you';
+  document.getElementById('viewAll').classList.toggle('hidden', currentFilter === 'all');
 
   const list = document.getElementById('list');
   if (!jobs.length) {
@@ -293,24 +362,52 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function setFilter(p) {
+  currentFilter = p;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.p === p));
+  render();
+}
 document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    currentFilter = tab.dataset.p;
-    render();
-  });
+  tab.addEventListener('click', () => setFilter(tab.dataset.p));
 });
+document.getElementById('viewAll').addEventListener('click', () => setFilter('all'));
 
-document.getElementById('qualSel').addEventListener('change', (e) => {
-  qualification = e.target.value || null;
+/* The qualification picker lives in the drawer, with the other settings, so
+   there is one of it rather than one per page. nav.js writes it and says so;
+   this page only has to re-filter. */
+document.getElementById('qualPrompt').addEventListener('click', () => {
+  if (window.JobhuntNav) window.JobhuntNav.openDrawer();
+});
+document.addEventListener('jobhunt:qualification', (e) => {
+  qualification = (e.detail && e.detail.qualification) || null;
   saveLocal();
-  saveProgress({ action: 'profile', qualification: qualification });
   render();
 });
 
+/* Quick actions. Built here rather than written into the HTML because the
+   links have to carry the exam currently chosen — tapping "Practice" must land
+   on the syllabus you are actually preparing for. */
+const TILES = [
+  { id: 'examinfo', label: 'Syllabus',  path: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 4.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2z' },
+  { id: 'learn',    label: 'Lessons',   path: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z' },
+  { id: 'quiz',     label: 'Practice',  path: 'M9 11.5l2.5 2.5L21 4.5M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' },
+  { id: 'schedule', label: 'Today’s plan', path: 'M16 2.5v4M8 2.5v4M3 10.5h18M5 4.5h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2z' },
+];
+function renderTiles() {
+  const href = id => window.JobhuntNav
+    ? window.JobhuntNav.learnHref(id)
+    : '/learn.html#' + id;
+  document.getElementById('tiles').innerHTML = TILES.map(t =>
+    `<a class="tile" href="${href(t.id)}" data-tile="${t.id}">
+       <span class="tile-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${t.path}"/></svg></span>
+       <span class="tile-lbl">${t.label}</span>
+     </a>`).join('');
+}
+document.addEventListener('DOMContentLoaded', renderTiles);
+document.addEventListener('jobhunt:exam', renderTiles);
+
 loadLocal();
-if (qualification) document.getElementById('qualSel').value = qualification;
 
 if (!window.matchMedia('(display-mode: standalone)').matches) {
   document.getElementById('installBanner').classList.add('show');

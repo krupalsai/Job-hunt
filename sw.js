@@ -16,12 +16,17 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v2';
+const CACHE = 'jobhunt-v3';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
+//
+// nav.js and exams.js are in here because the navigation is now shared: without
+// them the prep page would open offline with no bottom bar and no way out of it.
 const PREP_ASSETS = [
   '/learn.html',
+  '/nav.js',
+  '/prep/exams.js',
   '/prep/hal-cs.js',
   '/prep/lessons.js',
   '/prep/sync.js',
@@ -58,6 +63,7 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
   const isPrep = url.pathname === '/learn.html'
+              || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
               || url.pathname === '/manifest.json'
               || url.pathname === '/icon-192.svg';

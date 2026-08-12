@@ -61,11 +61,22 @@ function check(name, cond, detail){
 
   console.log('\n── page loads ───────────────────────────────────────────');
   check('no JavaScript errors on load', realErrors().length === 0, realErrors().join('\n     '));
-  check('all seven tabs render', (await page.locator('#tabs button').count()) === 7);
-  check('"My Weak Areas" tab exists', await page.locator('#tabs button[data-tab="progress"]').isVisible());
+  // Seven tabs in a scrolling strip became five destinations in a fixed bottom
+  // bar plus one drawer entry. The count is the point: every destination is on
+  // screen at once, so none of them can be scrolled out of sight.
+  check('the bottom bar offers five destinations, all visible at once',
+    (await page.locator('nav#nav-bottom .nav-item').count()) === 5);
+  check('the scrolling tab strip is gone', (await page.locator('#tabs').count()) === 0);
+  check('"My Weak Areas" is now Progress, one tap away',
+    await page.locator('nav#nav-bottom [data-tab="progress"]').isVisible());
+  check('Overview, Topics and Time Strategy are one Exam info destination in the drawer',
+    (await page.locator('#nav-drawer [data-goto="examinfo"]').count()) === 1 &&
+    (await page.locator('#examinfo').count()) === 1);
+  check('the prep page opens on Learn, not on a wall of reference material',
+    await page.locator('#learn').isVisible() && !(await page.locator('#examinfo').isVisible()));
 
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
-  await page.click('#tabs button[data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
   check('bank size is shown and is the full bank', /\/ 185 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
@@ -119,7 +130,7 @@ function check(name, cond, detail){
   await page.waitForSelector('#learn-reader:not(.hidden)');
   check('that button opens the lesson that teaches the topic',
     (await page.locator('#learn-reader .ls-main').textContent()).length > 3);
-  await page.click('#tabs button[data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
 
   console.log('\n── skipping still teaches ───────────────────────────────');
   await page.click('#next-btn');
@@ -150,7 +161,7 @@ function check(name, cond, detail){
   check('review includes explanations',
     (await page.locator('#review-list .explain').count()) === 10);
 
-  await page.click('#tabs button[data-tab="progress"]');
+  await page.click('nav#nav-bottom [data-tab="progress"]');
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
@@ -160,7 +171,7 @@ function check(name, cond, detail){
 
   console.log('\n── questions do not repeat ──────────────────────────────');
   const firstIds = new Set();
-  await page.click('#tabs button[data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
   // Collect the question text of two fresh quizzes and compare.
   async function runQuizCollect(){
     const seen = [];
@@ -183,7 +194,7 @@ function check(name, cond, detail){
   check('consecutive quizzes share no questions', overlap === 0, `${overlap} repeated`);
 
   console.log('\n── learn: subjects first ────────────────────────────────');
-  await page.click('#tabs button[data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="learn"]');
   // Earlier steps navigated into a subject (via "Teach me this topic"), and the
   // app deliberately remembers where you were. Step back out first.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
@@ -266,7 +277,7 @@ function check(name, cond, detail){
   check('practice is offered straight after the test',
     await page.locator('#ls-practice-now').count() === 1);
 
-  await page.click('#tabs button[data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="learn"]');
   // Returning to Learn keeps you inside the subject you were studying rather
   // than dumping you back at the top — so only navigate in if it did reset.
   if (await page.locator('#learn-path [data-subject="Data Structures"]').count()) {
@@ -279,7 +290,7 @@ function check(name, cond, detail){
     `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
 
   console.log('\n── the 4-week plan is workable, not a table ─────────────');
-  await page.click('#tabs button[data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
   const days = await page.locator('#plan-days .plan-day').count();
   check('the plan is broken into days', days === 28, `got ${days}`);
   const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
@@ -292,7 +303,7 @@ function check(name, cond, detail){
   check('ticking a day marks it done',
     (await page.locator('#plan-days .plan-day.is-done').count()) === 1);
   await page.reload({ waitUntil: 'networkidle' });
-  await page.click('#tabs button[data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
   check('a ticked day survives a reload',
     (await page.locator('#plan-days .plan-day.is-done').count()) === 1);
 
@@ -324,7 +335,7 @@ function check(name, cond, detail){
   const sub = await page.locator('header .sub').textContent();
   check('SSC CGL warns that wrong answers lose marks', /lose marks/i.test(sub), sub);
 
-  await page.click('#tabs button[data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="learn"]');
   const names = await page.locator('#learn-path [data-subject]')
     .evaluateAll(els => els.map(e => e.getAttribute('data-subject')));
   check('only SSC subjects are offered',
@@ -333,12 +344,12 @@ function check(name, cond, detail){
     names.indexOf('DBMS') === -1,
     names.join(' | '));
 
-  await page.click('#tabs button[data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
   const tags = await page.locator('#topic-tags .tag').allTextContents();
   check('the quiz offers only SSC topics',
     !tags.some(t => /Operating Systems|DBMS/.test(t)), tags.join(' | '));
 
-  await page.click('#tabs button[data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
   const planText = await page.locator('#plan-days').textContent();
   check('the 4-week plan follows the SSC syllabus, not HAL',
     !/Operating Systems|DBMS/.test(planText));
@@ -351,7 +362,7 @@ function check(name, cond, detail){
   console.log('\n── progress survives a reload ───────────────────────────');
   const before = await page.evaluate(()=>JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered);
   await page.reload({ waitUntil: 'networkidle' });
-  await page.click('#tabs button[data-tab="progress"]');
+  await page.click('nav#nav-bottom [data-tab="progress"]');
   const after = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answered count persists across reload', after === before, `${before} → ${after}`);
 

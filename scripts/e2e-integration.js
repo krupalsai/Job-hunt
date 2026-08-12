@@ -52,10 +52,17 @@ function check(name, cond, detail){
   check('manifest.json is served', requested.includes('/manifest.json'));
 
   console.log('\n── the job list reaches the prep ────────────────────────');
-  const link = page.locator('a[href="/learn.html"]');
-  check('the prep link is present', await link.count() === 1);
-  const linkText = await link.textContent();
-  check('the link says what it leads to', /HAL/.test(linkText) && /170|explanation|weak/i.test(linkText), linkText.trim());
+  // It used to be one banner near the top of the list, which you had to scroll
+  // back up to reach. It is now the bottom bar, which is always on screen, plus
+  // a row of quick actions where the banner was.
+  const link = page.locator('nav#nav-bottom [data-tab="learn"]');
+  check('the prep is one tap away from the job list', await link.count() === 1);
+  const href = await link.getAttribute('href');
+  check('and the link carries the exam being prepared for',
+    /^\/learn\.html\?exam=[a-z0-9-]+#learn$/.test(href), href);
+  const tiles = (await page.locator('#tiles .tile').allTextContents()).join(' | ');
+  check('quick actions say what is in there',
+    /Syllabus/.test(tiles) && /Practice/.test(tiles) && /Lessons/.test(tiles), tiles);
 
   notFound.length = 0;
   await link.click();
@@ -67,11 +74,15 @@ function check(name, cond, detail){
   check('all 185 questions are indexed', await page.evaluate(()=>ALL.length) === 185);
 
   console.log('\n── and the prep reaches back ────────────────────────────');
-  const back = page.locator('a.back');
-  check('a back link to the job list exists', await back.count() === 1);
+  // No "← Back to job list" at the top of the page any more: on a phone that
+  // meant scrolling up to leave. Jobs is a permanent destination instead.
+  const back = page.locator('nav#nav-bottom [data-tab="jobs"]');
+  check('the job list is a destination on the prep page too', await back.count() === 1);
+  check('and it is a real link, not a history step',
+    (await back.getAttribute('href')) === '/');
   await back.click();
   await page.waitForLoadState('networkidle');
-  check('back link returns to the job list', (await page.title()) === 'Job Tracker', await page.title());
+  check('it returns to the job list', (await page.title()) === 'Job Tracker', await page.title());
 
   console.log('\n── service worker caches prep, never job data ───────────');
   // Parse sw.js rather than waiting on a real install, which needs HTTPS or a
@@ -79,6 +90,9 @@ function check(name, cond, detail){
   const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
   check('sw.js exists (index.html has always registered it)', sw.length > 100);
   check('prep assets are precached', /\/learn\.html/.test(sw) && /\/prep\//.test(sw));
+  // The navigation is shared and lives outside /prep/. Without it in the cache
+  // the prep page would open offline with no bottom bar and no way out.
+  check('the shared navigation is precached too', /'\/nav\.js'/.test(sw));
   check('cross-origin requests are excluded (Supabase job data)',
     /url\.origin !== self\.location\.origin/.test(sw));
   // Network-first means the LAST handler tries fetch before it ever consults the
@@ -95,7 +109,7 @@ function check(name, cond, detail){
 
   console.log('\n── prep progress is namespaced to this app ──────────────');
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
-  await page.click('#tabs button[data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
   await page.click('#start-quiz');
   await page.locator('#q-options .opt').first().click();
   const keys = await page.evaluate(()=>Object.keys(localStorage));

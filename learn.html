@@ -11,6 +11,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <!-- Inline so there is no extra request and no 404 for a missing file. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1120'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%2322c55e' font-family='sans-serif' font-weight='bold'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E" />
+<!-- The bottom bar, the drawer and the exam switcher, shared with the job list.
+     Deferred, so it runs after prep/exams.js at the foot of the body has
+     defined EXAMS, and so its stylesheet lands after the one below. -->
+<script src="/nav.js" defer></script>
 <style>
   /* Palette matched to index.html so the tracker and the prep read as one app. */
   :root{
@@ -30,30 +34,23 @@
   *{ box-sizing:border-box; }
   body{
     margin:0; font-family:-apple-system, system-ui, sans-serif;
-    background:var(--bg); color:var(--text); padding-bottom:60px;
+    background:var(--bg); color:var(--text);
+    /* Cleared by nav.js too; stated here so the bottom bar never covers the
+       last card during the moment before that stylesheet lands. */
+    padding-bottom:calc(74px + env(safe-area-inset-bottom));
   }
   header{
-    padding:16px 16px 12px; position:sticky; top:0;
+    padding:10px 12px; position:sticky; top:0;
     background:#0b1120ee; backdrop-filter:blur(8px); z-index:10;
     border-bottom:1px solid var(--panel-border);
   }
-  .back{
-    display:inline-block; color:var(--dim); text-decoration:none;
-    font-size:12.5px; font-weight:600; margin-bottom:8px;
-  }
-  .back:hover{ color:var(--accent-soft); }
-  header h1{ font-size:20px; margin:0 0 3px; }
-  header .sub{ color:var(--dim); font-size:13px; }
+  /* The title is the exam switcher, the way "My Exams ▾" is: the header
+     already names the exam, so a separate chip repeating it would only take
+     width away from the name on a 390px screen. */
+  header h1{ font-size:16.5px; margin:0 0 2px; }
+  header .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
 
-  nav{ display:flex; gap:8px; overflow-x:auto; padding:14px 16px; max-width:960px; margin:0 auto; }
-  nav button{
-    flex:0 0 auto; background:#1e293b; border:1px solid var(--panel-border);
-    color:var(--text); padding:8px 14px; border-radius:8px; font-size:13px;
-    font-weight:600; cursor:pointer; white-space:nowrap;
-  }
-  nav button.active{ background:var(--accent); color:var(--bg); border-color:transparent; }
-
-  main{ max-width:960px; margin:0 auto; padding:0 12px 40px; }
+  main{ max-width:960px; margin:0 auto; padding:12px 12px 40px; }
   .card{
     background:var(--panel); border:1px solid var(--panel-border);
     border-radius:12px; padding:16px 18px; margin-bottom:12px;
@@ -61,7 +58,13 @@
   .card h2{ margin-top:0; font-size:15px; color:var(--accent-soft); }
   .card h3{ font-size:13.5px; color:var(--text); margin-bottom:6px; }
   table{ width:100%; border-collapse:collapse; font-size:13px; }
-  th,td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--panel-border); vertical-align:top; }
+  th,td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--panel-border);
+         vertical-align:top; overflow-wrap:break-word; }
+  /* Subject · priority · sub-topics, stacked rather than in columns. */
+  .topic-row{ padding:10px 0; border-bottom:1px solid var(--panel-border); }
+  .topic-row:last-child{ border-bottom:none; }
+  .topic-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13.5px; }
+  .topic-sub{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:5px; }
   th{ color:var(--dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
   .pill{ display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
   .p1{ background:#16a34a33; color:#4ade80; }
@@ -108,6 +111,12 @@
   }
   .tag.active{ background:var(--accent); color:var(--bg); font-weight:700; border-color:transparent; }
   .hidden{ display:none !important; }
+  /* Section ids double as hash targets, so the browser scrolls them into view
+     on load and keeps re-applying that as the page settles — landing the top of
+     the card behind the sticky header. A scroll margin larger than the header
+     makes its target position negative, which clamps to the top of the page:
+     exactly where a freshly-opened section belongs. */
+  .tab-section{ scroll-margin-top:140px; }
   .rev-item{ border-bottom:1px solid var(--panel-border); padding:12px 0; font-size:13.5px; }
   .rev-item .ans{ color:var(--muted); margin-top:4px; }
 
@@ -204,39 +213,62 @@
   .plan-go{ margin-top:10px; padding:7px 12px; font-size:12.5px; width:100%; text-align:center; }
 </style>
 </head>
-<body>
+<body data-page="learn">
 
 <header>
-  <a class="back" href="/">← Back to job list</a>
-  <h1>🧠 HAL MT/DT (CS) Prep</h1>
-  <div class="sub">160 MCQs · 150 minutes · no negative marking</div>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title nav-switch" id="exam-switch" role="button" tabindex="0"
+         aria-haspopup="dialog" aria-label="Switch exam">
+      <div class="nav-h1row">
+        <h1>🧠 HAL CS Prep</h1>
+        <span class="nav-caret" aria-hidden="true">▾</span>
+      </div>
+      <div class="sub">160 MCQs · 150 minutes · no negative marking</div>
+    </div>
+  </div>
 </header>
-
-<nav id="tabs">
-  <button data-tab="overview" class="active">Overview</button>
-  <button data-tab="topics">Topics</button>
-  <button data-tab="schedule">4-Week Plan</button>
-  <button data-tab="strategy">Time Strategy</button>
-  <button data-tab="learn">Learn from 0</button>
-  <button data-tab="quiz">Quiz</button>
-  <button data-tab="progress">My Weak Areas</button>
-</nav>
 
 <main>
 
-  <!-- OVERVIEW -->
-  <section id="overview" class="tab-section">
+  <!-- EXAM INFO — what used to be Overview, Topics and Time Strategy.
+       Three tabs of reference material competing for space with the things you
+       open every day. It is one destination now, behind the drawer, and most
+       of it is generated from the exam rather than written for HAL and left to
+       mislead anyone who switches. -->
+  <section id="examinfo" class="tab-section hidden">
     <div class="card">
-      <h2>Exam Snapshot</h2>
-      <table>
-        <tr><th>Format</th><td>160 MCQs in 150 minutes</td></tr>
-        <tr><th>Negative marking</th><td>None — attempt every question</td></tr>
-        <tr><th>Part I</th><td>General Awareness — 20 Qs / 20 marks</td></tr>
-        <tr><th>Part II</th><td>English &amp; Reasoning — 40 Qs / 40 marks</td></tr>
-        <tr><th>Part III</th><td>CS Technical Domain — 100 Qs / 100 marks</td></tr>
-        <tr><th>Difficulty</th><td>Easy–Moderate (1-mark GATE CS / ISRO SC / BEL-ECIL level)</td></tr>
-      </table>
+      <h2>Exam snapshot</h2>
+      <table><tbody id="ei-snapshot"></tbody></table>
     </div>
+    <div class="card">
+      <h2>Time budget</h2>
+      <table>
+        <thead><tr><th>Section</th><th>Time</th><th>Pace</th></tr></thead>
+        <tbody id="ei-budget"></tbody>
+      </table>
+      <p class="muted" id="ei-budget-note" style="margin-bottom:0;"></p>
+    </div>
+    <div class="card">
+      <h2>In the exam hall</h2>
+      <ul id="ei-tactics"></ul>
+    </div>
+    <div class="card">
+      <h2>What is examined — and what this app has ready</h2>
+      <table>
+        <thead><tr><th>Section</th><th>Subject</th><th>Ready</th></tr></thead>
+        <tbody id="ei-subjects"></tbody>
+      </table>
+      <p class="muted" style="margin-bottom:0;">A subject with no lessons yet still has questions,
+        and every question explains its answer — so practice teaches even where a lesson is missing.</p>
+    </div>
+
+    <!-- HAL-specific reference. Shown only when HAL is the exam being studied:
+         a GATE-level formula shortlist is noise on an SSC CGL screen. -->
+    <div id="ei-hal" class="hidden">
     <div class="card">
       <h2>Quick-Scoring: Part I &amp; II</h2>
       <div class="grid2">
@@ -270,16 +302,12 @@
         <li>Daily routine: 25 technical MCQs + 10 reasoning + 5 GK, timed</li>
       </ul>
     </div>
-  </section>
-
-  <!-- TOPICS -->
-  <section id="topics" class="tab-section hidden">
     <div class="card">
       <h2>High-Weightage Technical Topics (100 marks)</h2>
-      <table>
-        <thead><tr><th>Subject</th><th>Priority</th><th>Key Sub-topics</th></tr></thead>
-        <tbody id="topics-body"></tbody>
-      </table>
+      <!-- Stacked rows, not a three-column table. Subject, priority and a line
+           of sub-topics do not fit side by side in 329px, and a table that
+           needs 374 makes the whole page scroll sideways. -->
+      <div id="topics-body"></div>
     </div>
     <div class="card">
       <h2>Formula Shortlist — memorise cold</h2>
@@ -292,6 +320,7 @@
         <li>Normal forms: 1NF atomic · 2NF no partial · 3NF no transitive · BCNF determinant is a key</li>
       </ul>
     </div>
+    </div><!-- /#ei-hal -->
   </section>
 
   <!-- SCHEDULE -->
@@ -307,34 +336,8 @@
     <div id="plan-days"></div>
   </section>
 
-  <!-- STRATEGY -->
-  <section id="strategy" class="tab-section hidden">
-    <div class="card">
-      <h2>Time Budget (150 min · 160 Qs)</h2>
-      <table>
-        <thead><tr><th>Section</th><th>Time Budget</th><th>Target Pace</th></tr></thead>
-        <tbody>
-          <tr><td>General Awareness (20)</td><td>~10 min</td><td>30 sec/Q</td></tr>
-          <tr><td>English &amp; Reasoning (40)</td><td>~35–40 min</td><td>~55 sec/Q</td></tr>
-          <tr><td>Technical CS (100)</td><td>~95–100 min</td><td>~57 sec/Q</td></tr>
-          <tr><td>Buffer</td><td>~5 min</td><td>Review skipped Qs</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h2>Zero Negative Marking Tactics</h2>
-      <ul>
-        <li>Attempt 100% of questions — never leave one blank</li>
-        <li>Pass 1: answer everything you know instantly (&lt;20 sec); mark unsure ones</li>
-        <li>Pass 2: tackle marked/skipped questions</li>
-        <li>Final 2 minutes: blind-guess everything still blank</li>
-        <li>Never spend &gt;90 seconds on one question in pass one — flag and move on</li>
-      </ul>
-    </div>
-  </section>
-
   <!-- LEARN FROM 0 -->
-  <section id="learn" class="tab-section hidden">
+  <section id="learn" class="tab-section">
     <div id="learn-list">
       <div class="card">
         <h2>Learn from zero</h2>
@@ -437,20 +440,133 @@
 <script src="/prep/lessons.js"></script>
 <script>
 /* ==========================================================================
-   Tabs
+   Sections
+
+   There is no tab strip any more. The four things you do — Learn, Practice,
+   Plan, Progress — are in the bottom bar that nav.js renders, and Exam info is
+   in the drawer. This is the one function that shows a section, whoever asked
+   for it: a bottom-bar tap, a drawer row, a lesson link from the plan, or a
+   #hash in the URL so the job list can link straight to Practice.
    ========================================================================== */
-const tabs = document.querySelectorAll('#tabs button');
-tabs.forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    tabs.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-section').forEach(s=>s.classList.add('hidden'));
-    document.getElementById(btn.dataset.tab).classList.remove('hidden');
-    if(btn.dataset.tab === 'progress') renderProgress();
-    if(btn.dataset.tab === 'learn' && window.renderLearnPath) window.renderLearnPath();
-    if(btn.dataset.tab === 'schedule' && window.renderPlan) window.renderPlan();
-  });
+const SECTION_IDS = ['examinfo','learn','quiz','schedule','progress'];
+
+window.gotoSection = function(id){
+  if(SECTION_IDS.indexOf(id) === -1) id = 'learn';
+  document.querySelectorAll('.tab-section').forEach(s=>s.classList.add('hidden'));
+  const sec = document.getElementById(id);
+  if(sec) sec.classList.remove('hidden');
+  if(window.JobhuntNav) window.JobhuntNav.setActive(id);
+  // replaceState, not pushState: the hardware back button should leave the app
+  // the way it arrived, not walk back through every tab you touched.
+  try{ history.replaceState(null, '', location.pathname + location.search + '#' + id); }catch(e){}
+  if(id === 'progress') renderProgress();
+  if(id === 'learn' && window.renderLearnPath) window.renderLearnPath();
+  if(id === 'schedule' && window.renderPlan) window.renderPlan();
+  if(id === 'examinfo') renderExamInfo();
+  window.scrollTo(0, 0);
+};
+
+/* Landing on Learn rather than on the syllabus: the syllabus is read once and
+   the lessons are opened every day. A #hash wins — that is how the job list
+   sends you to Practice, and how switching exam keeps you where you were. */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const h = (location.hash || '').replace(/^#/, '');
+  window.gotoSection(SECTION_IDS.indexOf(h) !== -1 ? h : 'learn');
 });
+
+/* The section ids double as the hash targets, so the browser does its own
+   jump-to-anchor — and it does it AFTER the switch above, using offsets
+   measured while every section was still laid out. The result was landing
+   mid-page with the sticky header covering the first card. Reset once more
+   when everything has loaded, which is after the browser is finished. */
+window.addEventListener('load', ()=>window.scrollTo(0, 0));
+
+/* Changing only the hash is a same-document navigation: no reload, so the
+   handler above never runs. Without this, a link to #quiz from a page already
+   on #learn would move the address bar and nothing else. */
+window.addEventListener('hashchange', ()=>{
+  const h = (location.hash || '').replace(/^#/, '');
+  if(SECTION_IDS.indexOf(h) !== -1) window.gotoSection(h);
+});
+
+/* ==========================================================================
+   Exam info — generated from the exam, not written for HAL
+
+   Overview, Topics and Time Strategy were three tabs of prose about HAL. Two
+   of the three said things that are false for SSC CGL, and one of them —
+   "attempt 100% of questions, never leave one blank" — is the single worst
+   piece of advice you could follow in an exam that deducts half a mark per
+   wrong answer. So the snapshot, the budget and the tactics come from
+   prep/exams.js, and only the genuinely HAL-specific reference stays static.
+   ========================================================================== */
+function currentExamObj(){
+  if(typeof EXAMS === 'undefined') return null;
+  const k = new URLSearchParams(location.search).get('exam');
+  return EXAMS.find(e=>e.key === k) || EXAMS.find(e=>e.key === 'hal-cs') || EXAMS[0] || null;
+}
+
+function renderExamInfo(){
+  const exam = currentExamObj();
+  if(!exam || !document.getElementById('ei-snapshot')) return;
+
+  const totalMarks = exam.sections.reduce((n,s)=> n + s.marks, 0);
+  const totalQs = exam.questions || exam.sections.reduce((n,s)=> n + (s.questions || s.marks), 0);
+
+  document.getElementById('ei-snapshot').innerHTML =
+    `<tr><th>Format</th><td>${escHtml(exam.pattern)}</td></tr>` +
+    `<tr><th>Negative marking</th><td>${exam.negative
+      ? '<strong style="color:var(--bad)">Yes — a wrong answer costs marks.</strong> A blank is safer than a blind guess.'
+      : 'None. A blank and a wrong answer both score zero, so never leave one blank.'}</td></tr>` +
+    exam.sections.map(s=>
+      `<tr><th>${escHtml(s.name)}</th><td>${s.questions || s.marks} questions · ${s.marks} marks</td></tr>`
+    ).join('') +
+    `<tr><th>Total</th><td>${totalQs} questions · ${totalMarks} marks${
+      exam.minutes ? ' · ' + exam.minutes + ' minutes' : ''}</td></tr>`;
+
+  const buffer = exam.buffer || 0;
+  document.getElementById('ei-budget').innerHTML =
+    exam.sections.map(s=>{
+      const qs = s.questions || s.marks;
+      // Fall back to a share proportional to questions where no budget has been
+      // set — better an honest arithmetic split than a blank row.
+      const mins = s.budget || (exam.minutes ? Math.round((exam.minutes - buffer) * qs / totalQs) : null);
+      const pace = mins ? Math.round(mins * 60 / qs) : null;
+      return `<tr><td>${escHtml(s.name)} (${qs})</td><td>${mins ? '~' + mins + ' min' : '—'}</td>` +
+             `<td>${pace ? '~' + pace + ' sec/Q' : '—'}</td></tr>`;
+    }).join('') +
+    (buffer ? `<tr><td>Buffer</td><td>~${buffer} min</td><td>${
+      exam.negative ? 'Recheck what you marked' : 'Fill every remaining blank'}</td></tr>` : '');
+
+  document.getElementById('ei-budget-note').textContent = exam.minutes
+    ? `${exam.minutes} minutes for ${totalQs} questions is ${
+        Math.round(exam.minutes * 60 / totalQs)} seconds each on average. The split above spends less than that where marks are cheap and more where they are not.`
+    : '';
+
+  document.getElementById('ei-tactics').innerHTML =
+    (exam.tactics || []).map(t=>`<li>${escHtml(t)}</li>`).join('') ||
+    '<li class="muted">No tactics written for this exam yet.</li>';
+
+  const lessonsFor = name => (typeof CURRICULUM === 'undefined')
+    ? 0 : CURRICULUM.filter(l=>l.subject === name).length;
+  document.getElementById('ei-subjects').innerHTML = exam.sections.map(s=>
+    s.subjects.map((sub, i)=>{
+      const qn = (typeof QUESTION_BANK !== 'undefined' && QUESTION_BANK[sub]) ? QUESTION_BANK[sub].length : 0;
+      const ln = lessonsFor(sub);
+      return `<tr>${i === 0
+        ? `<td rowspan="${s.subjects.length}"><strong>${escHtml(s.name)}</strong><br>` +
+          `<span class="muted">${s.marks} marks</span></td>` : ''}` +
+        `<td>${escHtml(sub)}</td>` +
+        `<td>${qn} question${qn === 1 ? '' : 's'}${ln ? ` · ${ln} lesson${ln === 1 ? '' : 's'}` : ' · no lessons yet'}</td></tr>`;
+    }).join('')
+  ).join('');
+
+  document.getElementById('ei-hal').classList.toggle('hidden', exam.key !== 'hal-cs');
+}
+
+function escHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g,
+    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 /* ==========================================================================
    Static content
@@ -466,7 +582,10 @@ const topicData = [
   ["Software Engineering","P3","SDLC models, Testing types (quick recall)"]
 ];
 document.getElementById('topics-body').innerHTML = topicData.map(([subj,pri,sub])=>
-  `<tr><td><strong>${subj}</strong></td><td><span class="pill ${pri.toLowerCase()}">${pri}</span></td><td>${sub}</td></tr>`
+  `<div class="topic-row">
+     <div class="topic-head"><strong>${subj}</strong><span class="pill ${pri.toLowerCase()}">${pri}</span></div>
+     <div class="topic-sub">${sub}</div>
+   </div>`
 ).join('');
 
 /* The 4-week plan is generated from the curriculum in prep/sync.js, so a
