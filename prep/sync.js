@@ -175,6 +175,18 @@
     </div>`;
   }
 
+  /* Injected here rather than in learn.html so two sessions can work on the app
+     at once without colliding in the same stylesheet. */
+  (function () {
+    const css = document.createElement("style");
+    css.textContent =
+      ".ls-dots{display:flex;gap:5px;margin:0 0 16px;}" +
+      ".ls-dot{height:3px;flex:1;border-radius:2px;background:#1e293b;}" +
+      ".ls-dot.past{background:#22c55e66;}" +
+      ".ls-dot.on{background:#22c55e;}";
+    document.head.appendChild(css);
+  })();
+
   let view = { level: "subjects", subject: null };
 
   function render() {
@@ -264,25 +276,63 @@
     el("ls-to-subjects").onclick = () => { view = { level: "subjects" }; render(); window.scrollTo(0, 0); };
   }
 
-  function openLesson(name, i) {
+  /* A lesson arrives one section at a time rather than as a single scroll.
+     Seven minutes of prose on a phone is a wall you skim; a section with a
+     Next button is something you read. The split happens at each heading,
+     which is already where one idea ends and the next begins — so the author
+     does not have to mark section boundaries separately.
+
+     The video sits with the first section only: it introduces the topic, and
+     repeating it above every section would push the text off the screen. */
+  function sectionsOf(l) {
+    const out = [];
+    let cur = null;
+    l.blocks.forEach(b => {
+      if (b.h) { cur = { heading: b.h, blocks: [] }; out.push(cur); }
+      else {
+        if (!cur) { cur = { heading: null, blocks: [] }; out.push(cur); }
+        cur.blocks.push(b);
+      }
+    });
+    return out.length ? out : [{ heading: null, blocks: l.blocks }];
+  }
+
+  function openLesson(name, i, part) {
     const list = subjects().find(x => x.name === name).lessons;
     const l = list[i];
+    const secs = sectionsOf(l);
+    const p = Math.max(0, Math.min(part || 0, secs.length - 1));
+    const sec = secs[p];
+    const last = p === secs.length - 1;
+
     el("learn-list").classList.add("hidden");
     el("learn-reader").classList.remove("hidden");
     el("learn-reader").innerHTML = `
       <button class="ghost" id="ls-back">← ${esc(name)}</button>
-      <div class="ls-meta">${esc(l.subject)} · about ${l.minutes} min read</div>
+      <div class="ls-meta">${esc(l.subject)} · section ${p + 1} of ${secs.length}</div>
       <h2 class="ls-main">${esc(l.title)}</h2>
-      ${videoHtml(l.video)}
-      ${l.blocks.map(blockHtml).join("")}
+      <div class="ls-dots">${secs.map((_, k) =>
+        `<span class="ls-dot ${k === p ? "on" : k < p ? "past" : ""}"></span>`).join("")}</div>
+      ${p === 0 ? videoHtml(l.video) : ""}
+      ${sec.heading ? `<h3 class="ls-h">${esc(sec.heading)}</h3>` : ""}
+      ${sec.blocks.map(blockHtml).join("")}
       <div class="quiz-actions">
-        <button class="primary" id="ls-check">Take the test — ${CHECK_SIZE} questions</button>
+        ${p > 0 ? `<button class="ghost" id="ls-prev">← Back</button>` : ""}
+        ${last
+          ? `<button class="primary" id="ls-check">Take the test — ${CHECK_SIZE} questions</button>`
+          : `<button class="primary" id="ls-next">Next section →</button>`}
       </div>
-      <p class="muted" style="margin-top:8px;">${PASS_MARK} of ${CHECK_SIZE} masters this and unlocks the next topic. Practice comes after.</p>`;
+      ${last
+        ? `<p class="muted" style="margin-top:8px;">${PASS_MARK} of ${CHECK_SIZE} masters this and unlocks the next topic. Practice comes after.</p>`
+        : `<p class="muted" style="margin-top:8px;">${secs.length - p - 1} section${secs.length - p - 1 === 1 ? "" : "s"} left, then the test.</p>`}`;
     window.scrollTo(0, 0);
-    setLessonState(l.key, { read: true });
+    // Only count it as read once the last section is reached, so "read" means
+    // read rather than opened.
+    if (last) setLessonState(l.key, { read: true });
     el("ls-back").onclick = () => { view = { level: "lessons", subject: name }; render(); window.scrollTo(0, 0); };
-    el("ls-check").onclick = () => startCheck(name, i);
+    if (el("ls-next")) el("ls-next").onclick = () => openLesson(name, i, p + 1);
+    if (el("ls-prev")) el("ls-prev").onclick = () => openLesson(name, i, p - 1);
+    if (el("ls-check")) el("ls-check").onclick = () => startCheck(name, i);
   }
 
   function gotoQuizTab() {

@@ -207,18 +207,44 @@ function check(name, cond, detail){
 
   await page.locator('#learn-path .ls-row').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
+  // A lesson arrives one section at a time, not as one long scroll.
+  const meta1 = await page.locator('#learn-reader .ls-meta').textContent();
+  check('the lesson opens at section 1 of several', /section 1 of \d+/.test(meta1), meta1);
+  const secTotal = parseInt(meta1.match(/of (\d+)/)[1], 10);
+  check('the lesson is genuinely split, not one section', secTotal >= 4, `${secTotal} sections`);
+  check('there is no test button until the end',
+    (await page.locator('#ls-check').count()) === 0);
+  check('there is a next-section button', (await page.locator('#ls-next').count()) === 1);
+  check('progress dots match the section count',
+    (await page.locator('#learn-reader .ls-dot').count()) === secTotal);
+
   check('the lesson plays a video in the app',
     (await page.locator('#learn-reader .ls-video-frame iframe').count()) === 1);
   const src = await page.locator('#learn-reader .ls-video-frame iframe').getAttribute('src');
   check('the video is a real embed, not an arbitrary iframe',
     /^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}$/.test(src), src);
   const lessonText = await page.locator('#learn-reader').textContent();
-  check('the lesson body is real teaching, not a stub', lessonText.length > 800, `${lessonText.length} chars`);
-  check('the lesson has a key takeaway', (await page.locator('#learn-reader .ls-k').count()) >= 1);
+  // One section, not the whole lesson — so the bar is per-section substance.
+  check('the section is real teaching, not a stub', lessonText.length > 300, `${lessonText.length} chars`);
+  // The whole lesson still has to be substantial; measure it from the data.
+  const wholeLen = await page.evaluate(() =>
+    CURRICULUM[0].blocks.map(b => b.p || b.c || b.k || (b.l || []).join(' ') || b.h || '').join(' ').length);
+  check('the lesson as a whole is substantial', wholeLen > 1200, `${wholeLen} chars`);
   check('a locked topic cannot be opened', await page.evaluate(() => {
     const locked = document.querySelector('#learn-path .ls-row.is-locked');
     return locked === null || true;   // presence checked above; clicking is a no-op by design
   }));
+
+  // Walk to the last section; only then may the test appear.
+  for (let i = 0; i < 20 && await page.locator('#ls-next').count(); i++) {
+    await page.click('#ls-next');
+  }
+  check('the last section offers the test', (await page.locator('#ls-check').count()) === 1);
+  check('the key takeaway lands on the last section',
+    (await page.locator('#learn-reader .ls-k').count()) >= 1);
+  check('the video is not repeated on every section',
+    (await page.locator('#learn-reader .ls-video-frame').count()) === 0);
+  check('you can step back a section', (await page.locator('#ls-prev').count()) === 1);
 
   await page.click('#ls-check');
   await page.waitForSelector('#quiz-live:not(.hidden)');
