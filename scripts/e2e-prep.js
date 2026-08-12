@@ -153,7 +153,12 @@ function check(name, cond, detail){
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
   check('every subject is listed, not only the ones with lessons', subjectRows === 10, `got ${subjectRows}`);
   const listing = await page.locator('#learn-path').textContent();
-  check('subjects without lessons say so honestly', /practice only|lessons being written/i.test(listing));
+  // Every subject has a path now. If one ever loses it, the UI must say so
+  // rather than showing a blank screen — that branch is still in the code and
+  // this assertion is what would catch its loss.
+  check('no subject is left without lessons', !/practice only|lessons being written/i.test(listing),
+    listing.replace(/\s+/g,' ').slice(0,140));
+  check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
   // Into a subject that has a path.
   await page.locator('#learn-path [data-subject="Data Structures"]').click();
@@ -209,6 +214,29 @@ function check(name, cond, detail){
   check('mastering a lesson unlocks the next one',
     (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
     `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
+
+  console.log('\n── the 4-week plan is workable, not a table ─────────────');
+  await page.click('#tabs button[data-tab="schedule"]');
+  const days = await page.locator('#plan-days .plan-day').count();
+  check('the plan is broken into days', days === 28, `got ${days}`);
+  const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
+  check('a day names the actual lessons, not a vague focus',
+    /Reading Big-O/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+  check('every day has an action button',
+    (await page.locator('#plan-days [data-go]').count()) === days);
+
+  await page.locator('#plan-days [data-tick]').first().click();
+  check('ticking a day marks it done',
+    (await page.locator('#plan-days .plan-day.is-done').count()) === 1);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.click('#tabs button[data-tab="schedule"]');
+  check('a ticked day survives a reload',
+    (await page.locator('#plan-days .plan-day.is-done').count()) === 1);
+
+  await page.locator('#plan-days [data-go]').first().click();
+  await page.waitForSelector('#learn-reader:not(.hidden)');
+  check('the day button opens that exact lesson',
+    /Reading Big-O/.test(await page.locator('#learn-reader .ls-main').textContent()));
 
   console.log('\n── progress reaches the server ─────────────────────────');
   // Attempts are coalesced on a 1.5s timer so a 10-question quiz is one request

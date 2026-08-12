@@ -341,7 +341,138 @@
          </div>`;
   };
 
+  /** Jump straight to a lesson by key — used by the 4-week plan, which names
+      the exact lesson a day calls for rather than the subject it lives in. */
+  window.openLessonByKey = function (key) {
+    const l = CURRICULUM.find(x => x.key === key);
+    if (!l) return;
+    const list = subjects().find(x => x.name === l.subject).lessons;
+    const i = list.findIndex(x => x.key === key);
+    document.querySelectorAll("#tabs button").forEach(b => b.classList.remove("active"));
+    document.querySelector('#tabs button[data-tab="learn"]').classList.add("active");
+    document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
+    el("learn").classList.remove("hidden");
+    view = { level: "lessons", subject: l.subject };
+    // A day may point at a lesson still gated by an earlier one. Send them to
+    // the subject rather than silently opening something out of order.
+    if (!unlockedIn(list, i)) { render(); return; }
+    openLesson(l.subject, i);
+  };
+
   window.renderLearnPath = render;
+  document.addEventListener("DOMContentLoaded", render);
+  if (document.readyState !== "loading") render();
+})();
+
+/* ============================================================================
+   THE 4-WEEK PLAN, as something you work through rather than read.
+
+   The old tab was a table of prose: "Week 1 — Foundation: DS, OS, DBMS basics".
+   True, and useless at 7am, because it does not say what to open. Each day now
+   names its lessons and links straight to them, and remembers what you ticked.
+
+   Days are generated from the curriculum rather than hand-written, so a lesson
+   added by the scheduled run lands in the plan automatically instead of leaving
+   the plan quietly out of date.
+   ========================================================================== */
+(function () {
+  "use strict";
+  const DONE_KEY = "jobhunt_plan_done";
+  const read = () => { try { return JSON.parse(localStorage.getItem(DONE_KEY)) || {}; } catch (e) { return {}; } };
+  const write = o => { try { localStorage.setItem(DONE_KEY, JSON.stringify(o)); } catch (e) {} };
+  const el = id => document.getElementById(id);
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
+    c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  /* Weeks 1-2 walk the lesson path in order, two lessons a day. Weeks 3-4 are
+     revision and mocks, which are practice rather than new material — that
+     matches how the time budget actually works out before an exam. */
+  function buildPlan() {
+    const days = [];
+    const order = ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
+                   "COA", "Theory of Computation", "Programming & OOP",
+                   "Software Engineering", "Reasoning & English", "General Awareness"];
+    const lessons = [];
+    order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
+
+    let n = 0;
+    for (let i = 0; i < lessons.length; i += 2) {
+      const chunk = lessons.slice(i, i + 2);
+      n++;
+      days.push({
+        id: "d" + n,
+        day: n,
+        week: Math.min(4, Math.ceil(n / 7)),
+        title: chunk.map(l => l.title).join("  ·  "),
+        subject: chunk[0].subject,
+        lessons: chunk,
+        kind: "learn",
+      });
+    }
+    // Whatever days remain in a 28-day run become revision and mock days.
+    while (n < 28) {
+      n++;
+      const revising = order[(n - 1) % order.length];
+      days.push({
+        id: "d" + n, day: n, week: Math.min(4, Math.ceil(n / 7)),
+        title: n >= 25 ? "Full mock — 160 questions, 150 minutes"
+                       : "Revision + practice: " + revising,
+        subject: revising, lessons: [], kind: n >= 25 ? "mock" : "revise",
+      });
+    }
+    return days;
+  }
+
+  function render() {
+    if (!el("plan-days")) return;
+    const days = buildPlan();
+    const done = read();
+    const nDone = days.filter(d => done[d.id]).length;
+
+    el("plan-progress").innerHTML =
+      `<div class="bar-track"><div class="bar-fill" style="width:${
+        Math.round(nDone / days.length * 100)}%;background:var(--accent)"></div></div>
+       <div class="bar-note">${nDone} of ${days.length} days done</div>`;
+
+    let week = 0;
+    el("plan-days").innerHTML = days.map(d => {
+      const head = d.week !== week ? (week = d.week,
+        `<div class="ls-subject" style="padding:0 4px;">Week ${d.week}</div>`) : "";
+      const isDone = !!done[d.id];
+      const action = d.kind === "learn" ? "Open the lesson"
+                   : d.kind === "mock"  ? "Start a long practice set"
+                   : "Practise " + d.subject;
+      return `${head}
+        <div class="card plan-day ${isDone ? "is-done" : ""}" data-id="${d.id}">
+          <div class="plan-top">
+            <button class="plan-tick" data-tick="${d.id}" aria-label="Mark day ${d.day} done">${isDone ? "✓" : ""}</button>
+            <div class="plan-main">
+              <div class="plan-daynum">Day ${d.day} · ${esc(d.subject)}</div>
+              <div class="plan-title">${esc(d.title)}</div>
+            </div>
+          </div>
+          <button class="ghost plan-go" data-go="${d.id}">${esc(action)} →</button>
+        </div>`;
+    }).join("");
+
+    el("plan-days").querySelectorAll("[data-tick]").forEach(b => {
+      b.addEventListener("click", e => {
+        e.stopPropagation();
+        const o = read(); const id = b.dataset.tick;
+        if (o[id]) delete o[id]; else o[id] = Date.now();
+        write(o); render();
+      });
+    });
+    el("plan-days").querySelectorAll("[data-go]").forEach(b => {
+      b.addEventListener("click", () => {
+        const d = days.find(x => x.id === b.dataset.go);
+        if (d.kind === "learn" && window.openLessonByKey) window.openLessonByKey(d.lessons[0].key);
+        else if (window.practiseSubject) window.practiseSubject(d.subject);
+      });
+    });
+  }
+
+  window.renderPlan = render;
   document.addEventListener("DOMContentLoaded", render);
   if (document.readyState !== "loading") render();
 })();

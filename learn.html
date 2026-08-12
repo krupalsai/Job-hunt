@@ -183,6 +183,21 @@
                    border-radius:10px; overflow:hidden; background:#0f172a;
                    border:1px solid var(--panel-border); }
   .ls-video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+  /* 4-week plan */
+  .plan-day{ padding:14px 16px; }
+  .plan-day.is-done{ opacity:.55; }
+  .plan-top{ display:flex; gap:12px; align-items:flex-start; }
+  .plan-tick{ flex:0 0 auto; width:26px; height:26px; border-radius:8px; cursor:pointer;
+              background:#0f172a; border:1px solid var(--panel-border); color:var(--bg);
+              font-weight:900; font-size:15px; line-height:1; }
+  .plan-day.is-done .plan-tick{ background:var(--accent); border-color:transparent; }
+  .plan-main{ flex:1; min-width:0; }
+  .plan-daynum{ font-size:10.5px; text-transform:uppercase; letter-spacing:.6px;
+                color:var(--dim); font-weight:700; }
+  .plan-title{ font-size:14px; font-weight:600; margin-top:3px; line-height:1.45; }
+  .plan-day.is-done .plan-title{ text-decoration:line-through; }
+  .plan-go{ margin-top:10px; padding:7px 12px; font-size:12.5px; width:100%; text-align:center; }
 </style>
 </head>
 <body>
@@ -278,13 +293,14 @@
   <!-- SCHEDULE -->
   <section id="schedule" class="tab-section hidden">
     <div class="card">
-      <h2>4-Week Day-by-Day Schedule</h2>
-      <table>
-        <thead><tr><th>Week</th><th>Focus</th><th>Daily Structure (5–6 hrs)</th></tr></thead>
-        <tbody id="schedule-body"></tbody>
-      </table>
-      <p class="muted" style="margin-top:10px;">Daily non-negotiables: 20 min current affairs, 20 min reasoning speed drill, error-log review.</p>
+      <h2>Your 4-Week Plan</h2>
+      <p class="muted" style="margin-top:-4px;">
+        One day at a time. Tap a day to open exactly what it asks for — the lesson, then the test,
+        then the practice. Tick it when it is done.
+      </p>
+      <div id="plan-progress" style="margin-top:12px;"></div>
     </div>
+    <div id="plan-days"></div>
   </section>
 
   <!-- STRATEGY -->
@@ -427,6 +443,7 @@ tabs.forEach(btn=>{
     document.getElementById(btn.dataset.tab).classList.remove('hidden');
     if(btn.dataset.tab === 'progress') renderProgress();
     if(btn.dataset.tab === 'learn' && window.renderLearnPath) window.renderLearnPath();
+    if(btn.dataset.tab === 'schedule' && window.renderPlan) window.renderPlan();
   });
 });
 
@@ -447,15 +464,8 @@ document.getElementById('topics-body').innerHTML = topicData.map(([subj,pri,sub]
   `<tr><td><strong>${subj}</strong></td><td><span class="pill ${pri.toLowerCase()}">${pri}</span></td><td>${sub}</td></tr>`
 ).join('');
 
-const scheduleData = [
-  ["Week 1","Foundation: DS, OS, DBMS basics","AM: 2h new topic (theory+examples) → PM: 1h topic MCQs (25-30 Qs) → Eve: 30 min Reasoning drill"],
-  ["Week 2","CN, COA, TOC + continued DS/OS/DBMS practice","AM: 2h new topic → PM: 1h mixed MCQs → Eve: 30 min English + 20 min GK"],
-  ["Week 3","Full syllabus revision + timed sectional tests","AM: 1.5h revision (formula sheets) → PM: 1 sectional mock (60 Qs/60 min) → Eve: error log review"],
-  ["Week 4","Full-length mocks + weak-area repair","Alternate days: full mock (160 Qs/150 min) → next day: review + fix weak topics. Last 2 days: light revision only"]
-];
-document.getElementById('schedule-body').innerHTML = scheduleData.map(([w,f,d])=>
-  `<tr><td><strong>${w}</strong></td><td>${f}</td><td>${d}</td></tr>`
-).join('');
+/* The 4-week plan is generated from the curriculum in prep/sync.js, so a
+   lesson added later appears in the plan instead of leaving it out of date. */
 
 /* ==========================================================================
    Bank indexing — a stable id per question, derived from its text, so progress
