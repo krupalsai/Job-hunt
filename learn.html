@@ -119,6 +119,10 @@
   .explain .trick-box{ border-left:3px solid var(--warn); padding:8px 0 8px 12px; background:#f59e0b12; border-radius:0 8px 8px 0; }
   .explain .trick-box .lbl{ color:var(--warn); }
   .explain .trick{ font-size:13.5px; line-height:1.55; }
+  .explain .why.again{ border-left:2px solid var(--accent-soft); padding-left:10px; }
+  .diagram{ margin:0; font-size:12px; line-height:1.5; color:var(--accent-soft); }
+  .explain-more{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  button.ghost.small{ padding:7px 12px; font-size:12.5px; }
 
   /* Rotation */
   .rotate-bar{
@@ -676,22 +680,91 @@ function renderQuestion(){
   });
 }
 
-function explainHTML(item, isCorrect, skipped){
+/* An explanation that did not land is not an explanation. Every one now has an
+   "I still don't get it" button that says it a different way, then a different
+   way again, and finally opens the lesson that teaches the whole topic — with
+   its video. It never runs out: the last step is always the full lesson.
+
+   Levels 1 and 2 are per-question and only exist where they have been written.
+   Level 3 is generated from the question itself — walking why each wrong option
+   is wrong is something we can always do. Level 4 is the lesson. */
+function explainHTML(item, isCorrect, skipped, level){
+  level = level || 0;
   const verdict = skipped
     ? `<span style="color:var(--muted)">Skipped — the answer is <strong style="color:var(--good)">${item.opts[item.correct]}</strong></span>`
     : isCorrect
       ? `<span style="color:var(--good)">✓ Correct</span>`
       : `<span style="color:var(--bad)">✗ Not quite — the answer is <strong style="color:var(--good)">${item.opts[item.correct]}</strong></span>`;
-  return `<div class="explain">
+
+  const steps = explainSteps(item);
+  const shown = steps.slice(0, level + 1);
+  const more  = level + 1 < steps.length;
+  const lesson = lessonForTopic(item.topic);
+
+  return `<div class="explain" data-qid="${item.id}" data-level="${level}">
     <div class="verdict">${verdict}</div>
-    <div class="lbl">Why</div>
-    <div class="why">${item.why}</div>
+    ${shown.map((s, i) => `
+      <div class="lbl">${s.label}</div>
+      <div class="why${i > 0 ? ' again' : ''}">${s.body}</div>`).join('')}
     <div class="trick-box">
       <div class="lbl">Remember it</div>
       <div class="trick">${item.trick}</div>
     </div>
+    <div class="explain-more">
+      ${more ? `<button class="ghost small" data-again="${item.id}">Explain it another way</button>` : ''}
+      ${lesson ? `<button class="ghost small" data-lesson="${lesson.key}">📖 Teach me this topic${lesson.video ? ' (with video)' : ''}</button>` : ''}
+    </div>
   </div>`;
 }
+
+/** The ladder of explanations for one question, shortest first. */
+function explainSteps(item){
+  const steps = [{ label: 'Why', body: item.why }];
+  // A picture first where one exists. "Draw the generations on paper" is sound
+  // advice and useless on a phone — if the diagram is the explanation, the app
+  // should draw it. Seeing the same shape repeatedly is how it becomes
+  // something you can picture in the exam without drawing anything.
+  if (item.diagram) steps.push({ label: 'Picture it', body: `<pre class="ls-c diagram">${item.diagram}</pre>` });
+  if (item.deeper) steps.push({ label: 'Put another way', body: item.deeper });
+  if (item.worked) steps.push({ label: 'Step by step', body: item.worked });
+  // Always available: eliminate the wrong options one at a time. When you cannot
+  // see why the right answer is right, seeing why the others are wrong often
+  // gets you there from the other side.
+  const wrong = item.opts.map((o, i) => ({ o, i })).filter(x => x.i !== item.correct);
+  steps.push({
+    label: 'Rule the others out',
+    body: `The answer is <strong>${item.opts[item.correct]}</strong>. Work by elimination — for each of `
+        + wrong.map(x => `<em>${x.o}</em>`).join(', ')
+        + `, ask what would have to be true for it to be right. If you cannot make a case for it, it is out. `
+        + `In the exam this is often faster than proving the right answer directly, and with four options it always works.`
+  });
+  return steps;
+}
+
+/** The lesson that teaches a topic, if one exists. */
+function lessonForTopic(topic){
+  if (typeof CURRICULUM === 'undefined') return null;
+  return CURRICULUM.find(l => l.topic === topic) || null;
+}
+
+/* Delegated so it works in the live quiz and in the review list alike. */
+document.addEventListener('click', function(e){
+  const again = e.target.closest && e.target.closest('[data-again]');
+  if (again) {
+    const box = again.closest('.explain');
+    const lvl = parseInt(box.dataset.level, 10) + 1;
+    // Prefer the recorded answer: it carries `chosen`, so the verdict line stays
+    // correct. currentQuiz holds the question but not what was picked, and using
+    // it would tell someone they were wrong when they were right.
+    const item = answers.filter(a => a.id === box.dataset.qid).pop()
+              || (currentQuiz[currentIndex] || {});
+    if (!item.opts) return;
+    box.outerHTML = explainHTML(item, item.chosen === item.correct, item.chosen === -1, lvl);
+    return;
+  }
+  const les = e.target.closest && e.target.closest('[data-lesson]');
+  if (les && window.openLessonByKey) window.openLessonByKey(les.dataset.lesson);
+});
 
 function selectAnswer(idx){
   const item = currentQuiz[currentIndex];

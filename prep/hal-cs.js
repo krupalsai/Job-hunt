@@ -20,6 +20,7 @@ const QUESTION_BANK = {
   {q:"What is the worst-case time complexity of QuickSort?",
    opts:["O(n log n)","O(n²)","O(log n)","O(n)"], correct:1,
    why:"The worst case is when the pivot is always the smallest or largest element, so one partition holds n−1 items and the other holds none. That gives n + (n−1) + (n−2) + … = O(n²). A already-sorted array with a naive first-element pivot triggers exactly this.",
+   deeper:"Think about what QuickSort does: it picks one element (the pivot) and splits the rest into 'smaller' and 'bigger'. It is fast when the split is even, because the problem halves. The disaster case is when the pivot is the smallest or largest value every single time — then one side gets everything and the other gets nothing, so instead of halving you only remove one element per pass. Doing n passes of n work is n², and an already-sorted list with a naive pivot does exactly this.",
    trick:"Quick on average, quicksand at worst — a sorted array is what it sinks in."},
 
   {q:"Which data structure manages recursion (function calls)?",
@@ -30,6 +31,7 @@ const QUESTION_BANK = {
   {q:"In a max-heap, where is the largest element located?",
    opts:["Leaf node","Root node","Left child of root","Any node"], correct:1,
    why:"The heap property says every parent is ≥ its children. Apply that all the way up and the maximum can only sit at the top.",
+   diagram:"          50        \u2190 root: the maximum\n         /  \\\n       30    40\n      /  \\   /\n    10   20 35\n\nEvery parent \u2265 both of its children.\nFollow that rule upward from anywhere and\nyou always arrive at the top, so the largest\nvalue can only sit at the ROOT.\n\nNote 35 > 30 but sits lower \u2014 a heap is NOT sorted.",
    trick:"Max-heap is a mountain — the biggest thing is at the peak."},
 
   {q:"Time complexity of searching in a balanced BST?",
@@ -40,6 +42,7 @@ const QUESTION_BANK = {
   {q:"Which traversal of a BST gives elements in sorted order?",
    opts:["Preorder","Postorder","Inorder","Level order"], correct:2,
    why:"Inorder visits Left → Node → Right. A BST keeps smaller keys left and larger keys right, so this emits them ascending.",
+   diagram:"        8\n       / \\\n      3   10\n     / \\    \\\n    1   6    14\n\nInorder = Left, Node, Right.\nGo as far LEFT as possible, take the node,\nthen its RIGHT, and repeat:\n\n  1, 3, 6, 8, 10, 14   \u2190 sorted\n\nBecause a BST puts smaller on the left,\n'leftmost first' IS 'smallest first'.",
    trick:"IN-order gives INcreasing order. Same first three letters."},
 
   {q:"Which data structure uses FIFO order?",
@@ -158,11 +161,13 @@ const QUESTION_BANK = {
   {q:"Which page replacement algorithm suffers from Belady's anomaly?",
    opts:["LRU","Optimal","FIFO","LFU"], correct:2,
    why:"Belady's anomaly is more frames producing MORE page faults. FIFO exhibits it because it ignores usage. Stack algorithms like LRU and Optimal are provably immune.",
+   deeper:"Normally, giving a program more memory can only help. Belady found that FIFO can actually fault MORE with more frames, which feels impossible. It happens because FIFO evicts by age alone — it never looks at whether a page is still being used. With more frames the eviction ORDER changes, and it can end up throwing out exactly the page needed next. LRU cannot do this, because it evicts by usage, and adding frames can only ever keep more of the recently used pages.",
    trick:"Belady = Bad = FIFO. More frames should help; only FIFO is dumb enough to get worse."},
 
   {q:"A semaphore used to enforce mutual exclusion is initialised to?",
    opts:["0","1","−1","n (number of processes)"], correct:1,
    why:"A binary semaphore starting at 1 lets exactly one process into the critical section; the next wait() blocks until a signal(). Starting at 0 would block everyone; starting at n would let n in at once.",
+   deeper:"Read the starting number as 'how many are allowed in at once'. Mutual exclusion means one at a time, so it starts at 1: the first process takes the key, the counter drops to 0, and everyone else waits until it is handed back. Start it at 0 and nobody can ever get in. Start it at n and n processes walk in together, which is the opposite of what mutual exclusion means.",
    trick:"Mutex = one key for one door = 1. Counting semaphore for n resources = n."},
 
   {q:"Banker's algorithm is used for deadlock —",
@@ -246,6 +251,7 @@ const QUESTION_BANK = {
   {q:"A relation is in 2NF if it is in 1NF and has no:",
    opts:["Transitive dependency","Partial dependency on a candidate key","Multi-valued dependency","Join dependency"], correct:1,
    why:"Partial dependency means a non-prime attribute depends on part of a composite key rather than the whole key. It can only arise when the key has more than one attribute — a relation with a single-attribute key is automatically in 2NF.",
+   deeper:"Partial dependency only makes sense when the key is made of more than one column. Say the key is (student_id, course_id). 'Grade' genuinely needs both — you cannot know a grade from the student alone. But 'student_name' needs only student_id, which is HALF the key. That half-dependency is the partial dependency 2NF forbids. If your key is a single column, there is no half of it to depend on, so the relation is already in 2NF.",
    trick:"1NF atomic · 2NF no PARTIAL · 3NF no TRANSITIVE · BCNF every determinant is a key. Chant it in that order."},
 
   {q:"Which SQL clause filters GROUPS after aggregation?",
@@ -364,6 +370,7 @@ const QUESTION_BANK = {
   {q:"How many usable host addresses are in a /28 subnet?",
    opts:["16","14","30","32"], correct:1,
    why:"/28 leaves 32 − 28 = 4 host bits, so 2⁴ = 16 addresses. Subtract the network address and the broadcast address: 14 usable.",
+   deeper:"The /28 says 28 of the 32 bits name the network, so 4 bits are left for hosts. Four bits can count 2⁴ = 16 different values. But two of those sixteen are reserved and cannot be given to a machine: the all-zeros one names the network itself, and the all-ones one is the broadcast address. 16 − 2 = 14 usable.",
    trick:"Usable hosts = 2^(32−prefix) − 2. Always minus 2 — one for the network, one for broadcast."},
 
   {q:"Which protocol resolves domain names to IP addresses?",
@@ -739,6 +746,7 @@ const QUESTION_BANK = {
   {q:"Complete the series: 2, 6, 12, 20, 30, ?",
    opts:["40","42","36","44"], correct:1,
    why:"Differences are 4, 6, 8, 10 — increasing by 2 — so the next difference is 12, giving 42. Equivalently each term is n(n+1): 1×2, 2×3, 3×4, 4×5, 5×6, 6×7 = 42.",
+   deeper:"Write the gaps under the numbers: from 2 to 6 is 4, from 6 to 12 is 6, from 12 to 20 is 8, from 20 to 30 is 10. Those gaps go 4, 6, 8, 10 — climbing by 2 each time. So the next gap must be 12, and 30 + 12 = 42.",
    trick:"Always write the differences underneath first. If they are not obvious, try the differences of the differences."},
 
   {q:"Complete the series: 3, 8, 15, 24, 35, ?",
@@ -749,6 +757,7 @@ const QUESTION_BANK = {
   {q:"Complete the series: 1, 1, 2, 3, 5, 8, ?",
    opts:["11","12","13","15"], correct:2,
    why:"Fibonacci — each term is the sum of the two before it. 5 + 8 = 13.",
+   deeper:"Look at the numbers as pairs. 1+1 makes the 2. Then 1+2 makes the 3. Then 2+3 makes the 5, and 3+5 makes the 8. Every number is built from the two sitting immediately to its left, so the next one is 5+8 = 13. Nothing is multiplied or squared — it is only ever addition of the two most recent terms.",
    trick:"If differences go nowhere, test whether adding the previous two terms works. Fibonacci appears constantly."},
 
   {q:"If LOTUS is coded as MPUVT, how is ROSE coded?",
@@ -759,11 +768,13 @@ const QUESTION_BANK = {
   {q:"Pointing to a photo a man says, 'I have no brother or sister, but that man's father is my father's son.' Who is in the photo?",
    opts:["His father","His son","Himself","His nephew"], correct:1,
    why:"With no siblings, 'my father's son' can only be the speaker himself. So the man in the photo has the speaker as his father — the photo is of his son.",
+   diagram:"my father\n\u2502\n\u2502  \"my father's son\" \u2014 and I have no brothers,\n\u2502  so that son can only be ME\n\u2502\nME  \u2190 so I am 'that man's father'\n\u2502\n\u2502\nthat man   \u2190 the man in the photo\n\nI am his father \u2192 he is my SON.",
    trick:"Solve blood relations from the INSIDE out. 'My father's son' with no brothers always resolves to the speaker."},
 
   {q:"A man walks 5 km north, turns right and walks 3 km, then turns right and walks 5 km. How far is he from the start?",
    opts:["3 km","5 km","8 km","13 km"], correct:0,
    why:"North 5, then east 3, then south 5. The two vertical legs cancel exactly, leaving him 3 km east of the start.",
+   diagram:"START \u25cf\n      \u2502\n      \u2502 5 km north\n      \u2502\n      \u25cf\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25cf  3 km east (right turn)\n              \u2502\n              \u2502 5 km south (right again)\n              \u2502\n      \u25cf\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u25cf  END\n\nThe 5 north and the 5 south cancel exactly.\nOnly the 3 km east is left \u2192 3 km from the start.",
    trick:"Draw it. Opposite legs cancel; only the leftover legs count. If two remain, use Pythagoras."},
 
   {q:"All roses are flowers. Some flowers fade quickly. Which follows?",
@@ -829,6 +840,7 @@ const QUESTION_BANK = {
   {q:"A is B's sister, C is B's mother, D is C's father. How is A related to D?",
    opts:["Daughter","Granddaughter","Grandmother","Sister"], correct:1,
    why:"A and B are siblings, so C is A's mother too. D is C's father, so D is A's grandfather — making A his granddaughter.",
+   diagram:"D          \u2190 oldest generation\n\u2502          (C's father, so the grandfather)\n\u2502\nC          \u2190 middle generation\n\u2502          (mother of both A and B)\n\u2502\n\u250c\u2500\u2500\u2534\u2500\u2500\u2510\nA     B    \u2190 youngest generation\n           (A is B's sister, so same level)\n\nCount the steps from A up to D: two levels.\nTwo levels up = grandparent, so A is D's GRANDdaughter.",
    trick:"Draw the generations as levels on paper. Every 'father/mother of' moves you up one level; 'sister of' stays on the same level."},
 
   {q:"Which number is a prime?",
@@ -893,9 +905,73 @@ const QUESTION_BANK = {
    opts:["Sovereign Socialist Secular Democratic Republic","Sovereign Democratic Monarchy","Federal Socialist Union","Sovereign Communist Republic"], correct:0,
    why:"The words 'Socialist' and 'Secular' were inserted by the 42nd Amendment in 1976; the original Preamble read 'Sovereign Democratic Republic'.",
    trick:"Order: Sovereign, Socialist, Secular, Democratic, Republic. Socialist and Secular are the 1976 additions."}
+],
+
+/* ─────────────────── QUANTITATIVE APTITUDE (SSC CGL) ─────────────────── */
+"Quantitative Aptitude": [
+  {q:"A shopkeeper marks an item 40% above cost and gives a 25% discount. His profit percent is?",
+   opts:["5%","10%","15%","No profit"], correct:0,
+   why:"Take cost = 100. Marked price = 140. Selling price = 140 × 0.75 = 105. Profit = 5 on 100 = 5%.",
+   trick:"Always set cost = 100 for percentage questions. Successive changes multiply: 1.40 × 0.75 = 1.05."},
+  {q:"If A can do a job in 12 days and B in 18 days, together they take?",
+   opts:["7.2 days","6 days","15 days","30 days"], correct:0,
+   why:"Work per day: 1/12 + 1/18 = 3/36 + 2/36 = 5/36. Time = 36/5 = 7.2 days.",
+   trick:"Take LCM of the days as total work: LCM(12,18)=36 units. A does 3/day, B does 2/day, together 5/day → 36/5."},
+  {q:"A train 150 m long running at 72 km/h crosses a pole in?",
+   opts:["7.5 s","10 s","15 s","20 s"], correct:0,
+   why:"72 km/h × 5/18 = 20 m/s. Crossing a POLE means covering only its own length: 150/20 = 7.5 s.",
+   trick:"km/h → m/s: multiply by 5/18. Pole = train's length only. Platform = train + platform."},
+  {q:"The average of 5 numbers is 30. If one number is removed the average becomes 28. The removed number is?",
+   opts:["38","32","36","40"], correct:0,
+   why:"Total was 5 × 30 = 150. Remaining four total 4 × 28 = 112. Removed = 150 − 112 = 38.",
+   trick:"Averages are totals in disguise. Convert to totals, subtract, convert back."},
+  {q:"Simple interest on ₹5000 at 8% for 3 years is?",
+   opts:["₹1200","₹1400","₹1000","₹1600"], correct:0,
+   why:"SI = P×R×T/100 = 5000 × 8 × 3 / 100 = 1200.",
+   trick:"SI = PRT/100. Compound interest for 2 years = P[(1+R/100)² − 1]; the difference between CI and SI over 2 years is PR²/10000."},
+  {q:"If 20% of a number is 45, the number is?",
+   opts:["225","180","270","900"], correct:0,
+   why:"20% = 45, so 1% = 2.25, so 100% = 225. Or directly: 45 × 100/20 = 225.",
+   trick:"Find 1% first, then scale. It works for any percentage question without algebra."},
+  {q:"The ratio of two numbers is 3:5 and their sum is 64. The larger number is?",
+   opts:["40","24","32","45"], correct:0,
+   why:"3 + 5 = 8 parts = 64, so one part = 8. Larger = 5 × 8 = 40.",
+   trick:"Add the ratio parts, divide the total by that, then scale. Never set up two equations."},
+  {q:"A sum doubles in 8 years at simple interest. In how many years will it triple?",
+   opts:["16 years","12 years","24 years","20 years"], correct:0,
+   why:"Doubling means the interest equalled the principal in 8 years. Tripling needs interest of 2× principal, which at the same flat rate takes 16 years.",
+   trick:"Under SIMPLE interest, interest grows linearly: double = P in 8 yrs, triple = 2P in 16. Compound interest does not work this way."},
+  {q:"The area of a circle is 154 cm². Its circumference is (π = 22/7)?",
+   opts:["44 cm","49 cm","22 cm","88 cm"], correct:0,
+   why:"πr² = 154 → r² = 154 × 7/22 = 49 → r = 7. Circumference = 2πr = 2 × 22/7 × 7 = 44 cm.",
+   trick:"When π = 22/7 appears, the radius is almost always a multiple of 7. Solve for r first."},
+  {q:"What is the value of 15% of 40% of 500?",
+   opts:["30","60","75","20"], correct:0,
+   why:"40% of 500 = 200. 15% of 200 = 30. Percentages multiply: 0.15 × 0.40 × 500 = 30.",
+   trick:"Work outward-in, or just multiply the decimals. Order does not matter."},
+  {q:"A boat goes 20 km downstream in 2 hours and returns in 4 hours. The speed of the stream is?",
+   opts:["2.5 km/h","5 km/h","7.5 km/h","10 km/h"], correct:0,
+   why:"Downstream speed = 10 km/h, upstream = 5 km/h. Stream = (10 − 5)/2 = 2.5 km/h.",
+   trick:"Boat = (down + up)/2, stream = (down − up)/2. Two formulas cover every boat question."},
+  {q:"The LCM of two numbers is 84 and their HCF is 7. If one number is 21, the other is?",
+   opts:["28","12","24","42"], correct:0,
+   why:"Product of the numbers = LCM × HCF = 84 × 7 = 588. Other = 588/21 = 28.",
+   trick:"a × b = LCM × HCF. Always true for exactly two numbers — never for three."},
+  {q:"If the price of sugar rises 25%, by what percent must consumption fall to keep spending the same?",
+   opts:["20%","25%","15%","30%"], correct:0,
+   why:"Spending = price × quantity. New price is 1.25×, so quantity must be 1/1.25 = 0.8, a 20% fall.",
+   trick:"For a rise of R%, the reduction is 100R/(100+R). A 25% rise needs a 20% cut, not 25%."},
+  {q:"A number is increased by 20% then decreased by 20%. The net change is?",
+   opts:["4% decrease","No change","4% increase","20% decrease"], correct:0,
+   why:"1.20 × 0.80 = 0.96, a 4% decrease. The decrease applies to the larger amount, so it outweighs the rise.",
+   trick:"Equal up-then-down percentages always LOSE. Net = −x²/100, so ±20% gives −4%."},
+  {q:"Find the compound interest on ₹8000 at 10% per annum for 2 years.",
+   opts:["₹1680","₹1600","₹1700","₹1760"], correct:0,
+   why:"Amount = 8000 × 1.1² = 8000 × 1.21 = 9680. CI = 9680 − 8000 = 1680. (SI would be 1600; the extra 80 is interest on the first year's interest.)",
+   trick:"CI − SI over 2 years = P(R/100)². Here 8000 × 0.01 = 80 — check your answer against it."},
 ]
 };
 
-/* Current affairs deliberately excluded: a hard-coded bank goes stale and would
-   teach you last year's news as if it were true. 15 minutes of daily headlines
-   covers those 20 marks far better than any static list. */
+/* Current affairs deliberately excluded from this file: a hard-coded news bank
+   goes stale and would teach last year's headlines as fact. prep/current-affairs.js
+   is refreshed by the scheduled run instead, with a date and source on every item. */

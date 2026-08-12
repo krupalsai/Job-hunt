@@ -407,7 +407,7 @@ const CURRICULUM = [
     {p: "But 2PL does NOT prevent deadlock — two transactions can each hold what the other needs. That is why databases run a deadlock detector and abort a victim."},
     {k: "2PL buys correctness, not liveness. It still deadlocks; that is why a wait-for graph exists."},
   ],
-},,
+},
 
 /* ────────────────────────── COMPUTER NETWORKS ────────────────────────── */
 {

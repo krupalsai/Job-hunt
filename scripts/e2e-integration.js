@@ -64,7 +64,7 @@ function check(name, cond, detail){
     (await page.title()).includes('Prep'), await page.title());
   check('no missing local files on the prep page', notFound.length === 0, notFound.join(', '));
   check('the question bank loaded', await page.evaluate(()=>typeof QUESTION_BANK === 'object'));
-  check('all 170 questions are indexed', await page.evaluate(()=>ALL.length) === 170);
+  check('all 185 questions are indexed', await page.evaluate(()=>ALL.length) === 185);
 
   console.log('\n── and the prep reaches back ────────────────────────────');
   const back = page.locator('a.back');

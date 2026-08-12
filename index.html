@@ -70,8 +70,13 @@
                    border:1px solid #1e293b; background:#0f172a; color:#e2e8f0; cursor:pointer; }
   .btn-y.on { background:#22c55e; color:#0b1120; border-color:transparent; }
   .applied-tag { font-size:11px; font-weight:700; color:#4ade80; }
-  .syllabus-link { display:inline-block; margin-top:8px; font-size:12.5px; font-weight:600;
-                   color:#4ade80; text-decoration:none; }
+  .syllabus-link { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
+                   color:#0b1120; background:#22c55e; padding:8px 14px; border-radius:8px;
+                   text-decoration:none; }
+  .syllabus-box { margin-top:10px; padding:12px; border-radius:10px;
+                  background:#0f172a; border:1px solid #22c55e33; }
+  .syllabus-pattern { font-size:12px; color:#4ade80; font-weight:600; }
+  .syllabus-sections { font-size:12px; color:#94a3b8; margin-top:4px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -104,6 +109,7 @@
 <div class="list" id="list"><div class="empty">Loading jobs…</div></div>
 <button class="refresh" onclick="load()">↻</button>
 
+<script src="/prep/exams.js"></script>
 <script>
 const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
@@ -175,14 +181,20 @@ function setApplied(jobId, yes) {
   render();
 }
 
-/* Which prep exists for which employer. Only claim a syllabus we actually
-   have — pointing someone at an empty page is worse than saying nothing. */
+/* Which syllabus belongs to which job — see prep/exams.js. Claiming coverage we
+   do not have is worse than admitting none, because the person then studies the
+   wrong thing. */
 function syllabusFor(job) {
-  const org = (job.organization || '').toLowerCase();
-  if (org.indexOf('hindustan aeronautics') !== -1 || org.indexOf('hal') === 0) {
-    return { url: '/learn.html', label: 'Study for this — HAL CS syllabus, lessons and 170 questions' };
-  }
-  return null;
+  const exam = examForJob(job);
+  if (!exam) return null;
+  const marks = exam.sections.reduce((n, s) => n + s.marks, 0);
+  return {
+    url: '/learn.html?exam=' + encodeURIComponent(exam.key),
+    label: 'Open the full ' + exam.short + ' syllabus',
+    detail: exam.sections.map(s => s.name + ' (' + s.marks + ')').join(' · '),
+    pattern: exam.pattern,
+    marks: marks,
+  };
 }
 
 async function load() {
@@ -257,11 +269,16 @@ function render() {
           : `<span class="applied-q">Have you applied?</span>
              <button class="btn-y" data-apply="${j.id}">Yes</button>`}
       </div>
-      ${applied[j.id] && syllabusFor(j)
-        ? `<a class="syllabus-link" href="${syllabusFor(j).url}">📚 ${escapeHtml(syllabusFor(j).label)} →</a>`
-        : applied[j.id]
-          ? `<div class="applied-q" style="margin-top:8px;">No syllabus in the app for this one yet.</div>`
-          : ''}
+      ${applied[j.id] ? (syllabusFor(j)
+        ? `<div class="syllabus-box">
+             <div class="syllabus-pattern">${escapeHtml(syllabusFor(j).pattern)}</div>
+             <div class="syllabus-sections">${escapeHtml(syllabusFor(j).detail)}</div>
+             <a class="syllabus-link" href="${syllabusFor(j).url}">📚 ${escapeHtml(syllabusFor(j).label)} →</a>
+           </div>`
+        : `<div class="syllabus-box">
+             <div class="applied-q">No syllabus written for this one yet. The scheduled
+             run adds exams as they are applied for — it will pick this up.</div>
+           </div>`) : ''}
     </div>
   `).join('');
 

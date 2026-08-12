@@ -359,6 +359,16 @@
     openLesson(l.subject, i);
   };
 
+  /** Back to the subject list from anywhere. Exposed because other screens
+      (and tests) need a reliable way home that does not depend on which button
+      happens to be on screen. */
+  window.learnGoHome = function () {
+    view = { level: "subjects", subject: null };
+    if (el("learn-reader")) el("learn-reader").classList.add("hidden");
+    if (el("learn-list")) el("learn-list").classList.remove("hidden");
+    render();
+  };
+
   window.renderLearnPath = render;
   document.addEventListener("DOMContentLoaded", render);
   if (document.readyState !== "loading") render();

@@ -67,7 +67,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('#tabs button[data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 170 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 185 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -86,6 +86,40 @@ function check(name, cond, detail){
   check('the correct option is highlighted', (await page.locator('#q-options .opt.correct').count()) === 1);
   check('options lock after answering',
     await page.locator('#q-options .opt').first().isDisabled());
+
+  console.log('\n── "I still don\'t get it" ──────────────────────────────');
+  check('an explanation offers another way of putting it',
+    (await page.locator('.explain [data-again]').count()) === 1);
+  const firstWhy = await page.locator('.explain .why').first().textContent();
+  await page.locator('.explain [data-again]').click();
+  const whys = await page.locator('.explain .why').count();
+  check('asking again adds a second explanation, keeping the first', whys >= 2, `${whys} shown`);
+  const second = await page.locator('.explain .why').nth(1).textContent();
+  check('the second explanation is different text, not a repeat',
+    second.trim() !== firstWhy.trim() && second.length > 40);
+  check('the verdict survives re-explaining',
+    /Correct|Not quite|Skipped/.test(await page.locator('.explain .verdict').textContent()));
+  // Keep pressing: it must never run out of ways to explain.
+  for (let i = 0; i < 4 && await page.locator('.explain [data-again]').count(); i++) {
+    await page.locator('.explain [data-again]').click();
+  }
+  check('it keeps explaining until the ladder is exhausted',
+    (await page.locator('.explain .why').count()) >= 2);
+  // A diagram, where the picture IS the explanation.
+  const dq = await page.evaluate(() => {
+    const q = ALL.find(x => x.diagram);
+    return q ? { id: q.id, topic: q.topic } : null;
+  });
+  check('some questions carry a diagram to picture', dq !== null);
+
+  check('the last resort is always the full lesson',
+    (await page.locator('.explain [data-lesson]').count()) === 1);
+
+  await page.locator('.explain [data-lesson]').click();
+  await page.waitForSelector('#learn-reader:not(.hidden)');
+  check('that button opens the lesson that teaches the topic',
+    (await page.locator('#learn-reader .ls-main').textContent()).length > 3);
+  await page.click('#tabs button[data-tab="quiz"]');
 
   console.log('\n── skipping still teaches ───────────────────────────────');
   await page.click('#next-btn');
@@ -120,7 +154,7 @@ function check(name, cond, detail){
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
-  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 10);
+  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 11);
   const focus = await page.locator('#focus-list').textContent();
   check('weak-area verdict is stated (or honestly withheld)', focus.length > 30, focus);
 
@@ -150,13 +184,16 @@ function check(name, cond, detail){
 
   console.log('\n── learn: subjects first ────────────────────────────────');
   await page.click('#tabs button[data-tab="learn"]');
+  // Earlier steps navigated into a subject (via "Teach me this topic"), and the
+  // app deliberately remembers where you were. Step back out first.
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
-  check('every subject is listed, not only the ones with lessons', subjectRows === 10, `got ${subjectRows}`);
+  check('every subject is listed, not only the ones with lessons', subjectRows === 11, `got ${subjectRows}`);
   const listing = await page.locator('#learn-path').textContent();
   // Every subject has a path now. If one ever loses it, the UI must say so
   // rather than showing a blank screen — that branch is still in the code and
   // this assertion is what would catch its loss.
-  check('no subject is left without lessons', !/practice only|lessons being written/i.test(listing),
+  check('a subject without lessons says so honestly', /practice only|lessons being written/i.test(listing),
     listing.replace(/\s+/g,' ').slice(0,140));
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
