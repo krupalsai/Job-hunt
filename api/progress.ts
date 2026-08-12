@@ -89,8 +89,12 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json({
       topics,
       total_answered: topics.reduce((n: number, t: any) => n + t.answered, 0),
+      // Reaching this line means the database was read successfully — the
+      // handler returns 500 above if the credentials are missing. So an empty
+      // result means nobody has practised, NOT a misconfiguration. Saying
+      // otherwise would send the mentor run chasing a problem that is not there.
       note: topics.length === 0
-        ? "No attempts recorded yet. Either nobody has used the app, or SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are unset in Vercel so writes are failing."
+        ? "No practice recorded yet. The database is reachable and writes are working — there is simply nothing answered so far."
         : undefined,
     });
   }
