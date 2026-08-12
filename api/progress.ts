@@ -30,6 +30,7 @@ const TOPICS = new Set([
   "Data Structures", "Operating Systems", "DBMS", "Computer Networks", "COA",
   "Theory of Computation", "Programming & OOP", "Software Engineering",
   "Reasoning & English", "General Awareness",
+  "Quantitative Aptitude",   // SSC CGL; added with the SSC syllabus
 ]);
 
 const QUALIFICATIONS = new Set(["B.Tech CSE", "Intermediate", "Graduate"]);
@@ -143,20 +144,38 @@ export default async function handler(req: any, res: any) {
         // Every row is validated. One bad row rejects the batch rather than
         // being silently dropped — a silently missing answer would quietly
         // skew the weak-area maths, which is the whole point of this table.
+        // A malformed row is rejected, but an UNKNOWN TOPIC is not the client
+        // misbehaving — it is this list being out of date with the question
+        // bank, which is exactly what happened when Quantitative Aptitude was
+        // added for SSC CGL. Rejecting the batch for that reason threw away
+        // every other answer in it, so a single Quant question could destroy a
+        // whole quiz's progress. Skip what we do not recognise, keep the rest,
+        // and report it so the gap is visible.
         const clean = [];
+        const skippedTopics: string[] = [];
         for (const r of rows) {
-          if (!isQid(r?.qid) || !TOPICS.has(r?.topic) ||
-              typeof r?.correct !== "boolean" || typeof r?.skipped !== "boolean") {
+          if (!isQid(r?.qid) || typeof r?.correct !== "boolean" || typeof r?.skipped !== "boolean") {
             return res.status(400).json({ error: "Bad attempt row." });
+          }
+          if (!TOPICS.has(r.topic)) {
+            if (skippedTopics.indexOf(r.topic) === -1) skippedTopics.push(String(r.topic).slice(0, 40));
+            continue;
           }
           clean.push({
             device_id: deviceId, qid: r.qid, topic: r.topic,
             correct: r.correct, skipped: r.skipped,
           });
         }
+        if (clean.length === 0) {
+          return res.status(400).json({ error: "No recognised attempts.", unknown_topics: skippedTopics });
+        }
         const { error } = await db.from("study_attempts").insert(clean);
         if (error) throw error;
-        return res.status(200).json({ ok: true, recorded: clean.length });
+        if (skippedTopics.length) console.warn("[progress] unknown topics skipped:", skippedTopics);
+        return res.status(200).json({
+          ok: true, recorded: clean.length,
+          unknown_topics: skippedTopics.length ? skippedTopics : undefined,
+        });
       }
 
       case "lesson": {
