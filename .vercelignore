@@ -1,0 +1,10 @@
+# Vercel serves the repo root as static files, so anything committed here is
+# reachable at a URL. These are development-only and have no business being
+# served: test suites, and the SQL migration history.
+#
+# lib/ is deliberately NOT listed — api/ingest.ts imports it, so excluding it
+# would break the ingestion function's build. It contains no secrets (the
+# service-role key is read from the environment), and the repo is public
+# anyway, so serving that one file costs nothing.
+scripts/
+supabase/
