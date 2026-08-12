@@ -317,6 +317,37 @@ function check(name, cond, detail){
       typeof row.qid === 'string' && typeof row.topic === 'string' && typeof row.correct === 'boolean');
   }
 
+  console.log('\n── ?exam= switches the whole syllabus ──────────────────');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ssc-cgl`, { waitUntil: 'networkidle' });
+  const h1 = await page.locator('header h1').textContent();
+  check('the header names the exam being studied', /SSC CGL/i.test(h1), h1);
+  const sub = await page.locator('header .sub').textContent();
+  check('SSC CGL warns that wrong answers lose marks', /lose marks/i.test(sub), sub);
+
+  await page.click('#tabs button[data-tab="learn"]');
+  const names = await page.locator('#learn-path [data-subject]')
+    .evaluateAll(els => els.map(e => e.getAttribute('data-subject')));
+  check('only SSC subjects are offered',
+    names.indexOf('Quantitative Aptitude') !== -1 &&
+    names.indexOf('Theory of Computation') === -1 &&
+    names.indexOf('DBMS') === -1,
+    names.join(' | '));
+
+  await page.click('#tabs button[data-tab="quiz"]');
+  const tags = await page.locator('#topic-tags .tag').allTextContents();
+  check('the quiz offers only SSC topics',
+    !tags.some(t => /Operating Systems|DBMS/.test(t)), tags.join(' | '));
+
+  await page.click('#tabs button[data-tab="schedule"]');
+  const planText = await page.locator('#plan-days').textContent();
+  check('the 4-week plan follows the SSC syllabus, not HAL',
+    !/Operating Systems|DBMS/.test(planText));
+
+  // And the default page is unchanged.
+  await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
+  check('no ?exam= still gives the full HAL syllabus',
+    /HAL/i.test(await page.locator('header h1').textContent()));
+
   console.log('\n── progress survives a reload ───────────────────────────');
   const before = await page.evaluate(()=>JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered);
   await page.reload({ waitUntil: 'networkidle' });

@@ -121,10 +121,65 @@
            lesson_read: !!all[key].read, mastered: !!all[key].mastered }).catch(() => {});
   }
 
-  /* Every subject in the bank, whether or not it has lessons yet. Showing only
-     the three with a path would hide seven subjects that are still examined. */
+  /* ── Which exam am I preparing for? ──────────────────────────────────────
+     The page is reached as /learn.html?exam=ssc-cgl from the job list. Without
+     this the SSC CGL button landed on the HAL page unchanged — the right
+     content nowhere in sight and the wrong exam's pattern in the header, which
+     is worse than the "no syllabus yet" message it replaced.
+
+     No parameter means the HAL syllabus, which is what the standalone prep
+     link has always meant. */
+  const CURRENT_EXAM = (function () {
+    if (typeof EXAMS === "undefined") return null;
+    const key = new URLSearchParams(location.search).get("exam");
+    return EXAMS.find(e => e.key === key) || null;
+  })();
+
+  /* Retitle the page for the exam actually being studied. */
+  (function () {
+    if (!CURRENT_EXAM) return;
+    const h1 = document.querySelector("header h1");
+    const sub = document.querySelector("header .sub");
+    if (h1) h1.textContent = "🧠 " + CURRENT_EXAM.name;
+    if (sub) {
+      sub.textContent = CURRENT_EXAM.pattern;
+      if (CURRENT_EXAM.negative) {
+        // Negative marking changes exam-hall behaviour completely: on HAL you
+        // guess everything, on SSC CGL a blind guess costs you. Saying it in
+        // the header means it cannot be missed.
+        sub.innerHTML += ' <strong style="color:#f87171">· wrong answers lose marks</strong>';
+      }
+    }
+    document.title = CURRENT_EXAM.short + " Prep · Job Tracker";
+  })();
+
+  /** The subjects this exam examines — all of them when no exam is named. */
+  function examSubjects() {
+    if (!CURRENT_EXAM) return Object.keys(QUESTION_BANK);
+    return subjectsForExam(CURRENT_EXAM).filter(x => QUESTION_BANK[x]);
+  }
+
+  /* Hide topics the chosen exam does not test. Offering Theory of Computation
+     to someone preparing for SSC CGL wastes the scarcest thing they have. */
+  (function () {
+    if (!CURRENT_EXAM) return;
+    const keep = examSubjects();
+    const prune = () => {
+      document.querySelectorAll("#topic-tags .tag").forEach(t => {
+        const name = t.textContent.replace(/\s*\(\d+\)\s*$/, "").trim();
+        if (keep.indexOf(name) === -1) {
+          t.remove();
+          if (typeof selectedTopics !== "undefined") selectedTopics.delete(name);
+        }
+      });
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", prune);
+    else prune();
+  })();
+
+  /* Every subject the exam examines, whether or not it has lessons yet. */
   function subjects() {
-    return Object.keys(QUESTION_BANK).map(name => {
+    return examSubjects().map(name => {
       const lessons = CURRICULUM.filter(l => l.subject === name);
       return {
         name,
@@ -449,9 +504,13 @@
      matches how the time budget actually works out before an exam. */
   function buildPlan() {
     const days = [];
-    const order = ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
-                   "COA", "Theory of Computation", "Programming & OOP",
-                   "Software Engineering", "Reasoning & English", "General Awareness"];
+    // Follow the exam being studied, so an SSC plan is not full of DBMS.
+    const examKey = new URLSearchParams(location.search).get("exam");
+    const exam = (typeof EXAMS !== "undefined") ? EXAMS.find(e => e.key === examKey) : null;
+    const order = exam ? subjectsForExam(exam)
+      : ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
+         "COA", "Theory of Computation", "Programming & OOP",
+         "Software Engineering", "Reasoning & English", "General Awareness"];
     const lessons = [];
     order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
 
