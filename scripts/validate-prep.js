@@ -8,6 +8,8 @@ const path = require('path');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'prep', 'hal-cs.js'), 'utf8');
 const QUESTION_BANK = new Function(src + '; return QUESTION_BANK;')();
+const skillSrc = fs.readFileSync(path.join(__dirname, '..', 'prep', 'skills.js'), 'utf8');
+const SKILLS = new Function(skillSrc + '; return SKILLS;')();
 
 let problems = [];
 let total = 0;
@@ -37,6 +39,70 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
 }
 console.log('─'.repeat(46));
 console.log(`  ${'TOTAL'.padEnd(24)} ${String(total).padStart(3)}`);
+
+/* ---- The skill taxonomy ----------------------------------------------
+   A skill is the basic underneath a question. Getting one wrong sends
+   someone to drill a basic they do not have a problem with, so these rules
+   are strict on purpose:
+
+     · a skill named on a question must exist in the taxonomy — a typo would
+       otherwise silently create a skill nobody can ever drill;
+     · a question may only carry a skill from its OWN subject, so the weak-
+       basics list on the Progress screen groups honestly;
+     · every skill must have at least MIN_PER_SKILL questions, because the app
+       offers a drill for each one and a two-question drill does not teach a
+       method.
+   ------------------------------------------------------------------- */
+const MIN_PER_SKILL = 3;
+const skillByKey = new Map();
+SKILLS.forEach((s, i) => {
+  const at = `SKILLS[${i}]`;
+  if (!s.key || !/^[a-z][a-z0-9-]{2,48}$/.test(s.key)) problems.push(`${at}: bad or missing key`);
+  if (skillByKey.has(s.key)) problems.push(`${at}: duplicate key ${s.key}`);
+  else skillByKey.set(s.key, s);
+  if (!s.name || s.name.length < 4)          problems.push(`${at} (${s.key}): missing name`);
+  if (!QUESTION_BANK[s.subject])             problems.push(`${at} (${s.key}): subject "${s.subject}" is not a subject in the bank`);
+  // The rule is shown on its own inside the quiz, with no lesson around it, so
+  // it has to be a whole sentence rather than a label.
+  if (!s.rule || s.rule.length < 60)         problems.push(`${at} (${s.key}): rule missing or too short to teach anything`);
+  if (!Array.isArray(s.teach) || s.teach.length < 2)
+                                             problems.push(`${at} (${s.key}): needs a teaching block of at least 2 parts`);
+});
+
+const perSkill = new Map(SKILLS.map(s => [s.key, 0]));
+for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
+  qs.forEach((q, i) => {
+    if (q.skills === undefined) return;         // untagged is fine and expected
+    const at = `${topic}[${i}]`;
+    if (!Array.isArray(q.skills) || q.skills.length === 0) {
+      problems.push(`${at}: skills must be a non-empty array when present`);
+      return;
+    }
+    if (new Set(q.skills).size !== q.skills.length) problems.push(`${at}: repeats a skill`);
+    q.skills.forEach(key => {
+      const s = skillByKey.get(key);
+      if (!s) { problems.push(`${at}: unknown skill "${key}" — add it to prep/skills.js or fix the typo`); return; }
+      if (s.subject !== topic) {
+        problems.push(`${at}: carries skill "${key}", which belongs to ${s.subject}, not ${topic}`);
+        return;
+      }
+      perSkill.set(key, perSkill.get(key) + 1);
+    });
+  });
+}
+
+console.log('\nBasics (skills) and the questions that drill them');
+console.log('─'.repeat(46));
+SKILLS.forEach(s => {
+  const n = perSkill.get(s.key);
+  console.log(`  ${s.key.padEnd(32)} ${String(n).padStart(3)}`);
+  if (n < MIN_PER_SKILL) {
+    problems.push(`skill "${s.key}" has only ${n} question(s) — the app offers a drill for it, so it needs at least ${MIN_PER_SKILL}`);
+  }
+});
+const tagged = Object.values(QUESTION_BANK).flat().filter(q => q.skills).length;
+console.log('─'.repeat(46));
+console.log(`  ${String(SKILLS.length).padStart(3)} basics · ${tagged} of ${total} questions tagged`);
 
 /* ---- Selection engine: does it actually stop repeating? ---- */
 function qid(text){ let h=0; for(let i=0;i<text.length;i++){ h=((h<<5)-h+text.charCodeAt(i))|0; } return 'q'+(h>>>0).toString(36); }

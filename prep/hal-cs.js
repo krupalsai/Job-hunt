@@ -19,12 +19,14 @@ const QUESTION_BANK = {
 "Data Structures": [
   {q:"What is the worst-case time complexity of QuickSort?",
    opts:["O(n log n)","O(n²)","O(log n)","O(n)"], correct:1,
+   skills:["reading-big-o"],
    why:"The worst case is when the pivot is always the smallest or largest element, so one partition holds n−1 items and the other holds none. That gives n + (n−1) + (n−2) + … = O(n²). A already-sorted array with a naive first-element pivot triggers exactly this.",
    deeper:"Think about what QuickSort does: it picks one element (the pivot) and splits the rest into 'smaller' and 'bigger'. It is fast when the split is even, because the problem halves. The disaster case is when the pivot is the smallest or largest value every single time — then one side gets everything and the other gets nothing, so instead of halving you only remove one element per pass. Doing n passes of n work is n², and an already-sorted list with a naive pivot does exactly this.",
    trick:"Quick on average, quicksand at worst — a sorted array is what it sinks in."},
 
   {q:"Which data structure manages recursion (function calls)?",
    opts:["Queue","Stack","Heap","Graph"], correct:1,
+   skills:["lifo-vs-fifo"],
    why:"Each call pushes an activation record (return address, parameters, locals) and pops it on return. The most recent call must finish first — that is LIFO, which is a stack.",
    trick:"Last call made is the first to return. Last-in-first-out = Stack."},
 
@@ -36,6 +38,7 @@ const QUESTION_BANK = {
 
   {q:"Time complexity of searching in a balanced BST?",
    opts:["O(1)","O(n)","O(log n)","O(n log n)"], correct:2,
+   skills:["halving-gives-log"],
    why:"Every comparison discards one subtree, halving what remains. A balanced tree of n nodes has height log₂n, so at most log n comparisons.",
    trick:"Halving each step always gives a log. Balanced = log n; unbalanced degenerates to a linked list, O(n)."},
 
@@ -47,31 +50,37 @@ const QUESTION_BANK = {
 
   {q:"Which data structure uses FIFO order?",
    opts:["Stack","Queue","Tree","Heap"], correct:1,
+   skills:["lifo-vs-fifo"],
    why:"A queue inserts at the rear and removes from the front, so whatever entered first leaves first.",
    trick:"A queue at a ticket counter — first in line, first served."},
 
   {q:"Which data structure evaluates a postfix expression?",
    opts:["Queue","Stack","Linked list","Heap"], correct:1,
+   skills:["lifo-vs-fifo"],
    why:"Scan left to right: push operands; on an operator, pop the last two, apply, push the result. The last two operands are exactly what a stack gives you.",
    trick:"Postfix = push operands, pop on operator. Stack."},
 
   {q:"Worst-case time complexity of binary search on a sorted array?",
    opts:["O(1)","O(log n)","O(n)","O(n log n)"], correct:1,
+   skills:["halving-gives-log"],
    why:"Each comparison eliminates half the remaining range, so the array is exhausted after log₂n steps.",
    trick:"Halve, halve, halve → log n. Needs a SORTED array — that condition is what examiners hide."},
 
   {q:"Inserting a node at the head of a singly linked list takes?",
    opts:["O(1)","O(log n)","O(n)","O(n²)"], correct:0,
+   skills:["fixed-vs-variable-size"],
    why:"You already hold the head pointer, so it is two pointer writes regardless of list length. Inserting at the TAIL is O(n) without a tail pointer.",
    trick:"Head insert = constant. Tail insert = walk the whole list."},
 
   {q:"Accessing the i-th element of an array takes?",
    opts:["O(1)","O(log n)","O(n)","O(i)"], correct:0,
+   skills:["fixed-vs-variable-size"],
    why:"Arrays are contiguous, so the address is base + i × size — one arithmetic step, no traversal.",
    trick:"Array = address arithmetic = instant. Linked list = walk = O(n)."},
 
   {q:"Worst-case time complexity of Merge Sort?",
    opts:["O(n²)","O(n log n)","O(n)","O(log n)"], correct:1,
+   skills:["reading-big-o"],
    why:"It always splits exactly in half (log n levels) and merges each level in O(n). The split does not depend on the data, so worst = best = O(n log n).",
    trick:"Merge sort never has a bad day — it ignores the input and always splits down the middle."},
 
@@ -87,6 +96,7 @@ const QUESTION_BANK = {
 
   {q:"Which data structure does BFS use?",
    opts:["Stack","Queue","Priority queue","Array"], correct:1,
+   skills:["lifo-vs-fifo"],
    why:"BFS explores all neighbours at the current distance before going deeper, so nodes must come out in the order discovered — FIFO, a queue.",
    trick:"BFS = Breadth = Broad = Queue. DFS = Depth = Stack. B-Q and D-S."},
 
@@ -97,16 +107,19 @@ const QUESTION_BANK = {
 
   {q:"Time complexity of inserting into a binary heap of n elements?",
    opts:["O(1)","O(log n)","O(n)","O(n log n)"], correct:1,
+   skills:["halving-gives-log"],
    why:"Insert at the last position, then bubble up swapping with the parent. The number of swaps is bounded by the height, log n.",
    trick:"You only ever climb one path to the root — height = log n."},
 
   {q:"Building a heap from an unsorted array of n elements takes?",
    opts:["O(n)","O(n log n)","O(log n)","O(n²)"], correct:0,
+   skills:["reading-big-o"],
    why:"Bottom-up heapify is O(n), not O(n log n) — most nodes are near the bottom and sift down only a step or two. The sum works out to a constant times n.",
    trick:"BUILD a heap = O(n). SORT with a heap = O(n log n). The exam banks on you confusing the two."},
 
   {q:"Space required by an adjacency matrix for a graph with V vertices?",
    opts:["O(V)","O(E)","O(V²)","O(V + E)"], correct:2,
+   skills:["fixed-vs-variable-size"],
    why:"It is a V × V table with a cell for every possible pair, occupied or not. An adjacency LIST stores only real edges, O(V + E) — far better for sparse graphs.",
    trick:"Matrix = grid = V². List = only what exists = V + E."},
 
@@ -117,6 +130,7 @@ const QUESTION_BANK = {
 
   {q:"Best-case time complexity of Bubble Sort (with the early-exit flag)?",
    opts:["O(1)","O(n)","O(n log n)","O(n²)"], correct:1,
+   skills:["reading-big-o"],
    why:"On already-sorted input the first pass makes no swaps, the flag stays false, and it stops after that single O(n) pass.",
    trick:"Bubble's only redeeming feature: it notices when the work is already done — one pass, O(n)."},
 
@@ -137,6 +151,7 @@ const QUESTION_BANK = {
 
   {q:"Which is the correct order of complexities, smallest first?",
    opts:["O(log n) < O(n) < O(n log n) < O(n²)","O(n) < O(log n) < O(n²) < O(n log n)","O(1) < O(n²) < O(n) < O(log n)","O(n log n) < O(n) < O(log n) < O(n²)"], correct:0,
+   skills:["reading-big-o"],
    why:"Growth order is: 1 < log n < √n < n < n log n < n² < n³ < 2ⁿ < n!. Anything logarithmic beats anything linear for large n.",
    trick:"Memorise the ladder once: 1, log n, √n, n, n log n, n², 2ⁿ, n!. Numericals reduce to placing terms on it."}
 ],
@@ -250,6 +265,7 @@ const QUESTION_BANK = {
 "DBMS": [
   {q:"A relation is in 2NF if it is in 1NF and has no:",
    opts:["Transitive dependency","Partial dependency on a candidate key","Multi-valued dependency","Join dependency"], correct:1,
+   skills:["normal-forms-ladder"],
    why:"Partial dependency means a non-prime attribute depends on part of a composite key rather than the whole key. It can only arise when the key has more than one attribute — a relation with a single-attribute key is automatically in 2NF.",
    deeper:"Partial dependency only makes sense when the key is made of more than one column. Say the key is (student_id, course_id). 'Grade' genuinely needs both — you cannot know a grade from the student alone. But 'student_name' needs only student_id, which is HALF the key. That half-dependency is the partial dependency 2NF forbids. If your key is a single column, there is no half of it to depend on, so the relation is already in 2NF.",
    trick:"1NF atomic · 2NF no PARTIAL · 3NF no TRANSITIVE · BCNF every determinant is a key. Chant it in that order."},
@@ -266,21 +282,25 @@ const QUESTION_BANK = {
 
   {q:"A foreign key enforces which type of integrity?",
    opts:["Domain integrity","Referential integrity","Entity integrity","Key integrity"], correct:1,
+   skills:["keys-and-uniqueness"],
    why:"It guarantees that a value in the child table refers to an existing row in the parent — you cannot reference something that is not there. Entity integrity is the primary key rule (unique, not null).",
    trick:"Foreign key REFERS to another table → REFERential. Primary key identifies the ENTITY → ENTITY integrity."},
 
   {q:"Which normal form removes transitive dependency?",
    opts:["1NF","2NF","3NF","BCNF only"], correct:2,
+   skills:["normal-forms-ladder"],
    why:"A transitive dependency is a non-prime attribute determined by another non-prime attribute (A→B→C). 3NF eliminates it. BCNF is stricter still, requiring every determinant to be a candidate key.",
    trick:"Transitive = travelling through a middleman. 3NF fires the middleman."},
 
   {q:"A relation is in BCNF if, for every functional dependency X → Y:",
    opts:["X is a superkey","Y is a superkey","X is a non-prime attribute","Y is atomic"], correct:0,
+   skills:["normal-forms-ladder"],
    why:"BCNF demands that the left side of every non-trivial dependency is a superkey. 3NF relaxes this by also allowing Y to be a prime attribute — which is the only gap between them.",
    trick:"BCNF: only a KEY may determine anything. If a non-key determines something, it is not BCNF."},
 
   {q:"A primary key must be?",
    opts:["Unique only","Not null only","Unique and not null","Unique, not null and numeric"], correct:2,
+   skills:["keys-and-uniqueness"],
    why:"Uniqueness identifies the row; NOT NULL guarantees every row is identifiable. There is no requirement to be numeric. A UNIQUE constraint alone permits a null.",
    trick:"Primary key = unique + not null. UNIQUE allows a null; PRIMARY KEY never does."},
 
@@ -306,6 +326,7 @@ const QUESTION_BANK = {
 
   {q:"A candidate key is?",
    opts:["Any superkey","A minimal superkey","The chosen primary key","A foreign key"], correct:1,
+   skills:["keys-and-uniqueness"],
    why:"A superkey is any attribute set that identifies a row uniquely — it may carry extras. A candidate key is a superkey with no removable attribute. The designer picks one candidate key as the primary key.",
    trick:"Superkey = unique (maybe bloated). Candidate = unique AND minimal. Primary = the candidate you elected."},
 
@@ -354,6 +375,7 @@ const QUESTION_BANK = {
 "Computer Networks": [
   {q:"Which OSI layer is responsible for routing?",
    opts:["Data Link","Network","Transport","Session"], correct:1,
+   skills:["osi-layer-map"],
    why:"The Network layer (layer 3) handles logical addressing and path selection between networks — that is IP and the routers that read it. The Data Link layer only moves frames within one link.",
    trick:"Layer 3 = IP = routing between networks. Layer 2 = MAC = switching within one network."},
 
@@ -369,6 +391,7 @@ const QUESTION_BANK = {
 
   {q:"How many usable host addresses are in a /28 subnet?",
    opts:["16","14","30","32"], correct:1,
+   skills:["subnet-host-count"],
    why:"/28 leaves 32 − 28 = 4 host bits, so 2⁴ = 16 addresses. Subtract the network address and the broadcast address: 14 usable.",
    deeper:"The /28 says 28 of the 32 bits name the network, so 4 bits are left for hosts. Four bits can count 2⁴ = 16 different values. But two of those sixteen are reserved and cannot be given to a machine: the all-zeros one names the network itself, and the all-ones one is the broadcast address. 16 − 2 = 14 usable.",
    trick:"Usable hosts = 2^(32−prefix) − 2. Always minus 2 — one for the network, one for broadcast."},
@@ -380,11 +403,13 @@ const QUESTION_BANK = {
 
   {q:"How many layers does the OSI model have?",
    opts:["4","5","7","8"], correct:2,
+   skills:["osi-layer-map"],
    why:"OSI has 7: Physical, Data Link, Network, Transport, Session, Presentation, Application. The TCP/IP model condenses these into 4.",
    trick:"Bottom-up: 'Please Do Not Throw Sausage Pizza Away' — Physical, Data link, Network, Transport, Session, Presentation, Application."},
 
   {q:"A MAC address operates at which OSI layer?",
    opts:["Physical","Data Link","Network","Transport"], correct:1,
+   skills:["osi-layer-map"],
    why:"MAC is the hardware address used to deliver frames within a single link segment, which is the Data Link layer's job. It is 48 bits and burned into the NIC.",
    trick:"MAC = Media Access Control = layer 2. IP is layer 3. MAC is local; IP travels."},
 
@@ -410,11 +435,13 @@ const QUESTION_BANK = {
 
   {q:"A router operates at which layer, and a switch?",
    opts:["Both Network","Router = Network, Switch = Data Link","Router = Data Link, Switch = Network","Both Physical"], correct:1,
+   skills:["osi-layer-map"],
    why:"A router forwards on IP addresses between different networks (layer 3). A switch forwards frames on MAC addresses within one network (layer 2). A hub is layer 1 and simply repeats bits to every port.",
    trick:"Hub 1, Switch 2, Router 3. The device number matches its layer number."},
 
   {q:"The default subnet mask for a Class C network is?",
    opts:["255.0.0.0","255.255.0.0","255.255.255.0","255.255.255.255"], correct:2,
+   skills:["subnet-host-count"],
    why:"Class A is /8 (255.0.0.0), Class B is /16 (255.255.0.0) and Class C is /24 (255.255.255.0), leaving 8 host bits and 254 usable hosts.",
    trick:"A, B, C = 1, 2, 3 bytes of network. Class C gets three 255s."},
 
@@ -430,6 +457,7 @@ const QUESTION_BANK = {
 
   {q:"How many usable host addresses in a /24 network?",
    opts:["256","255","254","253"], correct:2,
+   skills:["subnet-host-count"],
    why:"8 host bits give 2⁸ = 256 addresses; minus the network address and the broadcast address leaves 254.",
    trick:"Same rule always: 2^(host bits) − 2. /24 → 254, /25 → 126, /26 → 62, /27 → 30, /28 → 14."},
 
@@ -445,6 +473,7 @@ const QUESTION_BANK = {
 
   {q:"In which layer does encryption typically occur in the OSI model?",
    opts:["Physical","Network","Presentation","Data Link"], correct:2,
+   skills:["osi-layer-map"],
    why:"The Presentation layer (6) handles translation, compression and encryption — turning application data into a transmittable form. In practice TLS straddles layers 5–6.",
    trick:"Presentation = how the data LOOKS: encoding, compression, encryption."},
 
@@ -463,6 +492,7 @@ const QUESTION_BANK = {
 
   {q:"The binary of decimal 45 is?",
    opts:["101101","110101","101010","111001"], correct:0,
+   skills:["number-base-conversion"],
    why:"45 = 32 + 8 + 4 + 1 → bits set at positions 5, 3, 2, 0 → 101101. Check: 32+0+8+4+0+1 = 45.",
    trick:"Subtract the biggest power of 2 that fits, repeat. Powers to know cold: 1, 2, 4, 8, 16, 32, 64, 128."},
 
@@ -478,6 +508,7 @@ const QUESTION_BANK = {
 
   {q:"The hexadecimal equivalent of decimal 255 is?",
    opts:["FF","EE","100","AA"], correct:0,
+   skills:["number-base-conversion"],
    why:"255 = 15×16 + 15, and 15 is F, so FF. It is also the largest value one byte can hold — 8 bits = two hex digits.",
    trick:"One byte = 2 hex digits = max FF = 255. That single fact answers half of all hex questions."},
 
@@ -544,7 +575,13 @@ const QUESTION_BANK = {
   {q:"Adding more cache generally reduces?",
    opts:["Hit ratio","Miss ratio","Clock speed","Bus width"], correct:1,
    why:"A larger cache holds more of the working set, so fewer accesses miss. Returns diminish once the cache exceeds the working set, and larger caches are slower to search.",
-   trick:"Bigger cache → higher hit ratio → lower miss ratio → lower average access time. But it plateaus."}
+   trick:"Bigger cache → higher hit ratio → lower miss ratio → lower average access time. But it plateaus."},
+
+  {q:"The decimal equivalent of the binary number 1101 is?",
+   opts:["9","11","13","14"], correct:2,
+   skills:["number-base-conversion"],
+   why:"Read the place values from the right: 1, 2, 4, 8. The bits set are 8, 4 and 1, and 8 + 4 + 1 = 13. The zero in the 2s place is what the wrong answers assume is set.",
+   trick:"Write 8 4 2 1 above the bits and add the columns holding a 1. No division needed."}
 ],
 
 /* ────────────────────── THEORY OF COMPUTATION ────────────────────── */
@@ -619,16 +656,19 @@ const QUESTION_BANK = {
 
   {q:"Which are the four pillars of OOP?",
    opts:["Encapsulation, Inheritance, Polymorphism, Abstraction","Classes, Objects, Methods, Variables","Compile, Link, Run, Debug","Public, Private, Protected, Default"], correct:0,
+   skills:["oop-four-pillars"],
    why:"Encapsulation bundles data with the methods that use it; abstraction hides the detail; inheritance reuses a base; polymorphism lets one interface take many forms.",
    trick:"A-PIE: Abstraction, Polymorphism, Inheritance, Encapsulation."},
 
   {q:"Method overloading is an example of?",
    opts:["Runtime polymorphism","Compile-time polymorphism","Inheritance","Encapsulation"], correct:1,
+   skills:["oop-four-pillars"],
    why:"Overloading picks between same-named methods by their signatures, which the compiler resolves statically. Overriding is resolved at runtime through the object's actual type — that is dynamic polymorphism.",
    trick:"OverLOADing = compile time (Load early). OverRIDing = runtime (Ride late)."},
 
   {q:"Encapsulation primarily means?",
    opts:["Hiding implementation and exposing a controlled interface","Creating many objects","Inheriting from a base class","Overloading operators"], correct:0,
+   skills:["oop-four-pillars"],
    why:"Data is made private and reached only through public methods, so internal representation can change without breaking callers, and invalid states can be rejected at the boundary.",
    trick:"Encapsulation = the capsule. You swallow the pill; you never touch the powder."},
 
@@ -649,6 +689,7 @@ const QUESTION_BANK = {
 
   {q:"Which OOP feature lets a derived class provide its own version of a base-class method?",
    opts:["Overloading","Overriding","Encapsulation","Abstraction"], correct:1,
+   skills:["oop-four-pillars"],
    why:"Overriding replaces the inherited implementation with a matching signature, and the call is dispatched on the object's real type at runtime — the mechanism behind polymorphic behaviour.",
    trick:"Same signature, different class = override. Same name, different signature, same class = overload."},
 
@@ -725,11 +766,13 @@ const QUESTION_BANK = {
 "Reasoning & English": [
   {q:"Find the odd one out: Apple, Banana, Carrot, Mango",
    opts:["Apple","Banana","Carrot","Mango"], correct:2,
+   skills:["odd-one-out-category"],
    why:"Apple, banana and mango are fruits; carrot is a root vegetable. The classification is botanical category, not colour or taste.",
    trick:"For odd-one-out, name the CATEGORY out loud before you look at the options. Three will share it."},
 
   {q:"Choose the synonym for 'Abundant'",
    opts:["Scarce","Plentiful","Rare","Limited"], correct:1,
+   skills:["synonym-antonym-direction"],
    why:"Abundant means present in large quantity. Scarce, rare and limited are all antonyms — a classic trap where three options point the same wrong way.",
    trick:"When three options mean the same thing, the odd one out is usually the answer."},
 
@@ -740,118 +783,234 @@ const QUESTION_BANK = {
 
   {q:"Identify the error: 'He don't like coffee.'",
    opts:["He","don't","like","coffee"], correct:1,
+   skills:["subject-verb-agreement"],
    why:"'He' is third person singular and needs 'doesn't'. 'Don't' is used with I, you, we and they.",
    trick:"Third person singular takes the S — either on the verb (he likes) or on the auxiliary (he does not)."},
 
   {q:"Complete the series: 2, 6, 12, 20, 30, ?",
    opts:["40","42","36","44"], correct:1,
+   skills:["series-find-the-rule"],
    why:"Differences are 4, 6, 8, 10 — increasing by 2 — so the next difference is 12, giving 42. Equivalently each term is n(n+1): 1×2, 2×3, 3×4, 4×5, 5×6, 6×7 = 42.",
    deeper:"Write the gaps under the numbers: from 2 to 6 is 4, from 6 to 12 is 6, from 12 to 20 is 8, from 20 to 30 is 10. Those gaps go 4, 6, 8, 10 — climbing by 2 each time. So the next gap must be 12, and 30 + 12 = 42.",
    trick:"Always write the differences underneath first. If they are not obvious, try the differences of the differences."},
 
   {q:"Complete the series: 3, 8, 15, 24, 35, ?",
    opts:["46","48","44","50"], correct:1,
+   skills:["series-find-the-rule"],
    why:"Each term is n² − 1: 4−1, 9−1, 16−1, 25−1, 36−1, then 49−1 = 48. The differences 5, 7, 9, 11, 13 confirm it.",
    trick:"Numbers just below perfect squares are a favourite. Memorise squares to 20² and these become instant."},
 
   {q:"Complete the series: 1, 1, 2, 3, 5, 8, ?",
    opts:["11","12","13","15"], correct:2,
+   skills:["series-find-the-rule"],
    why:"Fibonacci — each term is the sum of the two before it. 5 + 8 = 13.",
    deeper:"Look at the numbers as pairs. 1+1 makes the 2. Then 1+2 makes the 3. Then 2+3 makes the 5, and 3+5 makes the 8. Every number is built from the two sitting immediately to its left, so the next one is 5+8 = 13. Nothing is multiplied or squared — it is only ever addition of the two most recent terms.",
    trick:"If differences go nowhere, test whether adding the previous two terms works. Fibonacci appears constantly."},
 
   {q:"If LOTUS is coded as MPUVT, how is ROSE coded?",
    opts:["SPTF","SPTE","RPTF","SQTF"], correct:0,
+   skills:["letter-shift-coding"],
    why:"Every letter shifts forward by one: L→M, O→P, T→U, U→V, S→T. Applying +1 to ROSE: R→S, O→P, S→T, E→F = SPTF.",
    trick:"Write the alphabet with positions once at the start of the exam. Shift ciphers then take five seconds."},
 
   {q:"Pointing to a photo a man says, 'I have no brother or sister, but that man's father is my father's son.' Who is in the photo?",
    opts:["His father","His son","Himself","His nephew"], correct:1,
+   skills:["blood-relations-levels"],
    why:"With no siblings, 'my father's son' can only be the speaker himself. So the man in the photo has the speaker as his father — the photo is of his son.",
    diagram:"my father\n\u2502\n\u2502  \"my father's son\" \u2014 and I have no brothers,\n\u2502  so that son can only be ME\n\u2502\nME  \u2190 so I am 'that man's father'\n\u2502\n\u2502\nthat man   \u2190 the man in the photo\n\nI am his father \u2192 he is my SON.",
    trick:"Solve blood relations from the INSIDE out. 'My father's son' with no brothers always resolves to the speaker."},
 
   {q:"A man walks 5 km north, turns right and walks 3 km, then turns right and walks 5 km. How far is he from the start?",
    opts:["3 km","5 km","8 km","13 km"], correct:0,
+   skills:["direction-sense-cancelling"],
    why:"North 5, then east 3, then south 5. The two vertical legs cancel exactly, leaving him 3 km east of the start.",
    diagram:"START \u25cf\n      \u2502\n      \u2502 5 km north\n      \u2502\n      \u25cf\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25cf  3 km east (right turn)\n              \u2502\n              \u2502 5 km south (right again)\n              \u2502\n      \u25cf\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u25cf  END\n\nThe 5 north and the 5 south cancel exactly.\nOnly the 3 km east is left \u2192 3 km from the start.",
    trick:"Draw it. Opposite legs cancel; only the leftover legs count. If two remain, use Pythagoras."},
 
   {q:"All roses are flowers. Some flowers fade quickly. Which follows?",
    opts:["All roses fade quickly","Some roses fade quickly","No rose fades quickly","None of these follows"], correct:3,
+   skills:["syllogism-some-proves-nothing"],
    why:"The 'some flowers' that fade may be entirely outside the roses. Nothing forces an overlap, so neither a positive nor a negative conclusion about roses is guaranteed.",
    trick:"In syllogisms, 'some' never guarantees an overlap with a specific subgroup. Draw the circles and try to make the conclusion FALSE — if you can, it does not follow."},
 
   {q:"Find the odd one out: Rectangle, Square, Circle, Triangle",
    opts:["Rectangle","Square","Circle","Triangle"], correct:2,
+   skills:["odd-one-out-category"],
    why:"Rectangle, square and triangle are polygons bounded by straight sides with vertices. A circle has a single curved boundary and no vertices.",
    trick:"Ask what property THREE share. Straight sides here — the curve is the outsider."},
 
   {q:"Choose the antonym of 'Benevolent'",
    opts:["Generous","Kind","Malevolent","Charitable"], correct:2,
+   skills:["synonym-antonym-direction","word-roots-and-affixes"],
    why:"Benevolent means well-meaning; malevolent means wishing harm. Generous, kind and charitable are all synonyms, so they cannot be the answer.",
    trick:"BENE = good (benefit, benign). MAL = bad (malice, malfunction). These two roots answer dozens of questions."},
 
   {q:"Choose the synonym for 'Meticulous'",
    opts:["Careless","Extremely careful about detail","Fast","Rude"], correct:1,
+   skills:["synonym-antonym-direction"],
    why:"Meticulous means showing great attention to detail. Do not confuse it with 'ticklish' or 'mediocre' — the exam relies on lookalike words.",
    trick:"Meticulous = a METICULOUS person checks every detail twice. Its opposite is slapdash."},
 
   {q:"Choose the antonym of 'Transparent'",
    opts:["Clear","Opaque","Visible","Obvious"], correct:1,
+   skills:["synonym-antonym-direction","word-roots-and-affixes"],
    why:"Transparent lets light through; opaque blocks it. Clear, visible and obvious are all synonyms — again three pointing one way.",
    trick:"Trans = through. Opaque = blocked. If light cannot pass, it is opaque."},
 
   {q:"One word for 'a speech made without preparation'",
    opts:["Eloquent","Extempore","Verbose","Monologue"], correct:1,
+   skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Extempore (or impromptu) means done on the spur of the moment. Eloquent describes quality, verbose means wordy, and a monologue is a long speech by one person regardless of preparation.",
    trick:"EX-TEMPORE = out of TIME, i.e. no time to prepare."},
 
   {q:"One word for 'one who cannot read or write'",
    opts:["Ignorant","Illiterate","Innocent","Illegible"], correct:1,
+   skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Illiterate describes the person. Illegible describes handwriting that cannot be READ — the trap option here. Ignorant means lacking knowledge generally.",
    trick:"IlliterATE = a person. IllegiBLE = the writing. The ending tells you which is which."},
 
   {q:"Identify the error: 'Each of the boys have finished their work.'",
    opts:["Each of","the boys","have","their work"], correct:2,
+   skills:["subject-verb-agreement"],
    why:"'Each' is singular, so the verb must be 'has'. The plural noun in between ('boys') is a distraction — the verb agrees with 'each', not with the nearest noun.",
    trick:"Each, every, either, neither, none, everyone = ALWAYS singular. Ignore the phrase in between."},
 
   {q:"Identify the error: 'One of my friend is a doctor.'",
    opts:["One of","my friend","is","a doctor"], correct:1,
+   skills:["one-of-plural-noun"],
    why:"'One of' must be followed by a plural noun — one of my friendS. The verb 'is' is correct, since the subject is 'one'.",
    trick:"'One of' takes a PLURAL noun but a SINGULAR verb. One of my friends is — both parts matter."},
 
   {q:"'To let the cat out of the bag' means?",
    opts:["To free an animal","To reveal a secret","To cause chaos","To make a mistake"], correct:1,
+   skills:["idioms-are-not-literal"],
    why:"An idiom's meaning is conventional and cannot be worked out from the words — this one means to disclose something meant to be hidden.",
    trick:"Idioms must be memorised, not reasoned. If an option is the literal meaning, it is almost always wrong."},
 
   {q:"If FRIEND is coded as HTKGPF, then CANDLE is coded as?",
    opts:["ECPFNG","ECPFNH","DBOEMF","ECQFNG"], correct:0,
+   skills:["letter-shift-coding"],
    why:"Each letter moves forward by 2: F→H, R→T, I→K, E→G, N→P, D→F. Applying +2 to CANDLE: C→E, A→C, N→P, D→F, L→N, E→G = ECPFNG.",
    trick:"Find the shift from the FIRST letter, then verify with the second before applying it to the whole word."},
 
   {q:"Complete the series: 5, 10, 20, 40, ?",
    opts:["60","70","80","100"], correct:2,
+   skills:["series-find-the-rule"],
    why:"Each term doubles, so 40 × 2 = 80. Differences (5, 10, 20) are not constant, which is the signal to test a ratio instead.",
    trick:"If differences grow fast, try DIVIDING consecutive terms. A constant ratio means a geometric series."},
 
   {q:"A is B's sister, C is B's mother, D is C's father. How is A related to D?",
    opts:["Daughter","Granddaughter","Grandmother","Sister"], correct:1,
+   skills:["blood-relations-levels"],
    why:"A and B are siblings, so C is A's mother too. D is C's father, so D is A's grandfather — making A his granddaughter.",
    diagram:"D          \u2190 oldest generation\n\u2502          (C's father, so the grandfather)\n\u2502\nC          \u2190 middle generation\n\u2502          (mother of both A and B)\n\u2502\n\u250c\u2500\u2500\u2534\u2500\u2500\u2510\nA     B    \u2190 youngest generation\n           (A is B's sister, so same level)\n\nCount the steps from A up to D: two levels.\nTwo levels up = grandparent, so A is D's GRANDdaughter.",
    trick:"Draw the generations as levels on paper. Every 'father/mother of' moves you up one level; 'sister of' stays on the same level."},
 
   {q:"Which number is a prime?",
    opts:["91","87","97","93"], correct:2,
+   skills:["divisibility-and-primes"],
    why:"91 = 7×13, 87 = 3×29, 93 = 3×31. 97 has no factor up to √97 ≈ 9.8, so it is prime.",
    trick:"Test divisibility only up to the square root. For two-digit numbers that means just 2, 3, 5 and 7."},
 
   {q:"Complete the series: 2, 3, 5, 7, 11, 13, ?",
    opts:["15","17","19","21"], correct:1,
+   skills:["series-find-the-rule","divisibility-and-primes"],
    why:"These are consecutive primes; the next after 13 is 17 (15 = 3×5 is not prime).",
-   trick:"When a series has no arithmetic pattern, check whether it is simply the primes. Know them to 100."}
+   trick:"When a series has no arithmetic pattern, check whether it is simply the primes. Know them to 100."},
+
+  /* The questions below exist so that every basic in prep/skills.js has a drill
+     worth taking. Three questions on one skill is the least that can teach it;
+     one is an anecdote. */
+
+  {q:"Identify the error: 'The list of items are on the desk.'",
+   opts:["The list","of items","are","on the desk"], correct:2,
+   skills:["subject-verb-agreement"],
+   why:"The subject is 'the list', which is singular, so the verb must be 'is'. 'Of items' is a prepositional phrase — it describes the list and cannot change what the verb agrees with, however plural it looks.",
+   trick:"Cross out everything between the subject and the verb, then read it again: 'The list ... is on the desk.'"},
+
+  {q:"Identify the error: 'Neither of the answers were correct.'",
+   opts:["Neither","of the answers","were","correct"], correct:2,
+   skills:["subject-verb-agreement"],
+   why:"'Neither' is singular — it means not one of them — so the verb must be 'was'. The plural 'answers' sits next to the verb purely to pull you the wrong way.",
+   trick:"Each, every, either, neither, none: singular, always. The noun in between is a distraction."},
+
+  {q:"Which sentence is correct?",
+   opts:["One of my brother is an engineer.","One of my brothers is an engineer.","One of my brothers are an engineer.","One of my brother are an engineer."], correct:1,
+   skills:["one-of-plural-noun"],
+   why:"'One of' picks one out of a group, so the noun must be plural — brothers. But the subject of the sentence is 'one', which is singular, so the verb stays 'is'. Both halves are marked at once.",
+   trick:"Plural noun, singular verb. Say 'one of my brothers is' as a single phrase and both halves come out right."},
+
+  {q:"Identify the error: 'She is one of the best student in the class.'",
+   opts:["She is","one of","the best student","in the class"], correct:2,
+   skills:["one-of-plural-noun"],
+   why:"'One of the best' must be followed by a plural noun — students — because she is being picked out of a group of them. There is no group of one to pick from.",
+   trick:"'One of the best ___' is always plural. If the noun cannot go plural, 'one of' is the wrong phrase."},
+
+  {q:"If BOOK is coded as DQQM, how is DESK coded?",
+   opts:["FGUM","FGUN","EFTL","FHUM"], correct:0,
+   skills:["letter-shift-coding"],
+   why:"B→D is +2, and O→Q confirms it, so the rule is a forward shift of two. Applying it to DESK: D→F, E→G, S→U, K→M = FGUM.",
+   trick:"Get the shift from the first letter, confirm it on the second, then apply. Two letters agreeing is the whole check."},
+
+  {q:"P is the son of Q. R is the mother of Q. How is R related to P?",
+   opts:["Mother","Sister","Grandmother","Aunt"], correct:2,
+   skills:["blood-relations-levels"],
+   why:"Q is one level above P, and R is one level above Q — two levels above P in total. Two levels up is a grandparent, and R is female, so R is P's grandmother.",
+   trick:"Count the levels first, then apply the gender. Two levels up is always 'grand-'."},
+
+  {q:"Find the odd one out: Copper, Iron, Silver, Plastic",
+   opts:["Copper","Iron","Silver","Plastic"], correct:3,
+   skills:["odd-one-out-category"],
+   why:"Copper, iron and silver are metals; plastic is a synthetic non-metal. The category is what the material IS, not what it is used for — all four are used to make things.",
+   trick:"Name what three of them share out loud before hunting for the outsider. Here it is 'metal'."},
+
+  {q:"All pens are objects. Some objects are red. Which conclusion follows?",
+   opts:["All pens are red","Some pens are red","No pen is red","None of these follows"], correct:3,
+   skills:["syllogism-some-proves-nothing"],
+   why:"The red objects could sit entirely outside the pens, so no positive conclusion is forced; but they could also include pens, so no negative one is forced either. 'Some' guarantees nothing about a particular subgroup.",
+   trick:"Try to draw the circles so the conclusion is FALSE while every statement stays true. If you can, it does not follow."},
+
+  {q:"All cats are animals. All animals need water. Which follows?",
+   opts:["All cats need water","Some cats do not need water","All animals are cats","Nothing follows"], correct:0,
+   skills:["syllogism-some-proves-nothing"],
+   why:"Two universal statements chain: every cat is inside 'animals', and everything inside 'animals' needs water, so every cat needs water. This is the case that DOES follow — the contrast with 'some' is the whole point.",
+   trick:"All-to-all travels. Some-to-anything does not. Check which word the chain rests on."},
+
+  {q:"'To burn the midnight oil' means?",
+   opts:["To waste fuel","To work late into the night","To sleep badly","To start an argument"], correct:1,
+   skills:["idioms-are-not-literal"],
+   why:"The phrase comes from working by oil lamp after dark, and it means studying or working late. 'To waste fuel' is the literal reading, which is the decoy in nearly every idiom question.",
+   trick:"Cross out the literal option first. It is put there to be chosen."},
+
+  {q:"'A blessing in disguise' means?",
+   opts:["A secret prayer","A gift given anonymously","Something that seems bad but turns out to be good","An unexpected visitor"], correct:2,
+   skills:["idioms-are-not-literal"],
+   why:"It describes a misfortune that later proves to be an advantage. The options assembled from the separate words 'blessing' and 'disguise' are traps — an idiom's meaning is a convention, not a sum of its parts.",
+   trick:"If an option is built out of the individual words, it is almost certainly wrong."},
+
+  {q:"One word for 'one who eats everything'",
+   opts:["Carnivorous","Herbivorous","Voracious","Omnivorous"], correct:3,
+   skills:["one-word-substitution","word-roots-and-affixes"],
+   why:"Omni means all, so omnivorous is eating everything. Carnivorous is flesh, herbivorous is plants, and voracious means eating a great deal — a question of quantity, not of range. That last one is the trap.",
+   trick:"OMNI = all (omnipresent, omniscient). Voracious is about how much, not about what."},
+
+  {q:"A man walks 4 km east, turns left and walks 3 km. How far is he from the starting point?",
+   opts:["3 km","4 km","5 km","7 km"], correct:2,
+   skills:["direction-sense-cancelling"],
+   why:"Facing east, a left turn points north, so the two legs are at right angles and neither cancels the other. The distance is the hypotenuse: √(4² + 3²) = 5 km.",
+   trick:"Nothing cancels means Pythagoras. Exams choose 3-4-5 and 6-8-10 so the answer comes out whole."},
+
+  {q:"A boy walks 6 km south, turns left and walks 4 km, then turns left again and walks 6 km. How far is he from the start?",
+   opts:["2 km","4 km","10 km","16 km"], correct:1,
+   skills:["direction-sense-cancelling"],
+   why:"Facing south, a left turn points east; facing east, a left turn points north. So the legs are 6 south, 4 east, 6 north — the two 6s cancel exactly and only the 4 km east is left.",
+   trick:"Draw it and cancel opposite legs. Facing south, left is EAST — that is the step people get backwards."},
+
+  {q:"Which of these numbers is divisible by 3?",
+   opts:["1234","2345","3456","4567"], correct:2,
+   skills:["divisibility-and-primes"],
+   why:"Add the digits: 1+2+3+4 = 10, 2+3+4+5 = 14, 3+4+5+6 = 18, 4+5+6+7 = 22. Only 18 is a multiple of 3, so only 3456 is divisible by 3.",
+   trick:"Divisible by 3 if the digits add to a multiple of 3; by 9 if they add to a multiple of 9."}
 ],
 
 /* ─────────────────────── GENERAL AWARENESS ─────────────────────── */
@@ -911,6 +1070,7 @@ const QUESTION_BANK = {
 "Quantitative Aptitude": [
   {q:"A shopkeeper marks an item 40% above cost and gives a 25% discount. His profit percent is?",
    opts:["5%","10%","15%","No profit"], correct:0,
+   skills:["percentage-change-multiplies"],
    why:"Take cost = 100. Marked price = 140. Selling price = 140 × 0.75 = 105. Profit = 5 on 100 = 5%.",
    trick:"Always set cost = 100 for percentage questions. Successive changes multiply: 1.40 × 0.75 = 1.05."},
   {q:"If A can do a job in 12 days and B in 18 days, together they take?",
@@ -919,10 +1079,12 @@ const QUESTION_BANK = {
    trick:"Take LCM of the days as total work: LCM(12,18)=36 units. A does 3/day, B does 2/day, together 5/day → 36/5."},
   {q:"A train 150 m long running at 72 km/h crosses a pole in?",
    opts:["7.5 s","10 s","15 s","20 s"], correct:0,
+   skills:["speed-unit-conversion"],
    why:"72 km/h × 5/18 = 20 m/s. Crossing a POLE means covering only its own length: 150/20 = 7.5 s.",
    trick:"km/h → m/s: multiply by 5/18. Pole = train's length only. Platform = train + platform."},
   {q:"The average of 5 numbers is 30. If one number is removed the average becomes 28. The removed number is?",
    opts:["38","32","36","40"], correct:0,
+   skills:["averages-are-totals"],
    why:"Total was 5 × 30 = 150. Remaining four total 4 × 28 = 112. Removed = 150 − 112 = 38.",
    trick:"Averages are totals in disguise. Convert to totals, subtract, convert back."},
   {q:"Simple interest on ₹5000 at 8% for 3 years is?",
@@ -931,10 +1093,12 @@ const QUESTION_BANK = {
    trick:"SI = PRT/100. Compound interest for 2 years = P[(1+R/100)² − 1]; the difference between CI and SI over 2 years is PR²/10000."},
   {q:"If 20% of a number is 45, the number is?",
    opts:["225","180","270","900"], correct:0,
+   skills:["percentage-of-a-number"],
    why:"20% = 45, so 1% = 2.25, so 100% = 225. Or directly: 45 × 100/20 = 225.",
    trick:"Find 1% first, then scale. It works for any percentage question without algebra."},
   {q:"The ratio of two numbers is 3:5 and their sum is 64. The larger number is?",
    opts:["40","24","32","45"], correct:0,
+   skills:["ratio-parts"],
    why:"3 + 5 = 8 parts = 64, so one part = 8. Larger = 5 × 8 = 40.",
    trick:"Add the ratio parts, divide the total by that, then scale. Never set up two equations."},
   {q:"A sum doubles in 8 years at simple interest. In how many years will it triple?",
@@ -947,6 +1111,7 @@ const QUESTION_BANK = {
    trick:"When π = 22/7 appears, the radius is almost always a multiple of 7. Solve for r first."},
   {q:"What is the value of 15% of 40% of 500?",
    opts:["30","60","75","20"], correct:0,
+   skills:["percentage-of-a-number"],
    why:"40% of 500 = 200. 15% of 200 = 30. Percentages multiply: 0.15 × 0.40 × 500 = 30.",
    trick:"Work outward-in, or just multiply the decimals. Order does not matter."},
   {q:"A boat goes 20 km downstream in 2 hours and returns in 4 hours. The speed of the stream is?",
@@ -959,16 +1124,63 @@ const QUESTION_BANK = {
    trick:"a × b = LCM × HCF. Always true for exactly two numbers — never for three."},
   {q:"If the price of sugar rises 25%, by what percent must consumption fall to keep spending the same?",
    opts:["20%","25%","15%","30%"], correct:0,
+   skills:["percentage-change-multiplies"],
    why:"Spending = price × quantity. New price is 1.25×, so quantity must be 1/1.25 = 0.8, a 20% fall.",
    trick:"For a rise of R%, the reduction is 100R/(100+R). A 25% rise needs a 20% cut, not 25%."},
   {q:"A number is increased by 20% then decreased by 20%. The net change is?",
    opts:["4% decrease","No change","4% increase","20% decrease"], correct:0,
+   skills:["percentage-change-multiplies"],
    why:"1.20 × 0.80 = 0.96, a 4% decrease. The decrease applies to the larger amount, so it outweighs the rise.",
    trick:"Equal up-then-down percentages always LOSE. Net = −x²/100, so ±20% gives −4%."},
   {q:"Find the compound interest on ₹8000 at 10% per annum for 2 years.",
    opts:["₹1680","₹1600","₹1700","₹1760"], correct:0,
    why:"Amount = 8000 × 1.1² = 8000 × 1.21 = 9680. CI = 9680 − 8000 = 1680. (SI would be 1600; the extra 80 is interest on the first year's interest.)",
    trick:"CI − SI over 2 years = P(R/100)². Here 8000 × 0.01 = 80 — check your answer against it."},
+
+  /* Added so the arithmetic basics in prep/skills.js each have a real drill:
+     one question cannot teach a method, three can. */
+
+  {q:"If 35% of a number is 70, the number is?",
+   opts:["140","200","245","350"], correct:1,
+   skills:["percentage-of-a-number"],
+   why:"35 parts are 70, so one part is 70 ÷ 35 = 2, and the whole hundred parts are 200. Check it the other way: 35% of 200 is 70.",
+   trick:"Get to 1% first, then multiply by 100. It replaces every equation in these questions."},
+
+  {q:"₹1200 is divided between A and B in the ratio 2:3. B's share is?",
+   opts:["₹480","₹600","₹720","₹800"], correct:2,
+   skills:["ratio-parts"],
+   why:"2 + 3 = 5 parts make up ₹1200, so one part is ₹240. B holds 3 parts = ₹720, and A holds ₹480 — which adds back to ₹1200.",
+   trick:"Add the parts, divide the total by them, then multiply. Check that the shares add back to the total."},
+
+  {q:"The ratio of boys to girls in a class is 4:5. If there are 36 boys, the number of girls is?",
+   opts:["40","44","45","54"], correct:2,
+   skills:["ratio-parts"],
+   why:"4 parts are 36 boys, so one part is 9. Girls are 5 parts = 45. The total is not given here — one side is enough once you know the size of a part.",
+   trick:"You do not need the total. Any one side gives you the part, and the part gives you everything else."},
+
+  {q:"The average of 4 numbers is 25. A fifth number, 35, is added. The new average is?",
+   opts:["26","27","28","30"], correct:1,
+   skills:["averages-are-totals"],
+   why:"The four total 4 × 25 = 100. Adding 35 makes 135 across five numbers, so the average is 27. Averaging 25 and 35 to get 30 is the trap — averages cannot be averaged.",
+   trick:"Multiply out to a total, do the arithmetic there, then divide back."},
+
+  {q:"The average age of 10 students is 15 years. Including the teacher, the average becomes 16. The teacher's age is?",
+   opts:["16 years","25 years","26 years","30 years"], correct:2,
+   skills:["averages-are-totals"],
+   why:"The students total 10 × 15 = 150 years. With the teacher there are 11 people averaging 16, so the new total is 176. The teacher is 176 − 150 = 26.",
+   trick:"One extra member lifting the average by 1 across 11 people costs 11 extra years, on top of the new average itself."},
+
+  {q:"A car travelling at 90 km/h covers how many metres in one second?",
+   opts:["9 m","15 m","25 m","30 m"], correct:2,
+   skills:["speed-unit-conversion"],
+   why:"90 × 5/18 = 25 m/s. The factor is 5/18 because a kilometre is 1000 m and an hour is 3600 s, and 1000/3600 simplifies to 5/18.",
+   trick:"km/h → m/s: multiply by 5/18. Going back the other way: multiply by 18/5."},
+
+  {q:"A train 200 m long travelling at 36 km/h crosses a 100 m platform in?",
+   opts:["10 s","20 s","25 s","30 s"], correct:3,
+   skills:["speed-unit-conversion"],
+   why:"36 km/h is 10 m/s. Crossing a PLATFORM means covering the train's length plus the platform's: 200 + 100 = 300 m, so 300 ÷ 10 = 30 s.",
+   trick:"Pole means the train's own length. Platform means train plus platform. Getting the distance wrong costs more marks here than the arithmetic."},
 ]
 };
 

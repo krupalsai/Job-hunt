@@ -85,7 +85,13 @@
   /** Called by the quiz on every answer. Never throws, never blocks. */
   window.recordAttemptRemote = function (item, correct, skipped) {
     const q = readQueue();
-    q.push({ qid: item.id, topic: item.topic, correct: !!correct, skipped: !!skipped });
+    const row = { qid: item.id, topic: item.topic, correct: !!correct, skipped: !!skipped };
+    // The basics this question tests, so the mentor run can see that two misses
+    // in different topics were the same gap. Sent only when there are any: most
+    // questions are untagged, and an empty array on every row would be noise in
+    // the queue and in the request.
+    if (item.skills && item.skills.length) row.skills = item.skills.slice(0, 4);
+    q.push(row);
     writeQueue(q);
     // Coalesce: flushing once per quiz beats one request per question.
     clearTimeout(window.__syncTimer);

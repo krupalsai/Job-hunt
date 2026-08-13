@@ -158,6 +158,28 @@
   .miss-item .mq{ margin-bottom:6px; }
   .miss-item .mt{ font-size:12.5px; color:var(--warn); line-height:1.5; }
 
+  /* The basics — skills below topic level.
+     The alert is warm rather than red: it is not a telling-off, it is the app
+     noticing the same gap twice and offering to close it. */
+  .skill-alert{ border-left:3px solid var(--warn); background:#f59e0b1a;
+                border-radius:0 10px 10px 0; padding:12px 14px; margin-top:12px;
+                font-size:13.5px; line-height:1.6; }
+  .skill-alert .sa-head{ font-weight:700; color:var(--warn); margin-bottom:4px; }
+  .skill-alert .sa-rule{ color:var(--text); }
+  button.drill-btn{ min-height:44px; margin-top:10px; width:100%; }
+  .basic-row{ border-bottom:1px solid var(--panel-border); padding:12px 0; }
+  .basic-row:last-child{ border-bottom:none; }
+  .basic-head{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
+  .basic-name{ font-size:14px; font-weight:600; }
+  .basic-count{ font-size:11.5px; color:var(--bad); white-space:nowrap; font-weight:700; }
+  .basic-sub{ font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--dim);
+              font-weight:700; margin-top:3px; }
+  .basic-rule{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:6px; }
+  .drill-name{ font-size:19px; margin:4px 0 6px; }
+  .drill-rule{ border-left:3px solid var(--accent); background:#16a34a14;
+               border-radius:0 8px 8px 0; padding:10px 12px; margin:0 0 14px;
+               font-size:13.5px; line-height:1.65; }
+
   /* Learn path */
   .ls-subject{ font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--dim);
                font-weight:700; margin:16px 0 8px; }
@@ -371,6 +393,12 @@
       </div>
     </div>
 
+    <!-- MICRO-DRILL — one basic, taught in a paragraph, then tested on its own.
+         Reached from a wrong answer in the quiz and from the weak basics list
+         on Progress. It deliberately sits in Practice rather than in Learn: it
+         is three minutes on one sentence, not a lesson. -->
+    <div class="card hidden" id="skill-drill"></div>
+
     <div class="card hidden" id="quiz-live">
       <div class="quiz-top">
         <span id="q-counter">Question 1 / 10</span>
@@ -410,8 +438,20 @@
       <p class="muted" id="stat-note" style="margin-top:12px;"></p>
     </div>
 
+    <!-- Basics come before subjects, because the basic is the cause and the
+         subject is only where the symptom showed up. "55% in Reasoning &
+         English" is not something you can practise; "the verb is agreeing with
+         the nearest noun instead of the subject" is. -->
+    <div class="card">
+      <h2>Fix These Basics First</h2>
+      <p class="muted" style="margin-top:-4px;">The same small gap costing you marks in different questions.
+        A basic is listed once it has cost you twice, and it clears when you are answering it right.</p>
+      <div id="basics-list"></div>
+    </div>
+
     <div class="card">
       <h2>Focus Here First</h2>
+      <p class="muted" style="margin-top:-4px;">The subjects those basics are showing up in.</p>
       <div id="focus-list"></div>
     </div>
 
@@ -436,6 +476,8 @@
 </main>
 
 <script src="/prep/exams.js"></script>
+<!-- Before the bank, because the bank's questions name skills from it. -->
+<script src="/prep/skills.js"></script>
 <script src="/prep/hal-cs.js"></script>
 <script src="/prep/lessons.js"></script>
 <script>
@@ -612,13 +654,16 @@ const STORE_KEY = 'jobhunt_prep_hal_cs_v1';
 const ROTATE_MS = 10 * 60 * 1000;   // "new questions every 10 minutes"
 
 function blankState(){
-  return { seen:{}, topics:{}, answered:0, correct:0, rotationAt: Date.now() + ROTATE_MS, rotations:0 };
+  return { seen:{}, topics:{}, skills:{}, answered:0, correct:0, rotationAt: Date.now() + ROTATE_MS, rotations:0 };
 }
 let state;
 try{ state = JSON.parse(localStorage.getItem(STORE_KEY)) || blankState(); }
 catch(e){ state = blankState(); }
 state.seen = state.seen || {};
 state.topics = state.topics || {};
+// Added after people had already been using the app: an existing save has no
+// skills object, and it fills in from the next answer rather than being lost.
+state.skills = state.skills || {};
 state.answered = state.answered || 0;
 state.correct = state.correct || 0;
 if(!state.rotationAt) state.rotationAt = Date.now() + ROTATE_MS;
@@ -645,6 +690,21 @@ function recordAnswer(item, wasCorrect, skipped){
     state.topics[item.topic] = t;
     state.answered++;
     if(wasCorrect) state.correct++;
+  }
+
+  // The same record, one level down. Misses are kept per QUESTION rather than
+  // as a running count, because two misses of the same question is one gap seen
+  // twice, while two misses across different questions is the same gap costing
+  // you marks in places you did not connect. Only the second kind is a signal.
+  if(!skipped){
+    (item.skills || []).forEach(key=>{
+      const k = state.skills[key] || {asked:0, correct:0, missed:{}};
+      k.missed = k.missed || {};
+      k.asked++;
+      if(wasCorrect) k.correct++;
+      else k.missed[item.id] = (k.missed[item.id] || 0) + 1;
+      state.skills[key] = k;
+    });
   }
   save();
 
@@ -840,6 +900,13 @@ function explainHTML(item, isCorrect, skipped, level){
 /** The ladder of explanations for one question, shortest first. */
 function explainSteps(item){
   const steps = [{ label: 'Why', body: item.why }];
+  // The basic underneath, immediately after the answer. A question explained is
+  // one question; the rule it rests on is every question like it. This is the
+  // whole reason prep/skills.js exists, so it comes second, before the picture
+  // and before the elimination walk.
+  skillsForItem(item).forEach(s=>{
+    steps.push({ label: 'The basic behind it — ' + s.name, body: s.rule });
+  });
   // A picture first where one exists. "Draw the generations on paper" is sound
   // advice and useless on a phone — if the diagram is the explanation, the app
   // should draw it. Seeing the same shape repeatedly is how it becomes
@@ -866,6 +933,125 @@ function lessonForTopic(topic){
   if (typeof CURRICULUM === 'undefined') return null;
   return CURRICULUM.find(l => l.topic === topic) || null;
 }
+
+/* ==========================================================================
+   THE BASICS — diagnosing the cause instead of naming the symptom
+
+   A topic is where a question lives. A skill is what it actually tests. Told
+   that Reasoning & English is at 55%, there is nothing to do on a Tuesday
+   morning. Told that the verb keeps being made to agree with the nearest noun
+   instead of with the subject — twice now, in two questions that did not look
+   alike — there is exactly one thing to do, and it takes three minutes.
+
+   So the moment the same basic has cost marks on two DIFFERENT questions, the
+   quiz says so on the spot and offers the drill. Waiting until the Progress
+   screen would be waiting until after the person has stopped caring.
+   ========================================================================== */
+const SKILL_ALERT_AT = 2;   // one miss is an accident; two is a pattern
+
+function skillsForItem(item){
+  if(typeof SKILLS === 'undefined') return [];
+  return (item.skills || []).map(k => SKILL_BY_KEY[k]).filter(Boolean);
+}
+function skillStat(key){
+  const s = state.skills[key] || {};
+  const missed = s.missed || {};
+  const distinctMissed = Object.keys(missed).length;
+  const asked = s.asked || 0, correct = s.correct || 0;
+  return { asked, correct, distinctMissed,
+           pct: asked ? Math.round(correct / asked * 100) : null };
+}
+/** Every question in the bank that drills this basic. */
+function skillPool(key){
+  return ALL.filter(q => (q.skills || []).indexOf(key) !== -1);
+}
+/** A basic is weak once it has cost marks on two different questions, or once
+    enough answers have accumulated to judge it and it is below 60%. It stops
+    being weak when it is being answered right — 4 answers at 80% clears it, so
+    the list empties as the gap actually closes rather than accusing forever. */
+function weakSkills(){
+  if(typeof SKILLS === 'undefined') return [];
+  return SKILLS
+    .map(s => Object.assign({ skill: s }, skillStat(s.key)))
+    .filter(r => {
+      if(r.asked === 0) return false;
+      if(r.asked >= 4 && r.pct >= 80) return false;
+      return r.distinctMissed >= SKILL_ALERT_AT || (r.asked >= 4 && r.pct < 60);
+    })
+    .sort((a,b) => (b.distinctMissed - a.distinctMissed) || (a.pct - b.pct));
+}
+
+const ORDINALS = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
+function ordinal(n){ return ORDINALS[n] || (n + 'th'); }
+
+/** Shown under a wrong answer, and only for a basic that has now cost marks on
+    two different questions. A skipped question is not a miss — skipping is not
+    the same as getting it wrong, and treating it as one would raise the alarm
+    over nothing. */
+function skillAlertHTML(item, isCorrect, skipped){
+  if(isCorrect || skipped) return '';
+  const hit = skillsForItem(item)
+    .map(s => ({ s, stat: skillStat(s.key) }))
+    .filter(x => x.stat.distinctMissed >= SKILL_ALERT_AT)
+    .sort((a,b) => b.stat.distinctMissed - a.stat.distinctMissed)[0];
+  if(!hit) return '';
+  const n = skillPool(hit.s.key).length;
+  return `<div class="skill-alert">
+    <div class="sa-head">That is the ${ordinal(hit.stat.distinctMissed)} time ${escHtml(hit.s.name.toLowerCase())} has cost you — fix it now.</div>
+    <div class="sa-rule">${escHtml(hit.s.rule)}</div>
+    <button class="primary drill-btn" data-drill="${escHtml(hit.s.key)}">Drill it now — ${n} questions on this one thing</button>
+  </div>`;
+}
+
+function skillBlockHtml(b){
+  if(b.p) return `<p class="ls-p">${escHtml(b.p)}</p>`;
+  if(b.c) return `<pre class="ls-c">${escHtml(b.c)}</pre>`;
+  if(b.k) return `<div class="ls-k"><span>Remember</span>${escHtml(b.k)}</div>`;
+  if(b.l) return `<ul class="ls-l">${b.l.map(x=>`<li>${escHtml(x)}</li>`).join('')}</ul>`;
+  return '';
+}
+
+/** The drill screen: the basic explained, then a button into a quiz made only
+    of questions that test it. */
+function openSkillDrill(key){
+  const s = (typeof SKILL_BY_KEY !== 'undefined') ? SKILL_BY_KEY[key] : null;
+  if(!s) return;
+  const pool = skillPool(key);
+  const stat = skillStat(key);
+  const size = Math.min(5, pool.length);
+  window.gotoSection('quiz');
+  document.getElementById('quiz-setup').classList.add('hidden');
+  document.getElementById('quiz-live').classList.add('hidden');
+  document.getElementById('quiz-result').classList.add('hidden');
+  const box = document.getElementById('skill-drill');
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <button class="ghost" id="drill-back">← Back to practice</button>
+    <div class="ls-meta">${escHtml(s.subject)} · one basic</div>
+    <h2 class="drill-name">${escHtml(s.name)}</h2>
+    <div class="drill-rule">${escHtml(s.rule)}</div>
+    ${s.teach.map(skillBlockHtml).join('')}
+    ${stat.asked ? `<p class="muted">So far: ${stat.correct} right out of ${stat.asked}${
+      stat.distinctMissed ? `, and it has cost you marks on ${stat.distinctMissed} different question${stat.distinctMissed === 1 ? '' : 's'}` : ''}.</p>` : ''}
+    <button class="primary drill-btn" id="drill-start">Start the drill — ${size} question${size === 1 ? '' : 's'}</button>`;
+  document.getElementById('drill-back').onclick = ()=>{
+    box.classList.add('hidden');
+    document.getElementById('quiz-setup').classList.remove('hidden');
+  };
+  document.getElementById('drill-start').onclick = ()=>{
+    box.classList.add('hidden');
+    window.__lessonCheck = null;
+    window.__skillDrill = key;
+    beginQuiz(pool, { size: size });
+  };
+  window.scrollTo(0, 0);
+}
+window.openSkillDrill = openSkillDrill;
+
+document.addEventListener('click', function(e){
+  const d = e.target.closest && e.target.closest('[data-drill]');
+  if(d) openSkillDrill(d.dataset.drill);
+});
 
 /* Delegated so it works in the live quiz and in the review list alike. */
 document.addEventListener('click', function(e){
@@ -897,7 +1083,10 @@ function selectAnswer(idx){
   if(isCorrect) score++;
   answers.push({...item, chosen:idx});
   recordAnswer(item, isCorrect, false);
-  document.getElementById('explain-slot').innerHTML = explainHTML(item, isCorrect, false);
+  // The alert is computed AFTER the answer is recorded, so "the second time"
+  // counts the miss that just happened rather than the one before it.
+  document.getElementById('explain-slot').innerHTML =
+    explainHTML(item, isCorrect, false) + skillAlertHTML(item, isCorrect, false);
   document.getElementById('skip-btn').classList.add('hidden');
   document.getElementById('next-btn').classList.remove('hidden');
 }
@@ -939,6 +1128,24 @@ function showResult(){
   });
   // A lesson check reports mastery instead of the usual per-topic breakdown —
   // the only thing that matters there is whether the next topic unlocked.
+  // A skill drill reports on the one basic it was about. Anything else — a
+  // per-topic breakdown of five questions from the same topic — would be noise.
+  if(window.__skillDrill){
+    const key = window.__skillDrill;
+    window.__skillDrill = null;
+    const s = SKILL_BY_KEY[key];
+    const clean = score === currentQuiz.length;
+    document.getElementById('result-insight').innerHTML = `<div class="focus-box" style="${
+      clean ? 'border-left-color:var(--good);background:#16a34a1a' : ''}">
+      <strong>${escHtml(s.name)}: ${score}/${currentQuiz.length}</strong> — ${clean
+        ? 'that basic is holding. It stays on the Progress list until four answers back it up, then it clears.'
+        : 'not fixed yet, and that is normal on the first pass. Read the rule again and run the drill once more — the explanations below show which part slipped.'}
+      <div class="quiz-actions"><button class="ghost drill-btn" data-drill="${escHtml(key)}">Read it again and re-drill</button></div>
+    </div>`;
+    document.getElementById('review-list').innerHTML = reviewHtml();
+    return;
+  }
+
   const lessonVerdict = window.finishLessonCheck
     ? window.finishLessonCheck(score, currentQuiz.length) : null;
   if(lessonVerdict){
@@ -1005,6 +1212,8 @@ function renderProgress(){
     ? `${seenCount} of ${ALL.length} questions attempted at least once. Skipped questions are not counted in accuracy.`
     : `Nothing recorded yet. Take a quiz and this page fills in — it needs at least ${MIN_FOR_VERDICT} answers in a subject before it will call anything a weak area.`;
 
+  renderBasics();
+
   const rows = Object.keys(QUESTION_BANK).map(topic=>{
     const s = state.topics[topic] || {asked:0, correct:0};
     const pct = s.asked ? Math.round((s.correct/s.asked)*100) : null;
@@ -1062,6 +1271,34 @@ function renderProgress(){
         <div class="mt">💡 ${q.trick}</div>
       </div>`).join('')
     : `<p class="muted">Nothing here yet. A question lands on this list after you get it wrong twice — and drops off once you get it right.</p>`;
+}
+
+/* The weak basics, above the weak subjects. Each one is a rule you can be
+   taught in a minute and a drill you can take in three, which is the whole
+   difference between this list and the subject list underneath it. */
+function renderBasics(){
+  const el = document.getElementById('basics-list');
+  if(!el) return;
+  const weak = weakSkills();
+  if(!weak.length){
+    const anySkill = Object.keys(state.skills).length > 0;
+    el.innerHTML = `<p class="muted">${anySkill
+      ? `Nothing has cost you twice yet. A basic appears here the moment the same gap shows up in ${SKILL_ALERT_AT} different questions — until then, naming one would be guessing.`
+      : `Nothing recorded yet. Take a quiz and anything that trips you up twice will be named here, with a drill for it.`}</p>`;
+    return;
+  }
+  el.innerHTML = weak.map(r=>`
+    <div class="basic-row">
+      <div class="basic-head">
+        <span class="basic-name">${escHtml(r.skill.name)}</span>
+        <span class="basic-count">${r.distinctMissed} question${r.distinctMissed === 1 ? '' : 's'} lost</span>
+      </div>
+      <div class="basic-sub">${escHtml(r.skill.subject)}${
+        r.asked ? ` · ${r.correct}/${r.asked} right` : ''}</div>
+      <div class="basic-rule">${escHtml(r.skill.rule)}</div>
+      <button class="ghost drill-btn" data-drill="${escHtml(r.skill.key)}">Drill ${escHtml(r.skill.name.toLowerCase())} — ${
+        Math.min(5, skillPool(r.skill.key).length)} questions</button>
+    </div>`).join('');
 }
 
 document.getElementById('reset-btn').addEventListener('click', ()=>{

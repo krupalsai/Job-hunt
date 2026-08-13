@@ -187,6 +187,47 @@ async function reachable(page, selector, where, minH){
   check('no page reload — the section switch is in-page',
     await page.evaluate(() => performance.getEntriesByType('navigation').length === 1));
 
+  /* ── The basics ─────────────────────────────────────────────────────── */
+  // Everything the weak-basics work added is read on a phone, mid-quiz, with
+  // the bottom bar taking the last 74px. A drill explainer that scrolls
+  // sideways, or a "fix it now" button too small to hit, is the same failure
+  // this suite was written for — just on a new screen.
+  console.log('\n── the basics fit the phone they are read on ────────────');
+  await page.locator(BAR + '[data-tab="quiz"]').click();
+  await page.waitForSelector('#quiz-setup');
+  const skillKey = await page.evaluate(() => {
+    // A basic that has already cost marks on two different questions, which is
+    // the condition the app treats as a signal rather than an accident.
+    const k = SKILLS[0].key;
+    state.skills[k] = { asked: 4, correct: 1, missed: { qaaa: 1, qbbb: 1 } };
+    save();
+    openSkillDrill(k);
+    return k;
+  });
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('the drill explains the basic before testing it',
+    (await page.locator('#skill-drill .drill-rule').count()) === 1);
+  await noSideScroll(page, 'a micro-drill');
+  await reachable(page, '#skill-drill .drill-btn', 'drill screen button');
+
+  await page.evaluate(k => {
+    window.__lessonCheck = null;
+    beginQuiz(ALL.filter(q => (q.skills || []).indexOf(k) !== -1), { size: 2 });
+  }, skillKey);
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  const wrongIdx = await page.evaluate(() => currentQuiz[currentIndex].correct === 0 ? 1 : 0);
+  await page.locator('#q-options .opt').nth(wrongIdx).click();
+  await page.waitForSelector('.skill-alert');
+  check('a repeated basic is called out on the spot', (await page.locator('.skill-alert').count()) === 1);
+  await noSideScroll(page, 'a wrong answer carrying a basics alert');
+  await reachable(page, '.skill-alert [data-drill]', 'fix-it-now button');
+
+  await page.locator(BAR + '[data-tab="progress"]').click();
+  await page.waitForSelector('#basics-list');
+  check('Progress lists the weak basic', (await page.locator('#basics-list .basic-row').count()) >= 1);
+  await noSideScroll(page, 'Progress with weak basics listed');
+  await reachable(page, '#basics-list [data-drill]', 'weak basics drill');
+
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right section, at its top ─────');
   for (const h of ['examinfo', 'learn', 'quiz', 'schedule', 'progress']) {

@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 185 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 208 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -327,6 +327,117 @@ function check(name, cond, detail){
     check('each attempt has qid, topic and correctness',
       typeof row.qid === 'string' && typeof row.topic === 'string' && typeof row.correct === 'boolean');
   }
+
+  console.log('\n── the basics underneath the topics ────────────────────');
+  /* The failure this section exists to catch: "One of my friend is a doctor"
+     and "Each of the boys have finished" are the same gap in two different
+     questions, and the app used to treat them as two unrelated misses in a
+     topic called "Reasoning & English". Being told a subject is at 55% is not
+     something anyone can act on at 7am; being told the verb is agreeing with
+     the nearest noun instead of the subject is.
+
+     Skill state is cleared first so the count means what it says. Everything
+     before this point answered the first option ~30 times, which would have
+     already tripped some basics — the assertion here is about the SECOND miss
+     specifically, so it needs a known starting point. */
+  const DRILL_SKILL = 'subject-verb-agreement';
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  const poolSize = await page.evaluate(k => {
+    state.skills = {}; save();
+    window.__lessonCheck = null;
+    const pool = ALL.filter(q => (q.skills || []).indexOf(k) !== -1);
+    beginQuiz(pool, { size: pool.length });
+    return pool.length;
+  }, DRILL_SKILL);
+  check('a basic has enough questions to drill it', poolSize >= 3, `${poolSize} questions`);
+
+  async function answerWrongly(){
+    const idx = await page.evaluate(() => currentQuiz[currentIndex].correct === 0 ? 1 : 0);
+    await page.locator('#q-options .opt').nth(idx).click();
+    await page.waitForSelector('.explain');
+  }
+
+  await answerWrongly();
+  check('one miss says nothing — one is an accident, not a pattern',
+    (await page.locator('.skill-alert').count()) === 0);
+  // The rule the question rests on is in the explanation ladder, because a
+  // question explained is one question and the rule is every question like it.
+  await page.locator('.explain [data-again]').click();
+  const labels = (await page.locator('.explain .lbl').allTextContents()).join(' | ');
+  check('the explanation names the basic the question rests on',
+    /The basic behind it/i.test(labels), labels);
+
+  await page.click('#next-btn');
+  await answerWrongly();
+  const alert = page.locator('.skill-alert');
+  check('the second miss on the same basic is called out, inside the quiz',
+    (await alert.count()) === 1);
+  const alertText = await alert.textContent();
+  check('it says which basic, and that this is the second time',
+    /second time/i.test(alertText) && /subject-verb agreement/i.test(alertText),
+    alertText.replace(/\s+/g,' ').slice(0,140));
+  check('it offers the drill there and then, not on some other screen',
+    (await page.locator(`.skill-alert [data-drill="${DRILL_SKILL}"]`).count()) === 1);
+
+  await page.locator('.skill-alert [data-drill]').click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('the drill teaches the basic before testing it',
+    (await page.locator('#skill-drill .drill-rule').textContent()).length > 60);
+  check('and the explainer is more than one line',
+    (await page.locator('#skill-drill .ls-p, #skill-drill .ls-c, #skill-drill .ls-k, #skill-drill .ls-l').count()) >= 2);
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('the drill tests that one basic and nothing else',
+    await page.evaluate(k => currentQuiz.every(q => (q.skills || []).indexOf(k) !== -1), DRILL_SKILL));
+  const drillCount = await page.locator('#q-counter').textContent();
+  check('a drill is short — 5 questions at most', /\/ [1-5]$/.test(drillCount.trim()), drillCount);
+
+  for (let i = 0; i < 6; i++) {
+    if (await page.locator('#quiz-result').isVisible()) break;
+    const idx = await page.evaluate(() => currentQuiz[currentIndex].correct);
+    await page.locator('#q-options .opt').nth(idx).click();
+    await page.click('#next-btn');
+  }
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+  const drillVerdict = await page.locator('#result-insight').textContent();
+  check('the drill reports on the basic, not on the subject',
+    /Subject-verb agreement: \d+\/\d+/i.test(drillVerdict), drillVerdict.slice(0,120));
+
+  await page.click('nav#nav-bottom [data-tab="progress"]');
+  const basics = await page.locator('#basics-list').textContent();
+  check('Progress names the weak basic', /subject-verb agreement/i.test(basics),
+    basics.replace(/\s+/g,' ').slice(0,140));
+  check('and states the rule, so the list itself teaches',
+    (await page.locator('#basics-list .basic-rule').first().textContent()).length > 60);
+  check('every weak basic has a drill button',
+    (await page.locator('#basics-list [data-drill]').count()) ===
+    (await page.locator('#basics-list .basic-row').count()));
+  // The basic is the cause and the subject is the symptom, so the basics have
+  // to come first on the page. Reversed, the screen still reads as "revise
+  // Reasoning & English", which is the advice that was not working.
+  check('weak basics sit ABOVE weak subjects, because the basic is the cause',
+    await page.evaluate(() => {
+      const b = document.getElementById('basics-list');
+      const f = document.getElementById('focus-list');
+      return !!(b && f) &&
+        (b.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+    }));
+
+  await page.locator('#basics-list [data-drill]').first().click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('a drill is reachable from Progress too',
+    (await page.locator('#skill-drill .drill-rule').count()) === 1);
+
+  // A basic that is being answered right must leave the list, or it is an
+  // accusation rather than a diagnosis.
+  const cleared = await page.evaluate(k => {
+    state.skills[k] = { asked: 10, correct: 10, missed: {} };
+    save();
+    renderProgress();
+    return document.getElementById('basics-list').textContent;
+  }, DRILL_SKILL);
+  check('a basic that is now being answered right drops off the list',
+    !/subject-verb agreement/i.test(cleared), cleared.replace(/\s+/g,' ').slice(0,120));
 
   console.log('\n── ?exam= switches the whole syllabus ──────────────────');
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ssc-cgl`, { waitUntil: 'networkidle' });

@@ -15,7 +15,13 @@ you use the app  →  /api/progress  →  Supabase
 
 ## What the run may change
 
-- `prep/hal-cs.js` — add questions, especially in topics marked `weak`
+- `prep/skills.js` — the basics underneath the topics. Add a skill when the
+  same gap keeps showing up and nothing in the taxonomy names it. Every skill
+  needs at least three questions tagged with it or the build fails, because the
+  app offers a drill for each one.
+- `prep/hal-cs.js` — add questions, especially in topics marked `weak`, and tag
+  them with `skills: ["…"]` where you are confident. A wrong tag sends someone
+  to drill the wrong basic, which is worse than no tag — leave it off if unsure.
 - `prep/lessons.js` — deepen thin subjects (Quantitative Aptitude has none yet) and attach a
   `video: {url, title, channel}` where one genuinely helps. **Verify every video
   before adding it**: `curl -s "https://www.youtube.com/oembed?url=<watch-url>&format=json"`
@@ -47,3 +53,26 @@ from study_weak_areas order by accuracy nulls last;
 `verdict` is one of `unassessed` (< 4 answers — not enough to judge), `weak`
 (< 60%), `developing` (< 80%), `strong`. Only `weak` justifies new material;
 acting on `unassessed` would be guessing.
+
+## Reading it at the level that can be acted on
+
+A topic says WHERE marks are going. A skill says WHY. "Reasoning & English at
+55%" cannot be practised; "the verb keeps agreeing with the nearest noun
+instead of the subject" can, and it takes three minutes.
+
+```sql
+select skill, topic, answered, correct, distinct_missed, accuracy, verdict
+from study_weak_skills order by distinct_missed desc, accuracy nulls last;
+```
+
+`GET /api/progress?summary=1` returns the same thing as `skills`, alongside
+`topics`, with no credentials needed.
+
+`distinct_missed` is the count of DIFFERENT questions that basic has cost marks
+on. Two misses of one question is one gap seen twice; two misses across two
+questions is a gap that generalises — which is why a skill can be called `weak`
+on two misses without the four-answer floor the topic view waits for.
+
+**Prefer weak skills to weak topics when deciding what to write.** Four
+questions drilling one named basic are worth more than ten more questions
+scattered across the subject it showed up in.
