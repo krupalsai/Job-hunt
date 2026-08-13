@@ -61,6 +61,14 @@ const isSkillKey = (v: unknown): v is string =>
  *  single attempt from turning into an unbounded number of rows. */
 const MAX_SKILLS_PER_ATTEMPT = 4;
 
+/** Milliseconds spent on one question. The client already discards anything
+ *  under 250ms or over five minutes; this is the same bound restated, because
+ *  a public endpoint cannot assume the client that called it is the one that
+ *  was shipped. Anything outside it is dropped rather than rejected — a bad
+ *  clock must not cost you the answer it was attached to. */
+const isSaneMs = (v: unknown): v is number =>
+  typeof v === "number" && Number.isFinite(v) && v >= 250 && v <= 300000;
+
 const isUuid = (v: unknown): v is string =>
   typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
 
@@ -83,7 +91,7 @@ export default async function handler(req: any, res: any) {
   // the loop to work, and none of it is worth anything to anyone else.
   if (req.method === "GET" && String(req.query?.summary ?? "") === "1") {
     const { data, error } = await db.from("study_weak_areas")
-      .select("topic, answered, correct, accuracy, verdict, last_practised");
+      .select("topic, answered, correct, accuracy, verdict, last_practised, timed_answered, avg_ms");
     if (error) {
       console.error("[progress] summary failed", error);
       return res.status(500).json({ error: "Could not read progress." });
@@ -91,14 +99,27 @@ export default async function handler(req: any, res: any) {
     // Collapse devices together: one person, possibly two phones.
     const byTopic: Record<string, any> = {};
     for (const r of data ?? []) {
-      const t = byTopic[r.topic] || (byTopic[r.topic] = { topic: r.topic, answered: 0, correct: 0 });
+      const t = byTopic[r.topic] || (byTopic[r.topic] = {
+        topic: r.topic, answered: 0, correct: 0, timed: 0, totalMs: 0,
+      });
       t.answered += r.answered ?? 0;
       t.correct  += r.correct ?? 0;
+      // Weighted back into a total before re-averaging, so two devices with
+      // very different numbers of answers do not each count for half.
+      if (r.avg_ms && r.timed_answered) {
+        t.timed   += r.timed_answered;
+        t.totalMs += r.avg_ms * r.timed_answered;
+      }
     }
     const topics = Object.values(byTopic).map((t: any) => {
       const accuracy = t.answered ? Math.round(100 * t.correct / t.answered) : null;
+      const { totalMs, timed, ...rest } = t;
       return {
-        ...t, accuracy,
+        ...rest, accuracy,
+        // Seconds, because that is the unit the exam is budgeted in. Null when
+        // nothing has been timed — an absent measurement, not a fast one.
+        avg_seconds: timed ? Math.round(totalMs / timed / 1000) : null,
+        timed_answered: timed,
         verdict: t.answered < 4 ? "unassessed"
                : accuracy < 60 ? "weak"
                : accuracy < 80 ? "developing" : "strong",
@@ -227,6 +248,7 @@ export default async function handler(req: any, res: any) {
           clean.push({
             device_id: deviceId, qid: r.qid, topic: r.topic,
             correct: r.correct, skipped: r.skipped,
+            duration_ms: isSaneMs(r.ms) ? Math.round(r.ms) : null,
           });
           // The basics this question tests. Absent on most rows, and absent
           // entirely on rows queued by an older build of the app — neither is

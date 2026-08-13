@@ -83,9 +83,14 @@
   }
 
   /** Called by the quiz on every answer. Never throws, never blocks. */
-  window.recordAttemptRemote = function (item, correct, skipped) {
+  window.recordAttemptRemote = function (item, correct, skipped, ms) {
     const q = readQueue();
     const row = { qid: item.id, topic: item.topic, correct: !!correct, skipped: !!skipped };
+    // How long the answer took. Absent when the clock was discarded (a mis-tap,
+    // or a phone left locked on the question), and absent on a skip — never
+    // sent as a zero, because a zero would drag every average down and read as
+    // an instant answer rather than as no measurement.
+    if (typeof ms === "number" && ms > 0) row.ms = Math.round(ms);
     // The basics this question tests, so the mentor run can see that two misses
     // in different topics were the same gap. Sent only when there are any: most
     // questions are untagged, and an empty array on every row would be noise in

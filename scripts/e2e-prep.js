@@ -328,6 +328,91 @@ function check(name, cond, detail){
       typeof row.qid === 'string' && typeof row.topic === 'string' && typeof row.correct === 'boolean');
   }
 
+  console.log('\n── speed is half the answer ─────────────────────────────');
+  /* The exam gives 150 minutes for 160 questions. An answer you can only
+     produce in 94 seconds is one you cannot bank, and a screen that reports
+     82% accuracy without saying so is telling you half the truth. These
+     assertions are about the half that was missing. */
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.evaluate(() => {
+    if (!document.getElementById('quiz-result').classList.contains('hidden')) {
+      document.getElementById('retry-btn').click();
+    }
+  });
+  await page.click('#start-quiz');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  // Deliberately slow: under 250ms the clock is treated as a mis-tap, so a
+  // test that answered instantly would assert nothing.
+  await new Promise(r => setTimeout(r, 900));
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  const paceText = (await page.locator('.pace').first().textContent()).replace(/\s+/g, ' ').trim();
+  check('an answer reports what it cost in time', /\d+s/.test(paceText), paceText);
+  check('and states the time this paper actually allows for that section',
+    /allows about \d+s/.test(paceText), paceText.slice(0, 140));
+  const recorded = await page.evaluate(() => {
+    const t = Object.values(state.topics).filter(x => x.timed);
+    return { timed: t.reduce((n, x) => n + x.timed, 0), ms: t.reduce((n, x) => n + x.ms, 0) };
+  });
+  check('the time is recorded against the subject', recorded.timed >= 1, JSON.stringify(recorded));
+  check('and it is a plausible measurement, not a zero',
+    recorded.ms >= 900 && recorded.ms < 300000, `${recorded.ms}ms`);
+
+  // A skip has no answer time. Counting the seconds spent deciding NOT to
+  // answer would flatter or wreck the average depending on mood.
+  const beforeSkip = await page.evaluate(() =>
+    Object.values(state.topics).reduce((n, x) => n + (x.timed || 0), 0));
+  await page.click('#next-btn');
+  await new Promise(r => setTimeout(r, 600));
+  await page.click('#skip-btn');
+  await page.waitForSelector('.explain');
+  const afterSkip = await page.evaluate(() =>
+    Object.values(state.topics).reduce((n, x) => n + (x.timed || 0), 0));
+  check('a skip is not counted as a fast answer', afterSkip === beforeSkip,
+    `${beforeSkip} → ${afterSkip}`);
+  check('and a skip shows no pace line', (await page.locator('.pace').count()) === 0);
+
+  // The four quadrants. Accuracy and speed fail differently, and the fix for
+  // one is the opposite of the fix for the other, so the app has to say which.
+  const verdicts = await page.evaluate(() => {
+    const t = (pct, avg, target) => {
+      const v = speedVerdict(pct, avg, target);
+      return v ? v.kind : null;
+    };
+    return {
+      ready: t(90, 40, 56), slow: t(90, 94, 56),
+      hasty: t(55, 20, 56), gap: t(40, 120, 56),
+      noData: t(90, null, 56),
+    };
+  });
+  check('accurate and inside the time reads as ready', verdicts.ready === 'ready');
+  check('accurate but slow names SPEED as the problem', verdicts.slow === 'slow');
+  check('fast but wrong names ACCURACY as the problem', verdicts.hasty === 'hasty');
+  check('slow and wrong is called a method gap, not a timing one', verdicts.gap === 'gap');
+  check('no timing data means no verdict, rather than a guessed one',
+    verdicts.noData === null);
+
+  // Speed has to reach the server too, or the mentor run can see what you get
+  // wrong but not that you are simply too slow to finish the paper. Attempts
+  // are coalesced on a 1.5s timer, so wait for the flush rather than race it.
+  const allSent = () => apiCalls.filter(c => c.body && c.body.action === 'attempts')
+                                .flatMap(c => c.body.attempts);
+  for (let i = 0; i < 25 && !allSent().some(a => typeof a.ms === 'number'); i++) {
+    await new Promise(r => setTimeout(r, 200));
+  }
+  const timedRow = allSent().find(a => typeof a.ms === 'number');
+  check('at least one attempt reaches the server with how long it took', !!timedRow,
+    JSON.stringify(allSent().slice(-3)));
+  if (timedRow) {
+    check('the time sent is a real measurement, never a zero',
+      timedRow.ms >= 250 && timedRow.ms <= 300000, `${timedRow.ms}ms`);
+  }
+  const skippedRow = allSent().find(a => a.skipped);
+  if (skippedRow) {
+    check('a skipped attempt sends no time at all', skippedRow.ms === undefined,
+      JSON.stringify(skippedRow));
+  }
+
   console.log('\n── the basics underneath the topics ────────────────────');
   /* The failure this section exists to catch: "One of my friend is a doctor"
      and "Each of the boys have finished" are the same gap in two different

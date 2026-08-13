@@ -158,6 +158,19 @@
   .miss-item .mq{ margin-bottom:6px; }
   .miss-item .mt{ font-size:12.5px; color:var(--warn); line-height:1.5; }
 
+  /* Pace. Neutral by default — a time is information, not a telling-off. Only
+     going over the exam's own budget for that section colours it. */
+  .pace{ margin-top:10px; font-size:12.5px; line-height:1.55; color:var(--muted);
+         background:#0f172a; border:1px solid var(--panel-border);
+         border-radius:9px; padding:9px 12px; }
+  .pace.is-ok strong{ color:var(--good); }
+  .pace.is-slow{ border-color:#f59e0b55; }
+  .pace.is-slow strong{ color:var(--warn); }
+  .speed-line{ font-size:12.5px; line-height:1.6; margin-top:5px; }
+  .speed-line.ready{ color:var(--good); }
+  .speed-line.slow,.speed-line.hasty{ color:var(--warn); }
+  .speed-line.gap{ color:var(--bad); }
+
   /* The basics — skills below topic level.
      The alert is warm rather than red: it is not a telling-off, it is the app
      noticing the same gap twice and offering to close it. */
@@ -673,12 +686,61 @@ function save(){
   catch(e){ /* private mode / quota — the session still works, it just won't persist */ }
 }
 
-function recordAnswer(item, wasCorrect, skipped){
+/* ==========================================================================
+   TIME PER QUESTION
+
+   The exam is not a test of whether you know the answer. It is a test of
+   whether you can produce it in 56 seconds. Knowing a topic at 82% accuracy
+   and 94 seconds a question is a FAILING position in a paper that gives you
+   56 — and "Percentage: 82%" on a progress screen hides that completely.
+
+   So every answer is timed. The clock starts when the question is painted and
+   stops when an option is pressed, which is exactly the interval the exam
+   measures.
+   ========================================================================== */
+let questionShownAt = 0;
+
+/** Milliseconds spent on the question now on screen, or null if it was never
+    started. Capped: a phone left locked on question 4 overnight would poison
+    the average for weeks, and no real answer takes longer than five minutes. */
+const MAX_SANE_MS = 5 * 60 * 1000;
+function elapsedOnQuestion(){
+  if(!questionShownAt) return null;
+  const ms = Date.now() - questionShownAt;
+  if(ms < 250 || ms > MAX_SANE_MS) return null;   // mis-tap or walked away
+  return ms;
+}
+
+/** Seconds this exam allows for a question in this subject.
+
+    Taken from the per-section time budgets already in prep/exams.js rather
+    than invented: HAL gives 97 minutes to 100 technical questions and 10
+    minutes to 20 General Awareness ones, so the target for DBMS is not the
+    target for General Awareness. Falls back to the whole paper's average, and
+    then to null — an honest "no target" beats a made-up one. */
+function targetSecondsFor(topic){
+  const exam = (typeof currentExamObj === 'function') ? currentExamObj() : null;
+  if(!exam) return null;
+  const sec = (exam.sections || []).find(s => (s.subjects || []).indexOf(topic) !== -1);
+  if(sec){
+    const qs = sec.questions || sec.marks;
+    if(sec.budget && qs) return Math.round(sec.budget * 60 / qs);
+  }
+  const totalQs = exam.questions ||
+    (exam.sections || []).reduce((n,s)=> n + (s.questions || s.marks), 0);
+  if(exam.minutes && totalQs) return Math.round(exam.minutes * 60 / totalQs);
+  return null;
+}
+
+function recordAnswer(item, wasCorrect, skipped, ms){
   const s = state.seen[item.id] || {times:0, wrong:0, lastSeen:0};
   s.times++;
   s.lastSeen = Date.now();
   if(!wasCorrect) s.wrong++;
   else if(s.wrong > 0) s.wrong--;          // getting it right pays down the debt
+  // Kept per question as a total and a count rather than an average, so a new
+  // attempt can be folded in without storing every attempt.
+  if(!skipped && ms){ s.ms = (s.ms || 0) + ms; s.timed = (s.timed || 0) + 1; }
   state.seen[item.id] = s;
 
   // Skips are recorded but excluded from accuracy — skipping is not the same as
@@ -687,6 +749,9 @@ function recordAnswer(item, wasCorrect, skipped){
     const t = state.topics[item.topic] || {asked:0, correct:0};
     t.asked++;
     if(wasCorrect) t.correct++;
+    // Timing is counted separately from accuracy: an answer whose clock was
+    // discarded still counts as answered, it just does not count as timed.
+    if(ms){ t.ms = (t.ms || 0) + ms; t.timed = (t.timed || 0) + 1; }
     state.topics[item.topic] = t;
     state.answered++;
     if(wasCorrect) state.correct++;
@@ -711,7 +776,7 @@ function recordAnswer(item, wasCorrect, skipped){
   // Mirror to Supabase so the record exists somewhere other than this phone —
   // that is what makes mentoring against real data possible. Fire-and-forget:
   // localStorage above is the source of truth and the UI never waits on this.
-  if(window.recordAttemptRemote) window.recordAttemptRemote(item, wasCorrect, skipped);
+  if(window.recordAttemptRemote) window.recordAttemptRemote(item, wasCorrect, skipped, ms);
 }
 
 /* ==========================================================================
@@ -858,6 +923,10 @@ function renderQuestion(){
     b.addEventListener('click', ()=> selectAnswer(idx));
     optsDiv.appendChild(b);
   });
+
+  // Last thing before the question is live: the clock starts when it is on
+  // screen, not when it was chosen.
+  questionShownAt = Date.now();
 }
 
 /* An explanation that did not land is not an explanation. Every one now has an
@@ -926,6 +995,52 @@ function explainSteps(item){
         + `In the exam this is often faster than proving the right answer directly, and with four options it always works.`
   });
   return steps;
+}
+
+/* ==========================================================================
+   PACE — the half of every answer that a score does not show
+
+   Accuracy and speed fail differently and the fix for each is the opposite of
+   the fix for the other. Being told "Percentage is weak" when the truth is
+   "you get 82% of these right but take 94 seconds where the paper allows 56"
+   sends you back to a lesson you do not need. So they are always reported
+   apart, and the verdict names which of the two is actually costing marks.
+   ========================================================================== */
+function paceOf(topic){
+  const t = state.topics[topic] || {};
+  const timed = t.timed || 0;
+  return {
+    timed,
+    avg: timed ? Math.round((t.ms || 0) / timed / 1000) : null,
+    target: targetSecondsFor(topic),
+  };
+}
+
+/** The four quadrants, in the order they matter to someone with an exam date. */
+function speedVerdict(pct, avg, target){
+  if(pct === null || avg === null || !target) return null;
+  const accurate = pct >= 75;
+  const fast = avg <= target;
+  if(accurate && fast)
+    return {kind:'ready', text:'Accurate and inside the time. This one is exam-ready.'};
+  if(accurate && !fast)
+    return {kind:'slow', text:'Accuracy is good. <strong>Speed is the problem</strong> — you know this, you are just too slow to bank it. Drill it against the clock, not from the lesson.'};
+  if(!accurate && fast)
+    return {kind:'hasty', text:'You are attempting too quickly. <strong>Accuracy is the problem</strong> — the time is there to spend, so slow down and read the whole question.'};
+  return {kind:'gap', text:'Slow <em>and</em> wrong. This is a gap in the method rather than in the timing — learn it before drilling it, or you will only get faster at being wrong.'};
+}
+
+/** Shown under a single answer: what that one question cost, against what the
+    exam actually allows for its section. */
+function paceHTML(item, ms){
+  if(!ms) return '';
+  const secs = Math.round(ms / 1000);
+  const target = targetSecondsFor(item.topic);
+  if(!target) return `<div class="pace">⏱ ${secs}s on that one.</div>`;
+  const over = secs - target;
+  return `<div class="pace ${over > 0 ? 'is-slow' : 'is-ok'}">⏱ <strong>${secs}s</strong> · this paper allows about
+    ${target}s for a ${escHtml(item.topic)} question${
+      over > 0 ? ` — <strong>${over}s over</strong>` : ' — inside the budget'}.</div>`;
 }
 
 /** The lesson that teaches a topic, if one exists. */
@@ -1074,6 +1189,8 @@ document.addEventListener('click', function(e){
 
 function selectAnswer(idx){
   const item = currentQuiz[currentIndex];
+  const ms = elapsedOnQuestion();
+  questionShownAt = 0;
   document.querySelectorAll('#q-options .opt').forEach((b,i)=>{
     b.disabled = true;
     if(i === item.correct) b.classList.add('correct');
@@ -1081,24 +1198,29 @@ function selectAnswer(idx){
   });
   const isCorrect = idx === item.correct;
   if(isCorrect) score++;
-  answers.push({...item, chosen:idx});
-  recordAnswer(item, isCorrect, false);
+  answers.push({...item, chosen:idx, ms:ms});
+  recordAnswer(item, isCorrect, false, ms);
   // The alert is computed AFTER the answer is recorded, so "the second time"
   // counts the miss that just happened rather than the one before it.
   document.getElementById('explain-slot').innerHTML =
-    explainHTML(item, isCorrect, false) + skillAlertHTML(item, isCorrect, false);
+    explainHTML(item, isCorrect, false) + paceHTML(item, ms) +
+    skillAlertHTML(item, isCorrect, false);
   document.getElementById('skip-btn').classList.add('hidden');
   document.getElementById('next-btn').classList.remove('hidden');
 }
 
 document.getElementById('skip-btn').addEventListener('click', ()=>{
   const item = currentQuiz[currentIndex];
+  // A skip is timed for the record but never counted towards pace: the time
+  // spent deciding not to answer is real, and mixing it into "how fast do you
+  // answer this topic" would flatter or wreck the average depending on mood.
+  questionShownAt = 0;
+  answers.push({...item, chosen:-1});
   document.querySelectorAll('#q-options .opt').forEach((b,i)=>{
     b.disabled = true;
     if(i === item.correct) b.classList.add('correct');
   });
-  answers.push({...item, chosen:-1});
-  recordAnswer(item, false, true);
+  recordAnswer(item, false, true, null);
   // Skipping still shows the answer: a skipped question you never see the answer
   // to is one you will skip again in the hall.
   document.getElementById('explain-slot').innerHTML = explainHTML(item, false, true);
@@ -1154,13 +1276,27 @@ function showResult(){
     return;
   }
 
+  // What this set cost in time, against what the paper allows for it. A score
+  // with no pace beside it is half the picture in an exam decided by minutes.
+  const timed = answers.filter(a => a.ms);
+  let paceLine = '';
+  if(timed.length){
+    const avg = Math.round(timed.reduce((n,a)=> n + a.ms, 0) / timed.length / 1000);
+    const targets = timed.map(a => targetSecondsFor(a.topic)).filter(t => t);
+    const target = targets.length ? Math.round(targets.reduce((n,t)=>n+t,0) / targets.length) : null;
+    paceLine = `<div class="pace ${target && avg > target ? 'is-slow' : 'is-ok'}">⏱ <strong>${avg}s</strong> a question across this set${
+      target ? ` · the paper allows about ${target}s${
+        avg > target ? ` — you are ${avg - target}s over, which is ${Math.round((avg - target) * 160 / 60)} minutes across a full 160-question paper`
+                     : ' — inside the budget'}` : ''}.</div>`;
+  }
+
   const lost = Object.entries(byTopic).filter(([,v]) => v.ok < v.n)
     .sort((a,b)=> (a[1].ok/a[1].n) - (b[1].ok/b[1].n));
-  document.getElementById('result-insight').innerHTML = lost.length
+  document.getElementById('result-insight').innerHTML = paceLine + (lost.length
     ? `<div class="focus-box">Marks lost in this set: ${
         lost.map(([t,v])=>`<strong>${t}</strong> ${v.ok}/${v.n}`).join(' · ')
       }<br><span class="muted">Open <strong>My Weak Areas</strong> for the picture across every attempt, not just this one.</span></div>`
-    : `<div class="focus-box" style="border-left-color:var(--good); background:#16a34a1a">Clean sweep — nothing missed in this set.</div>`;
+    : `<div class="focus-box" style="border-left-color:var(--good); background:#16a34a1a">Clean sweep — nothing missed in this set.</div>`);
 
   document.getElementById('review-list').innerHTML = reviewHtml();
 }
@@ -1234,10 +1370,15 @@ function renderProgress(){
       </div>`;
     }
     const thin = r.asked < MIN_FOR_VERDICT;
+    const p = paceOf(r.topic);
+    const verdict = thin ? null : speedVerdict(r.pct, p.avg, p.target);
     return `<div class="bar-row">
       <div class="bar-head"><span>${r.topic}</span><span class="pct" style="color:${thin?'var(--dim)':barColour(r.pct)}">${r.pct}%</span></div>
       <div class="bar-track"><div class="bar-fill" style="width:${r.pct}%; background:${thin?'#334155':barColour(r.pct)}"></div></div>
-      <div class="bar-note">${r.correct}/${r.asked} correct${thin?` — too few answers to judge yet (need ${MIN_FOR_VERDICT})`:''}</div>
+      <div class="bar-note">${r.correct}/${r.asked} correct${
+        p.avg !== null ? ` · ${p.avg}s a question${p.target ? ` against ${p.target}s allowed` : ''}` : ''}${
+        thin?` — too few answers to judge yet (need ${MIN_FOR_VERDICT})`:''}</div>
+      ${verdict ? `<div class="speed-line ${verdict.kind}">${verdict.text}</div>` : ''}
     </div>`;
   }).join('');
 
