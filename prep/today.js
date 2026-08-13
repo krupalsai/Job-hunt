@@ -92,9 +92,48 @@
      means no urgency multiplier — NOT a guessed one. A planner that invented a
      deadline would quietly reorder every day around a date nobody supplied,
      and the person following it would have no way of knowing. */
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function fmtDate(iso, withYear) {
+    const d = new Date(iso + "T00:00:00Z");
+    if (isNaN(d.getTime())) return null;
+    return d.getUTCDate() + " " + MONTHS[d.getUTCMonth()] + (withYear ? " " + d.getUTCFullYear() : "");
+  }
+
+  /** How an exam's date reads on screen.
+
+      An exam advertised across two days IS two days until an admit card says
+      otherwise — "5–6 Sep 2026", never "5 Sep 2026". Printing the first day as
+      though it were the assigned one would be inventing a fact about this
+      candidate that only the board can supply. */
+  function examDateLabel(exam) {
+    if (!exam) return "date not configured";
+    if (exam.date) return fmtDate(exam.date, true) + " (assigned)";
+    if (exam.examDateStart && exam.examDateEnd && exam.examDateEnd !== exam.examDateStart) {
+      const a = new Date(exam.examDateStart + "T00:00:00Z");
+      const b = new Date(exam.examDateEnd + "T00:00:00Z");
+      // Within one month the month is said once: "5–6 Sep 2026", not
+      // "5 Sep–6 Sep 2026". Across months both are needed.
+      if (a.getUTCMonth() === b.getUTCMonth() && a.getUTCFullYear() === b.getUTCFullYear()) {
+        return a.getUTCDate() + "–" + fmtDate(exam.examDateEnd, true);
+      }
+      return fmtDate(exam.examDateStart, false) + "–" + fmtDate(exam.examDateEnd, true);
+    }
+    if (exam.examDateStart) return fmtDate(exam.examDateStart, true);
+    return "date not configured";
+  }
+
+  /** The day planning counts back from: an assigned date where one exists, and
+      otherwise the FIRST day of the advertised window. Being ready a day early
+      costs nothing; being ready a day late costs the exam. */
+  function planningDate(exam) {
+    if (!exam) return null;
+    return exam.date || exam.examDateStart || null;
+  }
+
   function urgencyOf(exam) {
-    if (!exam || !exam.date) return { factor: 1, note: "date not configured", days: null };
-    const days = Math.ceil((Date.parse(exam.date) - Date.now()) / 86400000);
+    const when = planningDate(exam);
+    if (!when) return { factor: 1, note: "date not configured", days: null };
+    const days = Math.ceil((Date.parse(when) - Date.now()) / 86400000);
     if (!isFinite(days)) return { factor: 1, note: "date not configured", days: null };
     if (days < 0) return { factor: 1, note: "date has passed", days };
     // Inside sixty days the multiplier climbs from 1.0 to 2.0, linearly. Beyond
@@ -487,7 +526,9 @@
     // day around a deadline nobody supplied.
     const dated = plan.exams.map(e => {
       const u = urgencyOf(e);
-      return esc(e.short) + ": " + esc(u.note);
+      const when = examDateLabel(e);
+      return esc(e.short) + ": " + esc(when) +
+        (u.days === null ? "" : " · " + esc(u.note));
     }).join(" · ");
 
     el("today-head").innerHTML =

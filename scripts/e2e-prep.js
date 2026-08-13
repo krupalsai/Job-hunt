@@ -489,21 +489,55 @@ function check(name, cond, detail){
     Math.min(targets.cglQuant.seconds, targets.tsQuant.seconds) === 53,
     `${targets.cglQuant.seconds} vs ${targets.tsQuant.seconds}`);
 
-  // Dates are configuration. None is set, so no urgency may be manufactured.
-  const urgency = await page.evaluate(() => {
-    const p = window.__buildToday();
+  /* Dates are configuration, and an exam advertised over two days IS two days
+     until an admit card says otherwise. HAL's CBT is a 5-6 September window;
+     which of those two days this candidate sits is decided by HAL, so the app
+     must not print either one as though it knew. */
+  const dates = await page.evaluate(() => {
+    const h = EXAMS.find(e => e.key === 'hal-cs');
+    const t = EXAMS.find(e => e.key === 'ts-si');
     return {
-      configured: EXAMS.map(e => e.date || null),
-      urgencies: p.blocks.filter(b => b.urgency !== undefined).map(b => b.urgency),
+      halAssigned: h.date || null, halStart: h.examDateStart, halEnd: h.examDateEnd,
+      tsAssigned: t.date || null, tsStart: t.examDateStart || null,
     };
   });
-  check('no exam date is invented',
-    urgency.configured.every(d => d === null), JSON.stringify(urgency.configured));
-  check('and an unconfigured date produces no urgency multiplier',
-    urgency.urgencies.every(u => u === 1), JSON.stringify(urgency.urgencies));
-  await page.evaluate(() => window.renderToday());
-  check('the screen says the date is not configured rather than guessing',
-    /date not configured/.test(await page.locator('#today-head').textContent()));
+  check('HAL carries a date WINDOW, not a single day',
+    dates.halStart === '2026-09-05' && dates.halEnd === '2026-09-06',
+    JSON.stringify(dates));
+  check('and no individual assigned date is invented for the candidate',
+    dates.halAssigned === null, String(dates.halAssigned));
+  check('TS SI has no date configured, and none is guessed',
+    dates.tsAssigned === null && dates.tsStart === null, JSON.stringify(dates));
+
+  await page.evaluate(() => { localStorage.setItem('jobhunt_plan_scope', 'all'); window.renderToday(); });
+  const head = (await page.locator('#today-head').textContent()).replace(/\s+/g, ' ');
+  check('the window is shown as a range, never as one day',
+    /5–6 Sep 2026/.test(head) && !/HAL CS: 5 Sep 2026/.test(head), head.slice(0, 160));
+  check('an exam with no date still says so rather than guessing',
+    /TS SI: date not configured/.test(head), head.slice(0, 160));
+
+  // Urgency counts back from the EARLIEST day of the window: ready a day early
+  // costs nothing, ready a day late costs the exam.
+  const urgency = await page.evaluate(() => {
+    const h = EXAMS.find(e => e.key === 'hal-cs');
+    const t = EXAMS.find(e => e.key === 'ts-si');
+    const p = window.__buildToday();
+    const halBlocks = p.blocks.filter(b => b.domain === 'hal-cs' && b.urgency !== undefined);
+    const tsBlocks  = p.blocks.filter(b => b.domain === 'ts-si' && b.urgency !== undefined);
+    return {
+      halDays: Math.ceil((Date.parse(h.examDateStart) - Date.now()) / 86400000),
+      halUrgency: halBlocks.length ? halBlocks[0].urgency : null,
+      tsUrgency: tsBlocks.length ? tsBlocks[0].urgency : null,
+      tsHasDate: !!(t.date || t.examDateStart),
+    };
+  });
+  check('urgency is measured from the first day of the window',
+    urgency.halUrgency === null ||
+    Math.abs(urgency.halUrgency - (1 + (60 - urgency.halDays) / 60)) < 0.001,
+    `${urgency.halUrgency} for ${urgency.halDays} days`);
+  check('an exam with no date still gets no urgency multiplier',
+    urgency.tsHasDate === false && (urgency.tsUrgency === null || urgency.tsUrgency === 1),
+    String(urgency.tsUrgency));
 
   // Question provenance survives the planner: nothing is relabelled by which
   // exam happened to schedule it.

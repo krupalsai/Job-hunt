@@ -36,14 +36,25 @@ const EXAMS = [
     // HAL/CHRC-TM/RECT-02/2026 — but it has NOT been checked against the
     // notification itself, which is the only authority.
     //
+    // The online test is advertised as a WINDOW, not a day: reporting on this
+    // advertisement puts the CBT on 5-6 September 2026. Which of those two days
+    // an individual candidate sits is decided by HAL and printed on the admit
+    // card, so nothing here may claim to know it.
+    //
+    // `date` stays absent until an assigned date is confirmed. Planning counts
+    // back from the EARLIEST day of the window: being ready a day early costs
+    // nothing, being ready a day late costs the exam.
+    examDateStart: "2026-09-05",
+    examDateEnd: "2026-09-06",
+
     // Those same sources describe the 100-mark discipline section as following
     // GATE Computer Science scope, which would mean four subjects this bank has
-    // nothing for at all. They are named here rather than silently generated:
+    // nothing for at all. They are NAMED here rather than silently generated:
     // writing a hundred questions against an unverified syllabus three weeks
     // before the paper is a good way to spend the last three weeks on the wrong
-    // subjects. Nothing gets written for these until the notification is read.
+    // subjects. See HAL-SYLLABUS-AUDIT.md for the full classification.
     pendingVerification: {
-      note: "Reported to follow GATE CS scope, but not yet checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026). No material has been written for these.",
+      note: "Reported to follow GATE CS scope, but not checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026) — the official PDF could not be retrieved. Nothing has been written for these. See HAL-SYLLABUS-AUDIT.md.",
       subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete / Engineering Mathematics"],
     },
     pattern: "160 MCQs · 150 minutes · no negative marking",
