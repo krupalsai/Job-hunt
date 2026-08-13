@@ -24,8 +24,8 @@ first. Both pages share one navigation, injected by `nav.js`:
 - **A side drawer** behind the hamburger — the exam you are preparing for, a
   link to each syllabus, every destination, and settings (qualification, reset
   prep progress).
-- **An exam switcher in the header** — HAL CS and SSC CGL swap without editing
-  the URL. On `/learn.html` the title *is* the switcher; on `/` it is a chip.
+- **An exam switcher in the header** — HAL CS, SSC CGL and TS SI swap without
+  editing the URL. On `/learn.html` the title *is* the switcher; on `/` it is a chip.
 
 Sections of the prep page are addressable: `/learn.html?exam=ssc-cgl#quiz`
 opens SSC practice directly, which is how the job list links into it.
@@ -42,8 +42,10 @@ needs horizontal scrolling or puts a tap target out of reach.
 
 # Preparation (`/learn.html`)
 
-HAL **Management Trainee / Design Trainee (Computer Science)** — 160 MCQs,
-150 minutes, no negative marking. Four destinations in the bottom bar — Learn,
+Three exams: HAL **Management Trainee (Computer Science)**, **SSC CGL** and
+**Telangana SI**. Arithmetic, reasoning and English are shared between them
+rather than copied; the paper structure, marking scheme and tactics are
+per-exam, because those are what differ. Four destinations in the bottom bar — Learn,
 Practice, Plan, Progress — plus **Exam info** in the drawer, which holds what
 used to be the Overview, Topics and Time Strategy tabs.
 
@@ -69,7 +71,7 @@ question whose answer you never see is one you will skip again in the hall.
 ### Questions do not repeat
 
 Selection is ordered **never seen → previously wrong → longest since last seen**.
-With 208 questions drawn 10 at a time, roughly 20 consecutive quizzes pass before
+With 235 questions drawn 10 at a time, roughly 23 consecutive quizzes pass before
 anything comes back. A right answer pays down a question's debt so it stops
 resurfacing; a wrong one brings it back sooner. A 10-minute timer rotates the
 pool and says so on screen.
@@ -124,7 +126,7 @@ wrong and write material aimed at it. That mirror is fire-and-forget: the UI
 never waits on it and a failed request is queued, so losing signal costs
 nothing.
 
-## Bank — `prep/hal-cs.js`
+## Bank — `prep/hal-cs.js` + `prep/ts-si.js`
 
 235 questions across three exams. `prep/hal-cs.js` holds the subjects HAL
 examines (several shared with SSC CGL); `prep/ts-si.js` adds the ones only the
