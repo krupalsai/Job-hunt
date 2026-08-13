@@ -32,6 +32,7 @@ const PREP_ASSETS = [
   '/prep/ts-si.js',
   '/prep/lessons.js',
   '/prep/sync.js',
+  '/prep/today.js',
   '/manifest.json',
   '/icon-192.svg',
 ];

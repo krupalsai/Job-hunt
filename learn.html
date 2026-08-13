@@ -376,6 +376,17 @@
 
   <!-- SCHEDULE -->
   <section id="schedule" class="tab-section hidden">
+    <!-- TODAY, above the 28-day map. The map says what the run looks like; this
+         says what to open now, with minutes on it, worked out from what has
+         actually been going wrong. -->
+    <div class="card">
+      <h2>Today</h2>
+      <p class="muted" style="margin-top:-4px;">How long have you got?</p>
+      <div class="td-chips" id="today-budget"></div>
+      <div id="today-head" style="margin-top:12px;"></div>
+    </div>
+    <div class="card"><div id="today-plan"></div></div>
+
     <div class="card">
       <h2>Your 4-Week Plan</h2>
       <p class="muted" style="margin-top:-4px;">
@@ -535,7 +546,7 @@ window.gotoSection = function(id){
   try{ history.replaceState(null, '', location.pathname + location.search + '#' + id); }catch(e){}
   if(id === 'progress') renderProgress();
   if(id === 'learn' && window.renderLearnPath) window.renderLearnPath();
-  if(id === 'schedule' && window.renderPlan) window.renderPlan();
+  if(id === 'schedule'){ if(window.renderToday) window.renderToday(); if(window.renderPlan) window.renderPlan(); }
   if(id === 'examinfo') renderExamInfo();
   window.scrollTo(0, 0);
 };
@@ -1549,6 +1560,10 @@ renderProgress();
 
 <!-- Loaded last: it uses ALL, state and beginQuiz from the script above. -->
 <script src="/prep/sync.js"></script>
+
+<!-- Reads what sync.js and the quiz have recorded and turns it into today's
+     blocks, with minutes on them. Last, because it uses all of it. -->
+<script src="/prep/today.js"></script>
 
 </body>
 </html>

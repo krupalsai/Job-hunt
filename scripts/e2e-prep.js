@@ -310,6 +310,59 @@ function check(name, cond, detail){
     (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
     `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
 
+  console.log('\n── today: which subjects, for how many minutes ──────────');
+  /* "Revise Data Structures" is not a plan. A plan is a subject, a number of
+     minutes, and a reason — and the numbers have to add up to the time you
+     actually said you had, or it is a wish list. */
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.waitForSelector('#today-plan .td-block');
+  const todayPlan = await page.evaluate(() => window.__buildToday());
+  check('today names specific subjects, not a vague focus',
+    todayPlan.blocks.length >= 3, `${todayPlan.blocks.length} blocks`);
+  check('every block carries minutes',
+    todayPlan.blocks.every(b => b.minutes >= 15), JSON.stringify(todayPlan.blocks.map(b => b.minutes)));
+  const summed = todayPlan.blocks.reduce((n, b) => n + b.minutes, 0);
+  check('the minutes add up to the time available, not to a wish list',
+    summed === todayPlan.total, `${summed} vs ${todayPlan.total}`);
+  check('every block says why it is on the list',
+    todayPlan.blocks.every(b => b.why && b.why.length > 12),
+    JSON.stringify(todayPlan.blocks.map(b => b.why).slice(0, 3)));
+  check('and every block opens the thing it names',
+    (await page.locator('#today-plan [data-go]').count()) === todayPlan.blocks.length);
+
+  // The whole point is that it responds to the time you have.
+  await page.locator('#today-budget [data-mins="60"]').click();
+  const short = await page.evaluate(() => window.__buildToday());
+  check('asking for one hour produces one hour of work',
+    short.blocks.reduce((n, b) => n + b.minutes, 0) === 60, JSON.stringify(short.blocks.map(b => b.minutes)));
+  check('and a shorter day means fewer subjects, not thinner slices',
+    short.blocks.length < todayPlan.blocks.length,
+    `${short.blocks.length} vs ${todayPlan.blocks.length}`);
+  await page.locator('#today-budget [data-mins="180"]').click();
+
+  // A basic that has already cost marks twice is the highest-value block there
+  // is: it fixes a cause instead of practising around a symptom.
+  const withBasic = await page.evaluate(() => {
+    state.skills['subject-verb-agreement'] = { asked: 5, correct: 1, missed: { qa: 1, qb: 1, qc: 1 } };
+    save();
+    return window.__buildToday();
+  });
+  check('a basic that keeps costing marks is scheduled first',
+    withBasic.blocks[0].kind === 'basic', JSON.stringify(withBasic.blocks[0]));
+  check('and it says how many questions it has cost',
+    /different questions/.test(withBasic.blocks[0].why), withBasic.blocks[0].why);
+
+  // Ticking survives, so a day half done still reads as half done.
+  await page.evaluate(() => window.renderToday());
+  await page.locator('#today-plan [data-tick]').first().click();
+  check('ticking a block marks it done',
+    (await page.locator('#today-plan .td-block.is-done').count()) === 1);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.waitForSelector('#today-plan .td-block');
+  check('and a ticked block survives a reload',
+    (await page.locator('#today-plan .td-block.is-done').count()) === 1);
+
   console.log('\n── the 4-week plan is workable, not a table ─────────────');
   await page.click('nav#nav-bottom [data-tab="schedule"]');
   const days = await page.locator('#plan-days .plan-day').count();

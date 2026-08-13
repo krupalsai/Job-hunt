@@ -228,6 +228,18 @@ async function reachable(page, selector, where, minH){
   await noSideScroll(page, 'Progress with weak basics listed');
   await reachable(page, '#basics-list [data-drill]', 'weak basics drill');
 
+  /* ── Today ──────────────────────────────────────────────────────────── */
+  // The one screen opened every morning, on a phone, usually in a hurry. The
+  // time chips and the start buttons are the two things tapped there.
+  console.log('\n── today\'s plan is usable with a thumb ──────────────────');
+  await page.locator(BAR + '[data-tab="schedule"]').click();
+  await page.waitForSelector('#today-plan .td-block');
+  check('today lists blocks with minutes on them',
+    (await page.locator('#today-plan .td-mins').count()) >= 3);
+  await reachable(page, '#today-budget .td-chip', 'study-time chip');
+  await reachable(page, '#today-plan .td-go', 'start button');
+  await noSideScroll(page, "today's plan");
+
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right section, at its top ─────');
   for (const h of ['examinfo', 'learn', 'quiz', 'schedule', 'progress']) {
