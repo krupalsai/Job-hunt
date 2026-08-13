@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 208 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 235 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -123,8 +123,29 @@ function check(name, cond, detail){
   });
   check('some questions carry a diagram to picture', dq !== null);
 
-  check('the last resort is always the full lesson',
-    (await page.locator('.explain [data-lesson]').count()) === 1);
+  // The last rung of the ladder is the lesson that teaches the whole topic —
+  // where one has been written. General Studies and Telangana Movement were
+  // added for TS SI with questions but no curriculum yet, and offering a
+  // "teach me this" button that opened nothing would be worse than not
+  // offering it. So the rule is: the button exists exactly when the lesson
+  // does, and this asserts the pairing rather than assuming it.
+  const lessonExpected = await page.evaluate(() =>
+    !!lessonForTopic(currentQuiz[currentIndex].topic));
+  check('the last resort is the full lesson, wherever one has been written',
+    (await page.locator('.explain [data-lesson]').count()) === (lessonExpected ? 1 : 0),
+    `lesson for this topic: ${lessonExpected}`);
+  if (!lessonExpected) {
+    // Land on a question that does have one, so the rest of this section can
+    // still prove the button opens the right lesson.
+    // A full-length set, not a single question: the sections after this one
+    // press Next and then Skip, and a one-question quiz would have ended.
+    await page.evaluate(() => {
+      window.__lessonCheck = null;
+      beginQuiz(ALL.filter(x => lessonForTopic(x.topic)), { size: 10 });
+    });
+    await page.locator('#q-options .opt').first().click();
+    await page.waitForSelector('.explain [data-lesson]');
+  }
 
   await page.locator('.explain [data-lesson]').click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
@@ -165,7 +186,7 @@ function check(name, cond, detail){
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
-  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 11);
+  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 14);
   const focus = await page.locator('#focus-list').textContent();
   check('weak-area verdict is stated (or honestly withheld)', focus.length > 30, focus);
 
@@ -199,7 +220,7 @@ function check(name, cond, detail){
   // app deliberately remembers where you were. Step back out first.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
-  check('every subject is listed, not only the ones with lessons', subjectRows === 11, `got ${subjectRows}`);
+  check('every subject is listed, not only the ones with lessons', subjectRows === 14, `got ${subjectRows}`);
   const listing = await page.locator('#learn-path').textContent();
   // Every subject has a path now. If one ever loses it, the UI must say so
   // rather than showing a blank screen — that branch is still in the code and
@@ -549,6 +570,118 @@ function check(name, cond, detail){
   const planText = await page.locator('#plan-days').textContent();
   check('the 4-week plan follows the SSC syllabus, not HAL',
     !/Operating Systems|DBMS/.test(planText));
+
+  console.log('\n── TS SI is a first-class exam, not SSC with a new name ─');
+  /* Telangana SI is two stages, four final papers, and a paper that charges you
+     for a wrong answer. Copying SSC CGL's shape onto it — or HAL's "attempt
+     everything, a guess is free" advice — would teach exactly the wrong
+     exam-hall behaviour, which is the failure prep/exams.js exists to prevent. */
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si`, { waitUntil: 'networkidle' });
+  const siH1 = await page.locator('header h1').textContent();
+  check('the header names TS SI', /TS SI/i.test(siH1), siH1);
+  check('and warns that wrong answers lose marks',
+    /lose marks/i.test(await page.locator('header .sub').textContent()));
+
+  const siExam = await page.evaluate(() => {
+    const e = EXAMS.find(x => x.key === 'ts-si');
+    const pwt = e.stages.find(s => s.key === 'pwt');
+    const fin = e.stages.find(s => s.key === 'final');
+    return {
+      questions: pwt.questions, marks: pwt.marks,
+      negative: e.negative, negativeText: e.negativeText,
+      minutes: e.minutes || null,
+      papers: fin.papers.map(p => ({ name: p.name, qualifying: !!p.qualifying, merit: !!p.merit })),
+      subjects: subjectsForExam(e),
+    };
+  });
+  check('the preliminary test is 200 questions for 200 marks',
+    siExam.questions === 200 && siExam.marks === 200, JSON.stringify(siExam));
+  check('negative marking is stated exactly, not as a bare flag',
+    siExam.negative === true && /20%/.test(siExam.negativeText), String(siExam.negativeText));
+  // The notification text this was built from gives no duration. Inventing one
+  // would put a fabricated per-question target on every practice screen.
+  check('no exam duration is invented where the notification gives none',
+    siExam.minutes === null, String(siExam.minutes));
+  check('Papers I and II are marked qualifying only',
+    siExam.papers.filter(p => p.qualifying).length === 2 &&
+    /English/.test(siExam.papers[0].name) && /Telugu/.test(siExam.papers[1].name),
+    JSON.stringify(siExam.papers));
+  check('Papers III and IV are the ones that decide merit',
+    siExam.papers.filter(p => p.merit).length === 2 &&
+    siExam.papers[2].merit && siExam.papers[3].merit);
+  check('Telangana Movement is its own subject, not buried in General Studies',
+    siExam.subjects.indexOf('Telangana Movement & State Formation') !== -1,
+    siExam.subjects.join(' | '));
+  // Arithmetic and reasoning are SHARED with SSC CGL rather than copied. One
+  // percentage question is the same question whichever board asks it.
+  check('arithmetic and reasoning are reused from the common core, not duplicated',
+    siExam.subjects.indexOf('Quantitative Aptitude') !== -1 &&
+    siExam.subjects.indexOf('Reasoning') !== -1, siExam.subjects.join(' | '));
+  check('English is not in the practice list — Papers I and II are only qualifying',
+    siExam.subjects.indexOf('English') === -1, siExam.subjects.join(' | '));
+  check('and no HAL technical subject leaks into TS SI',
+    !siExam.subjects.some(s => /DBMS|Operating Systems|Theory of Computation|Data Structures/.test(s)),
+    siExam.subjects.join(' | '));
+
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  const siTags = await page.locator('#topic-tags .tag').allTextContents();
+  check('the quiz offers only TS SI subjects',
+    !siTags.some(t => /DBMS|Operating Systems|General Awareness/.test(t)), siTags.join(' | '));
+  await page.click('#start-quiz');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await new Promise(r => setTimeout(r, 900));
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  const siPace = (await page.locator('.pace').first().textContent()).replace(/\s+/g, ' ');
+  check('timing works for TS SI too', /\d+s/.test(siPace), siPace.slice(0, 100));
+  // Speed advice without the marking scheme is dangerous: "go faster" is right
+  // for HAL, where a guess is free, and expensive on a paper that charges.
+  check('and pace advice carries this exam\'s marking scheme',
+    /20% of the marks/.test(siPace) && /blind guess is worse than a blank/.test(siPace),
+    siPace.slice(0, 200));
+  check('TS SI does not inherit HAL\'s "a guess is free" advice',
+    !/never leave a blank/i.test(siPace), siPace.slice(0, 200));
+
+  // The stage structure has to be visible, or there is no way to know that two
+  // of the four final papers do not count towards the rank.
+  await page.evaluate(() => window.gotoSection('examinfo'));
+  await page.waitForSelector('#ei-stages:not(.hidden)');
+  const stageText = (await page.locator('#ei-stages').textContent()).replace(/\s+/g, ' ');
+  check('the stages are shown, prelims and final', /Preliminary Written Test/.test(stageText) &&
+    /Final Written Examination/.test(stageText), stageText.slice(0, 120));
+  check('the screen says which papers only have to be passed',
+    /Qualifying only/.test(stageText));
+  check('and which papers decide the merit', /Counts towards the final merit/.test(stageText));
+
+  // HAL has one stage, so it must not grow a stages card.
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#examinfo`, { waitUntil: 'networkidle' });
+  check('an exam with a single stage shows no stages card',
+    await page.locator('#ei-stages').isHidden());
+
+  // The four CS subjects the paper may examine and this bank has nothing for.
+  // Naming them is the point: a gap you know about is something you can go and
+  // read elsewhere; a gap you do not know about is a section you walk into cold.
+  const pending = (await page.locator('#ei-pending').textContent()).replace(/\s+/g, ' ');
+  check('HAL names the subjects it has no material for yet',
+    /Digital Logic/.test(pending) && /Compiler Design/.test(pending) &&
+    /Algorithms/.test(pending) && /Mathematics/.test(pending), pending.slice(0, 160));
+  check('and says plainly that the syllabus is unverified',
+    /pending syllabus verification/i.test(pending) && /notification/i.test(pending),
+    pending.slice(0, 160));
+  check('the exam is named as Management Trainee, not MT/DT',
+    await page.evaluate(() => {
+      const e = EXAMS.find(x => x.key === 'hal-cs');
+      return /Management Trainee/.test(e.name) && !/DT/.test(e.name);
+    }));
+  // Nothing was generated for them: a subject with no verified syllabus must
+  // not quietly acquire questions.
+  check('and no questions were invented for those subjects',
+    await page.evaluate(() => !Object.keys(QUESTION_BANK).some(k =>
+      /Digital Logic|Compiler Design|Discrete/.test(k))));
+  // TS SI has no unverified gap list, so it must not show the card at all.
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
+  check('an exam with no unverified subjects shows no such card',
+    await page.locator('#ei-pending').isHidden());
 
   // And the default page is unchanged.
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });

@@ -771,7 +771,7 @@ const CURRICULUM = [
 
 /* ───────────────────── REASONING & ENGLISH ───────────────────── */
 {
-  key: "re-series", subject: "Reasoning & English", topic: "Reasoning & English",
+  key: "re-series", subject: "Reasoning", topic: "Reasoning",
   title: "Number series — a method, not a guess", minutes: 6,
   why: "40 marks of Part II, and series questions fall to a fixed procedure done in order.",
   blocks: [
@@ -794,7 +794,7 @@ const CURRICULUM = [
   ],
 },
 {
-  key: "re-coding", subject: "Reasoning & English", topic: "Reasoning & English",
+  key: "re-coding", subject: "Reasoning", topic: "Reasoning",
   title: "Coding-decoding and blood relations", minutes: 6,
   why: "Two mechanical topics that are pure marks once you have a method for each.",
   blocks: [
@@ -812,7 +812,7 @@ const CURRICULUM = [
   ],
 },
 {
-  key: "re-grammar", subject: "Reasoning & English", topic: "Reasoning & English",
+  key: "re-grammar", subject: "English", topic: "English",
   title: "Error spotting — the rules that get tested", minutes: 6,
   why: "English errors come from a short list of rules. Learn the list and the questions become recognition.",
   blocks: [
@@ -832,7 +832,7 @@ const CURRICULUM = [
   ],
 },
 {
-  key: "re-vocab", subject: "Reasoning & English", topic: "Reasoning & English",
+  key: "re-vocab", subject: "English", topic: "English",
   title: "Vocabulary by word roots", minutes: 6,
   why: "You cannot memorise every word, but roots let you decode ones you have never met.",
   blocks: [

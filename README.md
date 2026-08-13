@@ -126,16 +126,24 @@ nothing.
 
 ## Bank — `prep/hal-cs.js`
 
-208 questions at 1-mark GATE CS / ISRO SC / BEL-ECIL level:
+235 questions across three exams. `prep/hal-cs.js` holds the subjects HAL
+examines (several shared with SSC CGL); `prep/ts-si.js` adds the ones only the
+Telangana SI paper asks for.
 
 | Subject | Qs | Subject | Qs |
 |---|---|---|---|
-| Reasoning & English | 40 | COA | 19 |
-| Data Structures | 24 | Programming & OOP | 15 |
-| Quantitative Aptitude | 22 | Theory of Computation | 10 |
-| Operating Systems | 20 | General Awareness | 10 |
-| DBMS | 20 | Software Engineering | 8 |
-| Computer Networks | 20 | | |
+| Data Structures | 24 | General Studies | 15 |
+| Reasoning | 23 | Programming & OOP | 15 |
+| Quantitative Aptitude | 22 | Telangana Movement & State Formation | 12 |
+| Operating Systems | 20 | Theory of Computation | 10 |
+| DBMS | 20 | General Awareness | 10 |
+| Computer Networks | 20 | Software Engineering | 8 |
+| COA | 19 | English | 17 |
+
+Every question carries `kind`: `pyq`, `verified` or `generated`. It defaults to
+`generated` when absent, so nothing can become a PYQ by omission, and the build
+refuses a `pyq` that cannot name its exam, year and source. **Nothing in the
+bank is currently a PYQ.**
 
 90 of them are tagged with the basics they test (`prep/skills.js`, 28 basics).
 Tagging is deliberately incomplete: a wrong tag sends someone to drill a basic

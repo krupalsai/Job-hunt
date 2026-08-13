@@ -526,7 +526,7 @@
     const order = exam ? subjectsForExam(exam)
       : ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
          "COA", "Theory of Computation", "Programming & OOP",
-         "Software Engineering", "Reasoning & English", "General Awareness"];
+         "Software Engineering", "Reasoning", "English", "General Awareness"];
     const lessons = [];
     order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
 

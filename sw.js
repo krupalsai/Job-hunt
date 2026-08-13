@@ -29,6 +29,7 @@ const PREP_ASSETS = [
   '/prep/exams.js',
   '/prep/skills.js',
   '/prep/hal-cs.js',
+  '/prep/ts-si.js',
   '/prep/lessons.js',
   '/prep/sync.js',
   '/manifest.json',

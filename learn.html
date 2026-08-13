@@ -166,6 +166,16 @@
   .pace.is-ok strong{ color:var(--good); }
   .pace.is-slow{ border-color:#f59e0b55; }
   .pace.is-slow strong{ color:var(--warn); }
+  .pace .marking{ margin-top:6px; font-size:11.5px; color:var(--dim); line-height:1.5; }
+  .stage{ border-bottom:1px solid var(--panel-border); padding:10px 0 12px; }
+  .stage:last-child{ border-bottom:none; padding-bottom:0; }
+  .stage-head{ font-size:14px; font-weight:600; }
+  .stage-why{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:4px; }
+  .paper-row{ padding:8px 0 0; }
+  .paper-name{ font-size:13px; }
+  .paper-meta{ font-size:11.5px; color:var(--dim); line-height:1.55; margin-top:2px; }
+  .paper-meta .qual{ color:var(--warn); font-weight:700; }
+  .paper-meta .merit{ color:var(--good); font-weight:700; }
   .speed-line{ font-size:12.5px; line-height:1.6; margin-top:5px; }
   .speed-line.ready{ color:var(--good); }
   .speed-line.slow,.speed-line.hasty{ color:var(--warn); }
@@ -279,6 +289,12 @@
       <h2>Exam snapshot</h2>
       <table><tbody id="ei-snapshot"></tbody></table>
     </div>
+    <!-- Only rendered for an exam that has more than one stage. -->
+    <div class="card hidden" id="ei-stages"></div>
+
+    <!-- Subjects the paper may examine that the app has nothing for yet. -->
+    <div class="card hidden" id="ei-pending"></div>
+
     <div class="card">
       <h2>Time budget</h2>
       <table>
@@ -492,6 +508,9 @@
 <!-- Before the bank, because the bank's questions name skills from it. -->
 <script src="/prep/skills.js"></script>
 <script src="/prep/hal-cs.js"></script>
+<!-- Adds the subjects TS SI examines and HAL does not. After the bank,
+     because it extends the same QUESTION_BANK. -->
+<script src="/prep/ts-si.js"></script>
 <script src="/prep/lessons.js"></script>
 <script>
 /* ==========================================================================
@@ -615,7 +634,72 @@ function renderExamInfo(){
     }).join('')
   ).join('');
 
+  // Subjects the paper may examine that this app has nothing for yet. Stated
+  // plainly rather than left as a blank space on a syllabus screen: a gap you
+  // know about is something you can go and read elsewhere, and a gap you do not
+  // know about is a section you walk into cold.
+  const pv = document.getElementById('ei-pending');
+  if(pv){
+    if(exam.pendingVerification && exam.pendingVerification.subjects.length){
+      pv.classList.remove('hidden');
+      pv.innerHTML = `<h2>Not covered yet — pending syllabus verification</h2>
+        <p class="muted" style="margin-top:-4px;">${escHtml(exam.pendingVerification.note)}</p>
+        <ul>${exam.pendingVerification.subjects.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>
+        <p class="muted" style="margin-bottom:0;">Nothing has been written for these on purpose. Material aimed at a
+          syllabus that turns out to be wrong costs more than material that does not exist, because it also costs
+          the time spent studying it.</p>`;
+    } else {
+      pv.classList.add('hidden');
+    }
+  }
+
+  renderStages(exam);
   document.getElementById('ei-hal').classList.toggle('hidden', exam.key !== 'hal-cs');
+}
+
+/* Stages and papers, for an exam that has more than one.
+
+   HAL is one test and one interview and needs none of this. TS SI is a
+   preliminary test that only decides who sits the final, then four papers of
+   which two merely have to be passed and two decide the rank. Studying all
+   four as though they counted equally would waste the weeks before the exam,
+   so which paper actually counts is stated on screen rather than left to be
+   discovered. */
+function renderStages(exam){
+  const box = document.getElementById('ei-stages');
+  if(!box) return;
+  if(!exam.stages || !exam.stages.length){ box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  box.innerHTML = '<h2>Stages</h2>' + exam.stages.map(st=>`
+    <div class="stage">
+      <div class="stage-head">${escHtml(st.name)}${
+        st.questions ? ` <span class="muted">· ${st.questions} questions · ${st.marks} marks</span>` : ''}</div>
+      ${st.decides ? `<div class="stage-why">${escHtml(st.decides)}</div>` : ''}
+      ${(st.papers || []).map(p=>`
+        <div class="paper-row">
+          <div class="paper-name">${escHtml(p.name)}</div>
+          <div class="paper-meta">${[
+            p.questions ? p.questions + ' questions' : null,
+            p.format ? escHtml(p.format) : (p.objective ? 'Objective' : null),
+            p.qualifying ? '<span class="qual">Qualifying only — must be passed, does not count towards merit</span>' : null,
+            p.merit ? '<span class="merit">Counts towards the final merit</span>' : null,
+          ].filter(Boolean).join(' · ')}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+/** How this exam marks a wrong answer, in one sentence, for wherever the app
+    is about to advise on pace or on whether to attempt something. Speed advice
+    without the marking scheme is dangerous: "go faster" is correct for HAL,
+    where a guess is free, and expensive on a paper that charges for it. */
+function markingNote(){
+  const exam = currentExamObj();
+  if(!exam) return '';
+  if(!exam.negative){
+    return 'Nothing is deducted for a wrong answer on this paper, so never leave a blank.';
+  }
+  return 'A wrong answer costs ' + escHtml(exam.negativeText || 'marks') +
+         ' on this paper, so a blind guess is worse than a blank.';
 }
 
 function escHtml(s){
@@ -1036,11 +1120,18 @@ function paceHTML(item, ms){
   if(!ms) return '';
   const secs = Math.round(ms / 1000);
   const target = targetSecondsFor(item.topic);
-  if(!target) return `<div class="pace">⏱ ${secs}s on that one.</div>`;
+  // No target is not the same as no advice. Where the paper's duration is not
+  // known — TS SI's is not in the notification this was built from — the time
+  // is still worth recording and the marking scheme still governs whether it is
+  // worth attempting at all, so both are shown and the missing target is named
+  // rather than filled in with a guess.
+  if(!target) return `<div class="pace">⏱ <strong>${secs}s</strong> on that one. No official duration published for this
+    paper yet, so there is no per-question target to measure it against.
+    <div class="marking">${markingNote()}</div></div>`;
   const over = secs - target;
-  return `<div class="pace ${over > 0 ? 'is-slow' : 'is-ok'}">⏱ <strong>${secs}s</strong> · this paper allows about
-    ${target}s for a ${escHtml(item.topic)} question${
-      over > 0 ? ` — <strong>${over}s over</strong>` : ' — inside the budget'}.</div>`;
+  return `<div class="pace ${over > 0 ? 'is-slow' : 'is-ok'}">⏱ <strong>${secs}s</strong> · this paper allows about ${target}s for a ${escHtml(item.topic)} question${
+      over > 0 ? ` — <strong>${over}s over</strong>` : ' — inside the budget'}.
+    <div class="marking">${markingNote()}</div></div>`;
 }
 
 /** The lesson that teaches a topic, if one exists. */
@@ -1284,10 +1375,12 @@ function showResult(){
     const avg = Math.round(timed.reduce((n,a)=> n + a.ms, 0) / timed.length / 1000);
     const targets = timed.map(a => targetSecondsFor(a.topic)).filter(t => t);
     const target = targets.length ? Math.round(targets.reduce((n,t)=>n+t,0) / targets.length) : null;
+    const paperQs = (currentExamObj() || {}).questions || 160;
     paceLine = `<div class="pace ${target && avg > target ? 'is-slow' : 'is-ok'}">⏱ <strong>${avg}s</strong> a question across this set${
       target ? ` · the paper allows about ${target}s${
-        avg > target ? ` — you are ${avg - target}s over, which is ${Math.round((avg - target) * 160 / 60)} minutes across a full 160-question paper`
-                     : ' — inside the budget'}` : ''}.</div>`;
+        avg > target ? ` — you are ${avg - target}s over, which is ${Math.round((avg - target) * paperQs / 60)} minutes across a full ${paperQs}-question paper`
+                     : ' — inside the budget'}` : ''}.
+      <div class="marking">${markingNote()}</div></div>`;
   }
 
   const lost = Object.entries(byTopic).filter(([,v]) => v.ok < v.n)

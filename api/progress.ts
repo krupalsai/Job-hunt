@@ -29,8 +29,18 @@ const SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 const TOPICS = new Set([
   "Data Structures", "Operating Systems", "DBMS", "Computer Networks", "COA",
   "Theory of Computation", "Programming & OOP", "Software Engineering",
-  "Reasoning & English", "General Awareness",
+  "General Awareness",
   "Quantitative Aptitude",   // SSC CGL; added with the SSC syllabus
+  // Split out of a combined "Reasoning & English" subject, which had to serve
+  // two separate SSC CGL sections and TS SI's reasoning paper at once.
+  "Reasoning", "English",
+  // Kept so that answers queued offline by an older build of the app still
+  // record when they finally flush. Dropping it would silently discard a
+  // quiz someone took on a bus before the split shipped.
+  "Reasoning & English",
+  // TS SI. Its General Studies is a full GS paper and is deliberately not the
+  // same subject as HAL's defence-flavoured General Awareness.
+  "General Studies", "Telangana Movement & State Formation",
 ]);
 
 const QUALIFICATIONS = new Set(["B.Tech CSE", "Intermediate", "Graduate"]);

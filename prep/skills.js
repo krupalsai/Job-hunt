@@ -40,7 +40,7 @@ const SKILLS = [
 {
   key: "subject-verb-agreement",
   name: "Subject-verb agreement",
-  subject: "Reasoning & English",
+  subject: "English",
   rule: "The verb agrees with the SUBJECT of the sentence, never with whatever noun happens to sit closest to it — and examiners put a plural noun in between on purpose.",
   teach: [
     {p:"Find the subject first, before you look at the verb at all. Cross out everything between the subject and the verb — it is almost always a phrase starting with 'of', 'with', 'along with', 'as well as' or 'including', and none of those can change the subject."},
@@ -52,7 +52,7 @@ const SKILLS = [
 {
   key: "one-of-plural-noun",
   name: "'One of' takes a plural noun",
-  subject: "Reasoning & English",
+  subject: "English",
   rule: "'One of' must be followed by a PLURAL noun — one of my friendS — while the verb stays SINGULAR, because the subject of the sentence is 'one', not 'friends'.",
   teach: [
     {p:"'One of' means one picked out of a group, so the group has to be plural — there is no group of one to pick from. That is the half of the rule people get wrong."},
@@ -64,7 +64,7 @@ const SKILLS = [
 {
   key: "synonym-antonym-direction",
   name: "Synonym or antonym — which was asked",
-  subject: "Reasoning & English",
+  subject: "English",
   rule: "Read whether the question wants the SAME meaning or the OPPOSITE one before you look at the options, because the paper always includes a perfectly good answer to the question it did not ask.",
   teach: [
     {p:"The commonest way to lose this mark is not vocabulary at all. It is answering 'synonym' when the paper asked for the antonym. The option you want is sitting there and so is the trap."},
@@ -76,7 +76,7 @@ const SKILLS = [
 {
   key: "word-roots-and-affixes",
   name: "Word roots and endings",
-  subject: "Reasoning & English",
+  subject: "English",
   rule: "A word you have never seen can still be answered from its parts — bene means good, mal means bad, trans means through — and the ENDING often tells you whether it describes a person or a thing.",
   teach: [
     {p:"You cannot memorise every word in English, and you do not have to. A handful of roots answer dozens of questions:"},
@@ -94,7 +94,7 @@ const SKILLS = [
 {
   key: "series-find-the-rule",
   name: "Number series: find the rule",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "Write the gaps between the terms underneath the series first; if the gaps make no sense, try dividing consecutive terms, and only then look for squares, primes or a sum of the previous two.",
   teach: [
     {p:"Never stare at a series. Do the same three checks every time, in this order, and write them down — it takes ten seconds and it is faster than guessing."},
@@ -110,7 +110,7 @@ const SKILLS = [
 {
   key: "letter-shift-coding",
   name: "Letter-shift coding",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "Work out the shift from the FIRST letter of the given example, confirm it on the second letter, and only then apply it to the word you are asked about.",
   teach: [
     {p:"Coding questions look like puzzles and are actually arithmetic on letter positions. The one thing that costs marks is guessing the shift from one letter and never checking it."},
@@ -122,7 +122,7 @@ const SKILLS = [
 {
   key: "blood-relations-levels",
   name: "Blood relations: draw the levels",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "Draw the family as levels on paper — every 'father of' or 'mother of' moves you up one level, brother and sister stay on the same level — and then count the levels between the two people asked about.",
   teach: [
     {p:"These are only hard in your head. On paper they take fifteen seconds. Put the oldest generation at the top and work down."},
@@ -139,7 +139,7 @@ const SKILLS = [
 {
   key: "odd-one-out-category",
   name: "Odd one out: name the category",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "Say out loud what THREE of the four have in common before you look for the odd one, because the odd one is defined by the category and not by anything you can see in it alone.",
   teach: [
     {p:"People go wrong here by hunting for something strange about one option. Nothing is strange about it on its own — it is only the outsider once you have named the group."},
@@ -151,7 +151,7 @@ const SKILLS = [
 {
   key: "syllogism-some-proves-nothing",
   name: "Syllogisms: 'some' proves nothing",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "'All A are B' chains safely into further conclusions, but 'some' never guarantees an overlap with any particular subgroup — so a conclusion built on 'some' usually does not follow.",
   teach: [
     {p:"Test a conclusion by trying to make it FALSE while keeping every statement true. If you can draw that picture, the conclusion does not follow."},
@@ -163,7 +163,7 @@ const SKILLS = [
 {
   key: "idioms-are-not-literal",
   name: "Idioms are never literal",
-  subject: "Reasoning & English",
+  subject: "English",
   rule: "An idiom's meaning is a convention, not a calculation — so the option that describes what the words literally say is put there to be chosen and is almost always wrong.",
   teach: [
     {p:"You cannot reason your way to an idiom. But you can nearly always eliminate: the literal option is a decoy in almost every one of these questions."},
@@ -175,7 +175,7 @@ const SKILLS = [
 {
   key: "one-word-substitution",
   name: "One-word substitution",
-  subject: "Reasoning & English",
+  subject: "English",
   rule: "Match the definition to the word's PARTS, and watch for the lookalike option that describes something adjacent but not the same thing.",
   teach: [
     {p:"The options in these questions are chosen to be nearly right. The way through is the root, then the near-miss check."},
@@ -191,7 +191,7 @@ const SKILLS = [
 {
   key: "direction-sense-cancelling",
   name: "Direction sense: cancel the legs",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "Draw the walk, then cancel opposite legs against each other — north against south, east against west — and only what is left over decides the distance.",
   teach: [
     {p:"Never track a direction question in your head. Draw it, marking each turn, and the cancelling is visible rather than remembered."},
@@ -204,7 +204,7 @@ const SKILLS = [
 {
   key: "divisibility-and-primes",
   name: "Divisibility tests and primes",
-  subject: "Reasoning & English",
+  subject: "Reasoning",
   rule: "Test divisibility with the digit rules rather than by dividing, and to check whether a number is prime you only ever need factors up to its square root.",
   teach: [
     {l:[

@@ -763,29 +763,24 @@ const QUESTION_BANK = {
 ],
 
 /* ───────────────────── REASONING & ENGLISH ───────────────────── */
-"Reasoning & English": [
+/* ─────────────────────────────── REASONING ─────────────────────────────── */
+/* Split out of a combined "Reasoning & English" subject. They were one bank
+   entry serving two SEPARATE SSC CGL sections — General Intelligence &
+   Reasoning, and English Comprehension, 50 marks each — so a weak-area verdict
+   could not tell you which of the two was costing you. TS SI splits them
+   further still: reasoning is examined in Paper III for merit, while English is
+   Paper I and only qualifying. One pool could not serve both honestly. */
+"Reasoning": [
   {q:"Find the odd one out: Apple, Banana, Carrot, Mango",
    opts:["Apple","Banana","Carrot","Mango"], correct:2,
    skills:["odd-one-out-category"],
    why:"Apple, banana and mango are fruits; carrot is a root vegetable. The classification is botanical category, not colour or taste.",
    trick:"For odd-one-out, name the CATEGORY out loud before you look at the options. Three will share it."},
 
-  {q:"Choose the synonym for 'Abundant'",
-   opts:["Scarce","Plentiful","Rare","Limited"], correct:1,
-   skills:["synonym-antonym-direction"],
-   why:"Abundant means present in large quantity. Scarce, rare and limited are all antonyms — a classic trap where three options point the same wrong way.",
-   trick:"When three options mean the same thing, the odd one out is usually the answer."},
-
   {q:"If CAT is coded as 3120, how is DOG coded? (A=1 … Z=26)",
    opts:["4157","4715","41507","4 15 7"], correct:0,
    why:"C=3, A=1, T=20 gives 3-1-20 → '3120' concatenated. So D=4, O=15, G=7 → '4157'.",
    trick:"Work out the rule from the given example FIRST, then apply it. Never guess the rule from the options."},
-
-  {q:"Identify the error: 'He don't like coffee.'",
-   opts:["He","don't","like","coffee"], correct:1,
-   skills:["subject-verb-agreement"],
-   why:"'He' is third person singular and needs 'doesn't'. 'Don't' is used with I, you, we and they.",
-   trick:"Third person singular takes the S — either on the verb (he likes) or on the auxiliary (he does not)."},
 
   {q:"Complete the series: 2, 6, 12, 20, 30, ?",
    opts:["40","42","36","44"], correct:1,
@@ -839,6 +834,100 @@ const QUESTION_BANK = {
    why:"Rectangle, square and triangle are polygons bounded by straight sides with vertices. A circle has a single curved boundary and no vertices.",
    trick:"Ask what property THREE share. Straight sides here — the curve is the outsider."},
 
+  {q:"If FRIEND is coded as HTKGPF, then CANDLE is coded as?",
+   opts:["ECPFNG","ECPFNH","DBOEMF","ECQFNG"], correct:0,
+   skills:["letter-shift-coding"],
+   why:"Each letter moves forward by 2: F→H, R→T, I→K, E→G, N→P, D→F. Applying +2 to CANDLE: C→E, A→C, N→P, D→F, L→N, E→G = ECPFNG.",
+   trick:"Find the shift from the FIRST letter, then verify with the second before applying it to the whole word."},
+
+  {q:"Complete the series: 5, 10, 20, 40, ?",
+   opts:["60","70","80","100"], correct:2,
+   skills:["series-find-the-rule"],
+   why:"Each term doubles, so 40 × 2 = 80. Differences (5, 10, 20) are not constant, which is the signal to test a ratio instead.",
+   trick:"If differences grow fast, try DIVIDING consecutive terms. A constant ratio means a geometric series."},
+
+  {q:"A is B's sister, C is B's mother, D is C's father. How is A related to D?",
+   opts:["Daughter","Granddaughter","Grandmother","Sister"], correct:1,
+   skills:["blood-relations-levels"],
+   why:"A and B are siblings, so C is A's mother too. D is C's father, so D is A's grandfather — making A his granddaughter.",
+   diagram:"D          \u2190 oldest generation\n\u2502          (C's father, so the grandfather)\n\u2502\nC          \u2190 middle generation\n\u2502          (mother of both A and B)\n\u2502\n\u250c\u2500\u2500\u2534\u2500\u2500\u2510\nA     B    \u2190 youngest generation\n           (A is B's sister, so same level)\n\nCount the steps from A up to D: two levels.\nTwo levels up = grandparent, so A is D's GRANDdaughter.",
+   trick:"Draw the generations as levels on paper. Every 'father/mother of' moves you up one level; 'sister of' stays on the same level."},
+
+  {q:"Which number is a prime?",
+   opts:["91","87","97","93"], correct:2,
+   skills:["divisibility-and-primes"],
+   why:"91 = 7×13, 87 = 3×29, 93 = 3×31. 97 has no factor up to √97 ≈ 9.8, so it is prime.",
+   trick:"Test divisibility only up to the square root. For two-digit numbers that means just 2, 3, 5 and 7."},
+
+  {q:"Complete the series: 2, 3, 5, 7, 11, 13, ?",
+   opts:["15","17","19","21"], correct:1,
+   skills:["series-find-the-rule","divisibility-and-primes"],
+   why:"These are consecutive primes; the next after 13 is 17 (15 = 3×5 is not prime).",
+   trick:"When a series has no arithmetic pattern, check whether it is simply the primes. Know them to 100."},
+
+  {q:"If BOOK is coded as DQQM, how is DESK coded?",
+   opts:["FGUM","FGUN","EFTL","FHUM"], correct:0,
+   skills:["letter-shift-coding"],
+   why:"B→D is +2, and O→Q confirms it, so the rule is a forward shift of two. Applying it to DESK: D→F, E→G, S→U, K→M = FGUM.",
+   trick:"Get the shift from the first letter, confirm it on the second, then apply. Two letters agreeing is the whole check."},
+
+  {q:"P is the son of Q. R is the mother of Q. How is R related to P?",
+   opts:["Mother","Sister","Grandmother","Aunt"], correct:2,
+   skills:["blood-relations-levels"],
+   why:"Q is one level above P, and R is one level above Q — two levels above P in total. Two levels up is a grandparent, and R is female, so R is P's grandmother.",
+   trick:"Count the levels first, then apply the gender. Two levels up is always 'grand-'."},
+
+  {q:"Find the odd one out: Copper, Iron, Silver, Plastic",
+   opts:["Copper","Iron","Silver","Plastic"], correct:3,
+   skills:["odd-one-out-category"],
+   why:"Copper, iron and silver are metals; plastic is a synthetic non-metal. The category is what the material IS, not what it is used for — all four are used to make things.",
+   trick:"Name what three of them share out loud before hunting for the outsider. Here it is 'metal'."},
+
+  {q:"All pens are objects. Some objects are red. Which conclusion follows?",
+   opts:["All pens are red","Some pens are red","No pen is red","None of these follows"], correct:3,
+   skills:["syllogism-some-proves-nothing"],
+   why:"The red objects could sit entirely outside the pens, so no positive conclusion is forced; but they could also include pens, so no negative one is forced either. 'Some' guarantees nothing about a particular subgroup.",
+   trick:"Try to draw the circles so the conclusion is FALSE while every statement stays true. If you can, it does not follow."},
+
+  {q:"All cats are animals. All animals need water. Which follows?",
+   opts:["All cats need water","Some cats do not need water","All animals are cats","Nothing follows"], correct:0,
+   skills:["syllogism-some-proves-nothing"],
+   why:"Two universal statements chain: every cat is inside 'animals', and everything inside 'animals' needs water, so every cat needs water. This is the case that DOES follow — the contrast with 'some' is the whole point.",
+   trick:"All-to-all travels. Some-to-anything does not. Check which word the chain rests on."},
+
+  {q:"A man walks 4 km east, turns left and walks 3 km. How far is he from the starting point?",
+   opts:["3 km","4 km","5 km","7 km"], correct:2,
+   skills:["direction-sense-cancelling"],
+   why:"Facing east, a left turn points north, so the two legs are at right angles and neither cancels the other. The distance is the hypotenuse: √(4² + 3²) = 5 km.",
+   trick:"Nothing cancels means Pythagoras. Exams choose 3-4-5 and 6-8-10 so the answer comes out whole."},
+
+  {q:"A boy walks 6 km south, turns left and walks 4 km, then turns left again and walks 6 km. How far is he from the start?",
+   opts:["2 km","4 km","10 km","16 km"], correct:1,
+   skills:["direction-sense-cancelling"],
+   why:"Facing south, a left turn points east; facing east, a left turn points north. So the legs are 6 south, 4 east, 6 north — the two 6s cancel exactly and only the 4 km east is left.",
+   trick:"Draw it and cancel opposite legs. Facing south, left is EAST — that is the step people get backwards."},
+
+  {q:"Which of these numbers is divisible by 3?",
+   opts:["1234","2345","3456","4567"], correct:2,
+   skills:["divisibility-and-primes"],
+   why:"Add the digits: 1+2+3+4 = 10, 2+3+4+5 = 14, 3+4+5+6 = 18, 4+5+6+7 = 22. Only 18 is a multiple of 3, so only 3456 is divisible by 3.",
+   trick:"Divisible by 3 if the digits add to a multiple of 3; by 9 if they add to a multiple of 9."}
+],
+
+/* ──────────────────────────────── ENGLISH ──────────────────────────────── */
+"English": [
+  {q:"Choose the synonym for 'Abundant'",
+   opts:["Scarce","Plentiful","Rare","Limited"], correct:1,
+   skills:["synonym-antonym-direction"],
+   why:"Abundant means present in large quantity. Scarce, rare and limited are all antonyms — a classic trap where three options point the same wrong way.",
+   trick:"When three options mean the same thing, the odd one out is usually the answer."},
+
+  {q:"Identify the error: 'He don't like coffee.'",
+   opts:["He","don't","like","coffee"], correct:1,
+   skills:["subject-verb-agreement"],
+   why:"'He' is third person singular and needs 'doesn't'. 'Don't' is used with I, you, we and they.",
+   trick:"Third person singular takes the S — either on the verb (he likes) or on the auxiliary (he does not)."},
+
   {q:"Choose the antonym of 'Benevolent'",
    opts:["Generous","Kind","Malevolent","Charitable"], correct:2,
    skills:["synonym-antonym-direction","word-roots-and-affixes"],
@@ -887,41 +976,6 @@ const QUESTION_BANK = {
    why:"An idiom's meaning is conventional and cannot be worked out from the words — this one means to disclose something meant to be hidden.",
    trick:"Idioms must be memorised, not reasoned. If an option is the literal meaning, it is almost always wrong."},
 
-  {q:"If FRIEND is coded as HTKGPF, then CANDLE is coded as?",
-   opts:["ECPFNG","ECPFNH","DBOEMF","ECQFNG"], correct:0,
-   skills:["letter-shift-coding"],
-   why:"Each letter moves forward by 2: F→H, R→T, I→K, E→G, N→P, D→F. Applying +2 to CANDLE: C→E, A→C, N→P, D→F, L→N, E→G = ECPFNG.",
-   trick:"Find the shift from the FIRST letter, then verify with the second before applying it to the whole word."},
-
-  {q:"Complete the series: 5, 10, 20, 40, ?",
-   opts:["60","70","80","100"], correct:2,
-   skills:["series-find-the-rule"],
-   why:"Each term doubles, so 40 × 2 = 80. Differences (5, 10, 20) are not constant, which is the signal to test a ratio instead.",
-   trick:"If differences grow fast, try DIVIDING consecutive terms. A constant ratio means a geometric series."},
-
-  {q:"A is B's sister, C is B's mother, D is C's father. How is A related to D?",
-   opts:["Daughter","Granddaughter","Grandmother","Sister"], correct:1,
-   skills:["blood-relations-levels"],
-   why:"A and B are siblings, so C is A's mother too. D is C's father, so D is A's grandfather — making A his granddaughter.",
-   diagram:"D          \u2190 oldest generation\n\u2502          (C's father, so the grandfather)\n\u2502\nC          \u2190 middle generation\n\u2502          (mother of both A and B)\n\u2502\n\u250c\u2500\u2500\u2534\u2500\u2500\u2510\nA     B    \u2190 youngest generation\n           (A is B's sister, so same level)\n\nCount the steps from A up to D: two levels.\nTwo levels up = grandparent, so A is D's GRANDdaughter.",
-   trick:"Draw the generations as levels on paper. Every 'father/mother of' moves you up one level; 'sister of' stays on the same level."},
-
-  {q:"Which number is a prime?",
-   opts:["91","87","97","93"], correct:2,
-   skills:["divisibility-and-primes"],
-   why:"91 = 7×13, 87 = 3×29, 93 = 3×31. 97 has no factor up to √97 ≈ 9.8, so it is prime.",
-   trick:"Test divisibility only up to the square root. For two-digit numbers that means just 2, 3, 5 and 7."},
-
-  {q:"Complete the series: 2, 3, 5, 7, 11, 13, ?",
-   opts:["15","17","19","21"], correct:1,
-   skills:["series-find-the-rule","divisibility-and-primes"],
-   why:"These are consecutive primes; the next after 13 is 17 (15 = 3×5 is not prime).",
-   trick:"When a series has no arithmetic pattern, check whether it is simply the primes. Know them to 100."},
-
-  /* The questions below exist so that every basic in prep/skills.js has a drill
-     worth taking. Three questions on one skill is the least that can teach it;
-     one is an anecdote. */
-
   {q:"Identify the error: 'The list of items are on the desk.'",
    opts:["The list","of items","are","on the desk"], correct:2,
    skills:["subject-verb-agreement"],
@@ -946,36 +1000,6 @@ const QUESTION_BANK = {
    why:"'One of the best' must be followed by a plural noun — students — because she is being picked out of a group of them. There is no group of one to pick from.",
    trick:"'One of the best ___' is always plural. If the noun cannot go plural, 'one of' is the wrong phrase."},
 
-  {q:"If BOOK is coded as DQQM, how is DESK coded?",
-   opts:["FGUM","FGUN","EFTL","FHUM"], correct:0,
-   skills:["letter-shift-coding"],
-   why:"B→D is +2, and O→Q confirms it, so the rule is a forward shift of two. Applying it to DESK: D→F, E→G, S→U, K→M = FGUM.",
-   trick:"Get the shift from the first letter, confirm it on the second, then apply. Two letters agreeing is the whole check."},
-
-  {q:"P is the son of Q. R is the mother of Q. How is R related to P?",
-   opts:["Mother","Sister","Grandmother","Aunt"], correct:2,
-   skills:["blood-relations-levels"],
-   why:"Q is one level above P, and R is one level above Q — two levels above P in total. Two levels up is a grandparent, and R is female, so R is P's grandmother.",
-   trick:"Count the levels first, then apply the gender. Two levels up is always 'grand-'."},
-
-  {q:"Find the odd one out: Copper, Iron, Silver, Plastic",
-   opts:["Copper","Iron","Silver","Plastic"], correct:3,
-   skills:["odd-one-out-category"],
-   why:"Copper, iron and silver are metals; plastic is a synthetic non-metal. The category is what the material IS, not what it is used for — all four are used to make things.",
-   trick:"Name what three of them share out loud before hunting for the outsider. Here it is 'metal'."},
-
-  {q:"All pens are objects. Some objects are red. Which conclusion follows?",
-   opts:["All pens are red","Some pens are red","No pen is red","None of these follows"], correct:3,
-   skills:["syllogism-some-proves-nothing"],
-   why:"The red objects could sit entirely outside the pens, so no positive conclusion is forced; but they could also include pens, so no negative one is forced either. 'Some' guarantees nothing about a particular subgroup.",
-   trick:"Try to draw the circles so the conclusion is FALSE while every statement stays true. If you can, it does not follow."},
-
-  {q:"All cats are animals. All animals need water. Which follows?",
-   opts:["All cats need water","Some cats do not need water","All animals are cats","Nothing follows"], correct:0,
-   skills:["syllogism-some-proves-nothing"],
-   why:"Two universal statements chain: every cat is inside 'animals', and everything inside 'animals' needs water, so every cat needs water. This is the case that DOES follow — the contrast with 'some' is the whole point.",
-   trick:"All-to-all travels. Some-to-anything does not. Check which word the chain rests on."},
-
   {q:"'To burn the midnight oil' means?",
    opts:["To waste fuel","To work late into the night","To sleep badly","To start an argument"], correct:1,
    skills:["idioms-are-not-literal"],
@@ -992,25 +1016,7 @@ const QUESTION_BANK = {
    opts:["Carnivorous","Herbivorous","Voracious","Omnivorous"], correct:3,
    skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Omni means all, so omnivorous is eating everything. Carnivorous is flesh, herbivorous is plants, and voracious means eating a great deal — a question of quantity, not of range. That last one is the trap.",
-   trick:"OMNI = all (omnipresent, omniscient). Voracious is about how much, not about what."},
-
-  {q:"A man walks 4 km east, turns left and walks 3 km. How far is he from the starting point?",
-   opts:["3 km","4 km","5 km","7 km"], correct:2,
-   skills:["direction-sense-cancelling"],
-   why:"Facing east, a left turn points north, so the two legs are at right angles and neither cancels the other. The distance is the hypotenuse: √(4² + 3²) = 5 km.",
-   trick:"Nothing cancels means Pythagoras. Exams choose 3-4-5 and 6-8-10 so the answer comes out whole."},
-
-  {q:"A boy walks 6 km south, turns left and walks 4 km, then turns left again and walks 6 km. How far is he from the start?",
-   opts:["2 km","4 km","10 km","16 km"], correct:1,
-   skills:["direction-sense-cancelling"],
-   why:"Facing south, a left turn points east; facing east, a left turn points north. So the legs are 6 south, 4 east, 6 north — the two 6s cancel exactly and only the 4 km east is left.",
-   trick:"Draw it and cancel opposite legs. Facing south, left is EAST — that is the step people get backwards."},
-
-  {q:"Which of these numbers is divisible by 3?",
-   opts:["1234","2345","3456","4567"], correct:2,
-   skills:["divisibility-and-primes"],
-   why:"Add the digits: 1+2+3+4 = 10, 2+3+4+5 = 14, 3+4+5+6 = 18, 4+5+6+7 = 22. Only 18 is a multiple of 3, so only 3456 is divisible by 3.",
-   trick:"Divisible by 3 if the digits add to a multiple of 3; by 9 if they add to a multiple of 9."}
+   trick:"OMNI = all (omnipresent, omniscient). Voracious is about how much, not about what."}
 ],
 
 /* ─────────────────────── GENERAL AWARENESS ─────────────────────── */

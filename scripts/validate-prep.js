@@ -6,14 +6,21 @@
 const fs = require('fs');
 const path = require('path');
 
+// The bank is written across two files: hal-cs.js holds the subjects the HAL
+// paper examines (several of which SSC CGL shares), and ts-si.js adds the ones
+// only the Telangana SI paper asks for. They are evaluated together, exactly as
+// the browser loads them, so a duplicate question across the two is caught.
 const src = fs.readFileSync(path.join(__dirname, '..', 'prep', 'hal-cs.js'), 'utf8');
-const QUESTION_BANK = new Function(src + '; return QUESTION_BANK;')();
+const tsSrc = fs.readFileSync(path.join(__dirname, '..', 'prep', 'ts-si.js'), 'utf8');
+const QUESTION_BANK = new Function(src + ';' + tsSrc + '; return QUESTION_BANK;')();
 const skillSrc = fs.readFileSync(path.join(__dirname, '..', 'prep', 'skills.js'), 'utf8');
 const SKILLS = new Function(skillSrc + '; return SKILLS;')();
 
 let problems = [];
 let total = 0;
 const seenText = new Map();
+/** Where a question came from. Absent means "generated" — the safe default. */
+const KINDS = ['pyq', 'verified', 'generated'];
 
 console.log('\nBank contents');
 console.log('─'.repeat(46));
@@ -33,6 +40,20 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
       const key = q.q.trim().toLowerCase();
       if (seenText.has(key)) problems.push(`${at}: duplicate of ${seenText.get(key)}`);
       else seenText.set(key, at);
+    }
+    /* Where a question came from.
+       A candidate uses previous-year questions to judge what the paper
+       actually asks, so calling a written question a PYQ is the one lie this
+       app must never tell. `kind` is optional and defaults to the safe value —
+       absent means "generated", never "pyq" — and a question claiming to be a
+       PYQ has to name the exam, the year and the source it came from. */
+    if (q.kind !== undefined && KINDS.indexOf(q.kind) === -1) {
+      problems.push(`${at}: kind "${q.kind}" is not one of ${KINDS.join(', ')}`);
+    }
+    if (q.kind === 'pyq') {
+      if (!q.exam)   problems.push(`${at}: claims to be a PYQ but names no exam`);
+      if (!q.year)   problems.push(`${at}: claims to be a PYQ but names no year`);
+      if (!q.source) problems.push(`${at}: claims to be a PYQ but names no source`);
     }
   });
   console.log(`  ${topic.padEnd(24)} ${String(qs.length).padStart(3)}`);
