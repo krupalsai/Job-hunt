@@ -422,8 +422,14 @@ function check(name, cond, detail){
   await page.waitForSelector('.explain');
   const paceText = (await page.locator('.pace').first().textContent()).replace(/\s+/g, ' ').trim();
   check('an answer reports what it cost in time', /\d+s/.test(paceText), paceText);
-  check('and states the time this paper actually allows for that section',
-    /allows about \d+s/.test(paceText), paceText.slice(0, 140));
+  check('and states the per-question target it is being measured against',
+    /target \d+s\/question/.test(paceText), paceText.slice(0, 140));
+  // No board publishes a per-question time. Every target here is arithmetic on
+  // a published total or a planning decision made in this app, and the screen
+  // has to say which — never "official".
+  check('the target names where it came from, and never claims to be official',
+    /this plan's \d+ min for|derived from/.test(paceText) && !/official/i.test(paceText),
+    paceText.slice(0, 160));
   const recorded = await page.evaluate(() => {
     const t = Object.values(state.topics).filter(x => x.timed);
     return { timed: t.reduce((n, x) => n + x.timed, 0), ms: t.reduce((n, x) => n + x.ms, 0) };
@@ -643,6 +649,9 @@ function check(name, cond, detail){
       questions: pwt.questions, marks: pwt.marks,
       negative: e.negative, negativeText: e.negativeText,
       minutes: e.minutes || null,
+      marking: e.marking,
+      sectionBudgets: e.sections.map(s => s.budget || null),
+      derived: Math.round(e.minutes * 60 / e.questions),
       papers: fin.papers.map(p => ({ name: p.name, qualifying: !!p.qualifying, merit: !!p.merit })),
       subjects: subjectsForExam(e),
     };
@@ -651,10 +660,19 @@ function check(name, cond, detail){
     siExam.questions === 200 && siExam.marks === 200, JSON.stringify(siExam));
   check('negative marking is stated exactly, not as a bare flag',
     siExam.negative === true && /20%/.test(siExam.negativeText), String(siExam.negativeText));
-  // The notification text this was built from gives no duration. Inventing one
-  // would put a fabricated per-question target on every practice screen.
-  check('no exam duration is invented where the notification gives none',
-    siExam.minutes === null, String(siExam.minutes));
+  check('the preliminary test is three hours, as the notification states',
+    siExam.minutes === 180, String(siExam.minutes));
+  check('and the pace target is derived from it: 180 min / 200 questions = 54s',
+    siExam.derived === 54, String(siExam.derived));
+  // The notification gives ONE duration for ONE paper. It does not split that
+  // time between the two halves, so neither may this — a 90/90 section budget
+  // would be an allocation the board never published.
+  check('no per-section time allocation is invented for TS SI',
+    siExam.sectionBudgets.every(b => !b), JSON.stringify(siExam.sectionBudgets));
+  check('marking is recorded as numbers: +1, -0.20, 0 for unanswered',
+    siExam.marking.correct === 1 && siExam.marking.wrong === -0.20 &&
+    siExam.marking.unanswered === 0 && siExam.marking.negativePercent === 20,
+    JSON.stringify(siExam.marking));
   check('Papers I and II are marked qualifying only',
     siExam.papers.filter(p => p.qualifying).length === 2 &&
     /English/.test(siExam.papers[0].name) && /Telugu/.test(siExam.papers[1].name),
@@ -687,11 +705,21 @@ function check(name, cond, detail){
   await page.waitForSelector('.explain');
   const siPace = (await page.locator('.pace').first().textContent()).replace(/\s+/g, ' ');
   check('timing works for TS SI too', /\d+s/.test(siPace), siPace.slice(0, 100));
+  check('TS SI shows the 54-second derived target',
+    /target 54s\/question/.test(siPace), siPace.slice(0, 160));
+  check('labelled as DERIVED from 3h / 200 questions, not as official',
+    /derived from 3h \/ 200 questions/.test(siPace) && !/official/i.test(siPace),
+    siPace.slice(0, 200));
+  check('and it does not inherit HAL\'s section budget',
+    !/97 min|58s\/question/.test(siPace), siPace.slice(0, 200));
+  check('the marking scheme is spelled out in marks',
+    /\+1/.test(siPace) && /-0\.2/.test(siPace) && /unanswered 0/.test(siPace),
+    siPace.slice(0, 220));
   // Speed advice without the marking scheme is dangerous: "go faster" is right
   // for HAL, where a guess is free, and expensive on a paper that charges.
   check('and pace advice carries this exam\'s marking scheme',
-    /20% of the marks/.test(siPace) && /blind guess is worse than a blank/.test(siPace),
-    siPace.slice(0, 200));
+    /20% of the marks/.test(siPace) && /rule out two options before guessing/.test(siPace),
+    siPace.slice(0, 220));
   check('TS SI does not inherit HAL\'s "a guess is free" advice',
     !/never leave a blank/i.test(siPace), siPace.slice(0, 200));
 

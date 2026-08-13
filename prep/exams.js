@@ -111,12 +111,23 @@ const EXAMS = [
     // This one takes a proportion, so it is stated exactly rather than left as
     // a boolean — the whole guess-or-leave-it calculation depends on it.
     negativeText: "20% of the marks for that question",
+    // Exactly what the paper does with each response. Stated as numbers rather
+    // than as a boolean because the guess-or-leave-it decision is arithmetic:
+    // at one-in-four a guess is worth 0.25 − 0.75×0.20 = +0.10, and at
+    // one-in-two it is worth 0.50 − 0.50×0.20 = +0.40. Knowing that is the
+    // difference between leaving forty marks on the table and throwing them
+    // away.
+    marking: { correct: 1, wrong: -0.20, unanswered: 0, negativePercent: 20 },
     questions: 200,
-    // NOTE: the duration of the preliminary test is deliberately absent. It is
-    // not in the notification text this was built from, and inventing it would
-    // put a fabricated per-question target on every practice screen. Until it
-    // is confirmed, the app shows pace with no target rather than a made-up
-    // one. See targetSecondsFor() in learn.html, which handles null.
+    // The notification gives ONE duration for ONE paper: three hours for the
+    // preliminary test. It does NOT split that time between the two halves.
+    //
+    // So 180 × 60 ÷ 200 = 54 seconds a question is the pace this implies, and
+    // the sections below deliberately carry no `budget` of their own — writing
+    // 90 minutes against each half would be inventing an allocation the board
+    // never published. The app calls the 54 seconds derived, on screen, every
+    // time it shows it.
+    minutes: 180,
     match: j => /telangana.*(police|sub-?inspector)|\btslprb\b|\btglprb\b/i.test(
                   (j.organization || "") + " " + (j.post_name || "")),
     sections: [

@@ -709,6 +709,14 @@ function markingNote(){
   if(!exam.negative){
     return 'Nothing is deducted for a wrong answer on this paper, so never leave a blank.';
   }
+  const m = exam.marking;
+  if(m){
+    // Spelled out in marks, because the decision it governs is arithmetic. At
+    // one in four a guess is worth 0.25 − 0.75 × 0.20 = +0.10 here; the point
+    // is not to never guess, it is to never guess blind.
+    return `Correct ${m.correct > 0 ? '+' : ''}${m.correct} · wrong ${m.wrong} · unanswered ${m.unanswered}. ` +
+           `A wrong answer costs ${escHtml(exam.negativeText || 'marks')}, so rule out two options before guessing.`;
+  }
   return 'A wrong answer costs ' + escHtml(exam.negativeText || 'marks') +
          ' on this paper, so a blind guess is worse than a blank.';
 }
@@ -806,25 +814,57 @@ function elapsedOnQuestion(){
   return ms;
 }
 
-/** Seconds this exam allows for a question in this subject.
+/** The per-question pace target for a subject, and — just as importantly —
+    where the number came from.
 
-    Taken from the per-section time budgets already in prep/exams.js rather
-    than invented: HAL gives 97 minutes to 100 technical questions and 10
-    minutes to 20 General Awareness ones, so the target for DBMS is not the
-    target for General Awareness. Falls back to the whole paper's average, and
-    then to null — an honest "no target" beats a made-up one. */
-function targetSecondsFor(topic){
+    NO EXAM BOARD PUBLISHES A PER-QUESTION TIME. Every target in this app is
+    arithmetic done on a published total, or a planning decision made here, and
+    the screen has to say which. "Official target: 54s" is a claim TSLPRB never
+    made; "54s/question — derived from 3h / 200 questions" is the same number
+    without the lie, and the difference matters the first time the number turns
+    out to be inconvenient.
+
+    Two ways a target is reached, in order:
+
+      section plan — where this app has budgeted one section's share of the
+                     paper (HAL: 97 of its 150 minutes on the 100 technical
+                     questions). That split is a strategy decided here, not
+                     something the board issued.
+
+      derived      — total duration ÷ total questions, when no section split
+                     exists. TS SI is this case: the notification gives three
+                     hours for one 200-question paper and does NOT divide that
+                     time between its two halves, so neither does this.
+
+    Null when the duration is unknown, which stays honest rather than filling
+    the gap with a guess. */
+function paceTarget(topic){
   const exam = (typeof currentExamObj === 'function') ? currentExamObj() : null;
   if(!exam) return null;
-  const sec = (exam.sections || []).find(s => (s.subjects || []).indexOf(topic) !== -1);
-  if(sec){
-    const qs = sec.questions || sec.marks;
-    if(sec.budget && qs) return Math.round(sec.budget * 60 / qs);
-  }
   const totalQs = exam.questions ||
     (exam.sections || []).reduce((n,s)=> n + (s.questions || s.marks), 0);
-  if(exam.minutes && totalQs) return Math.round(exam.minutes * 60 / totalQs);
+
+  const sec = (exam.sections || []).find(s => (s.subjects || []).indexOf(topic) !== -1);
+  if(sec && sec.budget){
+    const qs = sec.questions || sec.marks;
+    if(qs) return {
+      seconds: Math.round(sec.budget * 60 / qs),
+      basis: `this plan's ${sec.budget} min for ${sec.name}`,
+      kind: 'section-plan',
+    };
+  }
+  if(exam.minutes && totalQs) return {
+    seconds: Math.round(exam.minutes * 60 / totalQs),
+    basis: `derived from ${exam.minutes % 60 === 0 ? (exam.minutes / 60) + 'h' : exam.minutes + ' min'} / ${totalQs} questions`,
+    kind: 'derived',
+  };
   return null;
+}
+
+/** Just the number, for callers that only need something to compare against. */
+function targetSecondsFor(topic){
+  const t = paceTarget(topic);
+  return t ? t.seconds : null;
 }
 
 function recordAnswer(item, wasCorrect, skipped, ms){
@@ -1130,18 +1170,17 @@ function speedVerdict(pct, avg, target){
 function paceHTML(item, ms){
   if(!ms) return '';
   const secs = Math.round(ms / 1000);
-  const target = targetSecondsFor(item.topic);
-  // No target is not the same as no advice. Where the paper's duration is not
-  // known — TS SI's is not in the notification this was built from — the time
-  // is still worth recording and the marking scheme still governs whether it is
-  // worth attempting at all, so both are shown and the missing target is named
-  // rather than filled in with a guess.
-  if(!target) return `<div class="pace">⏱ <strong>${secs}s</strong> on that one. No official duration published for this
-    paper yet, so there is no per-question target to measure it against.
+  const t = paceTarget(item.topic);
+  // No target is not the same as no advice. Where a paper's duration is not
+  // known, the time is still worth recording and the marking scheme still
+  // governs whether the question was worth attempting, so both are shown and
+  // the missing target is named rather than filled in with a guess.
+  if(!t) return `<div class="pace">⏱ <strong>${secs}s</strong> on that one. No published duration for this
+    paper, so there is no per-question target to measure it against.
     <div class="marking">${markingNote()}</div></div>`;
-  const over = secs - target;
-  return `<div class="pace ${over > 0 ? 'is-slow' : 'is-ok'}">⏱ <strong>${secs}s</strong> · this paper allows about ${target}s for a ${escHtml(item.topic)} question${
-      over > 0 ? ` — <strong>${over}s over</strong>` : ' — inside the budget'}.
+  const over = secs - t.seconds;
+  return `<div class="pace ${over > 0 ? 'is-slow' : 'is-ok'}">⏱ <strong>${secs}s</strong> · target <strong>${t.seconds}s/question</strong> — ${escHtml(t.basis)}${
+      over > 0 ? ` · <strong>${over}s over</strong>` : ' · inside it'}.
     <div class="marking">${markingNote()}</div></div>`;
 }
 
@@ -1384,13 +1423,14 @@ function showResult(){
   let paceLine = '';
   if(timed.length){
     const avg = Math.round(timed.reduce((n,a)=> n + a.ms, 0) / timed.length / 1000);
-    const targets = timed.map(a => targetSecondsFor(a.topic)).filter(t => t);
-    const target = targets.length ? Math.round(targets.reduce((n,t)=>n+t,0) / targets.length) : null;
+    const targets = timed.map(a => paceTarget(a.topic)).filter(t => t);
+    const target = targets.length ? Math.round(targets.reduce((n,t)=>n+t.seconds,0) / targets.length) : null;
+    const basis = targets.length ? targets[0].basis : '';
     const paperQs = (currentExamObj() || {}).questions || 160;
     paceLine = `<div class="pace ${target && avg > target ? 'is-slow' : 'is-ok'}">⏱ <strong>${avg}s</strong> a question across this set${
-      target ? ` · the paper allows about ${target}s${
-        avg > target ? ` — you are ${avg - target}s over, which is ${Math.round((avg - target) * paperQs / 60)} minutes across a full ${paperQs}-question paper`
-                     : ' — inside the budget'}` : ''}.
+      target ? ` · target <strong>${target}s/question</strong> — ${escHtml(basis)}${
+        avg > target ? ` · you are ${avg - target}s over, which is ${Math.round((avg - target) * paperQs / 60)} minutes across a full ${paperQs}-question paper`
+                     : ' · inside it'}` : ''}.
       <div class="marking">${markingNote()}</div></div>`;
   }
 
