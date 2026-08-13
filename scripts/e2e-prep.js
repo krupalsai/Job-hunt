@@ -363,6 +363,166 @@ function check(name, cond, detail){
   check('and a ticked block survives a reload',
     (await page.locator('#today-plan .td-block.is-done').count()) === 1);
 
+  console.log('\n── planning across three exams at once ─────────────────');
+  /* Three exams, not three separate universes. Percentage is examined by SSC
+     CGL and by TS SI, so one hour on it is an hour on both — scheduling it
+     twice would be doing the same work and calling it progress. Telangana
+     Movement helps one paper and DBMS helps another, and no amount of either
+     helps the other. */
+  const setScope = s => page.evaluate(v => {
+    localStorage.setItem('jobhunt_plan_scope', v);
+    return window.__buildToday();
+  }, s);
+  await page.evaluate(() => localStorage.setItem('jobhunt_daily_minutes', '240'));
+
+  const all = await setScope('all');
+  const domains = [...new Set(all.blocks.map(b => b.domain))];
+  check('ALL EXAMS draws on more than one domain', domains.length >= 2, domains.join(' | '));
+  check('and the minutes still add up to the budget',
+    all.blocks.reduce((n, b) => n + b.minutes, 0) === all.total,
+    `${all.blocks.reduce((n, b) => n + b.minutes, 0)} vs ${all.total}`);
+
+  // One block per subject, never one per (subject, exam) pair.
+  const subjectsSeen = all.blocks.filter(b => b.kind !== 'basic' && b.kind !== 'speed').map(b => b.subject);
+  check('a shared subject is scheduled once, not once per exam',
+    subjectsSeen.length === new Set(subjectsSeen).size, subjectsSeen.join(' | '));
+  check('and no two blocks share an id',
+    all.blocks.length === new Set(all.blocks.map(b => b.id)).size);
+
+  const common = all.blocks.filter(b => b.domain === 'common');
+  check('common-core subjects are recognised as common', common.length >= 1,
+    all.blocks.map(b => b.subject + '=' + b.domain).join(' | '));
+  /* Overlap gives a common subject up to twice the score of an equally weak
+     single-paper one, which on a full day can take every slot and leave an
+     entire exam out of the plan — not because it is in good shape, but because
+     it is only examined once. Each domain in scope is guaranteed its neediest
+     subject before score decides the rest. */
+  check('no exam is crowded out of a full day by the common core',
+    ['common', 'ts-si', 'hal-cs'].every(d => all.blocks.some(b => b.domain === d)),
+    all.blocks.map(b => b.domain).join(' | '));
+  check('and the minutes are still differentiated, not sliced equally',
+    new Set(all.blocks.map(b => b.minutes)).size > 1,
+    all.blocks.map(b => b.minutes).join(' | '));
+  check('and a common block names the exams the hour buys',
+    common.every(b => b.exams.length > 1) && /improves .+ \+ /.test(common[0].why),
+    common[0] && common[0].why);
+
+  const overlaps = {};
+  const domainBySubject = {};
+  all.blocks.forEach(b => {
+    if (b.exams) overlaps[b.subject] = b.exams.map(e => e.key);
+    domainBySubject[b.subject] = b.domain;
+  });
+  /* Asserted against the model rather than against whichever subjects today
+     happened to schedule: the sharing is a property of the syllabuses, and it
+     is true on a day Quant is not on the list. */
+  const sharing = await page.evaluate(() => {
+    const who = s => EXAMS.filter(e => subjectsForExam(e).indexOf(s) !== -1).map(e => e.key);
+    return {
+      quant: who('Quantitative Aptitude'),
+      reasoning: who('Reasoning'),
+      telangana: who('Telangana Movement & State Formation'),
+      dbms: who('DBMS'),
+    };
+  });
+  check('Quantitative Aptitude is shared by SSC CGL and TS SI',
+    sharing.quant.indexOf('ssc-cgl') !== -1 && sharing.quant.indexOf('ts-si') !== -1,
+    JSON.stringify(sharing.quant));
+  check('Reasoning is shared by all three exams',
+    sharing.reasoning.length === 3, JSON.stringify(sharing.reasoning));
+  check('Telangana Movement belongs to TS SI alone',
+    sharing.telangana.join() === 'ts-si', JSON.stringify(sharing.telangana));
+  check('and DBMS belongs to HAL alone',
+    sharing.dbms.join() === 'hal-cs', JSON.stringify(sharing.dbms));
+  check('a HAL-only subject is never filed as common',
+    Object.keys(domainBySubject).every(s =>
+      !/DBMS|Theory of Computation|Software Engineering/.test(s) || domainBySubject[s] === 'hal-cs'),
+    JSON.stringify(domainBySubject));
+
+  // Scoping to one exam must not leak another exam's subjects in.
+  const cgl = await setScope('ssc-cgl');
+  check('scoping to SSC CGL never schedules a TS SI-only subject',
+    !cgl.blocks.some(b => /Telangana/.test(b.subject)), cgl.blocks.map(b => b.subject).join(' | '));
+  check('and never schedules a HAL technical subject',
+    !cgl.blocks.some(b => /DBMS|Operating Systems|Theory of Computation/.test(b.subject)),
+    cgl.blocks.map(b => b.subject).join(' | '));
+  check('a single-exam plan applies no overlap multiplier',
+    cgl.blocks.every(b => b.overlap === undefined || b.overlap === 1),
+    JSON.stringify(cgl.blocks.map(b => b.overlap)));
+
+  const hal = await setScope('hal-cs');
+  check('scoping to HAL never schedules a TS SI-only subject',
+    !hal.blocks.some(b => /Telangana|General Studies/.test(b.subject)),
+    hal.blocks.map(b => b.subject).join(' | '));
+
+  // A short day across three exams still has to produce something worth doing.
+  await page.evaluate(() => localStorage.setItem('jobhunt_daily_minutes', '60'));
+  const shortAll = await setScope('all');
+  check('one hour across all three exams still produces real blocks',
+    shortAll.blocks.length >= 1 && shortAll.blocks.every(b => b.minutes >= 15),
+    JSON.stringify(shortAll.blocks.map(b => b.subject + ':' + b.minutes)));
+  check('and it still spends exactly the hour',
+    shortAll.blocks.reduce((n, b) => n + b.minutes, 0) === 60,
+    String(shortAll.blocks.reduce((n, b) => n + b.minutes, 0)));
+
+  // Timing stays exam-specific. The ONLY place a target crosses exams is the
+  // deliberate one: a shared subject is held to the strictest clock that
+  // applies to it, never to a laxer one borrowed from elsewhere.
+  const targets = await page.evaluate(() => {
+    const byKey = k => EXAMS.find(e => e.key === k);
+    return {
+      halTech:  paceTargetForExam('DBMS', byKey('hal-cs')),
+      tsGs:     paceTargetForExam('General Studies', byKey('ts-si')),
+      cglQuant: paceTargetForExam('Quantitative Aptitude', byKey('ssc-cgl')),
+      tsQuant:  paceTargetForExam('Quantitative Aptitude', byKey('ts-si')),
+    };
+  });
+  check('HAL keeps its own section-plan target with provenance',
+    targets.halTech.seconds === 58 && targets.halTech.kind === 'section-plan',
+    JSON.stringify(targets.halTech));
+  check('TS SI keeps its derived 54 seconds',
+    targets.tsGs.seconds === 54 && targets.tsGs.kind === 'derived', JSON.stringify(targets.tsGs));
+  check('SSC CGL uses its own configured section timing',
+    targets.cglQuant.seconds === 53 && targets.cglQuant.kind === 'section-plan',
+    JSON.stringify(targets.cglQuant));
+  check('a shared subject is held to the STRICTER of the two clocks',
+    Math.min(targets.cglQuant.seconds, targets.tsQuant.seconds) === 53,
+    `${targets.cglQuant.seconds} vs ${targets.tsQuant.seconds}`);
+
+  // Dates are configuration. None is set, so no urgency may be manufactured.
+  const urgency = await page.evaluate(() => {
+    const p = window.__buildToday();
+    return {
+      configured: EXAMS.map(e => e.date || null),
+      urgencies: p.blocks.filter(b => b.urgency !== undefined).map(b => b.urgency),
+    };
+  });
+  check('no exam date is invented',
+    urgency.configured.every(d => d === null), JSON.stringify(urgency.configured));
+  check('and an unconfigured date produces no urgency multiplier',
+    urgency.urgencies.every(u => u === 1), JSON.stringify(urgency.urgencies));
+  await page.evaluate(() => window.renderToday());
+  check('the screen says the date is not configured rather than guessing',
+    /date not configured/.test(await page.locator('#today-head').textContent()));
+
+  // Question provenance survives the planner: nothing is relabelled by which
+  // exam happened to schedule it.
+  const provenance = await page.evaluate(() => ({
+    pyqWithoutSource: ALL.filter(q => q.kind === 'pyq' && !(q.exam && q.year && q.source)).length,
+    kinds: [...new Set(ALL.map(q => q.kind || 'generated'))],
+  }));
+  check('every PYQ carries its exam, year and source',
+    provenance.pyqWithoutSource === 0, String(provenance.pyqWithoutSource));
+  check('and no question has an unknown kind',
+    provenance.kinds.every(k => ['pyq', 'verified', 'generated'].indexOf(k) !== -1),
+    provenance.kinds.join(' | '));
+
+  // Leave the scope as it was found, so nothing after this inherits it.
+  await page.evaluate(() => {
+    localStorage.removeItem('jobhunt_plan_scope');
+    localStorage.setItem('jobhunt_daily_minutes', '180');
+  });
+
   console.log('\n── the 4-week plan is workable, not a table ─────────────');
   await page.click('nav#nav-bottom [data-tab="schedule"]');
   const days = await page.locator('#plan-days .plan-day').count();

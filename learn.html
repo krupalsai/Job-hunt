@@ -381,7 +381,9 @@
          actually been going wrong. -->
     <div class="card">
       <h2>Today</h2>
-      <p class="muted" style="margin-top:-4px;">How long have you got?</p>
+      <p class="muted" style="margin-top:-4px;">Which exams are you planning for?</p>
+      <div class="td-chips" id="today-scope"></div>
+      <p class="muted" style="margin-top:10px;">How long have you got?</p>
       <div class="td-chips" id="today-budget"></div>
       <div id="today-head" style="margin-top:12px;"></div>
     </div>
@@ -839,7 +841,14 @@ function elapsedOnQuestion(){
     Null when the duration is unknown, which stays honest rather than filling
     the gap with a guess. */
 function paceTarget(topic){
-  const exam = (typeof currentExamObj === 'function') ? currentExamObj() : null;
+  return paceTargetForExam(topic, (typeof currentExamObj === 'function') ? currentExamObj() : null);
+}
+
+/** The same calculation against a named exam rather than the one on screen.
+    The cross-exam planner needs this: a subject that two papers examine has two
+    targets, and it has to be able to see both rather than assuming whichever
+    exam happens to be selected. */
+function paceTargetForExam(topic, exam){
   if(!exam) return null;
   const totalQs = exam.questions ||
     (exam.sections || []).reduce((n,s)=> n + (s.questions || s.marks), 0);

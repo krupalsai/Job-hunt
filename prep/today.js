@@ -35,12 +35,87 @@
 
   const BUDGET_KEY = "jobhunt_daily_minutes";
   const DONE_KEY   = "jobhunt_today_done";
+  const SCOPE_KEY  = "jobhunt_plan_scope";
   const DEFAULT_MINUTES = 180;
   const CHOICES = [60, 120, 180, 240, 300];
+
+  /* ── Domains ────────────────────────────────────────────────────────────
+     Three exams, but not three separate universes. Percentage is examined by
+     SSC CGL and by TS SI, and an hour spent on it is an hour spent on both —
+     scheduling "Percentage (CGL)" on Monday and "Percentage (TS SI)" on
+     Thursday would be doing the same work twice and calling it progress.
+     Telangana Movement is examined by one paper only, and DBMS by another, and
+     no amount of studying either helps the other.
+
+     So a subject's domain is not declared in a list that would drift out of
+     step with prep/exams.js — it is DERIVED from how many of the exams examine
+     it. More than one, and it is common core; exactly one, and it belongs to
+     that exam. Add an exam tomorrow and the domains reorganise themselves. */
+  const DOMAIN_COMMON = "common";
+
+  function allExams() {
+    return (typeof EXAMS !== "undefined" && Array.isArray(EXAMS)) ? EXAMS : [];
+  }
+
+  /** subject → the exams that examine it. */
+  function subjectExams() {
+    const map = {};
+    allExams().forEach(e => {
+      (typeof subjectsForExam === "function" ? subjectsForExam(e) : []).forEach(s => {
+        (map[s] || (map[s] = [])).push(e);
+      });
+    });
+    return map;
+  }
+
+  function domainOf(subject, exams) {
+    return exams.length > 1 ? DOMAIN_COMMON : exams[0].key;
+  }
+
+  function domainLabel(key) {
+    if (key === DOMAIN_COMMON) return "Common core";
+    const e = allExams().find(x => x.key === key);
+    return e ? e.short + " only" : key;
+  }
+
+  /* Studying one subject that two papers examine is worth more per minute than
+     studying one that only appears in a single paper. Half again for the second
+     exam, half again for the third: 1.0, 1.5, 2.0. It is a deliberate thumb on
+     the scale rather than a measurement, which is why it is written here in one
+     line where it can be argued with. */
+  function overlapValue(examCount) {
+    return 1 + 0.5 * (examCount - 1);
+  }
+
+  /* ── Urgency ────────────────────────────────────────────────────────────
+     From the exam's configured date and from nothing else. No date configured
+     means no urgency multiplier — NOT a guessed one. A planner that invented a
+     deadline would quietly reorder every day around a date nobody supplied,
+     and the person following it would have no way of knowing. */
+  function urgencyOf(exam) {
+    if (!exam || !exam.date) return { factor: 1, note: "date not configured", days: null };
+    const days = Math.ceil((Date.parse(exam.date) - Date.now()) / 86400000);
+    if (!isFinite(days)) return { factor: 1, note: "date not configured", days: null };
+    if (days < 0) return { factor: 1, note: "date has passed", days };
+    // Inside sixty days the multiplier climbs from 1.0 to 2.0, linearly. Beyond
+    // that everything is equally far away and the other signals should decide.
+    const factor = days >= 60 ? 1 : 1 + (60 - days) / 60;
+    return { factor, note: days + " days away", days };
+  }
 
   /* A block shorter than this is not worth switching context for; the leftover
      minutes are given to the subject that needs them most instead. */
   const MIN_BLOCK = 15;
+
+  /* And a ceiling on how many subjects one day may contain.
+
+     Without it, four hours across sixteen candidate subjects produces sixteen
+     identical quarter-hour blocks — which is not a plan, it is a checklist, and
+     it is precisely the equal division this planner exists to avoid. Six is
+     about the most a day can carry while still giving the worst subject a
+     session long enough to get somewhere. The rest wait for tomorrow, when the
+     same scoring picks them up again because nothing was done about them. */
+  const MAX_SUBJECT_BLOCKS = 6;
 
   const el = id => document.getElementById(id);
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
@@ -76,6 +151,20 @@
     return null;
   }
 
+  /** Which exams today is being planned for. Defaults to the one on screen, so
+      nothing changes for someone who never touches the selector. */
+  function scope() {
+    const s = localStorage.getItem(SCOPE_KEY);
+    if (s === "all") return "all";
+    if (s && allExams().some(e => e.key === s)) return s;
+    const cur = currentExam();
+    return cur ? cur.key : "all";
+  }
+  function scopeExams() {
+    const s = scope();
+    return s === "all" ? allExams() : allExams().filter(e => e.key === s);
+  }
+
   function masteredLessons() {
     return readJSON("jobhunt_lessons", {});
   }
@@ -85,24 +174,51 @@
      invented, and where there is no data the need is set to "unknown, treat as
      middling" rather than to zero — a subject you have never touched is a risk,
      not a strength. */
-  function needOf(subject, exam) {
+  /** What share of one paper's marks this subject carries. A section's marks
+      are split across the subjects that make it up, so two subjects sharing a
+      section do not each claim the whole of it. */
+  function weightIn(subject, exam) {
+    if (!exam) return 1 / 12;
+    const sec = (exam.sections || []).find(x => (x.subjects || []).indexOf(subject) !== -1);
+    const totalMarks = (exam.sections || []).reduce((n, x) => n + (x.marks || 0), 0) || 1;
+    return sec ? (sec.marks / (sec.subjects.length || 1)) / totalMarks : 1 / 12;
+  }
+
+  /** Pace for a subject measured against the STRICTEST clock among the exams
+      that examine it. SSC CGL allows about 53 seconds for a Quant question and
+      TS SI's derived figure is 54; preparing to 53 satisfies both, preparing to
+      54 satisfies one. This is the only place a target crosses exams, it does
+      so deliberately and downwards, and the exam it came from is carried along
+      so the screen can say whose clock is being used. */
+  function paceFor(subject, exams) {
+    const t = (state.topics || {})[subject] || {};
+    const avg = t.timed ? Math.round((t.ms || 0) / t.timed / 1000) : null;
+    let best = null;
+    exams.forEach(e => {
+      const pt = (typeof paceTargetForExam === "function") ? paceTargetForExam(subject, e) : null;
+      if (pt && (!best || pt.seconds < best.seconds)) best = { seconds: pt.seconds, basis: pt.basis, exam: e };
+    });
+    return {
+      avg,
+      target: best ? best.seconds : null,
+      basis: best ? best.basis : null,
+      targetExam: best ? best.exam : null,
+    };
+  }
+
+  function needOf(subject, exam, paceExams) {
     const s = (state.topics || {})[subject] || { asked: 0, correct: 0 };
     const pool = ALL.filter(q => q.topic === subject);
     const pct = s.asked ? Math.round(s.correct / s.asked * 100) : null;
 
-    // Marks this subject's section carries, as a share of the paper.
-    const sec = (exam.sections || []).find(x => (x.subjects || []).indexOf(subject) !== -1);
-    const totalMarks = (exam.sections || []).reduce((n, x) => n + (x.marks || 0), 0) || 1;
-    // Split a section's marks across the subjects that make it up, so two
-    // subjects sharing one section do not each claim the whole of it.
-    const weight = sec ? (sec.marks / (sec.subjects.length || 1)) / totalMarks : 1 / 12;
+    const weight = weightIn(subject, exam);
 
     // Accuracy: distance below the 75% that counts as exam-ready.
     const accuracyGap = pct === null ? 0.5
       : Math.max(0, 75 - pct) / 75;
 
-    // Speed: how far over the paper's own per-question budget.
-    const pace = (typeof paceOf === "function") ? paceOf(subject) : { avg: null, target: null };
+    // Speed: how far over the strictest clock that applies to this subject.
+    const pace = paceFor(subject, paceExams || [exam]);
     const speedGap = (pace.avg && pace.target && pace.avg > pace.target)
       ? Math.min(1, (pace.avg - pace.target) / pace.target) : 0;
 
@@ -143,8 +259,23 @@
     };
   }
 
-  /** One line saying why this block is on today's list. */
-  function reasonFor(n) {
+  /** One line saying why this block is on today's list. Across exams it also
+      says which papers the hour buys, because that is the whole argument for
+      doing this one before something with a worse score in a single paper. */
+  function reasonFor(n, isAll) {
+    return liftPrefix(n.exams, isAll) + reasonCore(n);
+  }
+
+  /** "improves SSC CGL + TS SI; " — the case for doing this block before one
+      with a worse score that only buys a single paper. Applies to every kind of
+      block, not just subjects: a basic sitting under a shared subject buys two
+      exams the same way an hour of practice does. */
+  function liftPrefix(exams, isAll) {
+    return (isAll && exams && exams.length > 1)
+      ? `improves ${exams.map(e => e.short).join(" + ")}; ` : "";
+  }
+
+  function reasonCore(n) {
     if (n.pct !== null && n.asked >= 4 && n.accuracyGap > 0) {
       const marks = Math.round(n.weight * 100);
       if (n.speedGap > 0) {
@@ -167,26 +298,39 @@
      the highest-value minutes on the list, and they must not be squeezed out
      by a subject that merely has a lot of questions left. */
   function buildToday() {
-    const exam = currentExam();
-    if (!exam) return null;
+    const exams = scopeExams();
+    if (!exams.length) return null;
+    const isAll = scope() === "all";
+    // For the single-exam path this is the exam being studied, exactly as
+    // before. For ALL EXAMS it is only used for headings.
+    const exam = isAll ? null : exams[0];
     const total = budget();
     const blocks = [];
     let left = total;
+    const examsBySubject = subjectExams();
+    /** The exams in scope that examine this subject. */
+    const forSubject = s => (examsBySubject[s] || []).filter(e => exams.some(x => x.key === e.key));
 
     // 1. A basic that has cost marks twice. Fifteen minutes on one rule is the
     //    best-value block on the page — it is the only one that fixes a cause
     //    rather than practising around a symptom.
     if (typeof weakSkills === "function") {
-      const weak = weakSkills();
+      // Only a basic that sits under a subject one of the scoped exams
+      // actually examines. Drilling a basic for a paper you are not sitting is
+      // the most plausible-looking way to waste the best block of the day.
+      const weak = weakSkills().filter(w => forSubject(w.skill.subject).length);
       if (weak.length && left >= MIN_BLOCK) {
         const w = weak[0];
         blocks.push({
           id: "skill-" + w.skill.key,
           kind: "basic",
+          domain: domainOf(w.skill.subject, examsBySubject[w.skill.subject] || exams),
+          exams: forSubject(w.skill.subject),
           title: w.skill.name,
           subject: w.skill.subject,
           minutes: 15,
-          why: `has cost you ${w.distinctMissed} different questions — fixing the rule fixes all of them`,
+          why: liftPrefix(forSubject(w.skill.subject), isAll) +
+               `has cost you ${w.distinctMissed} different questions — fixing the rule fixes all of them`,
           action: { type: "skill", key: w.skill.key, label: "Drill this basic" },
         });
         left -= 15;
@@ -194,9 +338,32 @@
     }
 
     // 2. Subjects, by need.
-    const subjects = (typeof subjectsForExam === "function" ? subjectsForExam(exam) : [])
-      .filter(s => QUESTION_BANK[s] && QUESTION_BANK[s].length);
-    const needs = subjects.map(s => needOf(s, exam)).sort((a, b) => b.score - a.score);
+    //
+    // One block per SUBJECT, never one per (subject, exam) pair. Percentage
+    // appears once whether one paper examines it or three; scheduling it twice
+    // because two exams want it would be doing the same hour twice and calling
+    // it two hours of progress.
+    const subjects = Object.keys(examsBySubject)
+      .filter(s => forSubject(s).length && QUESTION_BANK[s] && QUESTION_BANK[s].length);
+
+    const needs = subjects.map(s => {
+      const mine = forSubject(s);
+      // Weight the subject by the paper that stakes the most on it.
+      const weightExam = mine.slice().sort((a, b) =>
+        weightIn(s, b) - weightIn(s, a))[0];
+      const n = needOf(s, weightExam, mine);
+      n.exams = mine;
+      n.domain = domainOf(s, examsBySubject[s]);
+      // Overlap only applies when planning across exams. Inside a single
+      // exam's plan there is no second paper to benefit, so the single-exam
+      // behaviour is left exactly as it was.
+      n.overlap = isAll ? overlapValue(mine.length) : 1;
+      const urgencies = mine.map(urgencyOf);
+      n.urgency = urgencies.reduce((m, u) => Math.max(m, u.factor), 1);
+      n.urgencyNote = urgencies.map(u => u.note).join(" · ");
+      n.score = n.score * n.overlap * n.urgency;
+      return n;
+    }).sort((a, b) => b.score - a.score);
 
     // 3. A speed drill, if any subject is genuinely over the paper's budget.
     const slow = needs.filter(n => n.speedGap > 0).sort((a, b) => b.speedGap - a.speedGap)[0];
@@ -204,10 +371,13 @@
       blocks.push({
         id: "speed-" + slow.subject,
         kind: "speed",
+        domain: slow.domain,
+        exams: slow.exams,
         title: "Speed drill — " + slow.subject,
         subject: slow.subject,
         minutes: 15,
-        why: `${slow.pace.avg}s a question against ${slow.pace.target}s allowed. Answer these watching the clock, not the explanation`,
+        why: liftPrefix(slow.exams, isAll) +
+             `${slow.pace.avg}s a question against ${slow.pace.target}s (${slow.pace.basis}). Answer these watching the clock, not the explanation`,
         action: { type: "practise", subject: slow.subject, label: "Start the drill" },
       });
       left -= 15;
@@ -218,8 +388,35 @@
     //    each, which is not studying — so the number of blocks is decided
     //    first, by the budget, and only the neediest subjects get one. A short
     //    day means fewer subjects, not thinner slices of all of them.
-    const capacity = Math.floor(left / MIN_BLOCK);
-    const chosen = needs.slice(0, Math.max(0, capacity));
+    const capacity = Math.min(Math.floor(left / MIN_BLOCK), MAX_SUBJECT_BLOCKS);
+
+    /* Which subjects get one of those slots.
+
+       Taking the top scores outright looks right and is not. Overlap gives a
+       common-core subject up to twice the score of an equally weak one that
+       only appears in a single paper, so on a day planned across all three
+       exams the common core can take every slot and HAL can get NOTHING — not
+       because it is in good shape, but because it is only examined once. A
+       planner that silently drops a whole exam from the day is worse than one
+       that divides time equally, because at least the equal division is
+       visible.
+
+       So each domain in scope is guaranteed its neediest subject first, and
+       only then are the remaining slots filled by score. Overlap still decides
+       how many MINUTES each block gets — it just cannot shut an exam out. */
+    let chosen;
+    if (isAll) {
+      const byDomain = {};
+      needs.forEach(n => { (byDomain[n.domain] || (byDomain[n.domain] = [])).push(n); });
+      chosen = Object.keys(byDomain)
+        .sort((a, b) => byDomain[b][0].score - byDomain[a][0].score)
+        .slice(0, capacity)
+        .map(d => byDomain[d][0]);
+      needs.forEach(n => { if (chosen.length < capacity && chosen.indexOf(n) === -1) chosen.push(n); });
+      chosen.sort((a, b) => b.score - a.score);
+    } else {
+      chosen = needs.slice(0, Math.max(0, capacity));
+    }
     const alloc = [];
     if (chosen.length) {
       const totalScore = chosen.reduce((n, x) => n + x.score, 0) || 1;
@@ -250,16 +447,18 @@
       blocks.push({
         id: "sub-" + n.subject,
         kind: n.nextLesson ? "learn" : "practise",
+        domain: n.domain,
+        exams: n.exams,
         title: n.subject,
         subject: n.subject,
         detail: n.nextLesson ? n.nextLesson.title : null,
         minutes: a.minutes,
-        why: reasonFor(n),
+        why: reasonFor(n, isAll),
         action,
       });
     });
 
-    return { exam, total, blocks };
+    return { exam, exams, isAll, total, blocks, scope: scope() };
   }
 
   /* ── Rendering ──────────────────────────────────────────────────────────── */
@@ -277,16 +476,47 @@
       `<button class="td-chip ${c === plan.total ? "is-on" : ""}" data-mins="${c}">${
         c >= 60 ? (c / 60) + "h" : c + "m"}</button>`).join("");
 
+    el("today-scope").innerHTML =
+      `<button class="td-chip ${plan.scope === "all" ? "is-on" : ""}" data-scope="all">All exams</button>` +
+      allExams().map(e =>
+        `<button class="td-chip ${plan.scope === e.key ? "is-on" : ""}" data-scope="${esc(e.key)}">${esc(e.short)}</button>`
+      ).join("");
+
+    // Dates are configuration, never a guess. Where none is set the planner
+    // applies no urgency at all and says so, rather than quietly ordering the
+    // day around a deadline nobody supplied.
+    const dated = plan.exams.map(e => {
+      const u = urgencyOf(e);
+      return esc(e.short) + ": " + esc(u.note);
+    }).join(" · ");
+
     el("today-head").innerHTML =
       `<div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:var(--accent)"></div></div>
-       <div class="bar-note">${doneMins} of ${plan.total} minutes done · ${esc(plan.exam.short)}</div>`;
+       <div class="bar-note">${doneMins} of ${plan.total} minutes done · ${
+         plan.isAll ? "all exams" : esc(plan.exams[0].short)}</div>
+       <div class="bar-note">${dated}</div>`;
 
     if (!plan.blocks.length) {
       box.innerHTML = `<p class="muted">No subjects with questions for this exam yet.</p>`;
       return;
     }
 
-    box.innerHTML = plan.blocks.map(b => `
+    /* Grouped by domain when planning across exams, so it is obvious at a
+       glance which minutes are buying two papers and which are buying one.
+       The ORDER of the blocks is still need order — only the display is
+       regrouped, so a heading never implies that everything under it outranks
+       everything below. */
+    const domainOrder = [DOMAIN_COMMON].concat(allExams().map(e => e.key));
+    const ordered = plan.isAll
+      ? plan.blocks.slice().sort((a, b) =>
+          domainOrder.indexOf(a.domain) - domainOrder.indexOf(b.domain))
+      : plan.blocks;
+
+    let lastDomain = null;
+    box.innerHTML = ordered.map(b => `${
+      plan.isAll && b.domain !== lastDomain
+        ? (lastDomain = b.domain, `<div class="td-domain">${esc(domainLabel(b.domain))}</div>`)
+        : ""}` + `
       <div class="td-block ${done[b.id] ? "is-done" : ""} kind-${b.kind}" data-id="${esc(b.id)}">
         <button class="td-tick" data-tick="${esc(b.id)}" aria-label="Mark ${esc(b.title)} done">${done[b.id] ? "✓" : ""}</button>
         <div class="td-main">
@@ -312,6 +542,12 @@
         else if (b.action.type === "practise" && window.practiseSubject) window.practiseSubject(b.action.subject);
       });
     });
+    el("today-scope").querySelectorAll("[data-scope]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        localStorage.setItem(SCOPE_KEY, btn.dataset.scope);
+        render();
+      });
+    });
     el("today-budget").querySelectorAll("[data-mins]").forEach(btn => {
       btn.addEventListener("click", () => {
         localStorage.setItem(BUDGET_KEY, btn.dataset.mins);
@@ -326,6 +562,9 @@
     const css = document.createElement("style");
     css.textContent =
       ".td-chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;}" +
+      ".td-domain{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent-soft);"+
+        "font-weight:700;margin:16px 0 2px;padding-top:6px;}" +
+      ".td-domain:first-child{margin-top:0;padding-top:0;}" +
       ".td-chip{flex:1;min-width:52px;min-height:44px;border-radius:9px;cursor:pointer;" +
         "background:#0f172a;border:1px solid var(--panel-border);color:var(--text);font-size:13px;}" +
       ".td-chip.is-on{background:var(--accent);color:var(--bg);font-weight:700;border-color:transparent;}" +

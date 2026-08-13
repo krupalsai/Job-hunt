@@ -236,9 +236,20 @@ async function reachable(page, selector, where, minH){
   await page.waitForSelector('#today-plan .td-block');
   check('today lists blocks with minutes on them',
     (await page.locator('#today-plan .td-mins').count()) >= 3);
+  await reachable(page, '#today-scope .td-chip', 'exam-scope chip');
   await reachable(page, '#today-budget .td-chip', 'study-time chip');
   await reachable(page, '#today-plan .td-go', 'start button');
   await noSideScroll(page, "today's plan");
+
+  // Planning for all three exams at once is the densest this screen ever gets:
+  // more blocks, domain headings, and a longer reason on every one of them.
+  await page.locator('#today-scope [data-scope="all"]').click();
+  await page.waitForSelector('#today-plan .td-domain');
+  check('all-exams mode groups the day by domain',
+    (await page.locator('#today-plan .td-domain').count()) >= 2);
+  await noSideScroll(page, "today's plan across all three exams");
+  await reachable(page, '#today-plan .td-go', 'start button in all-exams mode');
+  await page.evaluate(() => { localStorage.removeItem('jobhunt_plan_scope'); window.renderToday(); });
 
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right section, at its top ─────');
