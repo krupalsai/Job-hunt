@@ -19,8 +19,15 @@ const SKILLS = new Function(skillSrc + '; return SKILLS;')();
 let problems = [];
 let total = 0;
 const seenText = new Map();
-/** Where a question came from. Absent means "generated" — the safe default. */
+/** Where a question came from. Absent means generated practice — the safe
+    default, so nothing can become a previous-year question by omission.
+    `kind` is the older spelling and is still accepted. */
+const SOURCE_TYPES = ['pyq', 'verified_practice', 'generated_practice'];
 const KINDS = ['pyq', 'verified', 'generated'];
+const DIFFICULTIES = ['easy', 'medium', 'hard'];
+const sourceOf = q => q.source_type
+  || (q.kind === 'pyq' ? 'pyq'
+    : q.kind === 'verified' ? 'verified_practice' : 'generated_practice');
 
 console.log('\nBank contents');
 console.log('─'.repeat(46));
@@ -50,7 +57,19 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
     if (q.kind !== undefined && KINDS.indexOf(q.kind) === -1) {
       problems.push(`${at}: kind "${q.kind}" is not one of ${KINDS.join(', ')}`);
     }
-    if (q.kind === 'pyq') {
+    if (q.source_type !== undefined && SOURCE_TYPES.indexOf(q.source_type) === -1) {
+      problems.push(`${at}: source_type "${q.source_type}" is not one of ${SOURCE_TYPES.join(', ')}`);
+    }
+    if (q.source_type !== undefined && q.kind !== undefined) {
+      problems.push(`${at}: carries both source_type and the older kind — keep one`);
+    }
+    if (q.difficulty !== undefined && DIFFICULTIES.indexOf(q.difficulty) === -1) {
+      problems.push(`${at}: difficulty "${q.difficulty}" is not one of ${DIFFICULTIES.join(', ')}`);
+    }
+    if (q.subtopic !== undefined && !/^[a-z][a-z0-9-]{2,40}$/.test(q.subtopic)) {
+      problems.push(`${at}: subtopic "${q.subtopic}" is not a lowercase dashed key`);
+    }
+    if (sourceOf(q) === 'pyq') {
       if (!q.exam)   problems.push(`${at}: claims to be a PYQ but names no exam`);
       if (!q.year)   problems.push(`${at}: claims to be a PYQ but names no year`);
       if (!q.source) problems.push(`${at}: claims to be a PYQ but names no source`);

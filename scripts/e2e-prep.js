@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 235 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 259 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -927,6 +927,99 @@ function check(name, cond, detail){
   check('the screen says which papers only have to be passed',
     /Qualifying only/.test(stageText));
   check('and which papers decide the merit', /Counts towards the final merit/.test(stageText));
+
+  /* ── TS SI content: is it actually studyable? ─────────────────────────
+     A subject with questions and no lessons is a shell. The path has to run
+     lesson → practice → timed → weak area → revision, which means the lesson
+     must exist, be reachable from this exam, and have enough questions behind
+     it for the check at the end. */
+  const content = await page.evaluate(() => {
+    const bySubject = s => ({
+      lessons: CURRICULUM.filter(l => l.subject === s).map(l => l.title),
+      questions: (QUESTION_BANK[s] || []).length,
+      subtopics: [...new Set((QUESTION_BANK[s] || []).map(q => q.subtopic).filter(Boolean))],
+    });
+    return {
+      gs: bySubject('General Studies'),
+      tm: bySubject('Telangana Movement & State Formation'),
+      inExam: subjectsForExam(EXAMS.find(e => e.key === 'ts-si')),
+    };
+  });
+  check('General Studies has lessons, not just questions',
+    content.gs.lessons.length >= 3, JSON.stringify(content.gs.lessons));
+  check('Telangana Movement has lessons',
+    content.tm.lessons.length >= 3, JSON.stringify(content.tm.lessons));
+  // The notification names three phases and only three. Inventing a fourth
+  // would be teaching a syllabus nobody set.
+  check('and its lessons follow the three phases the notification names',
+    content.tm.lessons.some(t => /1948/.test(t)) &&
+    content.tm.lessons.some(t => /1971/.test(t)) &&
+    content.tm.lessons.some(t => /1991/.test(t)), JSON.stringify(content.tm.lessons));
+  check('both subjects belong to TS SI',
+    content.inExam.indexOf('General Studies') !== -1 &&
+    content.inExam.indexOf('Telangana Movement & State Formation') !== -1,
+    content.inExam.join(' | '));
+  // A lesson check draws 5 questions from its subject, so a lesson with fewer
+  // than that behind it is a dead end.
+  check('each has enough questions behind it for the end-of-lesson test',
+    content.gs.questions >= 5 && content.tm.questions >= 5,
+    `GS ${content.gs.questions} · TM ${content.tm.questions}`);
+  check('questions are filed by syllabus area, not dumped in one pile',
+    content.gs.subtopics.length >= 4 && content.tm.subtopics.length === 3,
+    `GS ${content.gs.subtopics.join(',')} · TM ${content.tm.subtopics.join(',')}`);
+
+  // Every generated question says so, and none of them claims to be a PYQ.
+  const provenanceTsSi = await page.evaluate(() => {
+    const qs = [...(QUESTION_BANK['General Studies'] || []),
+                ...(QUESTION_BANK['Telangana Movement & State Formation'] || [])];
+    return {
+      total: qs.length,
+      generated: qs.filter(q => q.source_type === 'generated_practice').length,
+      pyq: qs.filter(q => q.source_type === 'pyq').length,
+      complete: qs.filter(q => q.q && q.opts && q.opts.length === 4 &&
+        typeof q.correct === 'number' && q.why && q.difficulty && q.subtopic).length,
+    };
+  });
+  check('every TS SI question is labelled generated practice',
+    provenanceTsSi.generated === provenanceTsSi.total,
+    JSON.stringify(provenanceTsSi));
+  check('and NONE of them is labelled a previous-year question',
+    provenanceTsSi.pyq === 0, String(provenanceTsSi.pyq));
+  check('every one carries answer, explanation, difficulty and syllabus area',
+    provenanceTsSi.complete === provenanceTsSi.total, JSON.stringify(provenanceTsSi));
+
+  // The lesson has to be openable from inside TS SI, or it is a file nobody
+  // reaches. Learn → subject → first lesson.
+  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="Telangana Movement & State Formation"]').click();
+  const tmRows = await page.locator('#learn-path .ls-row').count();
+  check('Telangana Movement opens its own lesson list inside TS SI', tmRows >= 3, `${tmRows} rows`);
+  await page.locator('#learn-path .ls-row').first().click();
+  await page.waitForSelector('#learn-reader:not(.hidden)');
+  const tmLesson = await page.locator('#learn-reader').textContent();
+  check('and the lesson is real teaching, not a stub', tmLesson.length > 400, `${tmLesson.length} chars`);
+  check('it names dated facts, which is what this section is made of',
+    /1948/.test(tmLesson) || /1956/.test(tmLesson), tmLesson.replace(/\s+/g,' ').slice(0, 120));
+
+  // Nothing written for TS SI may touch the exams it is not for.
+  const untouched = await page.evaluate(() => ({
+    halPending: (EXAMS.find(e => e.key === 'hal-cs').pendingVerification || {}).subjects || [],
+    halInvented: Object.keys(QUESTION_BANK).filter(k =>
+      /Digital Logic|Compiler Design|Discrete|^Algorithms$/.test(k)),
+    halTech: (QUESTION_BANK['Data Structures'] || []).length,
+    cglQuant: (QUESTION_BANK['Quantitative Aptitude'] || []).length,
+    cglReasoning: (QUESTION_BANK['Reasoning'] || []).length,
+  }));
+  check('the four uncertain HAL subjects still have nothing written for them',
+    untouched.halPending.length === 4 && untouched.halInvented.length === 0,
+    JSON.stringify(untouched.halInvented));
+  check('HAL technical content is untouched', untouched.halTech === 24, String(untouched.halTech));
+  check('and SSC CGL content is untouched',
+    untouched.cglQuant === 22 && untouched.cglReasoning === 23,
+    `${untouched.cglQuant} / ${untouched.cglReasoning}`);
+
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
 
   // HAL has one stage, so it must not grow a stages card.
   await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#examinfo`, { waitUntil: 'networkidle' });

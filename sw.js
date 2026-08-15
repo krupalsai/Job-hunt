@@ -31,6 +31,7 @@ const PREP_ASSETS = [
   '/prep/hal-cs.js',
   '/prep/ts-si.js',
   '/prep/lessons.js',
+  '/prep/ts-si-lessons.js',
   '/prep/sync.js',
   '/prep/today.js',
   '/manifest.json',
