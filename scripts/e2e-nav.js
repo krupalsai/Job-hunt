@@ -251,6 +251,30 @@ async function reachable(page, selector, where, minH){
   await reachable(page, '#today-plan .td-go', 'start button in all-exams mode');
   await page.evaluate(() => { localStorage.removeItem('jobhunt_plan_scope'); window.renderToday(); });
 
+  /* ── English grammar chapters ──────────────────────────────────────── */
+  // The newest, densest screen: two grouped chapter lists plus the existing
+  // full lessons, all on one subject page. If anything on this build scrolls
+  // sideways or shrinks a tap target, it is here.
+  console.log('\n── English grammar chapters fit the phone ───────────────');
+  await page.locator(BAR + '[data-tab="learn"]').click();
+  await page.waitForSelector('#learn-path');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.waitForSelector('#learn-path .ls-group');
+  await noSideScroll(page, 'English grammar/vocabulary chapters');
+  await reachable(page, '#learn-path [data-skill]', 'chapter row');
+
+  await page.locator('#learn-path [data-skill="verb-tenses-forms"]').click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  await noSideScroll(page, 'a chapter opened from English');
+  await reachable(page, '#skill-drill .drill-btn', 'start-drill button');
+
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.skill-tag');
+  await noSideScroll(page, 'a named-skill tag on an answered question');
+
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right section, at its top ─────');
   for (const h of ['examinfo', 'learn', 'quiz', 'schedule', 'progress']) {

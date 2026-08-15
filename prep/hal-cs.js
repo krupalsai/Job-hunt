@@ -1016,7 +1016,89 @@ const QUESTION_BANK = {
    opts:["Carnivorous","Herbivorous","Voracious","Omnivorous"], correct:3,
    skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Omni means all, so omnivorous is eating everything. Carnivorous is flesh, herbivorous is plants, and voracious means eating a great deal — a question of quantity, not of range. That last one is the trap.",
-   trick:"OMNI = all (omnipresent, omniscient). Voracious is about how much, not about what."}
+   trick:"OMNI = all (omnipresent, omniscient). Voracious is about how much, not about what."},
+
+  /* Added so the grammar chapters in prep/skills.js each have a real drill.
+     Tenses/verb-forms had zero coverage before this — the exact gap named as
+     "I can answer it but can't say what it is, this is past tense V1 V2 V3". */
+
+  {q:"Identify the error: 'He has went to the market.'",
+   opts:["He has","went to","the market","No error"], correct:1,
+   skills:["verb-tenses-forms"],
+   why:"'Has' must be followed by the past participle (V3), not the simple past (V2). 'Went' is V2; the past participle of 'go' is 'gone'. The correct sentence is 'He has gone to the market.'",
+   trick:"have/has/had always pairs with V3. 'Has went' is never correct — it is always 'has gone'."},
+
+  {q:"Choose the correct sentence about yesterday.",
+   opts:["She did not went to school yesterday.","She did not go to school yesterday.","She did not gone to school yesterday.","She does not went to school yesterday."], correct:1,
+   skills:["verb-tenses-forms"],
+   why:"'Did' already carries the past tense, so the verb after it returns to its base form (V1) — 'go', not 'went' or 'gone'. This is one of the most common errors in error-spotting questions: doubling up the past tense.",
+   trick:"did + V1, always. 'Did went' is wrong; 'did go' is right — go is correct because 'did' already did the work of showing past tense."},
+
+  {q:"Fill in the blank: 'I ___ in this city since 2015.'",
+   opts:["live","lived","have lived","am living"], correct:2,
+   skills:["verb-tenses-forms"],
+   why:"'Since' points to a fixed starting point in time and pairs with the present perfect — has/have + V3 — because the action began then and continues now. 'For' would pair with a duration instead (for ten years).",
+   trick:"SINCE a point (since 2015, since Monday). FOR a duration (for ten years, for a while). Both usually need 'have/has + V3'."},
+
+  {q:"Identify the error: 'By the time we reached the station, the train has left.'",
+   opts:["By the time","we reached","the train has left","No error"], correct:2,
+   skills:["verb-tenses-forms"],
+   why:"Two past actions, one finishing before the other, need the PAST perfect (had + V3) for the earlier one — not the present perfect (has + V3). The train's leaving happened before 'we reached', which is already simple past, so it must be 'had left'.",
+   trick:"Two events in the past, one before the other: the EARLIER one takes 'had + V3'. 'By the time' is the classic signal for this."},
+
+  {q:"Choose the correct passive form of: 'The manager writes the report every week.'",
+   opts:["The report is written by the manager every week.","The report was written by the manager every week.","The report has written by the manager every week.","The report is writing by the manager every week."], correct:0,
+   skills:["verb-tenses-forms","active-passive-voice"],
+   why:"Passive voice is formed with BE + V3, matching the tense of the active sentence. The original is simple present ('writes'), so the passive is 'is written' — is (BE) + written (V3), keeping the same present tense.",
+   trick:"Passive = a form of BE + V3. Match the tense of BE to the tense of the original sentence."},
+
+  {q:"The passive of 'They are building a bridge' is?",
+   opts:["A bridge is built by them.","A bridge is being built by them.","A bridge was being built by them.","A bridge has been built by them."], correct:1,
+   skills:["active-passive-voice"],
+   why:"The original is present continuous ('are building'), so the passive must also be present continuous: is/am/are + being + V3. 'Is built' drops the continuous meaning and 'was being built' shifts it to the past — both change the tense, which a passive conversion must never do.",
+   trick:"Present continuous active → 'is/are being + V3' in passive. The 'being' is what preserves the continuous meaning."},
+
+  {q:"Identify the error: 'The letter was wrote by Rahul.'",
+   opts:["The letter","was wrote","by Rahul","No error"], correct:1,
+   skills:["active-passive-voice","verb-tenses-forms"],
+   why:"Passive voice always uses the past participle (V3), never the simple past (V2). 'Wrote' is V2; the correct passive form is 'was written' — was + V3.",
+   trick:"Passive is always BE + V3. If you see BE + V2 ('was wrote', 'is went'), that is the error."},
+
+  {q:"Convert to active voice: 'The cake was eaten by the children.'",
+   opts:["The children eat the cake.","The children ate the cake.","The children have eaten the cake.","The children were eating the cake."], correct:1,
+   skills:["active-passive-voice"],
+   why:"'Was eaten' is simple past passive, so the active version is simple past too: 'ate'. Working backward from passive to active keeps the same rule — match the tense, then remove the BE + V3 structure and put the doer first.",
+   trick:"Passive → active: find who is after 'by', put them first, and use the SAME tense the passive form implied."},
+
+  {q:"Which sentence cannot normally be converted to the passive voice?",
+   opts:["She kicked the ball.","He sleeps early.","They painted the wall.","I read the book."], correct:1,
+   skills:["active-passive-voice"],
+   why:"Passive voice needs a direct object to become the new subject. 'Sleeps' is intransitive here — there is nothing being acted upon, so there is nothing to move to the front of a passive sentence. The other three all have an object (the ball, the wall, the book) that can become the passive subject.",
+   trick:"No object, no passive. Ask 'what is being [verb]ed?' — if there is no answer, the sentence cannot be passivised."},
+
+  {q:"Choose the correct article: '___ European Union has 27 members.'",
+   opts:["A","An","The","No article needed"], correct:2,
+   skills:["articles-and-determiners"],
+   why:"'European Union' names a specific, unique organisation, so it takes 'the' — the same reason we say 'the United Nations' or 'the Sun'. Note that 'European' alone would take 'a' (it sounds like 'yer-o-pee-an', a consonant sound) — but here the whole proper noun needs 'the'.",
+   trick:"A specific, one-of-a-kind organisation or institution takes 'the': the UN, the EU, the Government."},
+
+  {q:"Choose the correct article: 'She is ___ honest woman.'",
+   opts:["a","an","the","no article"], correct:1,
+   skills:["articles-and-determiners"],
+   why:"'Honest' begins with a silent H, so it is pronounced starting with the vowel sound 'on-est'. The article follows the SOUND, not the spelling, so 'an' is correct even though the word is spelled with a consonant letter.",
+   trick:"Silent-H words (honest, hour, heir) take 'an', because the sound that follows the article is a vowel, whatever the spelling says."},
+
+  {q:"Identify the error: 'I saw an unicorn in my dream.'",
+   opts:["I saw","an unicorn","in my","No error"], correct:1,
+   skills:["articles-and-determiners"],
+   why:"'Unicorn' is spelled with a vowel but is pronounced 'yoo-ni-corn' — the Y sound is a consonant sound. So it needs 'a', not 'an': 'a unicorn'. This is the mirror-image trap of silent-H words.",
+   trick:"Words starting with a 'yoo' sound (university, unicorn, uniform, European) take 'a', despite the vowel spelling."},
+
+  {q:"Choose the correct sentence about milk.",
+   opts:["Milk is a healthy drink for children.","The milk is healthy drink for children.","Milk is healthy drink for children.","A milk is healthy drink for children."], correct:2,
+   skills:["articles-and-determiners"],
+   why:"'Milk' here is an uncountable noun used in a general statement, so it takes no article at all. 'The milk' would only be correct if a specific batch of milk were meant (the milk in this glass), and 'a milk' is wrong because uncountable nouns cannot take 'a'.",
+   trick:"General statements about uncountable nouns (milk, honesty, water) take NO article. Add 'the' only when a specific instance is meant."}
 ],
 
 /* ─────────────────────── GENERAL AWARENESS ─────────────────────── */

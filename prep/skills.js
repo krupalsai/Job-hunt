@@ -41,6 +41,7 @@ const SKILLS = [
   key: "subject-verb-agreement",
   name: "Subject-verb agreement",
   subject: "English",
+  kind: "grammar",
   rule: "The verb agrees with the SUBJECT of the sentence, never with whatever noun happens to sit closest to it — and examiners put a plural noun in between on purpose.",
   teach: [
     {p:"Find the subject first, before you look at the verb at all. Cross out everything between the subject and the verb — it is almost always a phrase starting with 'of', 'with', 'along with', 'as well as' or 'including', and none of those can change the subject."},
@@ -53,6 +54,7 @@ const SKILLS = [
   key: "one-of-plural-noun",
   name: "'One of' takes a plural noun",
   subject: "English",
+  kind: "grammar",
   rule: "'One of' must be followed by a PLURAL noun — one of my friendS — while the verb stays SINGULAR, because the subject of the sentence is 'one', not 'friends'.",
   teach: [
     {p:"'One of' means one picked out of a group, so the group has to be plural — there is no group of one to pick from. That is the half of the rule people get wrong."},
@@ -65,6 +67,7 @@ const SKILLS = [
   key: "synonym-antonym-direction",
   name: "Synonym or antonym — which was asked",
   subject: "English",
+  kind: "vocabulary",
   rule: "Read whether the question wants the SAME meaning or the OPPOSITE one before you look at the options, because the paper always includes a perfectly good answer to the question it did not ask.",
   teach: [
     {p:"The commonest way to lose this mark is not vocabulary at all. It is answering 'synonym' when the paper asked for the antonym. The option you want is sitting there and so is the trap."},
@@ -77,6 +80,7 @@ const SKILLS = [
   key: "word-roots-and-affixes",
   name: "Word roots and endings",
   subject: "English",
+  kind: "vocabulary",
   rule: "A word you have never seen can still be answered from its parts — bene means good, mal means bad, trans means through — and the ENDING often tells you whether it describes a person or a thing.",
   teach: [
     {p:"You cannot memorise every word in English, and you do not have to. A handful of roots answer dozens of questions:"},
@@ -164,6 +168,7 @@ const SKILLS = [
   key: "idioms-are-not-literal",
   name: "Idioms are never literal",
   subject: "English",
+  kind: "vocabulary",
   rule: "An idiom's meaning is a convention, not a calculation — so the option that describes what the words literally say is put there to be chosen and is almost always wrong.",
   teach: [
     {p:"You cannot reason your way to an idiom. But you can nearly always eliminate: the literal option is a decoy in almost every one of these questions."},
@@ -176,6 +181,7 @@ const SKILLS = [
   key: "one-word-substitution",
   name: "One-word substitution",
   subject: "English",
+  kind: "vocabulary",
   rule: "Match the definition to the word's PARTS, and watch for the lookalike option that describes something adjacent but not the same thing.",
   teach: [
     {p:"The options in these questions are chosen to be nearly right. The way through is the root, then the near-miss check."},
@@ -188,6 +194,72 @@ const SKILLS = [
     {k:"Root first, then re-read the definition against your answer. Near-miss options are the whole game here."},
   ],
 },
+
+/* ── Added when English got split into a bounded grammar map and an
+      open-ended vocabulary one. These three are the grammar half — the part
+      that has an actual ceiling, so learning all of it is a finishable task
+      rather than an ongoing one. The case this exists for: getting a tense
+      question right from years of exposure without being able to say WHY —
+      "this is past tense, V2" — which means the next one that looks even
+      slightly different goes back to a guess. Naming the rule is what turns a
+      guess into something that transfers. ── */
+{
+  key: "verb-tenses-forms",
+  name: "Verb tenses and forms (V1/V2/V3)",
+  subject: "English",
+  kind: "grammar",
+  rule: "Every verb has three forms — V1 the base (go), V2 the simple past (went), V3 the past participle (gone) — and which one a sentence needs is decided by what comes before it: 'did' and 'does' always take V1, 'have/has/had' always take V3, and V2 never follows either.",
+  teach: [
+    {p:"Three forms, and exam questions are almost always about picking the right one rather than about vocabulary at all. V1 is the base form. V2 is the simple past — a complete, finished action, standing alone. V3 is the past participle — it never stands alone, it always needs 'have/has/had' in front of it (or 'is/was/been' in the passive)."},
+    {c:"V1 (base)   V2 (simple past)   V3 (past participle)\ngo          went               gone\neat         ate                eaten\nwrite       wrote              written\nsee         saw                seen\n\nHe has gone.        ✓  has + V3\nHe has went.        ✗  has + V2 — the trap\nHe did not go.      ✓  did + V1\nHe did not went.    ✗  did + V2 — the trap"},
+    {l:[
+      "'yesterday', 'last week', 'ago' → simple past → V2 alone",
+      "'since', 'for', 'already', 'just', 'yet' → present perfect → has/have + V3",
+      "'by the time', 'before ... arrived' → past perfect → had + V3",
+      "'tomorrow', 'next', 'soon' → future → will + V1",
+      "SINCE a point in time (since 2015, since Monday). FOR a duration (for ten years).",
+    ]},
+    {k:"'did'/'does' + V1, always. 'have'/'has'/'had' + V3, always. V2 never follows either one — those two rules alone catch most of the errors this exam sets."},
+  ],
+},
+{
+  key: "active-passive-voice",
+  name: "Active and passive voice",
+  subject: "English",
+  kind: "grammar",
+  rule: "Passive voice is built as a form of BE plus the past participle (V3), and it must match the TENSE of the original active sentence — converting voice never changes the tense, only its form.",
+  teach: [
+    {p:"Active: the subject does the action ('She writes a letter'). Passive: the subject receives the action ('A letter is written by her'). Converting between them is mechanical once you know the recipe — object moves to the front, BE + V3 replaces the verb, subject moves after 'by'."},
+    {c:"ACTIVE                          PASSIVE\nsubject + verb + object         object + BE + V3 + by + subject\n\nShe writes a letter.       →    A letter is written by her.\nShe wrote a letter.        →    A letter was written by her.\nShe has written a letter.  →    A letter has been written by her.\nShe will write a letter.   →    A letter will be written by her."},
+    {l:[
+      "Simple present → is/am/are + V3",
+      "Simple past → was/were + V3",
+      "Present perfect → has/have been + V3",
+      "Future → will be + V3",
+      "Present continuous → is/am/are being + V3",
+    ]},
+    {k:"The tense never changes when you convert to passive — only its FORM does. 'Wrote' (simple past) becomes 'was written' (still simple past, just passive)."},
+  ],
+},
+{
+  key: "articles-and-determiners",
+  name: "Articles: a, an, the",
+  subject: "English",
+  kind: "grammar",
+  rule: "'A' and 'an' are chosen by the SOUND the next word starts with, not its spelling, and 'the' marks something specific or already known — general statements about uncountable or plural nouns take no article at all.",
+  teach: [
+    {p:"'A' before a consonant SOUND, 'an' before a vowel SOUND. This trips people up exactly where spelling and sound disagree — a silent H (an hour) or a vowel spelled but consonant-sounding (a university, which starts with a 'yoo' sound)."},
+    {c:"a hospital     (h is pronounced — consonant sound)\nan hour        (h is silent — sounds like 'ow', vowel sound)\na university   (spelled with U, sounds like 'yoo' — consonant sound)\nan umbrella    (U sounds like 'uh' — vowel sound)"},
+    {l:[
+      "'the' for something unique (the Sun), already mentioned, or specified by a phrase (the boy in the blue shirt)",
+      "NO article before an uncountable noun in a general statement — Milk is healthy, not 'The milk is healthy'",
+      "NO article before a plural noun in a general statement — Dogs are loyal, not 'The dogs are loyal'",
+      "Silent-H words (honest, hour, heir) take 'an' despite the consonant spelling",
+    ]},
+    {k:"Say the next word out loud. If it starts with a vowel SOUND, use 'an' — spelling lies (hour, university), sound never does."},
+  ],
+},
+
 {
   key: "direction-sense-cancelling",
   name: "Direction sense: cancel the legs",

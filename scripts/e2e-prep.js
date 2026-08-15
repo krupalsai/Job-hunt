@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 259 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 272 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -309,6 +309,89 @@ function check(name, cond, detail){
   check('mastering a lesson unlocks the next one',
     (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
     `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
+
+  console.log('\n── English: grammar is bounded, vocabulary is not ──────');
+  /* The problem this section exists for: answering a tense question right
+     from years of exposure without being able to say what it tested, so the
+     next one that looks slightly different goes back to being a guess.
+     Naming the rule — and doing it immediately, not after two misses — is
+     what turns exposure into something that transfers. And grammar is a
+     FINISHABLE list; vocabulary is not; the screen has to say so, not just
+     imply it by which one has more questions. */
+  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.waitForSelector('#learn-path .ls-group');
+
+  const groups = await page.locator('#learn-path .ls-group').allTextContents();
+  check('English splits into a Grammar chapter list and a Vocabulary one',
+    groups.some(g => /Grammar/.test(g)) && groups.some(g => /Vocabulary/.test(g)),
+    groups.join(' | '));
+  check('Grammar is listed first — it is the bounded, finishable half',
+    /Grammar/.test(groups[0]), groups.join(' | '));
+
+  const engPath = await page.locator('#learn-path').textContent();
+  check('the chapters explain WHY grammar comes first — it is a short, finishable list',
+    /bounded/i.test(engPath) && /no such ceiling|open-ended/i.test(engPath),
+    engPath.replace(/\s+/g,' ').slice(0, 200));
+
+  const chapterNames = await page.locator('#learn-path [data-skill] .ls-title').allTextContents();
+  check('verb tenses and forms is now a chapter — this was zero-coverage before today',
+    chapterNames.some(t => /tense/i.test(t)), chapterNames.join(' | '));
+  check('active/passive voice and articles are chapters too',
+    chapterNames.some(t => /passive/i.test(t)) && chapterNames.some(t => /Article/i.test(t)),
+    chapterNames.join(' | '));
+
+  // The existing full lessons (Error spotting, Vocabulary by word roots) must
+  // still be there, unlost, just filed below the finer-grained chapter map.
+  check('the existing English lessons are still reachable, not replaced',
+    (await page.locator('#learn-path .ls-row[data-i]').count()) >= 2,
+    await page.locator('#learn-path').textContent());
+  check('and labelled as the fuller lessons, once chapters are shown',
+    /Full lessons/.test(engPath));
+
+  // A subject nobody has split into grammar/vocabulary must show no chapters
+  // at all — this is additive, not a change to how every subject renders.
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="Data Structures"]').click();
+  check('a subject with no grammar/vocabulary split shows no chapters block',
+    (await page.locator('#learn-path .ls-group').count()) === 0);
+  check('and its lesson list is completely unaffected',
+    (await page.locator('#learn-path .ls-row').count()) === 7);
+
+  // Opening a chapter goes straight into the same micro-drill Progress and
+  // the quiz alert already use — rule taught first, then the questions.
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.waitForSelector('#learn-path .ls-group');
+  const tenseRow = page.locator('#learn-path [data-skill="verb-tenses-forms"]');
+  await tenseRow.click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('tapping the chapter opens its rule and explainer before any question',
+    (await page.locator('#skill-drill .drill-rule').textContent()).length > 60);
+  check('V1/V2/V3 is explained in the chapter itself, not just implied',
+    /V1|V2|V3/.test(await page.locator('#skill-drill').textContent()));
+
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  // The core ask: name the rule the INSTANT you answer — right or wrong — with
+  // no extra tap. Previously this only appeared after "Explain it another way".
+  const tagText = await page.locator('.explain .skill-tag').first().textContent();
+  check('the basic being tested is named immediately, with no extra tap',
+    /Verb tenses|tense/i.test(tagText), tagText);
+  check('it is a compact label, not the full explanation repeated',
+    tagText.length < 80, `${tagText.length} chars: "${tagText}"`);
+
+  // And a question tagged with no skill must show no tag — the label appears
+  // exactly where there is a named basic behind it, never as a placeholder.
+  const untaggedTagCount = await page.evaluate(() => {
+    const q = ALL.find(x => !x.skills || x.skills.length === 0);
+    return skillsForItem(q).length;
+  });
+  check('an untagged question carries no skill tag to show',
+    untaggedTagCount === 0, String(untaggedTagCount));
 
   console.log('\n── today: which subjects, for how many minutes ──────────');
   /* "Revise Data Structures" is not a plan. A plan is a subject, a number of

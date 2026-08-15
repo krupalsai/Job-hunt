@@ -94,6 +94,7 @@ console.log(`  ${'TOTAL'.padEnd(24)} ${String(total).padStart(3)}`);
        method.
    ------------------------------------------------------------------- */
 const MIN_PER_SKILL = 3;
+const SKILL_KINDS = ['grammar', 'vocabulary'];
 const skillByKey = new Map();
 SKILLS.forEach((s, i) => {
   const at = `SKILLS[${i}]`;
@@ -107,6 +108,12 @@ SKILLS.forEach((s, i) => {
   if (!s.rule || s.rule.length < 60)         problems.push(`${at} (${s.key}): rule missing or too short to teach anything`);
   if (!Array.isArray(s.teach) || s.teach.length < 2)
                                              problems.push(`${at} (${s.key}): needs a teaching block of at least 2 parts`);
+  // `kind` splits a subject's chapters into a bounded list (grammar) and an
+  // open-ended one (vocabulary) on the Learn screen — see chaptersFor() in
+  // prep/sync.js. Optional: a subject not split this way carries no kind on
+  // any of its skills and the split UI never appears for it.
+  if (s.kind !== undefined && SKILL_KINDS.indexOf(s.kind) === -1)
+    problems.push(`${at} (${s.key}): kind "${s.kind}" is not one of ${SKILL_KINDS.join(', ')}`);
 });
 
 const perSkill = new Map(SKILLS.map(s => [s.key, 0]));

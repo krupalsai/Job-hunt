@@ -182,7 +182,14 @@
   .speed-line.gap{ color:var(--bad); }
 
   /* The basics — skills below topic level.
-     The alert is warm rather than red: it is not a telling-off, it is the app
+     Named the moment you answer, right or wrong, so "I got it right but
+     could not tell you what it was testing" stops being possible. Small and
+     quiet — this is a label, not the explanation; item.why still carries the
+     reasoning and the ladder still carries the full rule one tap deeper. */
+  .skill-tag{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .skill-tag .tag-chip{ font-size:11px; font-weight:700; padding:3px 9px;
+                border-radius:20px; background:#2563eb26; color:#60a5fa; }
+  /* The alert is warm rather than red: it is not a telling-off, it is the app
      noticing the same gap twice and offering to close it. */
   .skill-alert{ border-left:3px solid var(--warn); background:#f59e0b1a;
                 border-radius:0 10px 10px 0; padding:12px 14px; margin-top:12px;
@@ -207,6 +214,12 @@
   .ls-subject{ font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--dim);
                font-weight:700; margin:16px 0 8px; }
   .ls-subject:first-child{ margin-top:0; }
+  /* Chapters: the named-basics map for a subject that has been split into a
+     bounded grammar list and an open-ended vocabulary one. */
+  .ls-chapters{ margin-bottom:6px; }
+  .ls-group{ font-size:10.5px; text-transform:uppercase; letter-spacing:.6px;
+             color:var(--accent-soft); font-weight:700; margin:16px 0 4px; }
+  .ls-group:first-of-type{ margin-top:4px; }
   .ls-row{ display:flex; align-items:center; gap:10px; padding:12px 0;
            border-bottom:1px solid var(--panel-border); cursor:pointer; }
   .ls-row:last-child{ border-bottom:none; }
@@ -1076,6 +1089,22 @@ function renderQuestion(){
   questionShownAt = Date.now();
 }
 
+/** A small chip naming the basic a question tests — "📎 Verb tenses and forms
+    (V1/V2/V3)" — shown the instant you answer, right OR wrong. The gap this
+    closes: getting a question right from years of exposure without being able
+    to say what it was actually testing, so the next one that looks slightly
+    different goes back to being a guess. Naming it is what makes it transfer.
+
+    Deliberately just the name, not the rule: item.why already explains this
+    specific question, and the full generalisable rule is one tap away in the
+    ladder below ("Explain it another way"). This is the label, not the lesson. */
+function skillTagHTML(item){
+  const skills = skillsForItem(item);
+  if (!skills.length) return '';
+  return `<div class="skill-tag">${skills.map(s =>
+    `<span class="tag-chip">📎 ${escHtml(s.name)}</span>`).join('')}</div>`;
+}
+
 /* An explanation that did not land is not an explanation. Every one now has an
    "I still don't get it" button that says it a different way, then a different
    way again, and finally opens the lesson that teaches the whole topic — with
@@ -1099,6 +1128,7 @@ function explainHTML(item, isCorrect, skipped, level){
 
   return `<div class="explain" data-qid="${item.id}" data-level="${level}">
     <div class="verdict">${verdict}</div>
+    ${skillTagHTML(item)}
     ${shown.map((s, i) => `
       <div class="lbl">${s.label}</div>
       <div class="why${i > 0 ? ' again' : ''}">${s.body}</div>`).join('')}
