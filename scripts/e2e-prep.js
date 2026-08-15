@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 272 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 282 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -341,6 +341,15 @@ function check(name, cond, detail){
   check('active/passive voice and articles are chapters too',
     chapterNames.some(t => /passive/i.test(t)) && chapterNames.some(t => /Article/i.test(t)),
     chapterNames.join(' | '));
+  // Added after checking against a reference grammar syllabus that named six
+  // chapters where this app had one direct match. Parts of Speech and
+  // Direct/Indirect Speech were the two genuinely missing rules.
+  check('parts of speech and direct/indirect speech close the gap found against a reference syllabus',
+    chapterNames.some(t => /Parts of speech/i.test(t)) &&
+    chapterNames.some(t => /Direct and indirect/i.test(t)),
+    chapterNames.join(' | '));
+  check('parts of speech is the first grammar chapter — everything else assumes it',
+    /Parts of speech/i.test(chapterNames[0]), chapterNames.join(' | '));
 
   // The existing full lessons (Error spotting, Vocabulary by word roots) must
   // still be there, unlost, just filed below the finer-grained chapter map.

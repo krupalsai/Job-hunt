@@ -1098,7 +1098,71 @@ const QUESTION_BANK = {
    opts:["Milk is a healthy drink for children.","The milk is healthy drink for children.","Milk is healthy drink for children.","A milk is healthy drink for children."], correct:2,
    skills:["articles-and-determiners"],
    why:"'Milk' here is an uncountable noun used in a general statement, so it takes no article at all. 'The milk' would only be correct if a specific batch of milk were meant (the milk in this glass), and 'a milk' is wrong because uncountable nouns cannot take 'a'.",
-   trick:"General statements about uncountable nouns (milk, honesty, water) take NO article. Add 'the' only when a specific instance is meant."}
+   trick:"General statements about uncountable nouns (milk, honesty, water) take NO article. Add 'the' only when a specific instance is meant."},
+
+  /* Added after comparing against a reference grammar syllabus: Parts of
+     Speech and Direct/Indirect Speech were named chapters with zero coverage
+     here. Both are genuinely missing rules, not just missing formats. */
+
+  {q:"In the sentence 'She runs fast', what part of speech is 'fast'?",
+   opts:["Noun","Verb","Adjective","Adverb"], correct:3,
+   skills:["parts-of-speech"],
+   why:"'Fast' describes HOW she runs — it modifies the verb 'runs' — which makes it an adverb here. In 'a fast car', the same word describes the noun 'car' and is an adjective instead. The job the word does in the sentence decides its part of speech, not the word itself.",
+   trick:"Ask what the word is doing: describing a NOUN = adjective, describing a VERB (how/when/where) = adverb. Same word, different job."},
+
+  {q:"Identify the part of speech of the underlined word: 'He handed me the BOOK.'",
+   opts:["Verb","Noun","Adjective","Preposition"], correct:1,
+   skills:["parts-of-speech"],
+   why:"Here 'book' names a thing — the object being handed — so it is a noun. In 'Please book the tickets', the same word names the action instead and is a verb. Same spelling, different job.",
+   trick:"'Book' is a classic trap word: a noun when it names the object, a verb when it names the action."},
+
+  {q:"Which word in 'The cat sat under the table' is a preposition?",
+   opts:["cat","sat","under","table"], correct:2,
+   skills:["parts-of-speech"],
+   why:"'Under' shows the relationship in place between the cat and the table — that is exactly what a preposition does. Prepositions sit before a noun or pronoun and describe where, when, or how something relates to it.",
+   trick:"Prepositions answer 'where/when/how in relation to what' — in, on, at, under, before, after, between."},
+
+  {q:"Which underlined word is a conjunction: 'He was tired BUT he kept working.'",
+   opts:["tired","but","kept","working"], correct:1,
+   skills:["parts-of-speech"],
+   why:"'But' joins the two clauses ('he was tired' and 'he kept working') while showing a contrast between them — that is what a conjunction does. And, but, or, because and although are the ones most often tested.",
+   trick:"A conjunction JOINS. If removing the word would leave two separate, complete sentences, the word connecting them is a conjunction."},
+
+  {q:"In 'They quickly finished the work', what part of speech is 'quickly'?",
+   opts:["Adjective","Adverb","Noun","Pronoun"], correct:1,
+   skills:["parts-of-speech"],
+   why:"'Quickly' describes HOW they finished — it modifies the verb 'finished' — so it is an adverb. Most, not all, adverbs of manner end in -ly, which is a useful hint but not a rule (friendly, for instance, is an adjective).",
+   trick:"Ending in -ly is a hint, not a rule. The real test: what is it describing — a noun (adjective) or a verb/adjective/adverb (adverb)?"},
+
+  {q:"Convert to indirect speech: He said, 'I am reading a book.'",
+   opts:["He said that he is reading a book.","He said that he was reading a book.","He said that he read a book.","He said that he has read a book."], correct:1,
+   skills:["direct-indirect-speech"],
+   why:"Present continuous ('am reading') moves one step back to past continuous ('was reading') in reported speech, and the pronoun 'I' becomes 'he' to match who is being reported. Only one option shifts both correctly.",
+   trick:"Present continuous → past continuous: is/am/are + V-ing becomes was/were + V-ing."},
+
+  {q:"Convert to indirect speech: She said, 'I will call you tomorrow.'",
+   opts:["She said that she will call me tomorrow.","She said that she would call me the next day.","She said that she would call me tomorrow.","She said that she will call me the next day."], correct:1,
+   skills:["direct-indirect-speech"],
+   why:"'Will' moves back to 'would', and 'tomorrow' — a time word anchored to the moment of speaking — becomes 'the next day' once it is being reported later. Both have to change together; the other three options change only one.",
+   trick:"'will' → 'would' AND 'tomorrow' → 'the next day'. The exam tests whether you remember BOTH shifts, not just one."},
+
+  {q:"Identify the error: 'He said that he is tired yesterday.'",
+   opts:["He said","that he is tired","yesterday","No error"], correct:1,
+   skills:["direct-indirect-speech","verb-tenses-forms"],
+   why:"'Is' should shift one step back to 'was' in reported speech — present tense inside a past reporting verb ('said') is the classic narration error. 'Yesterday' can stay, describing when the tiredness was felt, so the error is isolated to the tense.",
+   trick:"'Said that he IS' is almost always wrong — a past reporting verb pulls the tense inside it back one step, to 'was'."},
+
+  {q:"Convert to indirect speech: The teacher said to the students, 'Do your homework.'",
+   opts:["The teacher told the students to do their homework.","The teacher said the students to do their homework.","The teacher told the students that do their homework.","The teacher said to the students doing their homework."], correct:0,
+   skills:["direct-indirect-speech"],
+   why:"A command in direct speech ('Do your homework') becomes an infinitive ('to do their homework') in indirect speech, and the reporting verb changes from 'said to' to 'told' — 'told' takes a direct object (the students) the way 'said to' cannot in reported form.",
+   trick:"Commands drop the imperative and become 'to + verb'. 'Said to' becomes 'told' when reporting an order."},
+
+  {q:"Convert to indirect speech: 'Where do you live?' she asked me.",
+   opts:["She asked me where did I live.","She asked me where I lived.","She asked me where do I live.","She asked me where I live."], correct:1,
+   skills:["direct-indirect-speech"],
+   why:"Reported questions drop the question-mark word order (do/does/did + subject) and return to normal statement order — 'where I lived', not 'where did I live' — and the tense still shifts back one step, 'do live' becoming 'lived'.",
+   trick:"A reported question is a STATEMENT in disguise: no 'do/does/did', no question mark, subject before the verb."}
 ],
 
 /* ─────────────────────── GENERAL AWARENESS ─────────────────────── */

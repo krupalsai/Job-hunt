@@ -71,7 +71,7 @@ function check(name, cond, detail){
     (await page.title()).includes('Prep'), await page.title());
   check('no missing local files on the prep page', notFound.length === 0, notFound.join(', '));
   check('the question bank loaded', await page.evaluate(()=>typeof QUESTION_BANK === 'object'));
-  check('all 272 questions are indexed', await page.evaluate(()=>ALL.length) === 272);
+  check('all 282 questions are indexed', await page.evaluate(()=>ALL.length) === 282);
   // The taxonomy of basics ships with the bank, and every skill a question
   // names has to exist in it — a page that loaded one without the other would
   // offer drills that lead nowhere.

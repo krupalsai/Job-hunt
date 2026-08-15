@@ -38,6 +38,47 @@ const SKILLS = [
 
 /* ───────────────────────── REASONING & ENGLISH ───────────────────────── */
 {
+  key: "parts-of-speech",
+  name: "Parts of speech",
+  subject: "English",
+  kind: "grammar",
+  rule: "Every word plays one of eight jobs in a sentence — noun, pronoun, verb, adjective, adverb, preposition, conjunction, interjection — and the SAME word can switch jobs depending on how it is used, so the part of speech is decided by what the word is doing here, never by the word alone.",
+  teach: [
+    {p:"This is the one everything else in grammar sits on top of — tenses, agreement, voice, all of it assumes you can already tell a verb from a noun. The trap is that most English words are not permanently one part of speech; the same spelling changes job from sentence to sentence."},
+    {c:"Noun:      I read a good BOOK.        (a thing)\nVerb:      Please BOOK two tickets.   (an action)\n\nAdjective: She is a FAST runner.      (describes 'runner', a noun)\nAdverb:    She runs FAST.             (describes 'runs', a verb)"},
+    {l:[
+      "Noun — names a person, place, thing or idea (who or what?)",
+      "Pronoun — replaces a noun (he, she, it, they, this)",
+      "Verb — the action or state (what is happening?)",
+      "Adjective — describes a noun (what kind? which one?)",
+      "Adverb — describes a verb, adjective or another adverb (how? when? where?) — often, not always, ends in -ly",
+      "Preposition — shows a relation in place or time (in, on, at, under, before)",
+      "Conjunction — joins words or clauses (and, but, because, although)",
+    ]},
+    {k:"Ask what JOB the word is doing in this exact sentence — never rely on memorising the word by itself, because most words can do more than one job."},
+  ],
+},
+{
+  key: "direct-indirect-speech",
+  name: "Direct and indirect speech (narration)",
+  subject: "English",
+  kind: "grammar",
+  rule: "Converting direct speech to indirect shifts three things together — the tense moves one step back, pronouns change to match who is being reported, and time/place words change (now→then, today→that day) — and an exam question is almost always testing whether you remembered all three, not just one.",
+  teach: [
+    {p:"Direct speech quotes the exact words: she said, \"I am tired.\" Indirect (reported) speech reports what was said, without quotation marks: she said that she was tired. Three things move together, and a wrong option usually gets one or two of the three right and misses the third."},
+    {c:"Direct:    She said, \"I am going to the market NOW.\"\nIndirect:  She said (that) she was going to the market THEN.\n\n  I    → she    (pronoun: matches who is being reported)\n  am   → was    (tense: one step back)\n  now  → then   (time word: matches the reporting moment)"},
+    {l:[
+      "Simple present → simple past: am/is/are → was/were",
+      "Simple past → past perfect: went → had gone",
+      "Present continuous → past continuous: is going → was going",
+      "will → would, can → could, may → might",
+      "now→then, today→that day, tomorrow→the next day, yesterday→the previous day, here→there",
+      "A command ('Do this') becomes an infinitive ('told them to do this'); a question drops the question word order ('where I lived', not 'where did I live')",
+    ]},
+    {k:"Three checks on every question: tense back one step, pronoun matched to the speaker, time/place word swapped. A question changing only one or two of the three is exactly the error being tested."},
+  ],
+},
+{
   key: "subject-verb-agreement",
   name: "Subject-verb agreement",
   subject: "English",
