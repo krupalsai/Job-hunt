@@ -29,8 +29,18 @@ const SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 const TOPICS = new Set([
   "Data Structures", "Operating Systems", "DBMS", "Computer Networks", "COA",
   "Theory of Computation", "Programming & OOP", "Software Engineering",
-  "Reasoning & English", "General Awareness",
+  "General Awareness",
   "Quantitative Aptitude",   // SSC CGL; added with the SSC syllabus
+  // Split out of a combined "Reasoning & English" subject, which had to serve
+  // two separate SSC CGL sections and TS SI's reasoning paper at once.
+  "Reasoning", "English",
+  // Kept so that answers queued offline by an older build of the app still
+  // record when they finally flush. Dropping it would silently discard a
+  // quiz someone took on a bus before the split shipped.
+  "Reasoning & English",
+  // TS SI. Its General Studies is a full GS paper and is deliberately not the
+  // same subject as HAL's defence-flavoured General Awareness.
+  "General Studies", "Telangana Movement & State Formation",
 ]);
 
 const QUALIFICATIONS = new Set(["B.Tech CSE", "Intermediate", "Graduate"]);
@@ -42,6 +52,32 @@ const isDeviceId = (v: unknown): v is string =>
 /** qid is 'q' + base36 of a 32-bit hash — see qid() in learn.html. */
 const isQid = (v: unknown): v is string =>
   typeof v === "string" && /^q[0-9a-z]{1,7}$/.test(v);
+
+/** A skill key from prep/skills.js: lowercase, dash-separated.
+ *
+ *  Deliberately validated by SHAPE and not against a hard-coded list of known
+ *  skills. TOPICS above is such a list, and it caused a real failure: adding
+ *  Quantitative Aptitude to the client bank made this endpoint reject whole
+ *  batches until it was updated here too. The taxonomy is meant to grow every
+ *  time the mentor run finds a new basic worth naming, and a deploy of the app
+ *  must not be able to make this endpoint start dropping data. The build
+ *  already refuses a question naming a skill that does not exist
+ *  (scripts/validate-prep.js), so the real guarantee lives there; the job here
+ *  is only to keep a hostile body from writing junk. */
+const isSkillKey = (v: unknown): v is string =>
+  typeof v === "string" && /^[a-z][a-z0-9-]{2,48}$/.test(v);
+
+/** A question tests one basic, occasionally two. The cap is what stops a
+ *  single attempt from turning into an unbounded number of rows. */
+const MAX_SKILLS_PER_ATTEMPT = 4;
+
+/** Milliseconds spent on one question. The client already discards anything
+ *  under 250ms or over five minutes; this is the same bound restated, because
+ *  a public endpoint cannot assume the client that called it is the one that
+ *  was shipped. Anything outside it is dropped rather than rejected — a bad
+ *  clock must not cost you the answer it was attached to. */
+const isSaneMs = (v: unknown): v is number =>
+  typeof v === "number" && Number.isFinite(v) && v >= 250 && v <= 300000;
 
 const isUuid = (v: unknown): v is string =>
   typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
@@ -65,7 +101,7 @@ export default async function handler(req: any, res: any) {
   // the loop to work, and none of it is worth anything to anyone else.
   if (req.method === "GET" && String(req.query?.summary ?? "") === "1") {
     const { data, error } = await db.from("study_weak_areas")
-      .select("topic, answered, correct, accuracy, verdict, last_practised");
+      .select("topic, answered, correct, accuracy, verdict, last_practised, timed_answered, avg_ms");
     if (error) {
       console.error("[progress] summary failed", error);
       return res.status(500).json({ error: "Could not read progress." });
@@ -73,22 +109,79 @@ export default async function handler(req: any, res: any) {
     // Collapse devices together: one person, possibly two phones.
     const byTopic: Record<string, any> = {};
     for (const r of data ?? []) {
-      const t = byTopic[r.topic] || (byTopic[r.topic] = { topic: r.topic, answered: 0, correct: 0 });
+      const t = byTopic[r.topic] || (byTopic[r.topic] = {
+        topic: r.topic, answered: 0, correct: 0, timed: 0, totalMs: 0,
+      });
       t.answered += r.answered ?? 0;
       t.correct  += r.correct ?? 0;
+      // Weighted back into a total before re-averaging, so two devices with
+      // very different numbers of answers do not each count for half.
+      if (r.avg_ms && r.timed_answered) {
+        t.timed   += r.timed_answered;
+        t.totalMs += r.avg_ms * r.timed_answered;
+      }
     }
     const topics = Object.values(byTopic).map((t: any) => {
       const accuracy = t.answered ? Math.round(100 * t.correct / t.answered) : null;
+      const { totalMs, timed, ...rest } = t;
       return {
-        ...t, accuracy,
+        ...rest, accuracy,
+        // Seconds, because that is the unit the exam is budgeted in. Null when
+        // nothing has been timed — an absent measurement, not a fast one.
+        avg_seconds: timed ? Math.round(totalMs / timed / 1000) : null,
+        timed_answered: timed,
         verdict: t.answered < 4 ? "unassessed"
                : accuracy < 60 ? "weak"
                : accuracy < 80 ? "developing" : "strong",
       };
     }).sort((a: any, b: any) => (a.accuracy ?? 999) - (b.accuracy ?? 999));
 
+    // The same picture one level down. A topic tells the mentor run WHERE
+    // marks are being lost; a skill tells it WHY, which is the difference
+    // between writing ten more Reasoning questions and writing the four that
+    // drill subject-verb agreement. A missing table or a failed read here must
+    // not take the topic summary down with it — the loop worked on topics
+    // alone before this existed and must keep working if this half is broken.
+    let skills: any[] = [];
+    const skillRes = await db.from("study_weak_skills")
+      .select("skill, topic, answered, correct, distinct_missed, accuracy, last_practised");
+    if (skillRes.error) {
+      console.error("[progress] skill summary failed", skillRes.error);
+    } else {
+      const bySkill: Record<string, any> = {};
+      for (const r of skillRes.data ?? []) {
+        const s = bySkill[r.skill] || (bySkill[r.skill] = {
+          skill: r.skill, topic: r.topic, answered: 0, correct: 0, distinct_missed: 0,
+        });
+        s.answered += r.answered ?? 0;
+        s.correct  += r.correct ?? 0;
+        // Summed across devices, which double-counts only in the case of the
+        // same question missed on two phones. One person, one history — the
+        // approximation is not worth a join to remove.
+        s.distinct_missed += r.distinct_missed ?? 0;
+      }
+      skills = Object.values(bySkill).map((s: any) => {
+        const accuracy = s.answered ? Math.round(100 * s.correct / s.answered) : null;
+        return {
+          ...s, accuracy,
+          // Two DIFFERENT questions lost to one basic is evidence at this
+          // grain, so it does not wait for the four-answer floor that topics
+          // use. Being answered right clears it again.
+          verdict: (s.answered >= 4 && accuracy >= 80) ? "strong"
+                 : s.distinct_missed >= 2 ? "weak"
+                 : s.answered < 4 ? "unassessed"
+                 : accuracy < 60 ? "weak" : "developing",
+        };
+      }).sort((a: any, b: any) =>
+        (b.distinct_missed - a.distinct_missed) || ((a.accuracy ?? 999) - (b.accuracy ?? 999)));
+    }
+
     return res.status(200).json({
       topics,
+      // Weak basics first in the payload as well as on screen: this is the
+      // list the mentor run should act on, and the topic list is the symptom.
+      skills,
+      weak_skills: skills.filter((s: any) => s.verdict === "weak").map((s: any) => s.skill),
       total_answered: topics.reduce((n: number, t: any) => n + t.answered, 0),
       // Reaching this line means the database was read successfully — the
       // handler returns 500 above if the credentials are missing. So an empty
@@ -152,6 +245,7 @@ export default async function handler(req: any, res: any) {
         // whole quiz's progress. Skip what we do not recognise, keep the rest,
         // and report it so the gap is visible.
         const clean = [];
+        const skillRows = [];
         const skippedTopics: string[] = [];
         for (const r of rows) {
           if (!isQid(r?.qid) || typeof r?.correct !== "boolean" || typeof r?.skipped !== "boolean") {
@@ -164,16 +258,41 @@ export default async function handler(req: any, res: any) {
           clean.push({
             device_id: deviceId, qid: r.qid, topic: r.topic,
             correct: r.correct, skipped: r.skipped,
+            duration_ms: isSaneMs(r.ms) ? Math.round(r.ms) : null,
           });
+          // The basics this question tests. Absent on most rows, and absent
+          // entirely on rows queued by an older build of the app — neither is
+          // an error, so an unusable value is dropped rather than failing the
+          // batch and losing the answer itself with it.
+          if (Array.isArray(r.skills)) {
+            for (const s of r.skills.slice(0, MAX_SKILLS_PER_ATTEMPT)) {
+              if (!isSkillKey(s)) continue;
+              skillRows.push({
+                device_id: deviceId, qid: r.qid, skill: s, topic: r.topic,
+                correct: r.correct, skipped: r.skipped,
+              });
+            }
+          }
         }
         if (clean.length === 0) {
           return res.status(400).json({ error: "No recognised attempts.", unknown_topics: skippedTopics });
         }
         const { error } = await db.from("study_attempts").insert(clean);
         if (error) throw error;
+        // Written second and never allowed to fail the request. The attempt is
+        // the record that matters; the skill breakdown is a finer view of it.
+        // If this table is missing or a write fails, the answer must still be
+        // saved rather than being retried forever by the client's queue.
+        let skillsRecorded = 0;
+        if (skillRows.length) {
+          const { error: skillError } = await db.from("study_skill_attempts").insert(skillRows);
+          if (skillError) console.error("[progress] skill attempts not recorded", skillError);
+          else skillsRecorded = skillRows.length;
+        }
         if (skippedTopics.length) console.warn("[progress] unknown topics skipped:", skippedTopics);
         return res.status(200).json({
           ok: true, recorded: clean.length,
+          skills_recorded: skillsRecorded,
           unknown_topics: skippedTopics.length ? skippedTopics : undefined,
         });
       }

@@ -71,7 +71,14 @@ function check(name, cond, detail){
     (await page.title()).includes('Prep'), await page.title());
   check('no missing local files on the prep page', notFound.length === 0, notFound.join(', '));
   check('the question bank loaded', await page.evaluate(()=>typeof QUESTION_BANK === 'object'));
-  check('all 185 questions are indexed', await page.evaluate(()=>ALL.length) === 185);
+  check('all 272 questions are indexed', await page.evaluate(()=>ALL.length) === 272);
+  // The taxonomy of basics ships with the bank, and every skill a question
+  // names has to exist in it — a page that loaded one without the other would
+  // offer drills that lead nowhere.
+  check('the skills taxonomy loaded alongside the bank',
+    await page.evaluate(()=>typeof SKILLS === 'object' && SKILLS.length > 0));
+  check('every skill a question names exists in the taxonomy',
+    await page.evaluate(()=>ALL.every(q => (q.skills||[]).every(k => !!SKILL_BY_KEY[k]))));
 
   console.log('\n── and the prep reaches back ────────────────────────────');
   // No "← Back to job list" at the top of the page any more: on a phone that
@@ -90,6 +97,9 @@ function check(name, cond, detail){
   const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
   check('sw.js exists (index.html has always registered it)', sw.length > 100);
   check('prep assets are precached', /\/learn\.html/.test(sw) && /\/prep\//.test(sw));
+  // Without it the page opens offline with a bank full of skill tags and no
+  // taxonomy to resolve them against.
+  check('the skills taxonomy is precached too', /'\/prep\/skills\.js'/.test(sw));
   // The navigation is shared and lives outside /prep/. Without it in the cache
   // the prep page would open offline with no bottom bar and no way out.
   check('the shared navigation is precached too', /'\/nav\.js'/.test(sw));

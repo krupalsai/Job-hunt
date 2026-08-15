@@ -187,6 +187,94 @@ async function reachable(page, selector, where, minH){
   check('no page reload — the section switch is in-page',
     await page.evaluate(() => performance.getEntriesByType('navigation').length === 1));
 
+  /* ── The basics ─────────────────────────────────────────────────────── */
+  // Everything the weak-basics work added is read on a phone, mid-quiz, with
+  // the bottom bar taking the last 74px. A drill explainer that scrolls
+  // sideways, or a "fix it now" button too small to hit, is the same failure
+  // this suite was written for — just on a new screen.
+  console.log('\n── the basics fit the phone they are read on ────────────');
+  await page.locator(BAR + '[data-tab="quiz"]').click();
+  await page.waitForSelector('#quiz-setup');
+  const skillKey = await page.evaluate(() => {
+    // A basic that has already cost marks on two different questions, which is
+    // the condition the app treats as a signal rather than an accident.
+    const k = SKILLS[0].key;
+    state.skills[k] = { asked: 4, correct: 1, missed: { qaaa: 1, qbbb: 1 } };
+    save();
+    openSkillDrill(k);
+    return k;
+  });
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('the drill explains the basic before testing it',
+    (await page.locator('#skill-drill .drill-rule').count()) === 1);
+  await noSideScroll(page, 'a micro-drill');
+  await reachable(page, '#skill-drill .drill-btn', 'drill screen button');
+
+  await page.evaluate(k => {
+    window.__lessonCheck = null;
+    beginQuiz(ALL.filter(q => (q.skills || []).indexOf(k) !== -1), { size: 2 });
+  }, skillKey);
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  const wrongIdx = await page.evaluate(() => currentQuiz[currentIndex].correct === 0 ? 1 : 0);
+  await page.locator('#q-options .opt').nth(wrongIdx).click();
+  await page.waitForSelector('.skill-alert');
+  check('a repeated basic is called out on the spot', (await page.locator('.skill-alert').count()) === 1);
+  await noSideScroll(page, 'a wrong answer carrying a basics alert');
+  await reachable(page, '.skill-alert [data-drill]', 'fix-it-now button');
+
+  await page.locator(BAR + '[data-tab="progress"]').click();
+  await page.waitForSelector('#basics-list');
+  check('Progress lists the weak basic', (await page.locator('#basics-list .basic-row').count()) >= 1);
+  await noSideScroll(page, 'Progress with weak basics listed');
+  await reachable(page, '#basics-list [data-drill]', 'weak basics drill');
+
+  /* ── Today ──────────────────────────────────────────────────────────── */
+  // The one screen opened every morning, on a phone, usually in a hurry. The
+  // time chips and the start buttons are the two things tapped there.
+  console.log('\n── today\'s plan is usable with a thumb ──────────────────');
+  await page.locator(BAR + '[data-tab="schedule"]').click();
+  await page.waitForSelector('#today-plan .td-block');
+  check('today lists blocks with minutes on them',
+    (await page.locator('#today-plan .td-mins').count()) >= 3);
+  await reachable(page, '#today-scope .td-chip', 'exam-scope chip');
+  await reachable(page, '#today-budget .td-chip', 'study-time chip');
+  await reachable(page, '#today-plan .td-go', 'start button');
+  await noSideScroll(page, "today's plan");
+
+  // Planning for all three exams at once is the densest this screen ever gets:
+  // more blocks, domain headings, and a longer reason on every one of them.
+  await page.locator('#today-scope [data-scope="all"]').click();
+  await page.waitForSelector('#today-plan .td-domain');
+  check('all-exams mode groups the day by domain',
+    (await page.locator('#today-plan .td-domain').count()) >= 2);
+  await noSideScroll(page, "today's plan across all three exams");
+  await reachable(page, '#today-plan .td-go', 'start button in all-exams mode');
+  await page.evaluate(() => { localStorage.removeItem('jobhunt_plan_scope'); window.renderToday(); });
+
+  /* ── English grammar chapters ──────────────────────────────────────── */
+  // The newest, densest screen: two grouped chapter lists plus the existing
+  // full lessons, all on one subject page. If anything on this build scrolls
+  // sideways or shrinks a tap target, it is here.
+  console.log('\n── English grammar chapters fit the phone ───────────────');
+  await page.locator(BAR + '[data-tab="learn"]').click();
+  await page.waitForSelector('#learn-path');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.waitForSelector('#learn-path .ls-group');
+  await noSideScroll(page, 'English grammar/vocabulary chapters');
+  await reachable(page, '#learn-path [data-skill]', 'chapter row');
+
+  await page.locator('#learn-path [data-skill="verb-tenses-forms"]').click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  await noSideScroll(page, 'a chapter opened from English');
+  await reachable(page, '#skill-drill .drill-btn', 'start-drill button');
+
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.skill-tag');
+  await noSideScroll(page, 'a named-skill tag on an answered question');
+
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right section, at its top ─────');
   for (const h of ['examinfo', 'learn', 'quiz', 'schedule', 'progress']) {

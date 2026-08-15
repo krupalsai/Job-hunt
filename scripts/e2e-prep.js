@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 185 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 272 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -123,8 +123,29 @@ function check(name, cond, detail){
   });
   check('some questions carry a diagram to picture', dq !== null);
 
-  check('the last resort is always the full lesson',
-    (await page.locator('.explain [data-lesson]').count()) === 1);
+  // The last rung of the ladder is the lesson that teaches the whole topic —
+  // where one has been written. General Studies and Telangana Movement were
+  // added for TS SI with questions but no curriculum yet, and offering a
+  // "teach me this" button that opened nothing would be worse than not
+  // offering it. So the rule is: the button exists exactly when the lesson
+  // does, and this asserts the pairing rather than assuming it.
+  const lessonExpected = await page.evaluate(() =>
+    !!lessonForTopic(currentQuiz[currentIndex].topic));
+  check('the last resort is the full lesson, wherever one has been written',
+    (await page.locator('.explain [data-lesson]').count()) === (lessonExpected ? 1 : 0),
+    `lesson for this topic: ${lessonExpected}`);
+  if (!lessonExpected) {
+    // Land on a question that does have one, so the rest of this section can
+    // still prove the button opens the right lesson.
+    // A full-length set, not a single question: the sections after this one
+    // press Next and then Skip, and a one-question quiz would have ended.
+    await page.evaluate(() => {
+      window.__lessonCheck = null;
+      beginQuiz(ALL.filter(x => lessonForTopic(x.topic)), { size: 10 });
+    });
+    await page.locator('#q-options .opt').first().click();
+    await page.waitForSelector('.explain [data-lesson]');
+  }
 
   await page.locator('.explain [data-lesson]').click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
@@ -165,7 +186,7 @@ function check(name, cond, detail){
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
-  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 11);
+  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 14);
   const focus = await page.locator('#focus-list').textContent();
   check('weak-area verdict is stated (or honestly withheld)', focus.length > 30, focus);
 
@@ -199,7 +220,7 @@ function check(name, cond, detail){
   // app deliberately remembers where you were. Step back out first.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
-  check('every subject is listed, not only the ones with lessons', subjectRows === 11, `got ${subjectRows}`);
+  check('every subject is listed, not only the ones with lessons', subjectRows === 14, `got ${subjectRows}`);
   const listing = await page.locator('#learn-path').textContent();
   // Every subject has a path now. If one ever loses it, the UI must say so
   // rather than showing a blank screen — that branch is still in the code and
@@ -289,6 +310,336 @@ function check(name, cond, detail){
     (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
     `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
 
+  console.log('\n── English: grammar is bounded, vocabulary is not ──────');
+  /* The problem this section exists for: answering a tense question right
+     from years of exposure without being able to say what it tested, so the
+     next one that looks slightly different goes back to being a guess.
+     Naming the rule — and doing it immediately, not after two misses — is
+     what turns exposure into something that transfers. And grammar is a
+     FINISHABLE list; vocabulary is not; the screen has to say so, not just
+     imply it by which one has more questions. */
+  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.waitForSelector('#learn-path .ls-group');
+
+  const groups = await page.locator('#learn-path .ls-group').allTextContents();
+  check('English splits into a Grammar chapter list and a Vocabulary one',
+    groups.some(g => /Grammar/.test(g)) && groups.some(g => /Vocabulary/.test(g)),
+    groups.join(' | '));
+  check('Grammar is listed first — it is the bounded, finishable half',
+    /Grammar/.test(groups[0]), groups.join(' | '));
+
+  const engPath = await page.locator('#learn-path').textContent();
+  check('the chapters explain WHY grammar comes first — it is a short, finishable list',
+    /bounded/i.test(engPath) && /no such ceiling|open-ended/i.test(engPath),
+    engPath.replace(/\s+/g,' ').slice(0, 200));
+
+  const chapterNames = await page.locator('#learn-path [data-skill] .ls-title').allTextContents();
+  check('verb tenses and forms is now a chapter — this was zero-coverage before today',
+    chapterNames.some(t => /tense/i.test(t)), chapterNames.join(' | '));
+  check('active/passive voice and articles are chapters too',
+    chapterNames.some(t => /passive/i.test(t)) && chapterNames.some(t => /Article/i.test(t)),
+    chapterNames.join(' | '));
+
+  // The existing full lessons (Error spotting, Vocabulary by word roots) must
+  // still be there, unlost, just filed below the finer-grained chapter map.
+  check('the existing English lessons are still reachable, not replaced',
+    (await page.locator('#learn-path .ls-row[data-i]').count()) >= 2,
+    await page.locator('#learn-path').textContent());
+  check('and labelled as the fuller lessons, once chapters are shown',
+    /Full lessons/.test(engPath));
+
+  // A subject nobody has split into grammar/vocabulary must show no chapters
+  // at all — this is additive, not a change to how every subject renders.
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="Data Structures"]').click();
+  check('a subject with no grammar/vocabulary split shows no chapters block',
+    (await page.locator('#learn-path .ls-group').count()) === 0);
+  check('and its lesson list is completely unaffected',
+    (await page.locator('#learn-path .ls-row').count()) === 7);
+
+  // Opening a chapter goes straight into the same micro-drill Progress and
+  // the quiz alert already use — rule taught first, then the questions.
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.waitForSelector('#learn-path .ls-group');
+  const tenseRow = page.locator('#learn-path [data-skill="verb-tenses-forms"]');
+  await tenseRow.click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('tapping the chapter opens its rule and explainer before any question',
+    (await page.locator('#skill-drill .drill-rule').textContent()).length > 60);
+  check('V1/V2/V3 is explained in the chapter itself, not just implied',
+    /V1|V2|V3/.test(await page.locator('#skill-drill').textContent()));
+
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  // The core ask: name the rule the INSTANT you answer — right or wrong — with
+  // no extra tap. Previously this only appeared after "Explain it another way".
+  const tagText = await page.locator('.explain .skill-tag').first().textContent();
+  check('the basic being tested is named immediately, with no extra tap',
+    /Verb tenses|tense/i.test(tagText), tagText);
+  check('it is a compact label, not the full explanation repeated',
+    tagText.length < 80, `${tagText.length} chars: "${tagText}"`);
+
+  // And a question tagged with no skill must show no tag — the label appears
+  // exactly where there is a named basic behind it, never as a placeholder.
+  const untaggedTagCount = await page.evaluate(() => {
+    const q = ALL.find(x => !x.skills || x.skills.length === 0);
+    return skillsForItem(q).length;
+  });
+  check('an untagged question carries no skill tag to show',
+    untaggedTagCount === 0, String(untaggedTagCount));
+
+  console.log('\n── today: which subjects, for how many minutes ──────────');
+  /* "Revise Data Structures" is not a plan. A plan is a subject, a number of
+     minutes, and a reason — and the numbers have to add up to the time you
+     actually said you had, or it is a wish list. */
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.waitForSelector('#today-plan .td-block');
+  const todayPlan = await page.evaluate(() => window.__buildToday());
+  check('today names specific subjects, not a vague focus',
+    todayPlan.blocks.length >= 3, `${todayPlan.blocks.length} blocks`);
+  check('every block carries minutes',
+    todayPlan.blocks.every(b => b.minutes >= 15), JSON.stringify(todayPlan.blocks.map(b => b.minutes)));
+  const summed = todayPlan.blocks.reduce((n, b) => n + b.minutes, 0);
+  check('the minutes add up to the time available, not to a wish list',
+    summed === todayPlan.total, `${summed} vs ${todayPlan.total}`);
+  check('every block says why it is on the list',
+    todayPlan.blocks.every(b => b.why && b.why.length > 12),
+    JSON.stringify(todayPlan.blocks.map(b => b.why).slice(0, 3)));
+  check('and every block opens the thing it names',
+    (await page.locator('#today-plan [data-go]').count()) === todayPlan.blocks.length);
+
+  // The whole point is that it responds to the time you have.
+  await page.locator('#today-budget [data-mins="60"]').click();
+  const short = await page.evaluate(() => window.__buildToday());
+  check('asking for one hour produces one hour of work',
+    short.blocks.reduce((n, b) => n + b.minutes, 0) === 60, JSON.stringify(short.blocks.map(b => b.minutes)));
+  check('and a shorter day means fewer subjects, not thinner slices',
+    short.blocks.length < todayPlan.blocks.length,
+    `${short.blocks.length} vs ${todayPlan.blocks.length}`);
+  await page.locator('#today-budget [data-mins="180"]').click();
+
+  // A basic that has already cost marks twice is the highest-value block there
+  // is: it fixes a cause instead of practising around a symptom.
+  const withBasic = await page.evaluate(() => {
+    state.skills['subject-verb-agreement'] = { asked: 5, correct: 1, missed: { qa: 1, qb: 1, qc: 1 } };
+    save();
+    return window.__buildToday();
+  });
+  check('a basic that keeps costing marks is scheduled first',
+    withBasic.blocks[0].kind === 'basic', JSON.stringify(withBasic.blocks[0]));
+  check('and it says how many questions it has cost',
+    /different questions/.test(withBasic.blocks[0].why), withBasic.blocks[0].why);
+
+  // Ticking survives, so a day half done still reads as half done.
+  await page.evaluate(() => window.renderToday());
+  await page.locator('#today-plan [data-tick]').first().click();
+  check('ticking a block marks it done',
+    (await page.locator('#today-plan .td-block.is-done').count()) === 1);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.waitForSelector('#today-plan .td-block');
+  check('and a ticked block survives a reload',
+    (await page.locator('#today-plan .td-block.is-done').count()) === 1);
+
+  console.log('\n── planning across three exams at once ─────────────────');
+  /* Three exams, not three separate universes. Percentage is examined by SSC
+     CGL and by TS SI, so one hour on it is an hour on both — scheduling it
+     twice would be doing the same work and calling it progress. Telangana
+     Movement helps one paper and DBMS helps another, and no amount of either
+     helps the other. */
+  const setScope = s => page.evaluate(v => {
+    localStorage.setItem('jobhunt_plan_scope', v);
+    return window.__buildToday();
+  }, s);
+  await page.evaluate(() => localStorage.setItem('jobhunt_daily_minutes', '240'));
+
+  const all = await setScope('all');
+  const domains = [...new Set(all.blocks.map(b => b.domain))];
+  check('ALL EXAMS draws on more than one domain', domains.length >= 2, domains.join(' | '));
+  check('and the minutes still add up to the budget',
+    all.blocks.reduce((n, b) => n + b.minutes, 0) === all.total,
+    `${all.blocks.reduce((n, b) => n + b.minutes, 0)} vs ${all.total}`);
+
+  // One block per subject, never one per (subject, exam) pair.
+  const subjectsSeen = all.blocks.filter(b => b.kind !== 'basic' && b.kind !== 'speed').map(b => b.subject);
+  check('a shared subject is scheduled once, not once per exam',
+    subjectsSeen.length === new Set(subjectsSeen).size, subjectsSeen.join(' | '));
+  check('and no two blocks share an id',
+    all.blocks.length === new Set(all.blocks.map(b => b.id)).size);
+
+  const common = all.blocks.filter(b => b.domain === 'common');
+  check('common-core subjects are recognised as common', common.length >= 1,
+    all.blocks.map(b => b.subject + '=' + b.domain).join(' | '));
+  /* Overlap gives a common subject up to twice the score of an equally weak
+     single-paper one, which on a full day can take every slot and leave an
+     entire exam out of the plan — not because it is in good shape, but because
+     it is only examined once. Each domain in scope is guaranteed its neediest
+     subject before score decides the rest. */
+  check('no exam is crowded out of a full day by the common core',
+    ['common', 'ts-si', 'hal-cs'].every(d => all.blocks.some(b => b.domain === d)),
+    all.blocks.map(b => b.domain).join(' | '));
+  check('and the minutes are still differentiated, not sliced equally',
+    new Set(all.blocks.map(b => b.minutes)).size > 1,
+    all.blocks.map(b => b.minutes).join(' | '));
+  check('and a common block names the exams the hour buys',
+    common.every(b => b.exams.length > 1) && /improves .+ \+ /.test(common[0].why),
+    common[0] && common[0].why);
+
+  const overlaps = {};
+  const domainBySubject = {};
+  all.blocks.forEach(b => {
+    if (b.exams) overlaps[b.subject] = b.exams.map(e => e.key);
+    domainBySubject[b.subject] = b.domain;
+  });
+  /* Asserted against the model rather than against whichever subjects today
+     happened to schedule: the sharing is a property of the syllabuses, and it
+     is true on a day Quant is not on the list. */
+  const sharing = await page.evaluate(() => {
+    const who = s => EXAMS.filter(e => subjectsForExam(e).indexOf(s) !== -1).map(e => e.key);
+    return {
+      quant: who('Quantitative Aptitude'),
+      reasoning: who('Reasoning'),
+      telangana: who('Telangana Movement & State Formation'),
+      dbms: who('DBMS'),
+    };
+  });
+  check('Quantitative Aptitude is shared by SSC CGL and TS SI',
+    sharing.quant.indexOf('ssc-cgl') !== -1 && sharing.quant.indexOf('ts-si') !== -1,
+    JSON.stringify(sharing.quant));
+  check('Reasoning is shared by all three exams',
+    sharing.reasoning.length === 3, JSON.stringify(sharing.reasoning));
+  check('Telangana Movement belongs to TS SI alone',
+    sharing.telangana.join() === 'ts-si', JSON.stringify(sharing.telangana));
+  check('and DBMS belongs to HAL alone',
+    sharing.dbms.join() === 'hal-cs', JSON.stringify(sharing.dbms));
+  check('a HAL-only subject is never filed as common',
+    Object.keys(domainBySubject).every(s =>
+      !/DBMS|Theory of Computation|Software Engineering/.test(s) || domainBySubject[s] === 'hal-cs'),
+    JSON.stringify(domainBySubject));
+
+  // Scoping to one exam must not leak another exam's subjects in.
+  const cgl = await setScope('ssc-cgl');
+  check('scoping to SSC CGL never schedules a TS SI-only subject',
+    !cgl.blocks.some(b => /Telangana/.test(b.subject)), cgl.blocks.map(b => b.subject).join(' | '));
+  check('and never schedules a HAL technical subject',
+    !cgl.blocks.some(b => /DBMS|Operating Systems|Theory of Computation/.test(b.subject)),
+    cgl.blocks.map(b => b.subject).join(' | '));
+  check('a single-exam plan applies no overlap multiplier',
+    cgl.blocks.every(b => b.overlap === undefined || b.overlap === 1),
+    JSON.stringify(cgl.blocks.map(b => b.overlap)));
+
+  const hal = await setScope('hal-cs');
+  check('scoping to HAL never schedules a TS SI-only subject',
+    !hal.blocks.some(b => /Telangana|General Studies/.test(b.subject)),
+    hal.blocks.map(b => b.subject).join(' | '));
+
+  // A short day across three exams still has to produce something worth doing.
+  await page.evaluate(() => localStorage.setItem('jobhunt_daily_minutes', '60'));
+  const shortAll = await setScope('all');
+  check('one hour across all three exams still produces real blocks',
+    shortAll.blocks.length >= 1 && shortAll.blocks.every(b => b.minutes >= 15),
+    JSON.stringify(shortAll.blocks.map(b => b.subject + ':' + b.minutes)));
+  check('and it still spends exactly the hour',
+    shortAll.blocks.reduce((n, b) => n + b.minutes, 0) === 60,
+    String(shortAll.blocks.reduce((n, b) => n + b.minutes, 0)));
+
+  // Timing stays exam-specific. The ONLY place a target crosses exams is the
+  // deliberate one: a shared subject is held to the strictest clock that
+  // applies to it, never to a laxer one borrowed from elsewhere.
+  const targets = await page.evaluate(() => {
+    const byKey = k => EXAMS.find(e => e.key === k);
+    return {
+      halTech:  paceTargetForExam('DBMS', byKey('hal-cs')),
+      tsGs:     paceTargetForExam('General Studies', byKey('ts-si')),
+      cglQuant: paceTargetForExam('Quantitative Aptitude', byKey('ssc-cgl')),
+      tsQuant:  paceTargetForExam('Quantitative Aptitude', byKey('ts-si')),
+    };
+  });
+  check('HAL keeps its own section-plan target with provenance',
+    targets.halTech.seconds === 58 && targets.halTech.kind === 'section-plan',
+    JSON.stringify(targets.halTech));
+  check('TS SI keeps its derived 54 seconds',
+    targets.tsGs.seconds === 54 && targets.tsGs.kind === 'derived', JSON.stringify(targets.tsGs));
+  check('SSC CGL uses its own configured section timing',
+    targets.cglQuant.seconds === 53 && targets.cglQuant.kind === 'section-plan',
+    JSON.stringify(targets.cglQuant));
+  check('a shared subject is held to the STRICTER of the two clocks',
+    Math.min(targets.cglQuant.seconds, targets.tsQuant.seconds) === 53,
+    `${targets.cglQuant.seconds} vs ${targets.tsQuant.seconds}`);
+
+  /* Dates are configuration, and an exam advertised over two days IS two days
+     until an admit card says otherwise. HAL's CBT is a 5-6 September window;
+     which of those two days this candidate sits is decided by HAL, so the app
+     must not print either one as though it knew. */
+  const dates = await page.evaluate(() => {
+    const h = EXAMS.find(e => e.key === 'hal-cs');
+    const t = EXAMS.find(e => e.key === 'ts-si');
+    return {
+      halAssigned: h.date || null, halStart: h.examDateStart, halEnd: h.examDateEnd,
+      tsAssigned: t.date || null, tsStart: t.examDateStart || null,
+    };
+  });
+  check('HAL carries a date WINDOW, not a single day',
+    dates.halStart === '2026-09-05' && dates.halEnd === '2026-09-06',
+    JSON.stringify(dates));
+  check('and no individual assigned date is invented for the candidate',
+    dates.halAssigned === null, String(dates.halAssigned));
+  check('TS SI has no date configured, and none is guessed',
+    dates.tsAssigned === null && dates.tsStart === null, JSON.stringify(dates));
+
+  await page.evaluate(() => { localStorage.setItem('jobhunt_plan_scope', 'all'); window.renderToday(); });
+  const head = (await page.locator('#today-head').textContent()).replace(/\s+/g, ' ');
+  check('the window is shown as a range, never as one day',
+    /5–6 Sep 2026/.test(head) && !/HAL CS: 5 Sep 2026/.test(head), head.slice(0, 160));
+  check('an exam with no date still says so rather than guessing',
+    /TS SI: date not configured/.test(head), head.slice(0, 160));
+
+  // Urgency counts back from the EARLIEST day of the window: ready a day early
+  // costs nothing, ready a day late costs the exam.
+  const urgency = await page.evaluate(() => {
+    const h = EXAMS.find(e => e.key === 'hal-cs');
+    const t = EXAMS.find(e => e.key === 'ts-si');
+    const p = window.__buildToday();
+    const halBlocks = p.blocks.filter(b => b.domain === 'hal-cs' && b.urgency !== undefined);
+    const tsBlocks  = p.blocks.filter(b => b.domain === 'ts-si' && b.urgency !== undefined);
+    return {
+      halDays: Math.ceil((Date.parse(h.examDateStart) - Date.now()) / 86400000),
+      halUrgency: halBlocks.length ? halBlocks[0].urgency : null,
+      tsUrgency: tsBlocks.length ? tsBlocks[0].urgency : null,
+      tsHasDate: !!(t.date || t.examDateStart),
+    };
+  });
+  check('urgency is measured from the first day of the window',
+    urgency.halUrgency === null ||
+    Math.abs(urgency.halUrgency - (1 + (60 - urgency.halDays) / 60)) < 0.001,
+    `${urgency.halUrgency} for ${urgency.halDays} days`);
+  check('an exam with no date still gets no urgency multiplier',
+    urgency.tsHasDate === false && (urgency.tsUrgency === null || urgency.tsUrgency === 1),
+    String(urgency.tsUrgency));
+
+  // Question provenance survives the planner: nothing is relabelled by which
+  // exam happened to schedule it.
+  const provenance = await page.evaluate(() => ({
+    pyqWithoutSource: ALL.filter(q => q.kind === 'pyq' && !(q.exam && q.year && q.source)).length,
+    kinds: [...new Set(ALL.map(q => q.kind || 'generated'))],
+  }));
+  check('every PYQ carries its exam, year and source',
+    provenance.pyqWithoutSource === 0, String(provenance.pyqWithoutSource));
+  check('and no question has an unknown kind',
+    provenance.kinds.every(k => ['pyq', 'verified', 'generated'].indexOf(k) !== -1),
+    provenance.kinds.join(' | '));
+
+  // Leave the scope as it was found, so nothing after this inherits it.
+  await page.evaluate(() => {
+    localStorage.removeItem('jobhunt_plan_scope');
+    localStorage.setItem('jobhunt_daily_minutes', '180');
+  });
+
   console.log('\n── the 4-week plan is workable, not a table ─────────────');
   await page.click('nav#nav-bottom [data-tab="schedule"]');
   const days = await page.locator('#plan-days .plan-day').count();
@@ -328,6 +679,208 @@ function check(name, cond, detail){
       typeof row.qid === 'string' && typeof row.topic === 'string' && typeof row.correct === 'boolean');
   }
 
+  console.log('\n── speed is half the answer ─────────────────────────────');
+  /* The exam gives 150 minutes for 160 questions. An answer you can only
+     produce in 94 seconds is one you cannot bank, and a screen that reports
+     82% accuracy without saying so is telling you half the truth. These
+     assertions are about the half that was missing. */
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.evaluate(() => {
+    if (!document.getElementById('quiz-result').classList.contains('hidden')) {
+      document.getElementById('retry-btn').click();
+    }
+  });
+  await page.click('#start-quiz');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  // Deliberately slow: under 250ms the clock is treated as a mis-tap, so a
+  // test that answered instantly would assert nothing.
+  await new Promise(r => setTimeout(r, 900));
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  const paceText = (await page.locator('.pace').first().textContent()).replace(/\s+/g, ' ').trim();
+  check('an answer reports what it cost in time', /\d+s/.test(paceText), paceText);
+  check('and states the per-question target it is being measured against',
+    /target \d+s\/question/.test(paceText), paceText.slice(0, 140));
+  // No board publishes a per-question time. Every target here is arithmetic on
+  // a published total or a planning decision made in this app, and the screen
+  // has to say which — never "official".
+  check('the target names where it came from, and never claims to be official',
+    /this plan's \d+ min for|derived from/.test(paceText) && !/official/i.test(paceText),
+    paceText.slice(0, 160));
+  const recorded = await page.evaluate(() => {
+    const t = Object.values(state.topics).filter(x => x.timed);
+    return { timed: t.reduce((n, x) => n + x.timed, 0), ms: t.reduce((n, x) => n + x.ms, 0) };
+  });
+  check('the time is recorded against the subject', recorded.timed >= 1, JSON.stringify(recorded));
+  check('and it is a plausible measurement, not a zero',
+    recorded.ms >= 900 && recorded.ms < 300000, `${recorded.ms}ms`);
+
+  // A skip has no answer time. Counting the seconds spent deciding NOT to
+  // answer would flatter or wreck the average depending on mood.
+  const beforeSkip = await page.evaluate(() =>
+    Object.values(state.topics).reduce((n, x) => n + (x.timed || 0), 0));
+  await page.click('#next-btn');
+  await new Promise(r => setTimeout(r, 600));
+  await page.click('#skip-btn');
+  await page.waitForSelector('.explain');
+  const afterSkip = await page.evaluate(() =>
+    Object.values(state.topics).reduce((n, x) => n + (x.timed || 0), 0));
+  check('a skip is not counted as a fast answer', afterSkip === beforeSkip,
+    `${beforeSkip} → ${afterSkip}`);
+  check('and a skip shows no pace line', (await page.locator('.pace').count()) === 0);
+
+  // The four quadrants. Accuracy and speed fail differently, and the fix for
+  // one is the opposite of the fix for the other, so the app has to say which.
+  const verdicts = await page.evaluate(() => {
+    const t = (pct, avg, target) => {
+      const v = speedVerdict(pct, avg, target);
+      return v ? v.kind : null;
+    };
+    return {
+      ready: t(90, 40, 56), slow: t(90, 94, 56),
+      hasty: t(55, 20, 56), gap: t(40, 120, 56),
+      noData: t(90, null, 56),
+    };
+  });
+  check('accurate and inside the time reads as ready', verdicts.ready === 'ready');
+  check('accurate but slow names SPEED as the problem', verdicts.slow === 'slow');
+  check('fast but wrong names ACCURACY as the problem', verdicts.hasty === 'hasty');
+  check('slow and wrong is called a method gap, not a timing one', verdicts.gap === 'gap');
+  check('no timing data means no verdict, rather than a guessed one',
+    verdicts.noData === null);
+
+  // Speed has to reach the server too, or the mentor run can see what you get
+  // wrong but not that you are simply too slow to finish the paper. Attempts
+  // are coalesced on a 1.5s timer, so wait for the flush rather than race it.
+  const allSent = () => apiCalls.filter(c => c.body && c.body.action === 'attempts')
+                                .flatMap(c => c.body.attempts);
+  for (let i = 0; i < 25 && !allSent().some(a => typeof a.ms === 'number'); i++) {
+    await new Promise(r => setTimeout(r, 200));
+  }
+  const timedRow = allSent().find(a => typeof a.ms === 'number');
+  check('at least one attempt reaches the server with how long it took', !!timedRow,
+    JSON.stringify(allSent().slice(-3)));
+  if (timedRow) {
+    check('the time sent is a real measurement, never a zero',
+      timedRow.ms >= 250 && timedRow.ms <= 300000, `${timedRow.ms}ms`);
+  }
+  const skippedRow = allSent().find(a => a.skipped);
+  if (skippedRow) {
+    check('a skipped attempt sends no time at all', skippedRow.ms === undefined,
+      JSON.stringify(skippedRow));
+  }
+
+  console.log('\n── the basics underneath the topics ────────────────────');
+  /* The failure this section exists to catch: "One of my friend is a doctor"
+     and "Each of the boys have finished" are the same gap in two different
+     questions, and the app used to treat them as two unrelated misses in a
+     topic called "Reasoning & English". Being told a subject is at 55% is not
+     something anyone can act on at 7am; being told the verb is agreeing with
+     the nearest noun instead of the subject is.
+
+     Skill state is cleared first so the count means what it says. Everything
+     before this point answered the first option ~30 times, which would have
+     already tripped some basics — the assertion here is about the SECOND miss
+     specifically, so it needs a known starting point. */
+  const DRILL_SKILL = 'subject-verb-agreement';
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  const poolSize = await page.evaluate(k => {
+    state.skills = {}; save();
+    window.__lessonCheck = null;
+    const pool = ALL.filter(q => (q.skills || []).indexOf(k) !== -1);
+    beginQuiz(pool, { size: pool.length });
+    return pool.length;
+  }, DRILL_SKILL);
+  check('a basic has enough questions to drill it', poolSize >= 3, `${poolSize} questions`);
+
+  async function answerWrongly(){
+    const idx = await page.evaluate(() => currentQuiz[currentIndex].correct === 0 ? 1 : 0);
+    await page.locator('#q-options .opt').nth(idx).click();
+    await page.waitForSelector('.explain');
+  }
+
+  await answerWrongly();
+  check('one miss says nothing — one is an accident, not a pattern',
+    (await page.locator('.skill-alert').count()) === 0);
+  // The rule the question rests on is in the explanation ladder, because a
+  // question explained is one question and the rule is every question like it.
+  await page.locator('.explain [data-again]').click();
+  const labels = (await page.locator('.explain .lbl').allTextContents()).join(' | ');
+  check('the explanation names the basic the question rests on',
+    /The basic behind it/i.test(labels), labels);
+
+  await page.click('#next-btn');
+  await answerWrongly();
+  const alert = page.locator('.skill-alert');
+  check('the second miss on the same basic is called out, inside the quiz',
+    (await alert.count()) === 1);
+  const alertText = await alert.textContent();
+  check('it says which basic, and that this is the second time',
+    /second time/i.test(alertText) && /subject-verb agreement/i.test(alertText),
+    alertText.replace(/\s+/g,' ').slice(0,140));
+  check('it offers the drill there and then, not on some other screen',
+    (await page.locator(`.skill-alert [data-drill="${DRILL_SKILL}"]`).count()) === 1);
+
+  await page.locator('.skill-alert [data-drill]').click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('the drill teaches the basic before testing it',
+    (await page.locator('#skill-drill .drill-rule').textContent()).length > 60);
+  check('and the explainer is more than one line',
+    (await page.locator('#skill-drill .ls-p, #skill-drill .ls-c, #skill-drill .ls-k, #skill-drill .ls-l').count()) >= 2);
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('the drill tests that one basic and nothing else',
+    await page.evaluate(k => currentQuiz.every(q => (q.skills || []).indexOf(k) !== -1), DRILL_SKILL));
+  const drillCount = await page.locator('#q-counter').textContent();
+  check('a drill is short — 5 questions at most', /\/ [1-5]$/.test(drillCount.trim()), drillCount);
+
+  for (let i = 0; i < 6; i++) {
+    if (await page.locator('#quiz-result').isVisible()) break;
+    const idx = await page.evaluate(() => currentQuiz[currentIndex].correct);
+    await page.locator('#q-options .opt').nth(idx).click();
+    await page.click('#next-btn');
+  }
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+  const drillVerdict = await page.locator('#result-insight').textContent();
+  check('the drill reports on the basic, not on the subject',
+    /Subject-verb agreement: \d+\/\d+/i.test(drillVerdict), drillVerdict.slice(0,120));
+
+  await page.click('nav#nav-bottom [data-tab="progress"]');
+  const basics = await page.locator('#basics-list').textContent();
+  check('Progress names the weak basic', /subject-verb agreement/i.test(basics),
+    basics.replace(/\s+/g,' ').slice(0,140));
+  check('and states the rule, so the list itself teaches',
+    (await page.locator('#basics-list .basic-rule').first().textContent()).length > 60);
+  check('every weak basic has a drill button',
+    (await page.locator('#basics-list [data-drill]').count()) ===
+    (await page.locator('#basics-list .basic-row').count()));
+  // The basic is the cause and the subject is the symptom, so the basics have
+  // to come first on the page. Reversed, the screen still reads as "revise
+  // Reasoning & English", which is the advice that was not working.
+  check('weak basics sit ABOVE weak subjects, because the basic is the cause',
+    await page.evaluate(() => {
+      const b = document.getElementById('basics-list');
+      const f = document.getElementById('focus-list');
+      return !!(b && f) &&
+        (b.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+    }));
+
+  await page.locator('#basics-list [data-drill]').first().click();
+  await page.waitForSelector('#skill-drill:not(.hidden)');
+  check('a drill is reachable from Progress too',
+    (await page.locator('#skill-drill .drill-rule').count()) === 1);
+
+  // A basic that is being answered right must leave the list, or it is an
+  // accusation rather than a diagnosis.
+  const cleared = await page.evaluate(k => {
+    state.skills[k] = { asked: 10, correct: 10, missed: {} };
+    save();
+    renderProgress();
+    return document.getElementById('basics-list').textContent;
+  }, DRILL_SKILL);
+  check('a basic that is now being answered right drops off the list',
+    !/subject-verb agreement/i.test(cleared), cleared.replace(/\s+/g,' ').slice(0,120));
+
   console.log('\n── ?exam= switches the whole syllabus ──────────────────');
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ssc-cgl`, { waitUntil: 'networkidle' });
   const h1 = await page.locator('header h1').textContent();
@@ -353,6 +906,233 @@ function check(name, cond, detail){
   const planText = await page.locator('#plan-days').textContent();
   check('the 4-week plan follows the SSC syllabus, not HAL',
     !/Operating Systems|DBMS/.test(planText));
+
+  console.log('\n── TS SI is a first-class exam, not SSC with a new name ─');
+  /* Telangana SI is two stages, four final papers, and a paper that charges you
+     for a wrong answer. Copying SSC CGL's shape onto it — or HAL's "attempt
+     everything, a guess is free" advice — would teach exactly the wrong
+     exam-hall behaviour, which is the failure prep/exams.js exists to prevent. */
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si`, { waitUntil: 'networkidle' });
+  const siH1 = await page.locator('header h1').textContent();
+  check('the header names TS SI', /TS SI/i.test(siH1), siH1);
+  check('and warns that wrong answers lose marks',
+    /lose marks/i.test(await page.locator('header .sub').textContent()));
+
+  const siExam = await page.evaluate(() => {
+    const e = EXAMS.find(x => x.key === 'ts-si');
+    const pwt = e.stages.find(s => s.key === 'pwt');
+    const fin = e.stages.find(s => s.key === 'final');
+    return {
+      questions: pwt.questions, marks: pwt.marks,
+      negative: e.negative, negativeText: e.negativeText,
+      minutes: e.minutes || null,
+      marking: e.marking,
+      sectionBudgets: e.sections.map(s => s.budget || null),
+      derived: Math.round(e.minutes * 60 / e.questions),
+      papers: fin.papers.map(p => ({ name: p.name, qualifying: !!p.qualifying, merit: !!p.merit })),
+      subjects: subjectsForExam(e),
+    };
+  });
+  check('the preliminary test is 200 questions for 200 marks',
+    siExam.questions === 200 && siExam.marks === 200, JSON.stringify(siExam));
+  check('negative marking is stated exactly, not as a bare flag',
+    siExam.negative === true && /20%/.test(siExam.negativeText), String(siExam.negativeText));
+  check('the preliminary test is three hours, as the notification states',
+    siExam.minutes === 180, String(siExam.minutes));
+  check('and the pace target is derived from it: 180 min / 200 questions = 54s',
+    siExam.derived === 54, String(siExam.derived));
+  // The notification gives ONE duration for ONE paper. It does not split that
+  // time between the two halves, so neither may this — a 90/90 section budget
+  // would be an allocation the board never published.
+  check('no per-section time allocation is invented for TS SI',
+    siExam.sectionBudgets.every(b => !b), JSON.stringify(siExam.sectionBudgets));
+  check('marking is recorded as numbers: +1, -0.20, 0 for unanswered',
+    siExam.marking.correct === 1 && siExam.marking.wrong === -0.20 &&
+    siExam.marking.unanswered === 0 && siExam.marking.negativePercent === 20,
+    JSON.stringify(siExam.marking));
+  check('Papers I and II are marked qualifying only',
+    siExam.papers.filter(p => p.qualifying).length === 2 &&
+    /English/.test(siExam.papers[0].name) && /Telugu/.test(siExam.papers[1].name),
+    JSON.stringify(siExam.papers));
+  check('Papers III and IV are the ones that decide merit',
+    siExam.papers.filter(p => p.merit).length === 2 &&
+    siExam.papers[2].merit && siExam.papers[3].merit);
+  check('Telangana Movement is its own subject, not buried in General Studies',
+    siExam.subjects.indexOf('Telangana Movement & State Formation') !== -1,
+    siExam.subjects.join(' | '));
+  // Arithmetic and reasoning are SHARED with SSC CGL rather than copied. One
+  // percentage question is the same question whichever board asks it.
+  check('arithmetic and reasoning are reused from the common core, not duplicated',
+    siExam.subjects.indexOf('Quantitative Aptitude') !== -1 &&
+    siExam.subjects.indexOf('Reasoning') !== -1, siExam.subjects.join(' | '));
+  check('English is not in the practice list — Papers I and II are only qualifying',
+    siExam.subjects.indexOf('English') === -1, siExam.subjects.join(' | '));
+  check('and no HAL technical subject leaks into TS SI',
+    !siExam.subjects.some(s => /DBMS|Operating Systems|Theory of Computation|Data Structures/.test(s)),
+    siExam.subjects.join(' | '));
+
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  const siTags = await page.locator('#topic-tags .tag').allTextContents();
+  check('the quiz offers only TS SI subjects',
+    !siTags.some(t => /DBMS|Operating Systems|General Awareness/.test(t)), siTags.join(' | '));
+  await page.click('#start-quiz');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await new Promise(r => setTimeout(r, 900));
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  const siPace = (await page.locator('.pace').first().textContent()).replace(/\s+/g, ' ');
+  check('timing works for TS SI too', /\d+s/.test(siPace), siPace.slice(0, 100));
+  check('TS SI shows the 54-second derived target',
+    /target 54s\/question/.test(siPace), siPace.slice(0, 160));
+  check('labelled as DERIVED from 3h / 200 questions, not as official',
+    /derived from 3h \/ 200 questions/.test(siPace) && !/official/i.test(siPace),
+    siPace.slice(0, 200));
+  check('and it does not inherit HAL\'s section budget',
+    !/97 min|58s\/question/.test(siPace), siPace.slice(0, 200));
+  check('the marking scheme is spelled out in marks',
+    /\+1/.test(siPace) && /-0\.2/.test(siPace) && /unanswered 0/.test(siPace),
+    siPace.slice(0, 220));
+  // Speed advice without the marking scheme is dangerous: "go faster" is right
+  // for HAL, where a guess is free, and expensive on a paper that charges.
+  check('and pace advice carries this exam\'s marking scheme',
+    /20% of the marks/.test(siPace) && /rule out two options before guessing/.test(siPace),
+    siPace.slice(0, 220));
+  check('TS SI does not inherit HAL\'s "a guess is free" advice',
+    !/never leave a blank/i.test(siPace), siPace.slice(0, 200));
+
+  // The stage structure has to be visible, or there is no way to know that two
+  // of the four final papers do not count towards the rank.
+  await page.evaluate(() => window.gotoSection('examinfo'));
+  await page.waitForSelector('#ei-stages:not(.hidden)');
+  const stageText = (await page.locator('#ei-stages').textContent()).replace(/\s+/g, ' ');
+  check('the stages are shown, prelims and final', /Preliminary Written Test/.test(stageText) &&
+    /Final Written Examination/.test(stageText), stageText.slice(0, 120));
+  check('the screen says which papers only have to be passed',
+    /Qualifying only/.test(stageText));
+  check('and which papers decide the merit', /Counts towards the final merit/.test(stageText));
+
+  /* ── TS SI content: is it actually studyable? ─────────────────────────
+     A subject with questions and no lessons is a shell. The path has to run
+     lesson → practice → timed → weak area → revision, which means the lesson
+     must exist, be reachable from this exam, and have enough questions behind
+     it for the check at the end. */
+  const content = await page.evaluate(() => {
+    const bySubject = s => ({
+      lessons: CURRICULUM.filter(l => l.subject === s).map(l => l.title),
+      questions: (QUESTION_BANK[s] || []).length,
+      subtopics: [...new Set((QUESTION_BANK[s] || []).map(q => q.subtopic).filter(Boolean))],
+    });
+    return {
+      gs: bySubject('General Studies'),
+      tm: bySubject('Telangana Movement & State Formation'),
+      inExam: subjectsForExam(EXAMS.find(e => e.key === 'ts-si')),
+    };
+  });
+  check('General Studies has lessons, not just questions',
+    content.gs.lessons.length >= 3, JSON.stringify(content.gs.lessons));
+  check('Telangana Movement has lessons',
+    content.tm.lessons.length >= 3, JSON.stringify(content.tm.lessons));
+  // The notification names three phases and only three. Inventing a fourth
+  // would be teaching a syllabus nobody set.
+  check('and its lessons follow the three phases the notification names',
+    content.tm.lessons.some(t => /1948/.test(t)) &&
+    content.tm.lessons.some(t => /1971/.test(t)) &&
+    content.tm.lessons.some(t => /1991/.test(t)), JSON.stringify(content.tm.lessons));
+  check('both subjects belong to TS SI',
+    content.inExam.indexOf('General Studies') !== -1 &&
+    content.inExam.indexOf('Telangana Movement & State Formation') !== -1,
+    content.inExam.join(' | '));
+  // A lesson check draws 5 questions from its subject, so a lesson with fewer
+  // than that behind it is a dead end.
+  check('each has enough questions behind it for the end-of-lesson test',
+    content.gs.questions >= 5 && content.tm.questions >= 5,
+    `GS ${content.gs.questions} · TM ${content.tm.questions}`);
+  check('questions are filed by syllabus area, not dumped in one pile',
+    content.gs.subtopics.length >= 4 && content.tm.subtopics.length === 3,
+    `GS ${content.gs.subtopics.join(',')} · TM ${content.tm.subtopics.join(',')}`);
+
+  // Every generated question says so, and none of them claims to be a PYQ.
+  const provenanceTsSi = await page.evaluate(() => {
+    const qs = [...(QUESTION_BANK['General Studies'] || []),
+                ...(QUESTION_BANK['Telangana Movement & State Formation'] || [])];
+    return {
+      total: qs.length,
+      generated: qs.filter(q => q.source_type === 'generated_practice').length,
+      pyq: qs.filter(q => q.source_type === 'pyq').length,
+      complete: qs.filter(q => q.q && q.opts && q.opts.length === 4 &&
+        typeof q.correct === 'number' && q.why && q.difficulty && q.subtopic).length,
+    };
+  });
+  check('every TS SI question is labelled generated practice',
+    provenanceTsSi.generated === provenanceTsSi.total,
+    JSON.stringify(provenanceTsSi));
+  check('and NONE of them is labelled a previous-year question',
+    provenanceTsSi.pyq === 0, String(provenanceTsSi.pyq));
+  check('every one carries answer, explanation, difficulty and syllabus area',
+    provenanceTsSi.complete === provenanceTsSi.total, JSON.stringify(provenanceTsSi));
+
+  // The lesson has to be openable from inside TS SI, or it is a file nobody
+  // reaches. Learn → subject → first lesson.
+  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="Telangana Movement & State Formation"]').click();
+  const tmRows = await page.locator('#learn-path .ls-row').count();
+  check('Telangana Movement opens its own lesson list inside TS SI', tmRows >= 3, `${tmRows} rows`);
+  await page.locator('#learn-path .ls-row').first().click();
+  await page.waitForSelector('#learn-reader:not(.hidden)');
+  const tmLesson = await page.locator('#learn-reader').textContent();
+  check('and the lesson is real teaching, not a stub', tmLesson.length > 400, `${tmLesson.length} chars`);
+  check('it names dated facts, which is what this section is made of',
+    /1948/.test(tmLesson) || /1956/.test(tmLesson), tmLesson.replace(/\s+/g,' ').slice(0, 120));
+
+  // Nothing written for TS SI may touch the exams it is not for.
+  const untouched = await page.evaluate(() => ({
+    halPending: (EXAMS.find(e => e.key === 'hal-cs').pendingVerification || {}).subjects || [],
+    halInvented: Object.keys(QUESTION_BANK).filter(k =>
+      /Digital Logic|Compiler Design|Discrete|^Algorithms$/.test(k)),
+    halTech: (QUESTION_BANK['Data Structures'] || []).length,
+    cglQuant: (QUESTION_BANK['Quantitative Aptitude'] || []).length,
+    cglReasoning: (QUESTION_BANK['Reasoning'] || []).length,
+  }));
+  check('the four uncertain HAL subjects still have nothing written for them',
+    untouched.halPending.length === 4 && untouched.halInvented.length === 0,
+    JSON.stringify(untouched.halInvented));
+  check('HAL technical content is untouched', untouched.halTech === 24, String(untouched.halTech));
+  check('and SSC CGL content is untouched',
+    untouched.cglQuant === 22 && untouched.cglReasoning === 23,
+    `${untouched.cglQuant} / ${untouched.cglReasoning}`);
+
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
+
+  // HAL has one stage, so it must not grow a stages card.
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#examinfo`, { waitUntil: 'networkidle' });
+  check('an exam with a single stage shows no stages card',
+    await page.locator('#ei-stages').isHidden());
+
+  // The four CS subjects the paper may examine and this bank has nothing for.
+  // Naming them is the point: a gap you know about is something you can go and
+  // read elsewhere; a gap you do not know about is a section you walk into cold.
+  const pending = (await page.locator('#ei-pending').textContent()).replace(/\s+/g, ' ');
+  check('HAL names the subjects it has no material for yet',
+    /Digital Logic/.test(pending) && /Compiler Design/.test(pending) &&
+    /Algorithms/.test(pending) && /Mathematics/.test(pending), pending.slice(0, 160));
+  check('and says plainly that the syllabus is unverified',
+    /pending syllabus verification/i.test(pending) && /notification/i.test(pending),
+    pending.slice(0, 160));
+  check('the exam is named as Management Trainee, not MT/DT',
+    await page.evaluate(() => {
+      const e = EXAMS.find(x => x.key === 'hal-cs');
+      return /Management Trainee/.test(e.name) && !/DT/.test(e.name);
+    }));
+  // Nothing was generated for them: a subject with no verified syllabus must
+  // not quietly acquire questions.
+  check('and no questions were invented for those subjects',
+    await page.evaluate(() => !Object.keys(QUESTION_BANK).some(k =>
+      /Digital Logic|Compiler Design|Discrete/.test(k))));
+  // TS SI has no unverified gap list, so it must not show the card at all.
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
+  check('an exam with no unverified subjects shows no such card',
+    await page.locator('#ei-pending').isHidden());
 
   // And the default page is unchanged.
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });

@@ -25,8 +25,38 @@
 const EXAMS = [
   {
     key: "hal-cs",
-    name: "HAL MT/DT (Computer Science)",
+    // Management Trainee, not Design Trainee. The two are advertised together
+    // and were named together here, but they are separate posts and only one
+    // of them is being prepared for — carrying "DT" around meant every screen
+    // implied a syllabus that does not apply.
+    name: "HAL Management Trainee (Computer Science)",
     short: "HAL CS",
+    // The pattern below (160 questions, 150 minutes, 20/40/100, no negative
+    // marking) matches what several independent sources report for advertisement
+    // HAL/CHRC-TM/RECT-02/2026 — but it has NOT been checked against the
+    // notification itself, which is the only authority.
+    //
+    // The online test is advertised as a WINDOW, not a day: reporting on this
+    // advertisement puts the CBT on 5-6 September 2026. Which of those two days
+    // an individual candidate sits is decided by HAL and printed on the admit
+    // card, so nothing here may claim to know it.
+    //
+    // `date` stays absent until an assigned date is confirmed. Planning counts
+    // back from the EARLIEST day of the window: being ready a day early costs
+    // nothing, being ready a day late costs the exam.
+    examDateStart: "2026-09-05",
+    examDateEnd: "2026-09-06",
+
+    // Those same sources describe the 100-mark discipline section as following
+    // GATE Computer Science scope, which would mean four subjects this bank has
+    // nothing for at all. They are NAMED here rather than silently generated:
+    // writing a hundred questions against an unverified syllabus three weeks
+    // before the paper is a good way to spend the last three weeks on the wrong
+    // subjects. See HAL-SYLLABUS-AUDIT.md for the full classification.
+    pendingVerification: {
+      note: "Reported to follow GATE CS scope, but not checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026) — the official PDF could not be retrieved. Nothing has been written for these. See HAL-SYLLABUS-AUDIT.md.",
+      subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete / Engineering Mathematics"],
+    },
     pattern: "160 MCQs · 150 minutes · no negative marking",
     minutes: 150,
     questions: 160,
@@ -34,7 +64,7 @@ const EXAMS = [
     match: j => /hindustan aeronautics|(^|\W)hal(\W|$)/i.test(j.organization || ""),
     sections: [
       { name: "General Awareness",    marks: 20,  questions: 20,  budget: 10, subjects: ["General Awareness"] },
-      { name: "English & Reasoning",  marks: 40,  questions: 40,  budget: 38, subjects: ["Reasoning & English"] },
+      { name: "English & Reasoning",  marks: 40,  questions: 40,  budget: 38, subjects: ["Reasoning", "English"] },
       { name: "CS Technical",         marks: 100, questions: 100, budget: 97, subjects: [
           "Data Structures", "Operating Systems", "DBMS", "Computer Networks",
           "COA", "Theory of Computation", "Programming & OOP", "Software Engineering"] },
@@ -62,10 +92,14 @@ const EXAMS = [
     match: j => /staff selection commission|(^|\W)ssc(\W|$)/i.test(j.organization || "") ||
                 /\bcgl\b/i.test(j.post_name || ""),
     sections: [
-      { name: "General Intelligence & Reasoning", marks: 50, questions: 25, budget: 13, subjects: ["Reasoning & English"] },
+      // Two SEPARATE sections, 50 marks each, so they get two separate
+      // subjects. Pointing both at one combined "Reasoning & English" pool
+      // meant a weak-area verdict could not say which of the two was costing
+      // the marks — and they are revised in completely different ways.
+      { name: "General Intelligence & Reasoning", marks: 50, questions: 25, budget: 13, subjects: ["Reasoning"] },
       { name: "General Awareness",                marks: 50, questions: 25, budget: 8,  subjects: ["General Awareness"] },
       { name: "Quantitative Aptitude",            marks: 50, questions: 25, budget: 22, subjects: ["Quantitative Aptitude"] },
-      { name: "English Comprehension",            marks: 50, questions: 25, budget: 12, subjects: ["Reasoning & English"] },
+      { name: "English Comprehension",            marks: 50, questions: 25, budget: 12, subjects: ["English"] },
     ],
     tactics: [
       "A wrong answer costs 0.50 of the 2 marks on offer. A blank costs nothing — do not guess blind.",
@@ -73,6 +107,75 @@ const EXAMS = [
       "Order: Reasoning, then English, then General Awareness, then Quant. The first three are the fastest marks and Quant will eat whatever time you leave it.",
       "Skip any Quant question needing more than 90 seconds of setup and come back only if time remains.",
       "Keep the last 5 minutes for checking answers you marked, not for filling blanks.",
+    ],
+  },
+  {
+    key: "ts-si",
+    name: "Telangana Sub-Inspector of Police (Civil)",
+    short: "TS SI",
+    // Two stages. `sections` describes the PRELIMINARY test, because that is
+    // the one being prepared for right now and the one the rest of the app
+    // reads; the full stage structure is in `stages` below.
+    pattern: "Prelims: 200 questions · 200 marks · negative marking",
+    negative: true,
+    // HAL takes nothing off for a wrong answer and SSC CGL takes half a mark.
+    // This one takes a proportion, so it is stated exactly rather than left as
+    // a boolean — the whole guess-or-leave-it calculation depends on it.
+    negativeText: "20% of the marks for that question",
+    // Exactly what the paper does with each response. Stated as numbers rather
+    // than as a boolean because the guess-or-leave-it decision is arithmetic:
+    // at one-in-four a guess is worth 0.25 − 0.75×0.20 = +0.10, and at
+    // one-in-two it is worth 0.50 − 0.50×0.20 = +0.40. Knowing that is the
+    // difference between leaving forty marks on the table and throwing them
+    // away.
+    marking: { correct: 1, wrong: -0.20, unanswered: 0, negativePercent: 20 },
+    questions: 200,
+    // The notification gives ONE duration for ONE paper: three hours for the
+    // preliminary test. It does NOT split that time between the two halves.
+    //
+    // So 180 × 60 ÷ 200 = 54 seconds a question is the pace this implies, and
+    // the sections below deliberately carry no `budget` of their own — writing
+    // 90 minutes against each half would be inventing an allocation the board
+    // never published. The app calls the 54 seconds derived, on screen, every
+    // time it shows it.
+    minutes: 180,
+    match: j => /telangana.*(police|sub-?inspector)|\btslprb\b|\btglprb\b/i.test(
+                  (j.organization || "") + " " + (j.post_name || "")),
+    sections: [
+      { name: "Arithmetic & Reasoning/Mental Ability", marks: 100, questions: 100,
+        subjects: ["Quantitative Aptitude", "Reasoning"] },
+      { name: "General Studies", marks: 100, questions: 100,
+        subjects: ["General Studies", "Telangana Movement & State Formation"] },
+    ],
+    stages: [
+      {
+        key: "pwt",
+        name: "Preliminary Written Test",
+        decides: "Shortlisting only — the marks do not carry into the final merit.",
+        questions: 200, marks: 200,
+        papers: [
+          { name: "Arithmetic & Reasoning/Mental Ability", questions: 100, marks: 100, objective: true },
+          { name: "General Studies", questions: 100, marks: 100, objective: true },
+        ],
+      },
+      {
+        key: "final",
+        name: "Final Written Examination",
+        decides: "For Civil SI, Papers III and IV decide the final written merit. Papers I and II only have to be passed.",
+        papers: [
+          { name: "Paper I — English", qualifying: true, format: "Objective and descriptive" },
+          { name: "Paper II — Telugu / Urdu", qualifying: true, format: "Objective and descriptive" },
+          { name: "Paper III — Arithmetic & Reasoning/Mental Ability", questions: 200, objective: true, merit: true },
+          { name: "Paper IV — General Studies", questions: 200, objective: true, merit: true },
+        ],
+      },
+    ],
+    tactics: [
+      "A wrong answer costs 20% of that question's marks. A blank costs nothing — this is not a paper where you fill everything in at the end.",
+      "Guess only after ruling out two options. At one-in-two the odds are worth the 20%; at one-in-four they are not.",
+      "The prelims are a gate, not a score. Nothing you earn here carries into the final merit, so clear it and move on rather than chasing every last mark.",
+      "Papers I and II are only qualifying. Passing them is compulsory, but an extra hour spent on English polish is an hour taken from Papers III and IV, which are what actually rank you.",
+      "Telangana Movement is the section a candidate from outside the state cannot bluff and you can. Treat it as the cheapest marks on the paper, not as background reading.",
     ],
   },
 ];

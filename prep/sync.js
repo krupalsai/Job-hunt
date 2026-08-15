@@ -83,9 +83,20 @@
   }
 
   /** Called by the quiz on every answer. Never throws, never blocks. */
-  window.recordAttemptRemote = function (item, correct, skipped) {
+  window.recordAttemptRemote = function (item, correct, skipped, ms) {
     const q = readQueue();
-    q.push({ qid: item.id, topic: item.topic, correct: !!correct, skipped: !!skipped });
+    const row = { qid: item.id, topic: item.topic, correct: !!correct, skipped: !!skipped };
+    // How long the answer took. Absent when the clock was discarded (a mis-tap,
+    // or a phone left locked on the question), and absent on a skip — never
+    // sent as a zero, because a zero would drag every average down and read as
+    // an instant answer rather than as no measurement.
+    if (typeof ms === "number" && ms > 0) row.ms = Math.round(ms);
+    // The basics this question tests, so the mentor run can see that two misses
+    // in different topics were the same gap. Sent only when there are any: most
+    // questions are untagged, and an empty array on every row would be noise in
+    // the queue and in the request.
+    if (item.skills && item.skills.length) row.skills = item.skills.slice(0, 4);
+    q.push(row);
     writeQueue(q);
     // Coalesce: flushing once per quiz beats one request per question.
     clearTimeout(window.__syncTimer);
@@ -289,6 +300,58 @@
     });
   }
 
+  /* ── Chapters: the named-basics map for a subject ─────────────────────────
+     Skills carrying a `kind` (currently English only — see prep/skills.js)
+     split into a GRAMMAR list and a VOCABULARY list. The distinction is the
+     whole point: grammar is short and finishable — learn every rule on the
+     list and there is nothing left to learn — while vocabulary has no ceiling
+     at all, so the two cannot be studied the same way or shown as one pile.
+     Where no skill carries `kind` this returns null and the screen looks
+     exactly as it did before — nothing here changes for a subject that has
+     not been split this way. */
+  function chaptersFor(name) {
+    if (typeof SKILLS === "undefined") return null;
+    const skills = SKILLS.filter(x => x.subject === name && x.kind);
+    if (!skills.length) return null;
+    return {
+      grammar: skills.filter(x => x.kind === "grammar"),
+      vocabulary: skills.filter(x => x.kind === "vocabulary"),
+    };
+  }
+
+  /** not started / practising-at-X% / strong — the same thresholds
+      weakSkills() uses, so a chapter marked "strong" here is genuinely one
+      that would not appear on the Progress weak-basics list. */
+  function chapterBadge(key) {
+    const st = skillStat(key);
+    if (!st.asked) return { cls: "lock", text: "not started" };
+    if (st.asked >= 4 && st.pct >= 80) return { cls: "done", text: st.pct + "% — strong" };
+    return { cls: "open", text: (st.pct == null ? 0 : st.pct) + "% so far" };
+  }
+
+  function chapterRowHtml(s) {
+    const b = chapterBadge(s.key);
+    return `<div class="ls-row" data-skill="${esc(s.key)}">
+      <div class="ls-row-main">
+        <div class="ls-title">${esc(s.name)}</div>
+        <div class="ls-why">${esc(s.rule)}</div>
+      </div>
+      <span class="ls-badge ${b.cls}">${esc(b.text)}</span>
+    </div>`;
+  }
+
+  function chaptersHtml(name, chapters) {
+    const g = chapters.grammar, v = chapters.vocabulary;
+    return `<div class="ls-chapters">
+      <p class="ls-p" style="margin-top:0;">${esc(name)} splits into two very
+        different things to study. Grammar is a SHORT, bounded list — learn
+        every rule on it and there is nothing left to learn. Vocabulary has no
+        such ceiling, which is why grammar is worth clearing first.</p>
+      ${g.length ? `<div class="ls-group">Grammar — bounded, learn these first</div>${g.map(chapterRowHtml).join("")}` : ""}
+      ${v.length ? `<div class="ls-group">Vocabulary — open-ended, practise as time allows</div>${v.map(chapterRowHtml).join("")}` : ""}
+    </div>`;
+  }
+
   function renderLessons(name) {
     const s = subjects().find(x => x.name === name);
     if (!s) { view = { level: "subjects" }; return render(); }
@@ -296,10 +359,13 @@
     el("learn-progress").innerHTML =
       `<button class="ghost" id="ls-to-subjects">← All subjects</button>`;
 
+    const chapters = chaptersFor(name);
+    const chaptersBlock = chapters ? chaptersHtml(name, chapters) : "";
+
     if (!s.lessons.length) {
       // Be straight about it rather than showing an empty screen: the hourly
       // run writes these, and practice is available in the meantime.
-      el("learn-path").innerHTML = `
+      el("learn-path").innerHTML = chaptersBlock + `
         <div class="ls-subject">${esc(name)}</div>
         <p class="ls-p">No lessons written for this subject yet — the scheduled
         run is working through them. The ${s.questions} questions are ready now,
@@ -307,7 +373,8 @@
         <button class="primary" id="ls-practice-only">Practise ${esc(name)}</button>`;
       el("ls-practice-only").onclick = () => practiseSubject(name);
     } else {
-      el("learn-path").innerHTML = `<div class="ls-subject">${esc(name)}</div>` +
+      el("learn-path").innerHTML = chaptersBlock +
+        `<div class="ls-subject">${chapters ? "Full lessons" : esc(name)}</div>` +
         s.lessons.map((l, i) => {
           const st = lessonState(l.key);
           const open = unlockedIn(s.lessons, i);
@@ -322,7 +389,7 @@
         }).join("") +
         `<button class="ghost" id="ls-practice-all" style="margin-top:14px;">Practise ${esc(name)} without a lesson</button>`;
 
-      el("learn-path").querySelectorAll(".ls-row").forEach(row => {
+      el("learn-path").querySelectorAll(".ls-row[data-i]").forEach(row => {
         row.addEventListener("click", () => {
           const i = +row.dataset.i;
           if (!unlockedIn(s.lessons, i)) return;
@@ -331,6 +398,11 @@
       });
       el("ls-practice-all").onclick = () => practiseSubject(name);
     }
+    // Chapter rows open the same micro-drill Progress and the quiz already
+    // use — teach the rule, then 3-5 questions on that one thing.
+    el("learn-path").querySelectorAll("[data-skill]").forEach(row => {
+      row.addEventListener("click", () => openSkillDrill(row.dataset.skill));
+    });
     el("ls-to-subjects").onclick = () => { view = { level: "subjects" }; render(); window.scrollTo(0, 0); };
   }
 
@@ -515,7 +587,7 @@
     const order = exam ? subjectsForExam(exam)
       : ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
          "COA", "Theory of Computation", "Programming & OOP",
-         "Software Engineering", "Reasoning & English", "General Awareness"];
+         "Software Engineering", "Reasoning", "English", "General Awareness"];
     const lessons = [];
     order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
 

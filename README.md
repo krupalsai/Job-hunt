@@ -24,8 +24,8 @@ first. Both pages share one navigation, injected by `nav.js`:
 - **A side drawer** behind the hamburger — the exam you are preparing for, a
   link to each syllabus, every destination, and settings (qualification, reset
   prep progress).
-- **An exam switcher in the header** — HAL CS and SSC CGL swap without editing
-  the URL. On `/learn.html` the title *is* the switcher; on `/` it is a chip.
+- **An exam switcher in the header** — HAL CS, SSC CGL and TS SI swap without
+  editing the URL. On `/learn.html` the title *is* the switcher; on `/` it is a chip.
 
 Sections of the prep page are addressable: `/learn.html?exam=ssc-cgl#quiz`
 opens SSC practice directly, which is how the job list links into it.
@@ -42,8 +42,10 @@ needs horizontal scrolling or puts a tap target out of reach.
 
 # Preparation (`/learn.html`)
 
-HAL **Management Trainee / Design Trainee (Computer Science)** — 160 MCQs,
-150 minutes, no negative marking. Four destinations in the bottom bar — Learn,
+Three exams: HAL **Management Trainee (Computer Science)**, **SSC CGL** and
+**Telangana SI**. Arithmetic, reasoning and English are shared between them
+rather than copied; the paper structure, marking scheme and tactics are
+per-exam, because those are what differ. Four destinations in the bottom bar — Learn,
 Practice, Plan, Progress — plus **Exam info** in the drawer, which holds what
 used to be the Overview, Topics and Time Strategy tabs.
 
@@ -69,10 +71,39 @@ question whose answer you never see is one you will skip again in the hall.
 ### Questions do not repeat
 
 Selection is ordered **never seen → previously wrong → longest since last seen**.
-With 170 questions drawn 10 at a time, roughly 17 consecutive quizzes pass before
+With 235 questions drawn 10 at a time, roughly 23 consecutive quizzes pass before
 anything comes back. A right answer pays down a question's debt so it stops
 resurfacing; a wrong one brings it back sooner. A 10-minute timer rotates the
 pool and says so on screen.
+
+### Weak basics — `prep/skills.js`
+
+A topic is where a question lives; a **skill** is what it actually tests. Being
+told "Reasoning & English, 55%" is not something anyone can act on. Being told
+the verb keeps agreeing with the nearest noun instead of with the subject is —
+and it takes three minutes to fix.
+
+So questions carry `skills: [...]` tags naming the basics underneath them, and
+misses are counted per basic as well as per subject. The moment one basic has
+cost marks on **two different questions**, the quiz says so where you are
+standing — *"that is the second time subject-verb agreement has cost you — fix
+it now"* — with a button into a **micro-drill**: the rule, a short explainer,
+then 3–5 questions testing only that one thing.
+
+One miss is an accident and says nothing. Two misses on two different questions
+is a pattern. Two misses of the *same* question is one gap seen twice, and is
+counted as one — which is why the record is kept per question rather than as a
+running total.
+
+On Progress, weak basics are listed **above** weak subjects: the basic is the
+cause, the subject is only where the symptom showed up. A basic clears once it
+is being answered right (4 answers at 80%), so the list empties as the gap
+closes rather than accusing forever.
+
+`scripts/validate-prep.js` fails the build if a question names a skill that does
+not exist, if a question carries a skill from another subject, or if any skill
+has fewer than three questions — a "drill this now" button leading to a
+two-question drill is a promise the app did not keep.
 
 ### Weak areas
 
@@ -87,20 +118,38 @@ repeated. **Drill My Weak Areas** builds a quiz from exactly those.
 Skips are recorded but excluded from accuracy — skipping is not the same as
 getting it wrong.
 
-Progress lives in `localStorage` under `jobhunt_prep_hal_cs_v1`. No account, no
-server, nothing leaves the device.
+Progress lives in `localStorage` under `jobhunt_prep_hal_cs_v1` and is the
+source of truth for everything on screen. There is no account. It is also
+mirrored to Supabase through `/api/progress` — attempts, and the basics each
+attempt tested — so the scheduled mentor run can read what is actually going
+wrong and write material aimed at it. That mirror is fire-and-forget: the UI
+never waits on it and a failed request is queued, so losing signal costs
+nothing.
 
-## Bank — `prep/hal-cs.js`
+## Bank — `prep/hal-cs.js` + `prep/ts-si.js`
 
-170 questions at 1-mark GATE CS / ISRO SC / BEL-ECIL level:
+235 questions across three exams. `prep/hal-cs.js` holds the subjects HAL
+examines (several shared with SSC CGL); `prep/ts-si.js` adds the ones only the
+Telangana SI paper asks for.
 
 | Subject | Qs | Subject | Qs |
 |---|---|---|---|
-| Reasoning & English | 25 | COA | 18 |
-| Data Structures | 24 | Programming & OOP | 15 |
+| Data Structures | 24 | General Studies | 15 |
+| Reasoning | 23 | Programming & OOP | 15 |
+| Quantitative Aptitude | 22 | Telangana Movement & State Formation | 12 |
 | Operating Systems | 20 | Theory of Computation | 10 |
 | DBMS | 20 | General Awareness | 10 |
 | Computer Networks | 20 | Software Engineering | 8 |
+| COA | 19 | English | 17 |
+
+Every question carries `kind`: `pyq`, `verified` or `generated`. It defaults to
+`generated` when absent, so nothing can become a PYQ by omission, and the build
+refuses a `pyq` that cannot name its exam, year and source. **Nothing in the
+bank is currently a PYQ.**
+
+90 of them are tagged with the basics they test (`prep/skills.js`, 28 basics).
+Tagging is deliberately incomplete: a wrong tag sends someone to drill a basic
+they do not have a problem with, which is worse than no tag at all.
 
 **Current affairs are deliberately excluded.** A hard-coded news bank goes stale
 and would teach last year's headlines as fact. Fifteen minutes of daily reading
