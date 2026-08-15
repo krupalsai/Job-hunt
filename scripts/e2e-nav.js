@@ -261,6 +261,8 @@ async function reachable(page, selector, where, minH){
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await page.locator('#learn-path [data-subject="English"]').click();
   await page.waitForSelector('#learn-path .ls-group');
+  check('the "what to open next" banner is on screen, not just the chapter list',
+    (await page.locator('#learn-path .ls-recommend').count()) === 1);
   await noSideScroll(page, 'English grammar/vocabulary chapters');
   await reachable(page, '#learn-path [data-skill]', 'chapter row');
 

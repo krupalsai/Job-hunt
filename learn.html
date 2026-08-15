@@ -220,10 +220,21 @@
   .ls-group{ font-size:10.5px; text-transform:uppercase; letter-spacing:.6px;
              color:var(--accent-soft); font-weight:700; margin:16px 0 4px; }
   .ls-group:first-of-type{ margin-top:4px; }
+  /* Which chapter to open right now — computed from real performance where
+     there is any, and from the intended learning sequence where there is
+     none, so this never reads as an empty list of equal-looking rows. */
+  .ls-recommend{ border-left:3px solid var(--accent); background:#16a34a14;
+                 border-radius:0 9px 9px 0; padding:10px 13px; margin-top:12px;
+                 font-size:13px; line-height:1.55; }
+  .ls-recommend strong{ color:var(--accent-soft); }
+  .ls-recommend.is-weak{ border-left-color:var(--warn); background:#f59e0b14; }
+  .ls-recommend.is-weak strong{ color:var(--warn); }
+  .ls-recommend.is-done{ color:var(--muted); }
   .ls-row{ display:flex; align-items:center; gap:10px; padding:12px 0;
            border-bottom:1px solid var(--panel-border); cursor:pointer; }
   .ls-row:last-child{ border-bottom:none; }
   .ls-row.is-locked{ opacity:.45; cursor:default; }
+  .ls-row.is-recommended .ls-title{ color:var(--accent-soft); }
   .ls-row-main{ flex:1; min-width:0; }
   .ls-title{ font-size:14px; font-weight:600; }
   .ls-why{ font-size:12px; color:var(--dim); margin-top:3px; line-height:1.45; }

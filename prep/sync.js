@@ -329,11 +329,71 @@
     return { cls: "open", text: (st.pct == null ? 0 : st.pct) + "% so far" };
   }
 
-  function chapterRowHtml(s) {
+  /* How urgently a chapter needs attention, for ORDERING the list rather than
+     just labelling each row. This was the actual complaint: seven chapters
+     all reading "not started" with nothing saying which one to open first,
+     and once some are attempted, nothing reordering to put the weak ones
+     back in front of you. Four tiers, most urgent first — the same signal
+     weakSkills() and prep/today.js already act on; this is one more place
+     that has to use it, not a new source of truth.
+       0  proven weak     — cost marks twice, or below 60% with enough answers
+       1  some data       — answered, but not enough yet to call it either way
+       2  never attempted — kept in the order the chapters were WRITTEN in,
+                             which is the intended learning sequence (English's
+                             skills.js puts Parts of Speech before Tenses
+                             before Voice on purpose)
+       3  strong           — mastered, pushed to the bottom */
+  function chapterTier(key) {
+    const st = skillStat(key);
+    if (!st.asked) return 2;
+    if (st.distinctMissed >= 2 || (st.asked >= 4 && st.pct < 60)) return 0;
+    if (st.asked >= 4 && st.pct >= 80) return 3;
+    return 1;
+  }
+
+  function orderChapters(list) {
+    return list.map((s, i) => ({ s, i }))
+      .sort((a, b) => chapterTier(a.s.key) - chapterTier(b.s.key) || a.i - b.i)
+      .map(x => x.s);
+  }
+
+  /** The one chapter to point at right now. Grammar is checked first — it is
+      already the priority group, with its own explanatory line above the
+      list — and vocabulary is only offered once nothing in grammar still
+      needs work. Returns null when everything is already strong. */
+  function recommendedChapter(chapters) {
+    for (const pool of [chapters.grammar, chapters.vocabulary]) {
+      if (!pool.length) continue;
+      const top = orderChapters(pool)[0];
+      if (chapterTier(top.key) < 3) return top;
+    }
+    return null;
+  }
+
+  function recommendationHtml(rec) {
+    if (!rec) {
+      return `<div class="ls-recommend is-done">Every chapter here is holding at 80%+. Nothing urgent — pick anything to keep it warm.</div>`;
+    }
+    const st = skillStat(rec.key);
+    const tier = chapterTier(rec.key);
+    if (tier === 0) {
+      const why = st.distinctMissed >= 2
+        ? `has cost you ${st.distinctMissed} different questions — the most urgent gap here`
+        : `${st.pct}% so far, below where this needs to be`;
+      return `<div class="ls-recommend is-weak"><strong>Focus here: ${esc(rec.name)}</strong> — ${why}.</div>`;
+    }
+    if (tier === 1) {
+      return `<div class="ls-recommend"><strong>Continue: ${esc(rec.name)}</strong> — ${st.pct}% so far, not enough answers yet to be sure.</div>`;
+    }
+    return `<div class="ls-recommend"><strong>Start here: ${esc(rec.name)}</strong> — nothing attempted yet, and it is the first one everything else here builds on.</div>`;
+  }
+
+  function chapterRowHtml(s, recKey) {
     const b = chapterBadge(s.key);
-    return `<div class="ls-row" data-skill="${esc(s.key)}">
+    const isRec = s.key === recKey;
+    return `<div class="ls-row ${isRec ? "is-recommended" : ""}" data-skill="${esc(s.key)}">
       <div class="ls-row-main">
-        <div class="ls-title">${esc(s.name)}</div>
+        <div class="ls-title">${isRec ? "→ " : ""}${esc(s.name)}</div>
         <div class="ls-why">${esc(s.rule)}</div>
       </div>
       <span class="ls-badge ${b.cls}">${esc(b.text)}</span>
@@ -341,14 +401,17 @@
   }
 
   function chaptersHtml(name, chapters) {
-    const g = chapters.grammar, v = chapters.vocabulary;
+    const g = orderChapters(chapters.grammar), v = orderChapters(chapters.vocabulary);
+    const rec = recommendedChapter(chapters);
+    const recKey = rec ? rec.key : null;
     return `<div class="ls-chapters">
       <p class="ls-p" style="margin-top:0;">${esc(name)} splits into two very
         different things to study. Grammar is a SHORT, bounded list — learn
         every rule on it and there is nothing left to learn. Vocabulary has no
         such ceiling, which is why grammar is worth clearing first.</p>
-      ${g.length ? `<div class="ls-group">Grammar — bounded, learn these first</div>${g.map(chapterRowHtml).join("")}` : ""}
-      ${v.length ? `<div class="ls-group">Vocabulary — open-ended, practise as time allows</div>${v.map(chapterRowHtml).join("")}` : ""}
+      ${recommendationHtml(rec)}
+      ${g.length ? `<div class="ls-group">Grammar — bounded, learn these first</div>${g.map(s => chapterRowHtml(s, recKey)).join("")}` : ""}
+      ${v.length ? `<div class="ls-group">Vocabulary — open-ended, practise as time allows</div>${v.map(s => chapterRowHtml(s, recKey)).join("")}` : ""}
     </div>`;
   }
 

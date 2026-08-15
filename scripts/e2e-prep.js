@@ -348,8 +348,69 @@ function check(name, cond, detail){
     chapterNames.some(t => /Parts of speech/i.test(t)) &&
     chapterNames.some(t => /Direct and indirect/i.test(t)),
     chapterNames.join(' | '));
-  check('parts of speech is the first grammar chapter — everything else assumes it',
-    /Parts of speech/i.test(chapterNames[0]), chapterNames.join(' | '));
+
+  /* Ordering and the "what to open next" banner — the complaint was a flat
+     list of "not started" rows with nothing saying which one to start on, and
+     nothing that would ever change once real answers came in. Both halves
+     need testing on a KNOWN state, not on whatever this session has
+     accumulated by this point in the run — earlier sections deliberately
+     answer wrong to exercise weak-area detection, and by design that now
+     reorders this very list, so asserting against a specific state has to
+     start by setting one. */
+  const rerenderEnglish = () => page.evaluate(() => {
+    window.learnGoHome();
+    document.querySelector('#learn-path [data-subject="English"]').click();
+  });
+
+  await page.evaluate(() => { state.skills = {}; save(); });
+  await rerenderEnglish();
+  await page.waitForSelector('#learn-path .ls-group');
+  const coldNames = await page.locator('#learn-path [data-skill] .ls-title').allTextContents();
+  const coldBanner = (await page.locator('#learn-path .ls-recommend').textContent()).replace(/\s+/g, ' ');
+  check('with nothing attempted, chapters stay in the intended learning order, Parts of Speech first',
+    /Parts of speech/i.test(coldNames[0]), coldNames.join(' | '));
+  check('and the banner says to start there, and says why',
+    /Start here/.test(coldBanner) && /Parts of speech/i.test(coldBanner) &&
+    /everything else here builds on/.test(coldBanner), coldBanner);
+
+  // Now the actual ask: prove a real weakness reorders the list and updates
+  // the recommendation — not just that a chapter exists, but that the app
+  // notices a problem and points at it.
+  await page.evaluate(() => {
+    state.skills['verb-tenses-forms'] = { asked: 5, correct: 1, missed: { qa: 1, qb: 1, qc: 1 } };
+    save();
+  });
+  await rerenderEnglish();
+  await page.waitForSelector('#learn-path .ls-group');
+  const weakNames = await page.locator('#learn-path [data-skill] .ls-title').allTextContents();
+  const weakBanner = (await page.locator('#learn-path .ls-recommend').textContent()).replace(/\s+/g, ' ');
+  check('a chapter that has genuinely cost marks jumps to the front of the list',
+    /tense/i.test(weakNames[0]), weakNames.join(' | '));
+  check('the banner switches from "start here" to naming the actual weakness',
+    /Focus here/.test(weakBanner) && /tense/i.test(weakBanner) &&
+    /3 different questions/.test(weakBanner), weakBanner);
+  check('the weak chapter is visually marked in the row itself, not only in the banner',
+    (await page.locator('#learn-path [data-skill="verb-tenses-forms"]').getAttribute('class')).includes('is-recommended'));
+
+  // And once every grammar chapter is genuinely strong, the recommendation
+  // must move to vocabulary rather than keep pointing at something mastered.
+  await page.evaluate(() => {
+    ['parts-of-speech','direct-indirect-speech','subject-verb-agreement','one-of-plural-noun',
+     'verb-tenses-forms','active-passive-voice','articles-and-determiners'].forEach(k => {
+      state.skills[k] = { asked: 6, correct: 6, missed: {} };
+    });
+    save();
+  });
+  await rerenderEnglish();
+  await page.waitForSelector('#learn-path .ls-group');
+  const doneBanner = (await page.locator('#learn-path .ls-recommend').textContent()).replace(/\s+/g, ' ');
+  check('once grammar is mastered, the recommendation moves on to vocabulary',
+    !/Parts of speech|tense/i.test(doneBanner), doneBanner);
+
+  // Leave state clean for whatever runs after this.
+  await page.evaluate(() => { state.skills = {}; save(); });
+  await rerenderEnglish();
+  await page.waitForSelector('#learn-path .ls-group');
 
   // The existing full lessons (Error spotting, Vocabulary by word roots) must
   // still be there, unlost, just filed below the finer-grained chapter map.
