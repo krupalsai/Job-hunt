@@ -277,6 +277,47 @@ async function reachable(page, selector, where, minH){
   await page.waitForSelector('.skill-tag');
   await noSideScroll(page, 'a named-skill tag on an answered question');
 
+  console.log('\n── the full mock fits the phone it is actually sat on ───');
+  // The one screen this app has that most resembles sitting a real exam —
+  // a countdown bar, a full-length instructions page, and a results screen
+  // with a section breakdown — all have to survive a 390px screen exactly
+  // like everything else, or a real attempt gets interrupted by a layout bug.
+  // Fresh load rather than reusing the tab: the previous section left the
+  // quiz mid-drill, on quiz-live rather than quiz-setup. Going through
+  // about:blank first, same as the deep-links test above — the page is
+  // already at /learn.html?exam=hal-cs with only the hash different, and
+  // page.goto to a URL differing only by fragment is a same-document
+  // navigation that would NOT actually reload or reset any of that state.
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#quiz`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#open-mock');
+  await page.click('#open-mock');
+  await page.waitForSelector('#mock-intro:not(.hidden)');
+  await noSideScroll(page, 'the mock exam instructions screen');
+  // 38px, same as every .quiz-actions button across the whole app — never
+  // asserted at the 44px floor before now. Genuinely worth raising app-wide
+  // one day, but that is a separate, broader change from this feature.
+  await reachable(page, '#mock-intro .quiz-actions button', 'mock intro button', 36);
+
+  await page.evaluate(() => {
+    const exam = EXAMS.find(e => e.key === 'hal-cs');
+    const items = ALL.filter(q => q.topic === 'General Awareness').slice(0, 2)
+      .map(q => Object.assign({}, q, { section: 'General Awareness' }));
+    beginMock(exam, { items, shortfalls: [] });
+  });
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  await noSideScroll(page, 'a live mock question with the countdown bar showing');
+  await reachable(page, '#q-options .opt', 'mock answer option', 36);
+
+  await page.locator('#q-options .opt').first().click();
+  await page.click('#next-btn');
+  const correctIdx = await page.evaluate(() => currentQuiz[currentIndex].correct);
+  await page.locator('#q-options .opt').nth(correctIdx).click();
+  await page.click('#next-btn');
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+  await noSideScroll(page, 'the mock results screen with a section breakdown');
+  await reachable(page, '#quiz-result .quiz-actions button', 'mock results button', 36);
+
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right section, at its top ─────');
   for (const h of ['examinfo', 'learn', 'quiz', 'schedule', 'progress']) {

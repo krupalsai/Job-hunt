@@ -672,10 +672,15 @@
     while (n < 28) {
       n++;
       const revising = order[(n - 1) % order.length];
+      // Named for the exam actually being planned, not hard-coded to HAL's
+      // numbers — a "Full mock" day on an SSC CGL plan quoting 160 questions
+      // and 150 minutes would be describing a different exam's paper.
+      const mockTitle = exam
+        ? `Full mock — ${exam.questions} questions, ${exam.minutes} minutes`
+        : "Full mock — sit the real paper, timed";
       days.push({
         id: "d" + n, day: n, week: Math.min(4, Math.ceil(n / 7)),
-        title: n >= 25 ? "Full mock — 160 questions, 150 minutes"
-                       : "Revision + practice: " + revising,
+        title: n >= 25 ? mockTitle : "Revision + practice: " + revising,
         subject: revising, lessons: [], kind: n >= 25 ? "mock" : "revise",
       });
     }
@@ -699,7 +704,7 @@
         `<div class="ls-subject" style="padding:0 4px;">Week ${d.week}</div>`) : "";
       const isDone = !!done[d.id];
       const action = d.kind === "learn" ? "Open the lesson"
-                   : d.kind === "mock"  ? "Start a long practice set"
+                   : d.kind === "mock"  ? "Sit the full mock"
                    : "Practise " + d.subject;
       return `${head}
         <div class="card plan-day ${isDone ? "is-done" : ""}" data-id="${d.id}">
@@ -726,6 +731,13 @@
       b.addEventListener("click", () => {
         const d = days.find(x => x.id === b.dataset.go);
         if (d.kind === "learn" && window.openLessonByKey) window.openLessonByKey(d.lessons[0].key);
+        // A mock day used to fall through to practiseSubject() — ten questions
+        // from one subject with a title claiming "160 questions, 150 minutes".
+        // It now opens the actual mock engine, on the Quiz tab where it lives.
+        else if (d.kind === "mock" && window.gotoSection && window.openMockIntro) {
+          window.gotoSection("quiz");
+          window.openMockIntro();
+        }
         else if (window.practiseSubject) window.practiseSubject(d.subject);
       });
     });

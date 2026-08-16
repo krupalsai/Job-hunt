@@ -58,6 +58,11 @@ const EXAMS = [
       subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete / Engineering Mathematics"],
     },
     pattern: "160 MCQs · 150 minutes · no negative marking",
+    // Every correct answer is worth one mark, nothing is deducted, an
+    // unanswered question scores zero. Stated as numbers, not just as
+    // "no negative marking", so the mock-exam scorer and HAL's own SSC/TS SI
+    // siblings can all be totalled the same way.
+    marking: { correct: 1, wrong: 0, unanswered: 0 },
     minutes: 150,
     questions: 160,
     buffer: 5,
@@ -86,6 +91,10 @@ const EXAMS = [
     // would teach exactly the wrong exam-hall behaviour, so it is stated on the
     // syllabus screen rather than left to be assumed.
     negative: true,
+    // 200 marks over 100 questions is 2 marks a correct answer; "−0.50 per
+    // wrong answer" above is the exact deduction, not a derived one. Both
+    // numbers are already the ones this exam's own tactics text quotes.
+    marking: { correct: 2, wrong: -0.5, unanswered: 0 },
     minutes: 60,
     questions: 100,
     buffer: 5,

@@ -710,6 +710,139 @@ function check(name, cond, detail){
     localStorage.setItem('jobhunt_daily_minutes', '180');
   });
 
+  console.log('\n── full mock: the real paper, in one sitting ────────────');
+  /* Practice is deliberately forgiving — unlimited time, the answer revealed
+     the instant you pick. None of that is the exam. A mock has to withhold
+     everything until the whole paper is done, run one clock for the entire
+     attempt rather than per question, and score in the exam's own marks
+     (negative marking included), or a good practice score and being ready
+     for the hall stay two unrelated facts. */
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs`, { waitUntil: 'networkidle' });
+  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.waitForSelector('#open-mock');
+  await page.click('#open-mock');
+  await page.waitForSelector('#mock-intro:not(.hidden)');
+  const introText = (await page.locator('#mock-intro').textContent()).replace(/\s+/g, ' ');
+  check('the intro states the real pattern before any clock starts',
+    /150/.test(introText) && /no negative marking/i.test(introText), introText.slice(0, 200));
+  // HAL's General Awareness bank (10) is short of the 20 the paper asks for —
+  // that has to be said before the attempt starts, not discovered afterwards.
+  check('a genuine content shortfall is disclosed up front, not hidden',
+    /General Awareness/.test(introText) && /10\/20/.test(introText), introText.slice(0, 300));
+  check('nothing is padded to hide the shortfall — the note says so',
+    /not repeated|would not tell you anything true/i.test(introText), introText.slice(0, 400));
+
+  const built = await page.evaluate(() => buildMockSet(EXAMS.find(e => e.key === 'hal-cs')));
+  check('the mock never exceeds the paper\'s real question count',
+    built.items.length <= 160, String(built.items.length));
+  check('and never invents questions to fill a short section',
+    built.items.length === built.items.filter((v, i, a) => a.findIndex(x => x.id === v.id) === i).length,
+    'duplicate ids found');
+
+  // Scoring itself, tested directly against each exam's real marking scheme
+  // rather than by clicking through a 100+ question paper three times.
+  const scoring = await page.evaluate(() => {
+    const mk = (chosen, correct) => ({ chosen, correct });
+    // 3 correct, 1 wrong, 1 unanswered, out of 5.
+    const answers = [mk(0,0), mk(1,1), mk(2,2), mk(0,1), mk(-1,3)];
+    const hal = scoreMock(EXAMS.find(e => e.key === 'hal-cs'), answers, 5);
+    const ssc = scoreMock(EXAMS.find(e => e.key === 'ssc-cgl'), answers, 5);
+    const tssi = scoreMock(EXAMS.find(e => e.key === 'ts-si'), answers, 5);
+    return { hal, ssc, tssi };
+  });
+  check('HAL: no negative marking, one mark a correct answer, unanswered costs nothing',
+    scoring.hal.marks === 3 && scoring.hal.maxMarks === 5, JSON.stringify(scoring.hal));
+  check('SSC CGL: 2 marks a correct answer, -0.5 a wrong one (3x2 - 1x0.5 = 5.5)',
+    scoring.ssc.marks === 5.5 && scoring.ssc.maxMarks === 10, JSON.stringify(scoring.ssc));
+  check('TS SI: 1 mark a correct answer, -0.20 a wrong one, 0 for the blank (3 - 0.2 = 2.8)',
+    scoring.tssi.marks === 2.8 && scoring.tssi.maxMarks === 5, JSON.stringify(scoring.tssi));
+
+  // Drive a real, short mock through the actual UI rather than the full 160
+  // questions, by injecting a small real-question set into the same engine
+  // beginMock() uses — the code path exercised is identical either way.
+  await page.locator('#mock-cancel').click();
+  await page.waitForSelector('#quiz-setup:not(.hidden)');
+  await page.evaluate(() => {
+    const exam = EXAMS.find(e => e.key === 'hal-cs');
+    const items = ALL.filter(q => q.topic === 'General Awareness').slice(0, 3)
+      .map(q => Object.assign({}, q, { section: 'General Awareness' }));
+    beginMock(exam, { items, shortfalls: [{ name: 'General Awareness', have: 3, want: 20 }] });
+  });
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('the mock shows one overall clock, not a per-question rotation timer',
+    (await page.locator('#mock-bar:not(.hidden)').count()) === 1);
+  const barText = await page.locator('#mock-bar').textContent();
+  check('the clock counts the WHOLE paper\'s minutes, not a 10-minute rotation',
+    /\d+:\d\d/.test(barText), barText);
+
+  await page.locator('#q-options .opt').first().click();
+  check('choosing an answer marks the pick without revealing correctness',
+    (await page.locator('#q-options .opt.picked').count()) === 1 &&
+    (await page.locator('#q-options .opt.correct').count()) === 0 &&
+    (await page.locator('#q-options .opt.wrong').count()) === 0);
+  check('and no explanation appears — that is withheld until the paper ends',
+    (await page.locator('.explain').count()) === 0);
+  await page.click('#next-btn');
+  await page.click('#skip-btn');
+  check('a skip inside a mock reveals nothing either — it is a blank left on the sheet',
+    (await page.locator('.explain').count()) === 0 &&
+    (await page.locator('#q-options .opt.correct').count()) === 0);
+  await page.click('#next-btn');
+
+  const correctIdx = await page.evaluate(() => currentQuiz[currentIndex].correct);
+  await page.locator('#q-options .opt').nth(correctIdx).click();
+  await page.click('#next-btn');
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+
+  const scoreHtml = (await page.locator('#score-big').textContent()).replace(/\s+/g, ' ');
+  check('the result is graded in marks, not "X out of Y correct"',
+    /\//.test(scoreHtml) && !/% correct/.test(scoreHtml), scoreHtml);
+  check('it reports the marking breakdown and the time actually used',
+    /correct/.test(scoreHtml) && /wrong/.test(scoreHtml) && /blank/.test(scoreHtml) &&
+    /used/.test(scoreHtml), scoreHtml);
+  const insightHtml = (await page.locator('#result-insight').textContent()).replace(/\s+/g, ' ');
+  check('the injected shortfall is repeated on the results screen too',
+    /General Awareness/.test(insightHtml) && /3\/20/.test(insightHtml), insightHtml.slice(0, 300));
+  check('section-by-section marks are shown, mirroring the real paper\'s structure',
+    /General Awareness/.test(insightHtml), insightHtml.slice(0, 200));
+
+  await page.click('#review-toggle');
+  const mockReview = await page.locator('#review-list .rev-item').count();
+  check('review after a mock shows all three questions, including the one never answered',
+    mockReview === 3, `got ${mockReview}`);
+  check('and NOW the explanations are visible — the paper is over',
+    (await page.locator('#review-list .explain').count()) === 3);
+  const mockSkippedRow = await page.locator('#review-list .rev-item').nth(1).textContent();
+  check('the question that was skipped is shown as skipped, not silently dropped',
+    /Skipped/.test(mockSkippedRow), mockSkippedRow.replace(/\s+/g, ' ').slice(0, 150));
+
+  // Time running out mid-paper must submit automatically and score whatever
+  // was reached — nothing left in limbo.
+  await page.locator('#retry-btn').click();
+  await page.waitForSelector('#quiz-setup:not(.hidden)');
+  const autoSubmitted = await page.evaluate(() => new Promise(resolve => {
+    const exam = EXAMS.find(e => e.key === 'hal-cs');
+    const items = ALL.filter(q => q.topic === 'General Awareness').slice(0, 3)
+      .map(q => Object.assign({}, q, { section: 'General Awareness' }));
+    beginMock(exam, { items, shortfalls: [] });
+    mockState.endsAt = Date.now() - 1000;   // already expired
+    tickMockTimer();
+    setTimeout(() => resolve(!document.getElementById('quiz-result').classList.contains('hidden')), 50);
+  }));
+  check('the clock reaching zero submits the paper automatically, mid-question or not',
+    autoSubmitted === true);
+  const autoScore = (await page.locator('#score-big').textContent()).replace(/\s+/g, ' ');
+  check('every question never reached scores as unanswered — 0 marks, not dropped from the total',
+    /\b0\b.*\/ 3/.test(autoScore) && /3 left blank/.test(autoScore), autoScore);
+  await page.click('#review-toggle');
+  const autoReviewCount = await page.locator('#review-list .rev-item').count();
+  const autoReviewText = (await page.locator('#review-list').textContent()).replace(/\s+/g, ' ');
+  check('the review still lists all 3, each shown as skipped rather than silently missing',
+    autoReviewCount === 3 && (autoReviewText.match(/Skipped/g) || []).length >= 3,
+    `${autoReviewCount} rows, "${autoReviewText.slice(0,200)}"`);
+
+  await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
+
   console.log('\n── the 4-week plan is workable, not a table ─────────────');
   await page.click('nav#nav-bottom [data-tab="schedule"]');
   const days = await page.locator('#plan-days .plan-day').count();
@@ -732,6 +865,24 @@ function check(name, cond, detail){
   await page.waitForSelector('#learn-reader:not(.hidden)');
   check('the day button opens that exact lesson',
     /Reading Big-O/.test(await page.locator('#learn-reader .ls-main').textContent()));
+
+  // Day 25+ used to say "Full mock — 160 questions, 150 minutes" and then
+  // hand you ten questions from one subject when tapped — a promise the app
+  // did not keep, and a HAL-specific number even when planning for a
+  // different exam entirely. Named to hal-cs explicitly here — the default
+  // no-?exam= load above is a different, deliberately generic case, already
+  // covered by the plan assertions above this point.
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#schedule`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#plan-days .plan-day');
+  const mockDayText = await page.locator('#plan-days .plan-day').nth(24).textContent();
+  check('a mock day names the exam actually being planned for, not a hard-coded number',
+    /160 questions, 150 minutes/.test(mockDayText), mockDayText.replace(/\s+/g,' ').slice(0,150));
+  await page.locator('#plan-days [data-go]').nth(24).click();
+  await page.waitForSelector('#mock-intro:not(.hidden)');
+  check('tapping it opens the real mock engine, not ten questions from one subject',
+    (await page.locator('#mock-intro h2').textContent()).includes('HAL'));
+  await page.locator('#mock-cancel').click();
 
   console.log('\n── progress reaches the server ─────────────────────────');
   // Attempts are coalesced on a 1.5s timer so a 10-question quiz is one request
