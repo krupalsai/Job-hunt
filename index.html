@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Job Tracker</title>
+<title>Job Hunt</title>
 <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#0f172a" />
+<meta name="theme-color" content="#ffffff" />
 <link rel="apple-touch-icon" href="/icon-192.svg" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -15,29 +15,26 @@
      stylesheet lands after the one below. -->
 <script src="/nav.js" defer></script>
 <style>
-  :root { color-scheme: dark; }
+  :root { color-scheme: light; }
   * { box-sizing: border-box; }
   body {
     margin: 0; font-family: -apple-system, system-ui, sans-serif;
-    background: #0b1120; color: #e2e8f0;
+    background: #ffffff; color: #0f172a;
     /* Cleared by nav.js too; stated here so the bottom bar never covers the
        last job card during the moment before that stylesheet lands. */
     padding-bottom: calc(74px + env(safe-area-inset-bottom));
   }
   header {
     padding: 10px 12px; position: sticky; top: 0;
-    background: #0b1120ee; backdrop-filter: blur(8px); z-index: 10;
-    border-bottom: 1px solid #1e293b;
+    background: #ffffffee; backdrop-filter: blur(8px); z-index: 10;
+    border-bottom: 1px solid #e2e8ec;
   }
   h1 { font-size: 17px; margin: 0; }
   .sub { color: #64748b; font-size: 11.5px; line-height: 1.35; }
 
   /* Card sections: a title, and where there is more behind it, a way through. */
   .sec { padding: 14px 12px 0; }
-  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-  .sec-head h2 { font-size: 12.5px; margin: 0; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
-  .sec-note { padding: 0 12px 8px; font-size: 11.5px; color: #64748b; line-height: 1.5; }
-  .view-all { background: none; border: 0; padding: 0; color: #4ade80; font: inherit;
+  .view-all { background: none; border: 0; padding: 0; color: #15803d; font: inherit;
               font-size: 12px; font-weight: 700; cursor: pointer; }
 
   /* ── The exam you chose ────────────────────────────────────────────────
@@ -45,79 +42,38 @@
      screen in the app is about. Pattern, marking and date live here rather
      than three taps away in the syllabus: they are what you need to know
      before you decide what to do today. */
-  .hero { margin: 0 12px; padding: 15px 15px 13px; border-radius: 14px;
-          background: linear-gradient(180deg, #16213c 0%, #131c31 60%);
-          border: 1px solid #22c55e40; }
-  .hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .7px;
-                  text-transform: uppercase; color: #64748b; }
-  .hero-top { display: flex; align-items: flex-start; gap: 10px; }
-  .hero-top > div { flex: 1; min-width: 0; }
-  .hero-name { font-size: 16px; font-weight: 700; line-height: 1.35; margin-top: 3px; }
-  .hero-change { flex: 0 0 auto; font-family: inherit; font-size: 11.5px; font-weight: 700;
-                 color: #4ade80; background: #16a34a1f; border: 1px solid #22c55e55;
-                 border-radius: 20px; padding: 7px 12px; min-height: 34px; cursor: pointer; }
-  .hero-pattern { font-size: 12.5px; color: #cbd5e1; margin-top: 9px; line-height: 1.5; }
-  .hero-warn { color: #f87171; font-weight: 700; }
-  .hero-when { font-size: 12.5px; margin-top: 6px; color: #94a3b8; }
-  .hero-when b { color: #4ade80; }
-  .hero-stats { display: flex; gap: 8px; margin-top: 12px; }
-  .hero-stat { flex: 1; background: #0f172a; border: 1px solid #1e293b; border-radius: 10px;
-               padding: 8px 6px; text-align: center; }
-  .hero-stat b { display: block; font-size: 15px; color: #e2e8f0; }
-  .hero-stat span { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: .4px; }
-  .hero-secs { font-size: 11.5px; color: #94a3b8; margin-top: 10px; line-height: 1.6; }
-  .hero-cta { display: block; margin-top: 12px; text-align: center; text-decoration: none;
-              font-size: 13px; font-weight: 700; color: #0b1120; background: #22c55e;
-              border-radius: 10px; padding: 11px 14px; }
 
   /* Round icon tiles — everything you actually do, one tap from the home screen. */
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
-  .tile { display: flex; flex-direction: column; align-items: center; gap: 7px;
-          text-decoration: none; color: #cbd5e1; }
-  .tile-ico { width: 54px; height: 54px; border-radius: 50%; background: #131c31;
-              border: 1px solid #1e293b; color: #4ade80;
-              display: flex; align-items: center; justify-content: center; }
-  .tile-ico svg { width: 23px; height: 23px; }
-  .tile:active .tile-ico { background: #16a34a1f; border-color: #22c55e55; }
-  .tile-lbl { font-size: 11px; font-weight: 600; text-align: center; line-height: 1.25; }
 
-  .tabs { display: flex; gap: 7px; margin: 0 0 10px; }
-  .tab {
-    flex: 1; min-height: 38px; padding: 0 6px; border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    background: #1e293b; font-size: 12px; font-weight: 600; cursor: pointer;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .tab.active { background: #22c55e; color: #0b1120; }
 
   .list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
   .card {
-    background: #131c31; border: 1px solid #1e293b; border-radius: 14px; padding: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.35);
+    background: #f8faf9; border: 1px solid #e2e8ec; border-radius: 14px; padding: 14px;
+    box-shadow: 0 1px 3px rgba(15,23,42,.06);
   }
   /* A tap should feel like it landed — the same rule learn.html uses. */
   button:active:not(:disabled), a.syllabus-link:active, .hero-cta:active { filter: brightness(.92); }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .org { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
+  .org { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; }
   .post { font-size: 15px; font-weight: 600; margin: 3px 0 8px; }
   .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
-  .badge.NEW { background: #16a34a33; color: #4ade80; }
-  .badge.UPDATED { background: #2563eb33; color: #60a5fa; }
-  .badge.DEADLINE_APPROACHING { background: #dc262633; color: #f87171; }
-  .badge.CLOSED { background: #47556933; color: #94a3b8; }
-  .meta { font-size: 12.5px; color: #94a3b8; line-height: 1.7; }
-  .meta b { color: #cbd5e1; }
+  .badge.NEW { background: #16a34a22; color: #15803d; }
+  .badge.UPDATED { background: #2563eb1f; color: #1d4ed8; }
+  .badge.DEADLINE_APPROACHING { background: #dc262622; color: #b91c1c; }
+  .badge.CLOSED { background: #64748b22; color: #64748b; }
+  .meta { font-size: 12.5px; color: #475569; line-height: 1.7; }
+  .meta b { color: #0f172a; }
   .links { display: flex; gap: 10px; margin-top: 10px; }
   .links a {
-    font-size: 12.5px; color: #22c55e; text-decoration: none; font-weight: 600;
+    font-size: 12.5px; color: #15803d; text-decoration: none; font-weight: 600;
   }
-  .empty { text-align: center; color: #475569; padding: 40px 20px; font-size: 13.5px; line-height: 1.6; }
+  .empty { text-align: center; color: #94a3b8; padding: 40px 20px; font-size: 13.5px; line-height: 1.6; }
   .retry { margin-top: 12px; font-family: inherit; font-size: 12.5px; font-weight: 700;
-           color: #0b1120; background: #22c55e; border: 0; border-radius: 8px;
+           color: #ffffff; background: #16a34a; border: 0; border-radius: 8px;
            padding: 9px 16px; min-height: 38px; cursor: pointer; }
   .install-banner {
-    margin: 14px 12px 0; padding: 12px 14px; background: #16213c; border: 1px solid #22c55e55;
-    border-radius: 10px; font-size: 12.5px; color: #94a3b8; display: none;
+    margin: 14px 12px 0; padding: 12px 14px; background: #eef8f1; border: 1px solid #16a34a55;
+    border-radius: 10px; font-size: 12.5px; color: #3f5a4c; display: none;
   }
   .install-banner.show { display: block; }
   /* Refreshing sits with the data age it refreshes, not in a floating circle
@@ -125,35 +81,47 @@
      the home screen is the exam rather than one long list. */
   .age-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   #refreshBtn { min-height: 34px; padding: 0 4px; }
-  .est { font-size: 11px; color: #f59e0b; border: 1px solid #f59e0b55;
+  .est { font-size: 11px; color: #b45309; border: 1px solid #f59e0b55;
          border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
-  #lastUpdated.stale { color: #f59e0b; }
+  #lastUpdated.stale { color: #b45309; }
   /* The qualification picker itself lives in the drawer with the other
      settings. This is the nudge on the list that opens it — without one, a
      first-time visitor would never find the control that makes the list
      theirs. */
   .qual-prompt { margin: 0 12px 10px; padding: 11px 13px; border-radius: 10px;
-                 background: #131c31; border: 1px solid #22c55e55; color: #94a3b8;
+                 background: #eef8f1; border: 1px solid #16a34a55; color: #3f5a4c;
                  font-size: 12.5px; text-align: left; width: calc(100% - 24px);
                  font-family: inherit; cursor: pointer; display: none; }
   .qual-prompt.show { display: block; }
-  .qual-prompt b { color: #4ade80; }
-  .qual-note { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+  .qual-prompt b { color: #15803d; }
+  /* Job card rows — label on the left, answer on the right, so "have I
+     applied / which exam / when is it" are read without hunting. */
+  .jrow { display: flex; gap: 10px; align-items: baseline; padding: 7px 0;
+          border-top: 1px solid #e2e8ec; font-size: 12.5px; }
+  .jlab { flex: 0 0 88px; color: #8794a1; font-size: 11px; text-transform: uppercase;
+          letter-spacing: .4px; }
+  .jval { flex: 1; min-width: 0; color: #1e293b; line-height: 1.5; }
+  .ok-tag { color: #15803d; font-weight: 700; font-size: 11px; }
+  .no-tag { color: #b45309; font-weight: 700; font-size: 11px; }
+  .study-now { display: block; margin-top: 12px; text-align: center; text-decoration: none;
+               font-size: 13.5px; font-weight: 800; color: #ffffff; background: #16a34a;
+               border-radius: 10px; padding: 12px 14px; }
+  .other-note { font-size: 11.5px; color: #64748b; line-height: 1.55; margin: 10px 0 0; }
   .hidden { display: none !important; }
   .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
-                 border-top:1px solid #1e293b; padding-top:10px; }
-  .applied-q { font-size:12.5px; color:#94a3b8; }
+                 border-top:1px solid #e2e8ec; padding-top:10px; }
+  .applied-q { font-size:12.5px; color:#64748b; }
   .btn-y, .btn-n { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px;
-                   border:1px solid #1e293b; background:#0f172a; color:#e2e8f0; cursor:pointer; }
-  .btn-y.on { background:#22c55e; color:#0b1120; border-color:transparent; }
-  .applied-tag { font-size:11px; font-weight:700; color:#4ade80; }
+                   border:1px solid #dbe6e0; background:#eef3f0; color:#0f172a; cursor:pointer; }
+  .btn-y.on { background:#16a34a; color:#ffffff; border-color:transparent; }
+  .applied-tag { font-size:11px; font-weight:700; color:#15803d; }
   .syllabus-link { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
-                   color:#0b1120; background:#22c55e; padding:8px 14px; border-radius:8px;
+                   color:#ffffff; background:#16a34a; padding:8px 14px; border-radius:8px;
                    text-decoration:none; }
   .syllabus-box { margin-top:10px; padding:12px; border-radius:10px;
-                  background:#0f172a; border:1px solid #22c55e33; }
-  .syllabus-pattern { font-size:12px; color:#4ade80; font-weight:600; }
-  .syllabus-sections { font-size:12px; color:#94a3b8; margin-top:4px; line-height:1.6; }
+                  background:#eef3f0; border:1px solid #16a34a33; }
+  .syllabus-pattern { font-size:12px; color:#15803d; font-weight:600; }
+  .syllabus-sections { font-size:12px; color:#64748b; margin-top:4px; line-height:1.6; }
 </style>
 </head>
 <body data-page="jobs">
@@ -163,62 +131,31 @@
       <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
            stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
-    <!-- The title IS the switcher, the way it is on the prep page. It already
-         names the exam; a separate chip beside it repeating the same name was
-         width spent twice on one fact. -->
-    <div class="nav-title nav-switch" id="exam-switch" role="button" tabindex="0"
-         aria-haspopup="dialog" aria-label="Switch exam">
-      <div class="nav-h1row">
-        <h1 id="hubTitle">🎯 Job Hunt</h1>
-        <span class="nav-caret" aria-hidden="true">▾</span>
-      </div>
-      <div class="sub" id="hubSub">Pick an exam to begin</div>
+    <div class="nav-title">
+      <h1 id="screen-title">Jobs</h1>
+      <div class="nav-exam" id="nav-exam"></div>
     </div>
   </div>
 </header>
 
-<!-- 1 — THE EXAM. What was chosen on the first screen, and what it demands. -->
-<section class="sec">
-  <div class="hero" id="examCard"></div>
-</section>
-
-<!-- 2 — WHAT IS OPEN FOR IT. The notification the studying is for. -->
-<section class="sec">
-  <div class="sec-head"><h2 id="examJobsHead">Openings for this exam</h2></div>
-</section>
+<!-- Only the openings for the exam being prepared for. A job list that mixed
+     all three would put the student back in the position of working out which
+     rows were theirs — which is the job the app is supposed to do. -->
 <div class="list" id="examJobs"><div class="empty">Loading…</div></div>
 
-<!-- 3 — PREPARATION. Everything you do, on one row of taps. -->
-<section class="sec">
-  <div class="sec-head">
-    <h2>Preparation</h2>
-    <a class="view-all" id="planLink" href="/learn.html#schedule">Today’s plan →</a>
-  </div>
-  <div class="tiles" id="tiles"></div>
-</section>
-
-<!-- 4 — EVERYTHING ELSE BEING TRACKED. -->
-<section class="sec">
-  <div class="sec-head">
-    <h2 id="jobsHead">Other openings</h2>
-    <button class="view-all" id="viewAll">View all</button>
-  </div>
-  <div class="tabs">
-    <div class="tab active" data-p="eligible">Eligible</div>
-    <div class="tab" data-p="applied">Applied</div>
-    <div class="tab" data-p="all">All</div>
-  </div>
-  <div class="qual-note" id="qualNote"></div>
+<div class="sec">
   <div class="age-row">
     <span class="sub" id="lastUpdated">Loading…</span>
     <button class="view-all" id="refreshBtn" onclick="load()">↻ Refresh</button>
   </div>
-</section>
+  <p class="other-note" id="otherNote"></p>
+</div>
+
 <button class="qual-prompt" id="qualPrompt">
   <b>Tell the app what you studied</b><br>
-  and this list narrows to the jobs you can actually apply for. Tap to set it.
+  and it can say whether you are eligible for this opening. Tap to set it.
 </button>
-<div class="list" id="list"><div class="empty">Loading jobs…</div></div>
+
 <div class="install-banner" id="installBanner">
   📲 Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
 </div>
@@ -228,7 +165,9 @@
 const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
 
-let currentFilter = 'eligible';
+/* Every screen in this app is about one exam. This one shows the openings for
+   that exam and nothing else — a mixed list would put the student back to
+   working out which rows are theirs, which is the job the app exists to do. */
 let allJobs = [];
 let applied = {};          // job_id -> true
 let qualification = null;
@@ -245,12 +184,8 @@ if (!deviceId) {
 
 /* The ingestion writes profile as "B.Tech CSE" / "Graduate" / "Intermediate",
    while the seeded rows use "person1" / "person2". Both are in the table right
-   now, so matching on either alone hides half the jobs — which is exactly what
-   the old tabs did to every newly ingested row. */
-const PROFILE_ALIASES = {
-  'person1': 'B.Tech CSE',
-  'person2': 'Intermediate',
-};
+   now, so matching on either alone hides half the jobs. */
+const PROFILE_ALIASES = { 'person1': 'B.Tech CSE', 'person2': 'Intermediate' };
 const normProfile = p => PROFILE_ALIASES[p] || p || '';
 
 /* A B.Tech holder is eligible for anything asking for less. Eligibility is
@@ -261,15 +196,13 @@ const ELIGIBLE_FOR = {
   'Graduate':     ['Graduate', 'Intermediate'],
   'Intermediate': ['Intermediate'],
 };
-
-function isEligible(job) {
-  if (!qualification) return true;               // nothing picked yet: show all
+function eligibility(job) {
+  if (!qualification) return null;                       // nothing to say yet
   const allowed = ELIGIBLE_FOR[qualification] || [];
   return allowed.indexOf(normProfile(job.profile)) !== -1;
 }
 
-/** The exam this whole screen is about. Null only in the moment before nav.js
-    has run, or if it somehow failed to load. */
+/** The exam this whole screen is about. */
 function currentExam() {
   return (window.JobhuntNav && window.JobhuntNav.exam) || null;
 }
@@ -305,25 +238,8 @@ function setApplied(jobId, yes) {
   render();
 }
 
-/* Which syllabus belongs to which job — see prep/exams.js. Claiming coverage we
-   do not have is worse than admitting none, because the person then studies the
-   wrong thing. */
-function syllabusFor(job) {
-  const exam = examForJob(job);
-  if (!exam) return null;
-  const marks = exam.sections.reduce((n, s) => n + s.marks, 0);
-  return {
-    url: '/learn.html?exam=' + encodeURIComponent(exam.key) + '#examinfo',
-    label: 'Open the full ' + exam.short + ' syllabus',
-    detail: exam.sections.map(s => s.name + ' (' + s.marks + ')').join(' · '),
-    pattern: exam.pattern,
-    marks: marks,
-  };
-}
-
 async function load() {
   loadFailed = false;
-  document.getElementById('list').innerHTML = '<div class="empty">Loading jobs…</div>';
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/jobs?select=*&order=is_estimated.asc,deadline.asc.nullslast`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
@@ -333,10 +249,9 @@ async function load() {
     if (!Array.isArray(rows)) throw new Error('unexpected response');
     allJobs = rows;
   } catch (e) {
-    // Say so, and offer the way out. The old version left "Loading jobs…" on
-    // screen forever, which reads as a broken app rather than as a phone with
-    // no signal — and the prep, which needs no network at all, looked broken
-    // with it.
+    // Say so, and offer the way out. Leaving "Loading…" on screen forever
+    // reads as a broken app rather than as a phone with no signal — and the
+    // prep, which needs no network at all, looks broken with it.
     loadFailed = true;
     allJobs = [];
   }
@@ -346,15 +261,13 @@ async function load() {
 
 function stampAge() {
   const el = document.getElementById('lastUpdated');
-  if (loadFailed) { el.textContent = 'Job list could not be refreshed'; el.className = 'sub stale'; return; }
+  if (loadFailed) { el.textContent = 'Could not refresh the openings'; el.className = 'sub stale'; return; }
   const newest = allJobs.reduce((max, j) => {
     const t = new Date(j.updated_at || j.last_checked_at || 0).getTime();
     return t > max ? t : max;
   }, 0);
   if (!newest) { el.textContent = 'Data age unknown'; el.className = 'sub'; return; }
   const ageH = Math.floor((Date.now() - newest) / 3600000);
-  // Say how stale it is out loud — a tracker that looks fresh while showing
-  // week-old deadlines is worse than one that admits its age.
   const at = new Date(newest);
   const when = ageH < 24
     ? at.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
@@ -363,134 +276,43 @@ function stampAge() {
   el.className = ageH >= 48 ? 'sub stale' : 'sub';
 }
 
-/* ── The exam card ─────────────────────────────────────────────────────────
-   Generated from prep/exams.js rather than written, so it cannot go on
-   describing HAL to someone who switched to SSC CGL — which is the class of
-   bug this whole screen exists to end. */
-function renderExamCard() {
-  const box = document.getElementById('examCard');
-  const exam = currentExam();
-  if (!exam) {
-    box.innerHTML = '<div class="hero-eyebrow">No exam chosen</div>' +
-      '<div class="hero-name">Pick the exam you are preparing for</div>' +
-      '<button class="hero-cta" id="pickExam" style="border:0;font-family:inherit;width:100%">Choose an exam</button>';
-    const b = document.getElementById('pickExam');
-    if (b) b.addEventListener('click', () => window.JobhuntNav && window.JobhuntNav.openExamGate());
-    return;
-  }
-
-  const marks = exam.sections.reduce((n, s) => n + s.marks, 0);
-  const qs = exam.questions || exam.sections.reduce((n, s) => n + (s.questions || s.marks), 0);
-  const when = window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : { text: '', days: null };
-
-  box.innerHTML =
-    '<div class="hero-top">' +
-      '<div><div class="hero-eyebrow">Preparing for</div>' +
-      '<div class="hero-name">' + escapeHtml(exam.name) + '</div></div>' +
-      '<button class="hero-change" id="heroChange">Change</button>' +
-    '</div>' +
-    '<div class="hero-pattern">' + escapeHtml(exam.pattern) +
-      (exam.negative ? ' <span class="hero-warn">· wrong answers lose marks</span>' : '') + '</div>' +
-    '<div class="hero-when">' + (when.days !== null && when.days >= 0
-        ? '📅 <b>' + escapeHtml(when.text) + '</b>'
-        : '📅 ' + escapeHtml(when.text)) + '</div>' +
-    '<div class="hero-stats">' +
-      '<div class="hero-stat"><b>' + qs + '</b><span>questions</span></div>' +
-      '<div class="hero-stat"><b>' + marks + '</b><span>marks</span></div>' +
-      '<div class="hero-stat"><b>' + (exam.minutes || '—') + '</b><span>minutes</span></div>' +
-    '</div>' +
-    '<div class="hero-secs">' +
-      exam.sections.map(s => escapeHtml(s.name) + ' (' + s.marks + ')').join(' · ') + '</div>' +
-    '<a class="hero-cta" href="' + examHref('examinfo') + '">Full syllabus &amp; exam-hall tactics →</a>';
-
-  const change = document.getElementById('heroChange');
-  if (change) change.addEventListener('click', () => window.JobhuntNav && window.JobhuntNav.openExamSheet());
-}
-
-/* The header names the exam too, so it is on screen while you scroll the
-   openings and cannot be confused with the exam you switched away from. The
-   subtitle is the countdown rather than the pattern: the pattern is in the
-   card directly below, and how long is left is the fact worth carrying at the
-   top of every screen. */
-function renderHeader() {
-  const exam = currentExam();
-  const chosen = window.JobhuntNav && window.JobhuntNav.chosen;
-  const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
-  document.getElementById('hubTitle').textContent = chosen && exam ? '🎯 ' + exam.short : '🎯 Job Hunt';
-  document.getElementById('hubSub').textContent = !(chosen && exam)
-    ? 'Pick an exam to begin'
-    : (when && when.days !== null ? when.text : exam.pattern);
-  document.getElementById('planLink').setAttribute('href', examHref('schedule'));
-}
-
 function render() {
-  renderHeader();
-  renderExamCard();
-  renderTiles();
-
   const exam = currentExam();
-  const forExam = exam ? allJobs.filter(j => { const e = examForJob(j); return e && e.key === exam.key; }) : [];
-
-  document.getElementById('examJobsHead').textContent =
-    exam ? 'Openings for ' + exam.short : 'Openings for this exam';
-  const examList = document.getElementById('examJobs');
-  if (loadFailed) {
-    examList.innerHTML = '<div class="empty">Could not reach the job list.<br>' +
-      'Your prep works offline — the openings need a connection.' +
-      '<br><button class="retry" onclick="load()">Try again</button></div>';
-  } else if (!allJobs.length) {
-    examList.innerHTML = '<div class="empty">Loading…</div>';
-  } else if (!forExam.length) {
-    examList.innerHTML = '<div class="empty">No notification tracked for ' +
-      escapeHtml(exam ? exam.short : 'this exam') + ' right now.<br>' +
-      'The scheduled run adds them as they are published.</div>';
-  } else {
-    examList.innerHTML = forExam.map(cardHtml).join('');
-  }
-
-  let jobs = allJobs;
-  if (currentFilter === 'eligible') jobs = allJobs.filter(isEligible);
-  else if (currentFilter === 'applied') jobs = allJobs.filter(j => applied[j.id]);
-  // The ones above are not repeated here; the heading says so.
-  const forExamIds = {};
-  forExam.forEach(j => { forExamIds[j.id] = true; });
-  jobs = jobs.filter(j => !forExamIds[j.id]);
-
-  const note = document.getElementById('qualNote');
+  const list = document.getElementById('examJobs');
   document.getElementById('qualPrompt').classList.toggle('show', !qualification);
-  if (!qualification) {
-    note.textContent = '';
-  } else {
-    const n = allJobs.filter(isEligible).length;
-    note.textContent = `${qualification} — ${n} of ${allJobs.length} jobs match`;
-  }
 
-  // Short enough to sit on one line beside "View all" at 390px; the
-  // qualification note under it carries the detail.
-  document.getElementById('jobsHead').textContent =
-    currentFilter === 'applied' ? 'Applied' :
-    currentFilter === 'all' ? 'All other openings' : 'Other openings';
-  document.getElementById('viewAll').classList.toggle('hidden', currentFilter === 'all');
-
-  const list = document.getElementById('list');
   if (loadFailed) {
-    list.innerHTML = '<div class="empty">Nothing to show while the job list is unreachable.' +
+    list.innerHTML = '<div class="empty">Could not reach the openings.<br>' +
+      'Your preparation works offline — only this list needs a connection.' +
       '<br><button class="retry" onclick="load()">Try again</button></div>';
+    document.getElementById('otherNote').textContent = '';
     return;
   }
-  if (!jobs.length) {
-    list.innerHTML = '<div class="empty">' + (
-      currentFilter === 'applied' ? 'Nothing marked as applied yet.'
-      : currentFilter === 'eligible' && qualification ? 'No other open jobs match ' + escapeHtml(qualification) + ' right now.'
-      : 'Nothing else being tracked right now.'
-    ) + '</div>';
-    return;
-  }
-  list.innerHTML = jobs.map(cardHtml).join('');
+  if (!allJobs.length) { list.innerHTML = '<div class="empty">Loading…</div>'; return; }
+
+  const mine = exam ? allJobs.filter(j => { const e = examForJob(j); return e && e.key === exam.key; }) : [];
+  list.innerHTML = mine.length
+    ? mine.map(cardHtml).join('')
+    : '<div class="empty">No opening is being tracked for ' +
+      escapeHtml(exam ? exam.short : 'this exam') + ' right now.<br>' +
+      'The nightly run adds them as they are published — your preparation carries on either way.</div>';
+
+  /* The openings for other exams are not hidden, but they are not mixed in
+     either: they belong to a different exam, and seeing them means switching
+     to it. Saying how many exist stops the app quietly losing the student's
+     own tracked data. */
+  const others = allJobs.length - mine.length;
+  document.getElementById('otherNote').textContent = others
+    ? `${others} other opening${others === 1 ? '' : 's'} tracked for the other exams. Change exam in the ☰ menu to see them.`
+    : '';
 }
 
+/* One card, answering the four things a tracked opening has to answer: have I
+   applied, which exam is it, when is that exam, and what do I do about it. */
 function cardHtml(j) {
-  const syl = applied[j.id] ? syllabusFor(j) : null;
+  const exam = currentExam();
+  const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
+  const elig = eligibility(j);
   return `
     <div class="card">
       <div class="card-top">
@@ -498,40 +320,54 @@ function cardHtml(j) {
           <div class="org">${escapeHtml(j.organization)}</div>
           <div class="post">${escapeHtml(j.post_name)}</div>
         </div>
-        <span class="badge ${j.status}">${String(j.status || '').replace('_',' ')}</span>
+        <span class="badge ${escapeHtml(j.status)}">${escapeHtml(String(j.status || '').replace('_',' '))}</span>
       </div>
-      <div class="meta">
-        ${j.eligibility ? `<div><b>Eligibility:</b> ${escapeHtml(j.eligibility)}</div>` : ''}
-        ${j.location ? `<div><b>Location:</b> ${escapeHtml(j.location)}</div>` : ''}
-        <div><b>${j.is_estimated ? 'Expected' : 'Deadline'}:</b> ${escapeHtml(j.deadline_text || 'TBA')}${j.is_estimated ? ' <span class="est">estimate</span>' : ''}</div>
-        ${j.pay_scale ? `<div><b>Pay:</b> ₹${escapeHtml(j.pay_scale)}</div>` : ''}
+
+      <div class="jrow">
+        <span class="jlab">Application</span>
+        <span class="jval">${applied[j.id]
+          ? `<span class="applied-tag">✓ Applied</span> <button class="btn-n" data-unapply="${escapeHtml(j.id)}">Undo</button>`
+          : `<button class="btn-y" data-apply="${escapeHtml(j.id)}">Mark as applied</button>`}</span>
       </div>
+      <div class="jrow">
+        <span class="jlab">Closes</span>
+        <span class="jval">${escapeHtml(j.deadline_text || 'TBA')}${
+          j.is_estimated ? ' <span class="est">estimate</span>' : ''}</span>
+      </div>
+      ${exam ? `
+      <div class="jrow">
+        <span class="jlab">Exam</span>
+        <span class="jval">${escapeHtml(exam.name)}</span>
+      </div>
+      <div class="jrow">
+        <span class="jlab">Exam date</span>
+        <span class="jval">${escapeHtml(when ? when.text : 'not announced')}</span>
+      </div>
+      <div class="jrow">
+        <span class="jlab">Paper</span>
+        <span class="jval">${escapeHtml(exam.pattern)}</span>
+      </div>` : ''}
+      ${j.eligibility ? `
+      <div class="jrow">
+        <span class="jlab">Eligibility</span>
+        <span class="jval">${escapeHtml(j.eligibility)}${
+          elig === null ? '' : elig
+            ? ' <span class="ok-tag">you qualify</span>'
+            : ' <span class="no-tag">below your stated qualification</span>'}</span>
+      </div>` : ''}
+      ${j.location ? `<div class="jrow"><span class="jlab">Location</span><span class="jval">${escapeHtml(j.location)}</span></div>` : ''}
+      ${j.pay_scale ? `<div class="jrow"><span class="jlab">Pay</span><span class="jval">₹${escapeHtml(j.pay_scale)}</span></div>` : ''}
+
       <div class="links">
-        ${j.notification_url ? `<a href="${j.notification_url}" target="_blank">📄 Notification</a>` : ''}
-        ${j.apply_url ? `<a href="${j.apply_url}" target="_blank">🔗 Portal</a>` : ''}
+        ${j.notification_url ? `<a href="${escapeHtml(j.notification_url)}" target="_blank" rel="noopener">📄 Notification</a>` : ''}
+        ${j.apply_url ? `<a href="${escapeHtml(j.apply_url)}" target="_blank" rel="noopener">🔗 Portal</a>` : ''}
       </div>
-      <div class="applied-row">
-        ${applied[j.id]
-          ? `<span class="applied-tag">✓ Applied</span>
-             <button class="btn-n" data-unapply="${j.id}">Undo</button>`
-          : `<span class="applied-q">Have you applied?</span>
-             <button class="btn-y" data-apply="${j.id}">Yes</button>`}
-      </div>
-      ${applied[j.id] ? (syl
-        ? `<div class="syllabus-box">
-             <div class="syllabus-pattern">${escapeHtml(syl.pattern)}</div>
-             <div class="syllabus-sections">${escapeHtml(syl.detail)}</div>
-             <a class="syllabus-link" href="${syl.url}">📚 ${escapeHtml(syl.label)} →</a>
-           </div>`
-        : `<div class="syllabus-box">
-             <div class="applied-q">No syllabus written for this one yet. The scheduled
-             run adds exams as they are applied for — it will pick this up.</div>
-           </div>`) : ''}
+      <a class="study-now" href="${examHref('study')}">Study now →</a>
     </div>
   `;
 }
 
-/* One delegated handler for both lists, rather than rebinding per card. */
+/* One delegated handler, rather than rebinding per card. */
 document.addEventListener('click', (e) => {
   const y = e.target.closest && e.target.closest('[data-apply]');
   if (y) { setApplied(y.getAttribute('data-apply'), true); return; }
@@ -544,19 +380,9 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-function setFilter(p) {
-  currentFilter = p;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.p === p));
-  render();
-}
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => setFilter(tab.dataset.p));
-});
-document.getElementById('viewAll').addEventListener('click', () => setFilter('all'));
-
-/* The qualification picker lives in the drawer, with the other settings, so
-   there is one of it rather than one per page. nav.js writes it and says so;
-   this page only has to re-filter. */
+/* The qualification picker lives in the menu, with the other settings, so
+   there is one of it rather than one per page. nav.js writes it; this page
+   only has to re-render. */
 document.getElementById('qualPrompt').addEventListener('click', () => {
   if (window.JobhuntNav) window.JobhuntNav.openDrawer();
 });
@@ -566,28 +392,8 @@ document.addEventListener('jobhunt:qualification', (e) => {
   render();
 });
 
-/* Preparation. Built here rather than written into the HTML because every link
-   has to carry the exam currently chosen — tapping "Practice" must land on the
-   questions for the exam you are actually preparing for. */
-const TILES = [
-  { id: 'examinfo', label: 'Syllabus',  path: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 4.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2z' },
-  { id: 'learn',    label: 'Lessons',   path: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z' },
-  { id: 'quiz',     label: 'Practice',  path: 'M9 11.5l2.5 2.5L21 4.5M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' },
-  { id: 'schedule', label: 'Today’s plan', path: 'M16 2.5v4M8 2.5v4M3 10.5h18M5 4.5h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2z' },
-  { id: 'mock',     label: 'Mock exam', path: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7.5V12l3 2' },
-  { id: 'progress', label: 'Progress',  path: 'M18 20V10M12 20V4M6 20v-6' },
-];
-function renderTiles() {
-  document.getElementById('tiles').innerHTML = TILES.map(t =>
-    `<a class="tile" href="${examHref(t.id)}" data-tile="${t.id}">
-       <span class="tile-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${t.path}"/></svg></span>
-       <span class="tile-lbl">${t.label}</span>
-     </a>`).join('');
-}
-
-/* Switching exam from the menu or the sheet rebuilds the whole screen: the
-   card, the header, every prep link and which openings are pinned to the top. */
+/* Switching exam rebuilds this screen too: which openings belong here, what
+   the cards say about the exam, and where "Study now" goes. */
 document.addEventListener('jobhunt:exam', render);
 document.addEventListener('DOMContentLoaded', render);
 

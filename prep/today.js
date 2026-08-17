@@ -35,7 +35,6 @@
 
   const BUDGET_KEY = "jobhunt_daily_minutes";
   const DONE_KEY   = "jobhunt_today_done";
-  const SCOPE_KEY  = "jobhunt_plan_scope";
   const DEFAULT_MINUTES = 180;
   const CHOICES = [60, 120, 180, 240, 300];
 
@@ -190,22 +189,44 @@
     return null;
   }
 
-  /** Which exams today is being planned for. Defaults to the one on screen, so
-      nothing changes for someone who never touches the selector. */
+  /** Which exam today is planned for: the selected one, always.
+
+      There used to be an "all exams" mode here that planned across all three
+      at once. It was honest arithmetic and the wrong product: it put a
+      student's Telangana Movement block next to their DBMS block on one
+      screen and left them to work out which paper each hour was buying. One
+      exam is the root context of the app now — planning for another means
+      switching to it, deliberately, from the menu. */
   function scope() {
-    const s = localStorage.getItem(SCOPE_KEY);
-    if (s === "all") return "all";
-    if (s && allExams().some(e => e.key === s)) return s;
     const cur = currentExam();
-    return cur ? cur.key : "all";
+    return cur ? cur.key : (allExams()[0] || {}).key || null;
   }
   function scopeExams() {
     const s = scope();
-    return s === "all" ? allExams() : allExams().filter(e => e.key === s);
+    return allExams().filter(e => e.key === s);
   }
 
   function masteredLessons() {
     return readJSON("jobhunt_lessons", {});
+  }
+
+  /** The exact subtopics of a lesson: its own section headings. Real data
+      already in the repo — nothing invented, and nothing the student has to go
+      and find in a textbook. */
+  function headingsOf(lesson) {
+    if (!lesson || !Array.isArray(lesson.blocks)) return null;
+    const heads = lesson.blocks.filter(b => b.h).map(b => b.h);
+    return heads.length ? heads : null;
+  }
+
+  /** Questions to solve after the reading. Roughly one per two minutes of the
+      block, capped by what the bank actually holds for that subject — promising
+      twenty questions where twelve exist is a promise the app cannot keep. */
+  function questionsFor(subject, minutes) {
+    const have = (typeof QUESTION_BANK !== "undefined" && QUESTION_BANK[subject])
+      ? QUESTION_BANK[subject].length : 0;
+    if (!have) return 0;
+    return Math.max(5, Math.min(have, Math.round(minutes / 2 / 5) * 5));
   }
 
   /* ── What each subject needs ────────────────────────────────────────────
@@ -339,7 +360,10 @@
   function buildToday() {
     const exams = scopeExams();
     if (!exams.length) return null;
-    const isAll = scope() === "all";
+    // One exam at a time — see scope(). Kept as a named constant because the
+    // reason strings below still ask "is this lifting more than one paper?",
+    // and the honest answer inside a single exam's plan is no.
+    const isAll = false;
     // For the single-exam path this is the exam being studied, exactly as
     // before. For ALL EXAMS it is only used for headings.
     const exam = isAll ? null : exams[0];
@@ -363,6 +387,9 @@
         blocks.push({
           id: "skill-" + w.skill.key,
           kind: "basic",
+          subtopics: [w.skill.name],
+          questions: 10,
+          stop: "Clears when you are answering it right again.",
           domain: domainOf(w.skill.subject, examsBySubject[w.skill.subject] || exams),
           exams: forSubject(w.skill.subject),
           title: w.skill.name,
@@ -410,6 +437,8 @@
       blocks.push({
         id: "speed-" + slow.subject,
         kind: "speed",
+        questions: 10,
+        stop: `Ends when you are under ${slow.pace.target}s a question.`,
         domain: slow.domain,
         exams: slow.exams,
         title: "Speed drill — " + slow.subject,
@@ -443,19 +472,7 @@
        So each domain in scope is guaranteed its neediest subject first, and
        only then are the remaining slots filled by score. Overlap still decides
        how many MINUTES each block gets — it just cannot shut an exam out. */
-    let chosen;
-    if (isAll) {
-      const byDomain = {};
-      needs.forEach(n => { (byDomain[n.domain] || (byDomain[n.domain] = [])).push(n); });
-      chosen = Object.keys(byDomain)
-        .sort((a, b) => byDomain[b][0].score - byDomain[a][0].score)
-        .slice(0, capacity)
-        .map(d => byDomain[d][0]);
-      needs.forEach(n => { if (chosen.length < capacity && chosen.indexOf(n) === -1) chosen.push(n); });
-      chosen.sort((a, b) => b.score - a.score);
-    } else {
-      chosen = needs.slice(0, Math.max(0, capacity));
-    }
+    const chosen = needs.slice(0, Math.max(0, capacity));
     const alloc = [];
     if (chosen.length) {
       const totalScore = chosen.reduce((n, x) => n + x.score, 0) || 1;
@@ -481,17 +498,28 @@
       // been read gets practice. Reading a lesson you have already mastered is
       // the most comfortable way to waste an evening.
       const action = n.nextLesson
-        ? { type: "lesson", key: n.nextLesson.key, label: "Open the lesson" }
-        : { type: "practise", subject: n.subject, label: "Practise " + n.subject };
+        ? { type: "lesson", key: n.nextLesson.key, label: "Start" }
+        : { type: "practise", subject: n.subject, label: "Start" };
+      /* "Study Data Structures" is not a task — it is a category, and it
+         leaves the student deciding which part of a 300-page subject matters.
+         The lesson names the exact topic and its own section headings are the
+         exact subtopics, so the task says what to read, for how long, what to
+         solve afterwards and when it is finished. */
+      const qs = questionsFor(n.subject, a.minutes);
       blocks.push({
         id: "sub-" + n.subject,
         kind: n.nextLesson ? "learn" : "practise",
         domain: n.domain,
         exams: n.exams,
-        title: n.subject,
+        title: n.nextLesson ? n.subject + " — " + n.nextLesson.title : n.subject + " — practice",
         subject: n.subject,
-        detail: n.nextLesson ? n.nextLesson.title : null,
+        detail: null,
+        subtopics: n.nextLesson ? headingsOf(n.nextLesson) : null,
         minutes: a.minutes,
+        questions: qs,
+        stop: n.nextLesson
+          ? "Ends with a 5-question check. 4 of 5 passes it; below that, reread the section you missed."
+          : "Ends when you are over 60% on " + n.subject + ".",
         why: reasonFor(n, isAll),
         action,
       });
@@ -515,12 +543,6 @@
       `<button class="td-chip ${c === plan.total ? "is-on" : ""}" data-mins="${c}">${
         c >= 60 ? (c / 60) + "h" : c + "m"}</button>`).join("");
 
-    el("today-scope").innerHTML =
-      `<button class="td-chip ${plan.scope === "all" ? "is-on" : ""}" data-scope="all">All exams</button>` +
-      allExams().map(e =>
-        `<button class="td-chip ${plan.scope === e.key ? "is-on" : ""}" data-scope="${esc(e.key)}">${esc(e.short)}</button>`
-      ).join("");
-
     // Dates are configuration, never a guess. Where none is set the planner
     // applies no urgency at all and says so, rather than quietly ordering the
     // day around a deadline nobody supplied.
@@ -533,8 +555,7 @@
 
     el("today-head").innerHTML =
       `<div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:var(--accent)"></div></div>
-       <div class="bar-note">${doneMins} of ${plan.total} minutes done · ${
-         plan.isAll ? "all exams" : esc(plan.exams[0].short)}</div>
+       <div class="bar-note">${doneMins} of ${plan.total} minutes done</div>
        <div class="bar-note">${dated}</div>`;
 
     if (!plan.blocks.length) {
@@ -547,26 +568,23 @@
        The ORDER of the blocks is still need order — only the display is
        regrouped, so a heading never implies that everything under it outranks
        everything below. */
-    const domainOrder = [DOMAIN_COMMON].concat(allExams().map(e => e.key));
-    const ordered = plan.isAll
-      ? plan.blocks.slice().sort((a, b) =>
-          domainOrder.indexOf(a.domain) - domainOrder.indexOf(b.domain))
-      : plan.blocks;
-
-    let lastDomain = null;
-    box.innerHTML = ordered.map(b => `${
-      plan.isAll && b.domain !== lastDomain
-        ? (lastDomain = b.domain, `<div class="td-domain">${esc(domainLabel(b.domain))}</div>`)
-        : ""}` + `
+    /* Every task states the same five things, in the same order: the exact
+       topic, the exact subtopics inside it, how long, what to solve
+       afterwards, and how you know it is finished. A task without a stopping
+       point is how an evening disappears into one chapter. */
+    box.innerHTML = plan.blocks.map((b, i) => `
       <div class="td-block ${done[b.id] ? "is-done" : ""} kind-${b.kind}" data-id="${esc(b.id)}">
         <button class="td-tick" data-tick="${esc(b.id)}" aria-label="Mark ${esc(b.title)} done">${done[b.id] ? "✓" : ""}</button>
         <div class="td-main">
           <div class="td-top">
-            <span class="td-title">${esc(b.title)}</span>
+            <span class="td-title"><span class="td-n">${i + 1}.</span> ${esc(b.title)}</span>
             <span class="td-mins">${b.minutes} min</span>
           </div>
-          ${b.detail ? `<div class="td-detail">${esc(b.detail)}</div>` : ""}
+          ${b.subtopics && b.subtopics.length
+            ? `<div class="td-only"><span>Study only:</span> ${b.subtopics.map(esc).join(" · ")}</div>` : ""}
           <div class="td-why">${esc(b.why)}</div>
+          <div class="td-then">${b.questions ? `Then <strong>${b.questions} questions</strong>` : "Practice"}${
+            b.stop ? ` · ${esc(b.stop)}` : ""}</div>
           <button class="ghost td-go" data-go="${esc(b.id)}">${esc(b.action.label)} →</button>
         </div>
       </div>`).join("");
@@ -581,12 +599,6 @@
         if (b.action.type === "skill" && window.openSkillDrill) window.openSkillDrill(b.action.key);
         else if (b.action.type === "lesson" && window.openLessonByKey) window.openLessonByKey(b.action.key);
         else if (b.action.type === "practise" && window.practiseSubject) window.practiseSubject(b.action.subject);
-      });
-    });
-    el("today-scope").querySelectorAll("[data-scope]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        localStorage.setItem(SCOPE_KEY, btn.dataset.scope);
-        render();
       });
     });
     el("today-budget").querySelectorAll("[data-mins]").forEach(btn => {
@@ -607,7 +619,7 @@
         "font-weight:700;margin:16px 0 2px;padding-top:6px;}" +
       ".td-domain:first-child{margin-top:0;padding-top:0;}" +
       ".td-chip{flex:1;min-width:52px;min-height:44px;border-radius:9px;cursor:pointer;" +
-        "background:#0f172a;border:1px solid var(--panel-border);color:var(--text);font-size:13px;}" +
+        "background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:13px;}" +
       ".td-chip.is-on{background:var(--accent);color:var(--bg);font-weight:700;border-color:transparent;}" +
       ".td-block{display:flex;gap:11px;align-items:flex-start;padding:13px 0;" +
         "border-bottom:1px solid var(--panel-border);}" +
@@ -615,15 +627,24 @@
       ".td-block.is-done{opacity:.5;}" +
       ".td-block.is-done .td-title{text-decoration:line-through;}" +
       ".td-tick{flex:0 0 auto;width:26px;height:26px;border-radius:8px;cursor:pointer;margin-top:2px;" +
-        "background:#0f172a;border:1px solid var(--panel-border);color:var(--bg);font-weight:900;font-size:15px;line-height:1;}" +
+        "background:var(--panel);border:1px solid var(--panel-border);color:var(--bg);font-weight:900;font-size:15px;line-height:1;}" +
       ".td-block.is-done .td-tick{background:var(--accent);border-color:transparent;}" +
       ".td-main{flex:1;min-width:0;}" +
       ".td-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;}" +
-      ".td-title{font-size:14px;font-weight:600;}" +
+      ".td-title{font-size:14px;font-weight:700;line-height:1.35;}" +
       ".td-mins{font-size:12.5px;font-weight:700;color:var(--accent-soft);white-space:nowrap;" +
         "font-variant-numeric:tabular-nums;}" +
       ".td-detail{font-size:12.5px;color:var(--text);margin-top:3px;line-height:1.45;}" +
-      ".td-why{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;}" +
+      ".td-n{color:var(--dim);font-weight:800;}" +
+      // The subtopics are the instruction — what to read and, by omission,
+      // what to skip. They sit directly under the topic, smaller than it, and
+      // in the body colour so they read as content rather than as a caption.
+      ".td-only{font-size:12.5px;color:var(--text);margin-top:5px;line-height:1.5;}" +
+      ".td-only span{color:var(--dim);}" +
+      ".td-why{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.45;}" +
+      // What happens after the reading, and how you know the task is over.
+      ".td-then{font-size:11.5px;color:var(--accent-soft);margin-top:6px;line-height:1.45;}" +
+      ".td-then strong{color:var(--accent-soft);}" +
       ".td-block.kind-basic .td-title{color:var(--warn);}" +
       ".td-block.kind-speed .td-title{color:var(--accent-soft);}" +
       ".td-go{margin-top:9px;padding:9px 12px;font-size:12.5px;width:100%;min-height:44px;text-align:center;}";

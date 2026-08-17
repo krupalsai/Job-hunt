@@ -58,23 +58,22 @@ function check(name, cond, detail){
   check('manifest.json is served', requested.includes('/manifest.json'));
 
   console.log('\n── the job list reaches the prep ────────────────────────');
-  // It used to be one banner near the top of the list, which you had to scroll
-  // back up to reach. It is now the bottom bar, which is always on screen, plus
-  // a row of quick actions where the banner was.
-  const link = page.locator('nav#nav-bottom [data-tab="learn"]');
+  // Four destinations, one name each, on both pages. There are no home-screen
+  // tiles repeating them under other names any more.
+  const labels = await page.locator('nav#nav-bottom .nav-lbl').allTextContents();
+  check('the bottom bar is the four destinations',
+    labels.join('|') === 'Jobs|Study|Test|Progress', labels.join('|'));
+  const link = page.locator('nav#nav-bottom [data-tab="study"]');
   check('the prep is one tap away from the job list', await link.count() === 1);
   const href = await link.getAttribute('href');
   check('and the link carries the exam being prepared for',
-    /^\/learn\.html\?exam=[a-z0-9-]+#learn$/.test(href), href);
-  const tiles = (await page.locator('#tiles .tile').allTextContents()).join(' | ');
-  check('quick actions say what is in there',
-    /Syllabus/.test(tiles) && /Practice/.test(tiles) && /Lessons/.test(tiles), tiles);
+    /^\/learn\.html\?exam=[a-z0-9-]+#study$/.test(href), href);
 
   notFound.length = 0;
   await link.click();
   await page.waitForLoadState('networkidle');
   check('the link opens the prep page (no 404)',
-    (await page.title()).includes('Prep'), await page.title());
+    /Job Hunt/.test(await page.title()), await page.title());
   check('no missing local files on the prep page', notFound.length === 0, notFound.join(', '));
   check('the question bank loaded', await page.evaluate(()=>typeof QUESTION_BANK === 'object'));
   check('all 282 questions are indexed', await page.evaluate(()=>ALL.length) === 282);
@@ -95,7 +94,7 @@ function check(name, cond, detail){
     (await back.getAttribute('href')) === '/');
   await back.click();
   await page.waitForLoadState('networkidle');
-  check('it returns to the job list', (await page.title()) === 'Job Tracker', await page.title());
+  check('it returns to the job list', (await page.title()) === 'Job Hunt', await page.title());
 
   console.log('\n── service worker caches prep, never job data ───────────');
   // Parse sw.js rather than waiting on a real install, which needs HTTPS or a
@@ -123,9 +122,34 @@ function check(name, cond, detail){
   check('the cache is only a fallback for the job list, reached via catch',
     /\.catch\(\s*\(\)\s*=>\s*caches\.match\(req\)\s*\)/.test(tail));
 
+  console.log('\n── ingestion and the mirror are untouched ───────────────');
+  /* The redesign is a navigation and scoping change. These two pipelines were
+     working and had no business being touched by it, so this asserts they were
+     not: the nightly job ingestion, and the queued progress mirror. */
+  const ingest = fs.readFileSync(path.join(ROOT, 'api/ingest.ts'), 'utf8');
+  const vercel = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+  check('the nightly ingestion cron is still configured',
+    (vercel.crons || []).some(c => c.path === '/api/ingest' && /\d/.test(c.schedule)),
+    JSON.stringify(vercel.crons));
+  check('ingestion still reads the official sources module',
+    /from "\.\.\/lib\/sources"/.test(ingest));
+  check('and still writes into the jobs table',
+    /from\("jobs"\)/.test(ingest), ingest.slice(0, 0));
+
+  const progress = fs.readFileSync(path.join(ROOT, 'api/progress.ts'), 'utf8');
+  check('the mirror still accepts every action the app sends',
+    ['attempts', 'lesson', 'applied', 'profile'].every(a => progress.includes(`case "${a}"`)));
+
+  const sync = fs.readFileSync(path.join(ROOT, 'prep/sync.js'), 'utf8');
+  check('progress is still queued locally before it is sent',
+    /jobhunt_pending_attempts/.test(sync) && /writeQueue/.test(sync));
+  check('and localStorage is still the source of truth, the network a mirror',
+    /fire-and-forget|never blocks/.test(sync));
+
   console.log('\n── prep progress is namespaced to this app ──────────────');
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  await page.click('[data-mode="practice"]');
   await page.click('#start-quiz');
   await page.locator('#q-options .opt').first().click();
   const keys = await page.evaluate(()=>Object.keys(localStorage));

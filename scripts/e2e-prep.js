@@ -66,6 +66,13 @@ function check(name, cond, detail){
   const EXTERNAL = /youtube|ytimg|googlevideo/i;
   const realErrors = () => errors.filter(e => !/favicon/i.test(e) && !EXTERNAL.test(e));
 
+  /* Practice is one of five named modes on Test now, so a student gets there
+     by picking it. The helper does exactly what they do. */
+  const startPractice = async () => {
+    if (await page.locator('#test-modes').isVisible()) await page.click('[data-mode="practice"]');
+    await page.click('#start-quiz');
+  };
+
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
 
   console.log('\n── page loads ───────────────────────────────────────────');
@@ -73,24 +80,40 @@ function check(name, cond, detail){
   // Seven tabs in a scrolling strip became five destinations in a fixed bottom
   // bar plus one drawer entry. The count is the point: every destination is on
   // screen at once, so none of them can be scrolled out of sight.
-  check('the bottom bar offers five destinations, all visible at once',
-    (await page.locator('nav#nav-bottom .nav-item').count()) === 5);
+  // Seven tabs in a scrolling strip became four destinations in a fixed bottom
+  // bar. The count is the point: every destination is on screen at once, so
+  // none of them can be scrolled out of sight — and there is one name for each,
+  // not a tile and a drawer row calling the same screen something else.
+  check('the bottom bar offers four destinations, all visible at once',
+    (await page.locator('nav#nav-bottom .nav-item').count()) === 4);
+  check('and they are Jobs, Study, Test, Progress',
+    (await page.locator('nav#nav-bottom .nav-lbl').allTextContents()).join('|') === 'Jobs|Study|Test|Progress');
   check('the scrolling tab strip is gone', (await page.locator('#tabs').count()) === 0);
   check('"My Weak Areas" is now Progress, one tap away',
     await page.locator('nav#nav-bottom [data-tab="progress"]').isVisible());
-  check('Overview, Topics and Time Strategy are one Exam info destination in the drawer',
-    (await page.locator('#nav-drawer [data-goto="examinfo"]').count()) === 1 &&
-    (await page.locator('#examinfo').count()) === 1);
-  check('the prep page opens on Learn, not on a wall of reference material',
-    await page.locator('#learn').isVisible() && !(await page.locator('#examinfo').isVisible()));
+  check('Overview, Topics and Time Strategy are one Syllabus entry in the menu',
+    (await page.locator('#nav-drawer [data-goto="syllabus"]').count()) === 1 &&
+    (await page.locator('#syllabus').count()) === 1);
+  check('the prep page opens on Study, not on a wall of reference material',
+    await page.locator('#study').isVisible() && !(await page.locator('#syllabus').isVisible()));
+  check('and Study opens with today\'s tasks, not a catalogue of lessons',
+    (await page.locator('#today-plan .td-block').count()) >= 1);
 
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  const modes = await page.locator('#mode-list .mode-name').allTextContents();
+  check('Test offers the named modes, including fun mode',
+    modes.join('|') === 'Practice|Weak areas|Previous mistakes|Mock exam|Quick drill|Fun mode 🎮',
+    modes.join('|'));
+  await page.click('[data-mode="practice"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 282 seen/.test(bankText), `got "${bankText}"`);
+  check('the pool is this exam\'s subjects, not the whole bank',
+    new RegExp('/ ' + (await page.evaluate(()=>POOL.length)) + ' seen').test(bankText) &&
+    (await page.evaluate(()=>POOL.length)) < (await page.evaluate(()=>ALL.length)),
+    `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
-  await page.click('#start-quiz');
+  await startPractice();
   await page.waitForSelector('#quiz-live:not(.hidden)');
   const q1 = await page.locator('#q-text').textContent();
   check('a question is displayed', q1.length > 10);
@@ -160,7 +183,7 @@ function check(name, cond, detail){
   await page.waitForSelector('#learn-reader:not(.hidden)');
   check('that button opens the lesson that teaches the topic',
     (await page.locator('#learn-reader .ls-main').textContent()).length > 3);
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
 
   console.log('\n── skipping still teaches ───────────────────────────────');
   await page.click('#next-btn');
@@ -195,18 +218,23 @@ function check(name, cond, detail){
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
-  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 14);
+  // Eleven, not fourteen: Progress answers "how ready am I for THIS exam",
+  // so it counts the subjects this paper examines and no others.
+  check('per-subject bars cover this exam\'s subjects only',
+    (await page.locator('#topic-bars .bar-row').count()) === 11);
+  check('and Progress ends in an instruction, not a number',
+    /Do this next/i.test(await page.locator('#next-task').innerText()));
   const focus = await page.locator('#focus-list').textContent();
   check('weak-area verdict is stated (or honestly withheld)', focus.length > 30, focus);
 
   console.log('\n── questions do not repeat ──────────────────────────────');
   const firstIds = new Set();
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
   // Collect the question text of two fresh quizzes and compare.
   async function runQuizCollect(){
     const seen = [];
     if(await page.locator('#quiz-result').isVisible()) await page.click('#retry-btn');
-    await page.click('#start-quiz');
+    await startPractice();
     await page.waitForSelector('#quiz-live:not(.hidden)');
     for(let i=0;i<10;i++){
       seen.push(await page.locator('#q-text').textContent());
@@ -223,11 +251,46 @@ function check(name, cond, detail){
   const overlap = setB.filter(t=>firstIds.has(t)).length;
   check('consecutive quizzes share no questions', overlap === 0, `${overlap} repeated`);
 
+  /* The full lesson path is behind "All lessons for this exam" — Study opens on
+     today's tasks, not on a catalogue. Open it the way a student browsing it
+     would. */
+  const openPath = async () => {
+    await page.evaluate(() => {
+      const d = document.getElementById('path-fold');
+      if (d && !d.open) d.open = true;
+    });
+  };
+
+  console.log('\n── fun mode: same pool, a streak that moves ─────────────');
+  // A fresh load rather than continuing from whatever quiz state the previous
+  // block left behind — this test only cares about fun mode's own behaviour.
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#test`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('[data-mode="fun"]');
+  await page.click('[data-mode="fun"]');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('fun mode is visually flagged, not a silent variant',
+    await page.locator('#quiz-live.is-fun').isVisible());
+  check('the streak badge is shown', await page.locator('#fun-streak').isVisible());
+  check('it starts at zero', /0 in a row/.test(await page.locator('#fun-streak').textContent()));
+  const funCorrectIdx = await page.evaluate(() => currentQuiz[currentIndex].correct);
+  await page.locator('#q-options .opt').nth(funCorrectIdx).click();
+  check('a correct answer grows the streak',
+    /1 in a row/.test(await page.locator('#fun-streak').textContent()),
+    await page.locator('#fun-streak').textContent());
+  check('and it is still a real question with a real explanation',
+    (await page.locator('.explain .why').textContent()).length > 20);
+  const rec = await page.evaluate(() => JSON.parse(localStorage.getItem('jobhunt_fun_streak') || '{}'));
+  check('the best streak is remembered, separately from study progress',
+    rec.best >= 1, JSON.stringify(rec));
+
   console.log('\n── learn: subjects first ────────────────────────────────');
-  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
+  await openPath();
   // Earlier steps navigated into a subject (via "Teach me this topic"), and the
   // app deliberately remembers where you were. Step back out first.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await openPath();
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
   // Eleven: every subject HAL examines, whether or not it has lessons yet, and
   // nothing that belongs to another exam's paper. The page is exam-scoped now —
@@ -307,7 +370,7 @@ function check(name, cond, detail){
   check('practice is offered straight after the test',
     await page.locator('#ls-practice-now').count() === 1);
 
-  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   // Returning to Learn keeps you inside the subject you were studying rather
   // than dumping you back at the top — so only navigate in if it did reset.
   if (await page.locator('#learn-path [data-subject="Data Structures"]').count()) {
@@ -327,7 +390,7 @@ function check(name, cond, detail){
      what turns exposure into something that transfers. And grammar is a
      FINISHABLE list; vocabulary is not; the screen has to say so, not just
      imply it by which one has more questions. */
-  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await page.locator('#learn-path [data-subject="English"]').click();
   await page.waitForSelector('#learn-path .ls-group');
@@ -476,7 +539,7 @@ function check(name, cond, detail){
   /* "Revise Data Structures" is not a plan. A plan is a subject, a number of
      minutes, and a reason — and the numbers have to add up to the time you
      actually said you had, or it is a wish list. */
-  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   await page.waitForSelector('#today-plan .td-block');
   const todayPlan = await page.evaluate(() => window.__buildToday());
   check('today names specific subjects, not a vague focus',
@@ -520,64 +583,62 @@ function check(name, cond, detail){
   check('ticking a block marks it done',
     (await page.locator('#today-plan .td-block.is-done').count()) === 1);
   await page.reload({ waitUntil: 'networkidle' });
-  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   await page.waitForSelector('#today-plan .td-block');
   check('and a ticked block survives a reload',
     (await page.locator('#today-plan .td-block.is-done').count()) === 1);
 
-  console.log('\n── planning across three exams at once ─────────────────');
-  /* Three exams, not three separate universes. Percentage is examined by SSC
-     CGL and by TS SI, so one hour on it is an hour on both — scheduling it
-     twice would be doing the same work and calling it progress. Telangana
-     Movement helps one paper and DBMS helps another, and no amount of either
-     helps the other. */
-  const setScope = s => page.evaluate(v => {
-    localStorage.setItem('jobhunt_plan_scope', v);
-    return window.__buildToday();
-  }, s);
+  console.log('\n── the plan is for one exam, and says which ────────────');
+  /* There used to be an "all exams" mode that planned across all three at
+     once. It was honest arithmetic and the wrong product: it put a Telangana
+     Movement block next to a DBMS block on one screen and left the student to
+     work out which paper each hour was buying. One exam is the root context of
+     the app now — planning for another means switching to it, deliberately. */
+  /* The prep page renders one exam, named in the URL — switching exam means
+     loading it, which is exactly what the menu does. */
+  const planFor = async key => {
+    await page.goto(`http://localhost:${PORT}/learn.html?exam=${key}#study`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#today-plan .td-block, #today-plan');
+    return page.evaluate(() => window.__buildToday());
+  };
   await page.evaluate(() => localStorage.setItem('jobhunt_daily_minutes', '240'));
 
-  const all = await setScope('all');
-  const domains = [...new Set(all.blocks.map(b => b.domain))];
-  check('ALL EXAMS draws on more than one domain', domains.length >= 2, domains.join(' | '));
-  check('and the minutes still add up to the budget',
-    all.blocks.reduce((n, b) => n + b.minutes, 0) === all.total,
-    `${all.blocks.reduce((n, b) => n + b.minutes, 0)} vs ${all.total}`);
+  const halPlan = await planFor('hal-cs');
+  check('the day is planned for exactly one exam',
+    halPlan.exams.length === 1 && halPlan.exams[0].key === 'hal-cs',
+    JSON.stringify(halPlan.exams.map(e => e.key)));
+  check('and every block belongs to a subject that exam examines',
+    halPlan.blocks.every(b => b.exams.every(e => e.key === 'hal-cs')),
+    halPlan.blocks.map(b => b.subject).join(' | '));
+  check('the minutes still add up to the budget',
+    halPlan.blocks.reduce((n, b) => n + b.minutes, 0) === halPlan.total,
+    `${halPlan.blocks.reduce((n, b) => n + b.minutes, 0)} vs ${halPlan.total}`);
+  check('a subject is scheduled once, never twice in a day',
+    (() => { const ss = halPlan.blocks.filter(b => b.kind !== 'basic' && b.kind !== 'speed').map(b => b.subject);
+             return ss.length === new Set(ss).size; })(),
+    halPlan.blocks.map(b => b.subject).join(' | '));
 
-  // One block per subject, never one per (subject, exam) pair.
-  const subjectsSeen = all.blocks.filter(b => b.kind !== 'basic' && b.kind !== 'speed').map(b => b.subject);
-  check('a shared subject is scheduled once, not once per exam',
-    subjectsSeen.length === new Set(subjectsSeen).size, subjectsSeen.join(' | '));
-  check('and no two blocks share an id',
-    all.blocks.length === new Set(all.blocks.map(b => b.id)).size);
+  /* Every task has to name the exact topic, the exact subtopics, the time, the
+     questions and a stopping point. "Study DBMS" is a category, not a task,
+     and a task with no stopping point is how an evening disappears. */
+  const learnBlocks = halPlan.blocks.filter(b => b.kind === 'learn');
+  check('a learning task names an exact topic, not just a subject',
+    learnBlocks.length > 0 && learnBlocks.every(b => / — /.test(b.title)),
+    learnBlocks.map(b => b.title).join(' | '));
+  check('and lists the exact subtopics to study inside it',
+    learnBlocks.every(b => Array.isArray(b.subtopics) && b.subtopics.length >= 2),
+    JSON.stringify(learnBlocks.map(b => b.subtopics)));
+  check('every task carries minutes, questions and a stopping condition',
+    halPlan.blocks.every(b => b.minutes >= 15 && typeof b.questions === 'number' && !!b.stop),
+    JSON.stringify(halPlan.blocks.map(b => ({ m: b.minutes, q: b.questions, s: !!b.stop }))));
+  check('and it never promises more questions than the bank holds',
+    await page.evaluate(p => p.blocks.every(b =>
+      !b.questions || !QUESTION_BANK[b.subject] || b.questions <= QUESTION_BANK[b.subject].length),
+      halPlan),
+    JSON.stringify(halPlan.blocks.map(b => b.subject + ':' + b.questions)));
 
-  const common = all.blocks.filter(b => b.domain === 'common');
-  check('common-core subjects are recognised as common', common.length >= 1,
-    all.blocks.map(b => b.subject + '=' + b.domain).join(' | '));
-  /* Overlap gives a common subject up to twice the score of an equally weak
-     single-paper one, which on a full day can take every slot and leave an
-     entire exam out of the plan — not because it is in good shape, but because
-     it is only examined once. Each domain in scope is guaranteed its neediest
-     subject before score decides the rest. */
-  check('no exam is crowded out of a full day by the common core',
-    ['common', 'ts-si', 'hal-cs'].every(d => all.blocks.some(b => b.domain === d)),
-    all.blocks.map(b => b.domain).join(' | '));
-  check('and the minutes are still differentiated, not sliced equally',
-    new Set(all.blocks.map(b => b.minutes)).size > 1,
-    all.blocks.map(b => b.minutes).join(' | '));
-  check('and a common block names the exams the hour buys',
-    common.every(b => b.exams.length > 1) && /improves .+ \+ /.test(common[0].why),
-    common[0] && common[0].why);
-
-  const overlaps = {};
-  const domainBySubject = {};
-  all.blocks.forEach(b => {
-    if (b.exams) overlaps[b.subject] = b.exams.map(e => e.key);
-    domainBySubject[b.subject] = b.domain;
-  });
   /* Asserted against the model rather than against whichever subjects today
-     happened to schedule: the sharing is a property of the syllabuses, and it
-     is true on a day Quant is not on the list. */
+     happened to schedule: the sharing is a property of the syllabuses. */
   const sharing = await page.evaluate(() => {
     const who = s => EXAMS.filter(e => subjectsForExam(e).indexOf(s) !== -1).map(e => e.key);
     return {
@@ -596,36 +657,29 @@ function check(name, cond, detail){
     sharing.telangana.join() === 'ts-si', JSON.stringify(sharing.telangana));
   check('and DBMS belongs to HAL alone',
     sharing.dbms.join() === 'hal-cs', JSON.stringify(sharing.dbms));
-  check('a HAL-only subject is never filed as common',
-    Object.keys(domainBySubject).every(s =>
-      !/DBMS|Theory of Computation|Software Engineering/.test(s) || domainBySubject[s] === 'hal-cs'),
-    JSON.stringify(domainBySubject));
 
-  // Scoping to one exam must not leak another exam's subjects in.
-  const cgl = await setScope('ssc-cgl');
-  check('scoping to SSC CGL never schedules a TS SI-only subject',
+  // Switching the selected exam must not leak the previous one's subjects in.
+  const cgl = await planFor('ssc-cgl');
+  check('planning for SSC CGL never schedules a TS SI-only subject',
     !cgl.blocks.some(b => /Telangana/.test(b.subject)), cgl.blocks.map(b => b.subject).join(' | '));
   check('and never schedules a HAL technical subject',
     !cgl.blocks.some(b => /DBMS|Operating Systems|Theory of Computation/.test(b.subject)),
     cgl.blocks.map(b => b.subject).join(' | '));
-  check('a single-exam plan applies no overlap multiplier',
-    cgl.blocks.every(b => b.overlap === undefined || b.overlap === 1),
-    JSON.stringify(cgl.blocks.map(b => b.overlap)));
+  const ts = await planFor('ts-si');
+  check('planning for TS SI never schedules a HAL technical subject',
+    !ts.blocks.some(b => /DBMS|Operating Systems|Theory of Computation/.test(b.subject)),
+    ts.blocks.map(b => b.subject).join(' | '));
 
-  const hal = await setScope('hal-cs');
-  check('scoping to HAL never schedules a TS SI-only subject',
-    !hal.blocks.some(b => /Telangana|General Studies/.test(b.subject)),
-    hal.blocks.map(b => b.subject).join(' | '));
-
-  // A short day across three exams still has to produce something worth doing.
+  await planFor('hal-cs');
+  // A short day still has to produce something worth doing.
   await page.evaluate(() => localStorage.setItem('jobhunt_daily_minutes', '60'));
-  const shortAll = await setScope('all');
-  check('one hour across all three exams still produces real blocks',
-    shortAll.blocks.length >= 1 && shortAll.blocks.every(b => b.minutes >= 15),
-    JSON.stringify(shortAll.blocks.map(b => b.subject + ':' + b.minutes)));
+  const shortDay = await page.evaluate(() => window.__buildToday());
+  check('one hour still produces real blocks, not slivers',
+    shortDay.blocks.length >= 1 && shortDay.blocks.every(b => b.minutes >= 15),
+    JSON.stringify(shortDay.blocks.map(b => b.subject + ':' + b.minutes)));
   check('and it still spends exactly the hour',
-    shortAll.blocks.reduce((n, b) => n + b.minutes, 0) === 60,
-    String(shortAll.blocks.reduce((n, b) => n + b.minutes, 0)));
+    shortDay.blocks.reduce((n, b) => n + b.minutes, 0) === 60,
+    String(shortDay.blocks.reduce((n, b) => n + b.minutes, 0)));
 
   // Timing stays exam-specific. The ONLY place a target crosses exams is the
   // deliberate one: a shared subject is held to the strictest clock that
@@ -671,12 +725,15 @@ function check(name, cond, detail){
   check('TS SI has no date configured, and none is guessed',
     dates.tsAssigned === null && dates.tsStart === null, JSON.stringify(dates));
 
-  await page.evaluate(() => { localStorage.setItem('jobhunt_plan_scope', 'all'); window.renderToday(); });
+  await page.evaluate(() => { localStorage.setItem('jobhunt_current_exam', 'hal-cs'); window.renderToday(); });
   const head = (await page.locator('#today-head').textContent()).replace(/\s+/g, ' ');
   check('the window is shown as a range, never as one day',
     /5–6 Sep 2026/.test(head) && !/HAL CS: 5 Sep 2026/.test(head), head.slice(0, 160));
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#study`, { waitUntil: 'networkidle' });
+  const tsHead = (await page.locator('#today-head').textContent()).replace(/\s+/g, ' ');
   check('an exam with no date still says so rather than guessing',
-    /TS SI: date not configured/.test(head), head.slice(0, 160));
+    /date not configured/.test(tsHead), tsHead.slice(0, 160));
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
 
   // Urgency counts back from the EARLIEST day of the window: ready a day early
   // costs nothing, ready a day late costs the exam.
@@ -727,9 +784,9 @@ function check(name, cond, detail){
      (negative marking included), or a good practice score and being ready
      for the hall stay two unrelated facts. */
   await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs`, { waitUntil: 'networkidle' });
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
-  await page.waitForSelector('#open-mock');
-  await page.click('#open-mock');
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  await page.waitForSelector('[data-mode="mock"]');
+  await page.click('[data-mode="mock"]');
   await page.waitForSelector('#mock-intro:not(.hidden)');
   const introText = (await page.locator('#mock-intro').textContent()).replace(/\s+/g, ' ');
   check('the intro states the real pattern before any clock starts',
@@ -852,10 +909,29 @@ function check(name, cond, detail){
 
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
 
-  console.log('\n── the 4-week plan is workable, not a table ─────────────');
-  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  console.log('\n── the run to the exam is as long as the time left ──────');
+  await page.click('nav#nav-bottom [data-tab="study"]');
+  const openRun = async () => page.evaluate(() => {
+    const d = document.getElementById('plan-fold');
+    if (d && !d.open) d.open = true;
+  });
+  await openRun();
   const days = await page.locator('#plan-days .plan-day').count();
-  check('the plan is broken into days', days === 28, `got ${days}`);
+  /* It used to be twenty-eight days whatever the date said — a fortnight the
+     student did not have, or a plan that stopped four weeks early. The run is
+     now counted back from the earliest day of the exam window. */
+  const leftDays = await page.evaluate(() => {
+    const e = EXAMS.find(x => x.key === 'hal-cs');
+    const d = new Date(e.examDateStart + 'T00:00:00');
+    const t = new Date(); t.setHours(0,0,0,0);
+    return Math.max(0, Math.round((d - t) / 86400000));
+  });
+  check('the run is the days actually left, not a fixed 28',
+    days === Math.min(60, Math.max(7, leftDays)), `${days} days for ${leftDays} left`);
+  check('and it says what it counted back from',
+    /counted back from the earliest day/.test(await page.locator('#plan-progress').textContent()));
+  check('the last days are mocks and repair, not new material',
+    /Full mock/.test(await page.locator('#plan-days .plan-day').last().textContent()));
   const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
   // A named lesson, not "Day 1: revision". The plan is exam-scoped, so day one
   // is the first lesson of the chosen exam's path.
@@ -868,7 +944,8 @@ function check(name, cond, detail){
   check('ticking a day marks it done',
     (await page.locator('#plan-days .plan-day.is-done').count()) === 1);
   await page.reload({ waitUntil: 'networkidle' });
-  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
+  await openRun();
   check('a ticked day survives a reload',
     (await page.locator('#plan-days .plan-day.is-done').count()) === 1);
 
@@ -882,12 +959,15 @@ function check(name, cond, detail){
   // did not keep, and a HAL-specific number even when planning for a
   // different exam entirely.
   await page.goto('about:blank');
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#schedule`, { waitUntil: 'networkidle' });
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  await openRun();
   await page.waitForSelector('#plan-days .plan-day');
-  const mockDayText = await page.locator('#plan-days .plan-day').nth(24).textContent();
+  const mockIdx = await page.locator('#plan-days .plan-day').evaluateAll(els =>
+    els.findIndex(e => /Full mock/.test(e.textContent)));
+  const mockDayText = await page.locator('#plan-days .plan-day').nth(mockIdx).textContent();
   check('a mock day names the exam actually being planned for, not a hard-coded number',
     /160 questions, 150 minutes/.test(mockDayText), mockDayText.replace(/\s+/g,' ').slice(0,150));
-  await page.locator('#plan-days [data-go]').nth(24).click();
+  await page.locator('#plan-days [data-go]').nth(mockIdx).click();
   await page.waitForSelector('#mock-intro:not(.hidden)');
   check('tapping it opens the real mock engine, not ten questions from one subject',
     (await page.locator('#mock-intro h2').textContent()).includes('HAL'));
@@ -914,13 +994,13 @@ function check(name, cond, detail){
      produce in 94 seconds is one you cannot bank, and a screen that reports
      82% accuracy without saying so is telling you half the truth. These
      assertions are about the half that was missing. */
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
   await page.evaluate(() => {
     if (!document.getElementById('quiz-result').classList.contains('hidden')) {
       document.getElementById('retry-btn').click();
     }
   });
-  await page.click('#start-quiz');
+  await startPractice();
   await page.waitForSelector('#quiz-live:not(.hidden)');
   // Deliberately slow: under 250ms the clock is treated as a mis-tap, so a
   // test that answered instantly would assert nothing.
@@ -1013,7 +1093,7 @@ function check(name, cond, detail){
      already tripped some basics — the assertion here is about the SECOND miss
      specifically, so it needs a known starting point. */
   const DRILL_SKILL = 'subject-verb-agreement';
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
   const poolSize = await page.evaluate(k => {
     state.skills = {}; save();
     window.__lessonCheck = null;
@@ -1113,12 +1193,16 @@ function check(name, cond, detail){
 
   console.log('\n── ?exam= switches the whole syllabus ──────────────────');
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ssc-cgl`, { waitUntil: 'networkidle' });
-  const h1 = await page.locator('header h1').textContent();
-  check('the header names the exam being studied', /SSC CGL/i.test(h1), h1);
-  const sub = await page.locator('header .sub').textContent();
-  check('SSC CGL warns that wrong answers lose marks', /lose marks/i.test(sub), sub);
+  const examLine = await page.locator('#nav-exam').textContent();
+  check('the header names the exam being studied', /SSC CGL/i.test(examLine), examLine);
+  check('and names the screen you are on', /Study|Test|Progress|Syllabus/.test(
+    await page.locator('#screen-title').textContent()));
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  check('the marking scheme is stated where the tests are',
+    /wrong/i.test(await page.locator('#test-modes-note').textContent()),
+    await page.locator('#test-modes-note').textContent());
 
-  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   const names = await page.locator('#learn-path [data-subject]')
     .evaluateAll(els => els.map(e => e.getAttribute('data-subject')));
   check('only SSC subjects are offered',
@@ -1134,12 +1218,12 @@ function check(name, cond, detail){
     /practice only|lessons being written/i.test(sscListing),
     sscListing.replace(/\s+/g,' ').slice(0,140));
 
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
   const tags = await page.locator('#topic-tags .tag').allTextContents();
   check('the quiz offers only SSC topics',
     !tags.some(t => /Operating Systems|DBMS/.test(t)), tags.join(' | '));
 
-  await page.click('nav#nav-bottom [data-tab="schedule"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   const planText = await page.locator('#plan-days').textContent();
   check('the 4-week plan follows the SSC syllabus, not HAL',
     !/Operating Systems|DBMS/.test(planText));
@@ -1150,10 +1234,8 @@ function check(name, cond, detail){
      everything, a guess is free" advice — would teach exactly the wrong
      exam-hall behaviour, which is the failure prep/exams.js exists to prevent. */
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si`, { waitUntil: 'networkidle' });
-  const siH1 = await page.locator('header h1').textContent();
-  check('the header names TS SI', /TS SI/i.test(siH1), siH1);
-  check('and warns that wrong answers lose marks',
-    /lose marks/i.test(await page.locator('header .sub').textContent()));
+  check('the header names TS SI', /TS SI/i.test(await page.locator('#nav-exam').textContent()),
+    await page.locator('#nav-exam').textContent());
 
   const siExam = await page.evaluate(() => {
     const e = EXAMS.find(x => x.key === 'ts-si');
@@ -1208,11 +1290,11 @@ function check(name, cond, detail){
     !siExam.subjects.some(s => /DBMS|Operating Systems|Theory of Computation|Data Structures/.test(s)),
     siExam.subjects.join(' | '));
 
-  await page.click('nav#nav-bottom [data-tab="quiz"]');
+  await page.click('nav#nav-bottom [data-tab="test"]');
   const siTags = await page.locator('#topic-tags .tag').allTextContents();
   check('the quiz offers only TS SI subjects',
     !siTags.some(t => /DBMS|Operating Systems|General Awareness/.test(t)), siTags.join(' | '));
-  await page.click('#start-quiz');
+  await startPractice();
   await page.waitForSelector('#quiz-live:not(.hidden)');
   await new Promise(r => setTimeout(r, 900));
   await page.locator('#q-options .opt').first().click();
@@ -1310,8 +1392,9 @@ function check(name, cond, detail){
 
   // The lesson has to be openable from inside TS SI, or it is a file nobody
   // reaches. Learn → subject → first lesson.
-  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.click('nav#nav-bottom [data-tab="study"]');
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await openPath();
   await page.locator('#learn-path [data-subject="Telangana Movement & State Formation"]').click();
   const tmRows = await page.locator('#learn-path .ls-row').count();
   check('Telangana Movement opens its own lesson list inside TS SI', tmRows >= 3, `${tmRows} rows`);
@@ -1339,10 +1422,10 @@ function check(name, cond, detail){
     untouched.cglQuant === 22 && untouched.cglReasoning === 23,
     `${untouched.cglQuant} / ${untouched.cglReasoning}`);
 
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#syllabus`, { waitUntil: 'networkidle' });
 
   // HAL has one stage, so it must not grow a stages card.
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#examinfo`, { waitUntil: 'networkidle' });
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#syllabus`, { waitUntil: 'networkidle' });
   check('an exam with a single stage shows no stages card',
     await page.locator('#ei-stages').isHidden());
 
@@ -1367,7 +1450,7 @@ function check(name, cond, detail){
     await page.evaluate(() => !Object.keys(QUESTION_BANK).some(k =>
       /Digital Logic|Compiler Design|Discrete/.test(k))));
   // TS SI has no unverified gap list, so it must not show the card at all.
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#syllabus`, { waitUntil: 'networkidle' });
   check('an exam with no unverified subjects shows no such card',
     await page.locator('#ei-pending').isHidden());
 
@@ -1376,16 +1459,25 @@ function check(name, cond, detail){
   // which is the one lie a syllabus screen cannot tell.
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
   check('no ?exam= falls back to the exam you chose',
-    /HAL/i.test(await page.locator('header h1').textContent()));
+    /HAL/i.test(await page.locator('#nav-exam').textContent()),
+    await page.locator('#nav-exam').textContent());
   check('and says so in the address, so the page and its header cannot disagree',
     /exam=hal-cs/.test(page.url()), page.url());
 
   console.log('\n── progress survives a reload ───────────────────────────');
-  const before = await page.evaluate(()=>JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered);
+  /* Counted for this exam, not for the lifetime of the phone: "how ready am I"
+     is not a question a total across three different papers can answer. */
+  const before = await page.evaluate(() => {
+    const st = JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1'));
+    return EXAM_SUBJECTS.reduce((n, t) => n + ((st.topics[t] || {}).asked || 0), 0);
+  });
   await page.reload({ waitUntil: 'networkidle' });
   await page.click('nav#nav-bottom [data-tab="progress"]');
   const after = parseInt(await page.locator('#stat-answered').textContent(), 10);
-  check('answered count persists across reload', after === before, `${before} → ${after}`);
+  check('this exam\'s answered count persists across reload', after === before, `${before} → ${after}`);
+  check('and it counts only this exam, not every exam ever practised',
+    before <= (await page.evaluate(() => JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered)),
+    String(before));
 
   check('still no JavaScript errors after the whole run', realErrors().length === 0, realErrors().join('\n     '));
 
