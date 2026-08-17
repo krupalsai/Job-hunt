@@ -607,6 +607,23 @@
   };
 
   window.renderLearnPath = render;
+
+  /** The exam's subjects with their lesson and question counts. Exposed so the
+      Study screen can put them at the top without a second copy of the list —
+      one source, so a subject can never appear in the strip and be missing
+      from the path below it. */
+  window.examSubjectSummary = subjects;
+
+  /** Open one subject's lessons. Same state change the subject rows make, so
+      arriving from the strip at the top and from the path below land in
+      exactly the same place. */
+  window.openSubject = function (name) {
+    view = { level: "lessons", subject: name };
+    if (el("learn-reader")) el("learn-reader").classList.add("hidden");
+    if (el("learn-list")) el("learn-list").classList.remove("hidden");
+    render();
+  };
+
   document.addEventListener("DOMContentLoaded", render);
   if (document.readyState !== "loading") render();
 })();

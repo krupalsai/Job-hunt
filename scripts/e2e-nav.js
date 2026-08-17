@@ -328,6 +328,36 @@ async function reachable(page, selector, where, minH){
     (await page.locator('#today-plan .td-only').count()) >= 1);
   check('there is no all-exams switch to mix three papers on one screen',
     (await page.locator('#today-scope').count()) === 0);
+
+  /* Subjects sit above today's list: the app decides for you, but when you
+     already know what you want to open, every subject the exam examines is
+     one tap away and all of them are on screen at once. */
+  const subjChips = await page.locator('#subject-chips .subj-chip').allTextContents();
+  check('every subject the exam examines is a chip at the top of Study',
+    subjChips.length === await page.evaluate(() => EXAM_SUBJECTS.length) && subjChips.length >= 4,
+    subjChips.length + ' chips');
+  check('the strip and the path below it name the same subjects — one source',
+    await page.evaluate(() => {
+      const chips = [...document.querySelectorAll('#subject-chips [data-subj]')]
+        .map(c => c.getAttribute('data-subj')).sort().join('|');
+      return chips === window.examSubjectSummary().map(s => s.name).sort().join('|');
+    }));
+  check('each chip is legible, not text the same colour as the chip under it',
+    await page.evaluate(() => {
+      const c = document.querySelector('.subj-chip');
+      if (!c) return false;
+      const cs = getComputedStyle(c);
+      return cs.color !== cs.backgroundColor;
+    }));
+  await reachable(page, '#subject-chips .subj-chip', 'subject chip', 40);
+
+  await page.locator('#subject-chips [data-subj="DBMS"]').click();
+  await page.waitForFunction(() => document.getElementById('path-fold').open);
+  check('tapping a subject opens that subject\'s lessons',
+    (await page.locator('#learn-path .ls-row').count()) >= 1 &&
+    /Normal|SQL|Keys|ACID|Transaction/i.test(await page.locator('#learn-path').innerText()),
+    (await page.locator('#learn-path').innerText()).replace(/\s+/g, ' ').slice(0, 100));
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await reachable(page, '#today-budget .td-chip', 'study-time chip');
   await reachable(page, '#today-plan .td-go', 'start button');
   await noSideScroll(page, "today's plan");

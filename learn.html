@@ -338,6 +338,22 @@
                    border:1px solid var(--panel-border); }
   .ls-video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
 
+  /* Subjects strip — every subject on screen at once, wrapped, never scrolled
+     sideways. The count is the honest state of the subject: mastered of total
+     where lessons exist, question count where they do not. */
+  .subj-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .subj-chip{
+    display:flex; align-items:baseline; gap:7px; min-height:42px;
+    background:#eef3f0; border:1px solid var(--panel-border); border-radius:10px;
+    padding:9px 12px; color:var(--text); font-family:inherit; font-size:13px;
+    font-weight:600; cursor:pointer; text-align:left;
+  }
+  .subj-chip:active{ filter:brightness(.95); border-color:var(--accent); }
+  .subj-chip.is-done{ border-color:#16a34a55; background:#16a34a14; }
+  .subj-chip .subj-meta{ font-size:11px; font-weight:700; color:var(--dim);
+                         font-variant-numeric:tabular-nums; }
+  .subj-chip.is-done .subj-meta{ color:var(--accent); }
+
   /* Test — the five modes */
   .mode-row{
     display:flex; align-items:center; gap:12px; width:100%; text-align:left;
@@ -513,6 +529,16 @@
        part they have no way to get right. -->
   <section id="study" class="tab-section">
     <div id="learn-list">
+      <!-- SUBJECTS, first. Today's list below decides for you; this is for the
+           times you already know what you want to open. Every subject the exam
+           examines is here, all visible at once — a strip that scrolled off the
+           edge is the failure the whole navigation was rebuilt to end. -->
+      <div class="card" id="subjects-card">
+        <h2>Subjects</h2>
+        <p class="muted" style="margin-top:-4px;">Tap one to open its lessons.</p>
+        <div class="subj-chips" id="subject-chips"></div>
+      </div>
+
       <div class="card" id="today-card">
         <h2>Today</h2>
         <p class="muted" style="margin-top:-4px;">How long have you got?</p>
@@ -733,11 +759,44 @@ window.gotoSection = function(id){
     if(window.renderToday) window.renderToday();
     if(window.renderPlan) window.renderPlan();
     if(window.renderLearnPath) window.renderLearnPath();
+    renderSubjectChips();
   }
   if(id === 'test') renderTestModes();
   if(id === 'syllabus') renderExamInfo();
   window.scrollTo(0, 0);
 };
+
+/* ── Subjects, at the top of Study ────────────────────────────────────────
+   Built from the same subjects() the lesson path below uses (exposed by
+   prep/sync.js), so the strip and the path can never disagree about what this
+   exam examines. Tapping one opens that subject's lessons in the path and
+   scrolls to it, which is the same place the path's own rows go. */
+function renderSubjectChips(){
+  const box = document.getElementById('subject-chips');
+  if(!box || typeof window.examSubjectSummary !== 'function') return;
+  const subs = window.examSubjectSummary();
+  box.innerHTML = subs.map(s=>{
+    const has = s.lessons.length;
+    const done = has && s.mastered === s.lessons.length;
+    // Lessons where there are lessons; question count where there are none —
+    // "0/0" would read as a subject with nothing in it at all.
+    const meta = has ? `${s.mastered}/${s.lessons.length}` : `${s.questions}q`;
+    return `<button type="button" class="subj-chip${done ? ' is-done' : ''}" data-subj="${escHtml(s.name)}">
+      <span class="subj-name">${escHtml(s.name)}</span>
+      <span class="subj-meta">${escHtml(meta)}</span>
+    </button>`;
+  }).join('');
+}
+
+document.addEventListener('click', e=>{
+  const b = e.target.closest && e.target.closest('[data-subj]');
+  if(!b) return;
+  const fold = document.getElementById('path-fold');
+  if(fold) fold.open = true;
+  if(window.openSubject) window.openSubject(b.getAttribute('data-subj'));
+  const path = document.getElementById('learn-path');
+  if(path) path.scrollIntoView({ behavior:'smooth', block:'start' });
+});
 
 /* #mock is not a section — it is Practice with the full paper already open.
    The home screen offers it as its own tile because sitting the whole paper is
