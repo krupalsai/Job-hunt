@@ -91,6 +91,8 @@
     topic: "Telangana Movement & State Formation",
     title: "Towards statehood, 1991–2014",
     minutes: 6,
+    video: {url:"https://www.youtube.com/watch?v=KBUjKE8iqpc",
+            title:"History of Telangana in English — Movement and State Formation, 1724–2014", channel:"StudyIQ IAS"},
     why: "The densest phase for dates, and the one where a single year separates the right answer from three plausible wrong ones.",
     blocks: [
       {h: "From a party to a state"},
@@ -120,6 +122,8 @@
     topic: "General Studies",
     title: "Indian Polity — the parts that get asked",
     minutes: 6,
+    video: {url:"https://www.youtube.com/watch?v=M1ZSxhiaZV8",
+            title:"Fundamental Rights in 1 Shot | Indian Polity", channel:"UPSC Wallah"},
     why: "Polity is the most predictable scoring in General Studies: a fixed set of Parts, Articles and Amendments that recur almost unchanged from paper to paper.",
     blocks: [
       {h: "The Constitution by Part"},
@@ -145,6 +149,8 @@
     topic: "General Studies",
     title: "The Indian National Movement",
     minutes: 6,
+    video: {url:"https://www.youtube.com/watch?v=GohI2-5QQnQ",
+            title:"Indian Freedom Struggle | Indian National Movement, 1857 to 1947 | Modern History", channel:"Dr Vipan Goyal, StudyIQ"},
     why: "A dated sequence, which is exactly what an objective paper likes: every question here is answered by knowing what came in which decade.",
     blocks: [
       {h: "The spine of the movement"},
@@ -169,6 +175,8 @@
     topic: "General Studies",
     title: "Geography of India",
     minutes: 5,
+    video: {url:"https://www.youtube.com/watch?v=AouGvKtb_Ic",
+            title:"All Important Indian Rivers in One Class | Indian Geography", channel:"OnlyIAS"},
     why: "Rivers, ranges and the monsoon come up every year, and they are facts rather than reasoning — cheap marks if you have read them once.",
     blocks: [
       {h: "What the paper actually asks"},
@@ -194,6 +202,8 @@
     topic: "General Studies",
     title: "General Science and the environment",
     minutes: 5,
+    video: {url:"https://www.youtube.com/watch?v=HyxrLZhme4o",
+            title:"General Science for Competitive Exams — Human Body Facts", channel:"Amazing World 24*7"},
     why: "Pure recall, no working out, and it is the fastest section on the paper — which matters on a paper that gives you 54 seconds a question.",
     blocks: [
       {h: "Units, elements, body, atmosphere"},

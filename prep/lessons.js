@@ -338,6 +338,8 @@ const CURRICULUM = [
 {
   key: "db-normal", subject: "DBMS", topic: "DBMS",
   title: "Normalisation, 1NF to BCNF", minutes: 8,
+  video: {url:"https://www.youtube.com/watch?v=IBEuwmYsMKI",
+          title:"Normalization in DBMS | Normal Forms | 1NF, 2NF, 3NF, BCNF, 4NF, 5NF with examples", channel:"NS lectures"},
   why: "The most examined DBMS topic. Four rules in order, each fixing one specific anomaly.",
   blocks: [
     {h: "What it is for"},
@@ -432,6 +434,8 @@ const CURRICULUM = [
 {
   key: "cn-tcp-udp", subject: "Computer Networks", topic: "Computer Networks",
   title: "TCP vs UDP", minutes: 6,
+  video: {url:"https://www.youtube.com/watch?v=7brFDwM64aQ",
+          title:"TCP vs UDP in 3 minutes", channel:"Software With Shawn"},
   why: "One comparison, asked endlessly, and it explains why video calls drop frames instead of freezing.",
   blocks: [
     {h: "TCP — connection-oriented and reliable"},
@@ -592,6 +596,8 @@ const CURRICULUM = [
 {
   key: "toc-automata", subject: "Theory of Computation", topic: "Theory of Computation",
   title: "Finite automata and regular languages", minutes: 6,
+  video: {url:"https://www.youtube.com/watch?v=19ygGQqolGI",
+          title:"Introduction to Deterministic Finite Automata (DFA)", channel:"Neso Academy"},
   why: "TOC is small in the syllabus and highly predictable. This lesson covers most of what is asked.",
   blocks: [
     {h: "A finite automaton"},
