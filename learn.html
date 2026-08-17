@@ -20,19 +20,51 @@
      White ground, not the dark one this app started on: a light background
      under a green accent needs the accent taken down a shade to keep 4.5:1 on
      white, which --accent below does — the same hue, not a new one. */
+  /* Light is the base; dark is the same set of tokens redefined under the
+     system preference, so the app follows the phone instead of forcing one
+     look. Every colour below is a token for exactly this reason — a literal
+     hex in a component is a colour that only works in one scheme, which is
+     how the subject chips ended up black-on-black. */
   :root{
-    color-scheme: light;
+    color-scheme: light dark;
     --bg:#ffffff;
     --panel:#f8faf9;
     --panel-border:#e2e8ec;
+    --surface-2:#eef3f0;        /* raised inside a card: chips, mode rows */
+    --surface-2-border:#dbe6e0;
+    --tint:#eef8f1;             /* accent wash behind a highlighted block */
+    --tint-2:#f3f7f5;
+    --header-bg:#ffffffee;
     --accent:#16a34a;
     --accent-soft:#15803d;
+    --link:#1d4ed8;
     --text:#0f172a;
     --muted:#5b6b7a;
     --dim:#8794a1;
     --good:#16a34a;
     --bad:#dc2626;
     --warn:#b45309;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b1120;
+      --panel:#131c31;
+      --panel-border:#1e293b;
+      --surface-2:#0f172a;
+      --surface-2-border:#243049;
+      --tint:#14351f;
+      --tint-2:#122031;
+      --header-bg:#0b1120ee;
+      --accent:#22c55e;
+      --accent-soft:#4ade80;
+      --link:#7db4ea;
+      --text:#e2e8f0;
+      --muted:#94a3b8;
+      --dim:#64748b;
+      --good:#4ade80;
+      --bad:#f87171;
+      --warn:#f59e0b;
+    }
   }
   *{ box-sizing:border-box; }
   body{
@@ -44,7 +76,7 @@
   }
   header{
     padding:10px 12px; position:sticky; top:0;
-    background:#ffffffee; backdrop-filter:blur(8px); z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); z-index:10;
     border-bottom:1px solid var(--panel-border);
   }
   /* The title is the exam switcher, the way "My Exams ▾" is: the header
@@ -75,7 +107,7 @@
   th{ color:var(--dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
   .pill{ display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
   .p1{ background:#16a34a1f; color:#15803d; }
-  .p2{ background:#2563eb1f; color:#1d4ed8; }
+  .p2{ background:#2563eb1f; color:var(--link); }
   .p3{ background:#47556933; color:#94a3b8; }
   ul{ padding-left:18px; margin:6px 0; font-size:13.5px; line-height:1.65; }
   .grid2{ display:grid; grid-template-columns:1fr; gap:14px; }
@@ -88,7 +120,7 @@
   /* Fun mode — same questions, same pool, a streak that moves. */
   .fun-streak{
     display:flex; align-items:center; gap:8px; margin-bottom:10px; padding:9px 12px;
-    background:linear-gradient(90deg,#eef8f1,#f3f7f5); border:1px solid #16a34a33;
+    background:linear-gradient(90deg,var(--tint),var(--tint-2)); border:1px solid #16a34a33;
     border-radius:20px; font-size:12.5px; font-weight:700; color:var(--accent-soft);
   }
   .fun-flame{ font-size:15px; }
@@ -123,7 +155,7 @@
      scan than four unlabelled rows. */
   .opt-letter{
     flex:0 0 auto; width:22px; height:22px; border-radius:50%;
-    background:#dbe6e0; color:var(--muted); font-size:11px; font-weight:700;
+    background:var(--surface-2-border); color:var(--muted); font-size:11px; font-weight:700;
     display:flex; align-items:center; justify-content:center;
   }
   .opt-label{ flex:1; min-width:0; }
@@ -134,7 +166,7 @@
   .opt.wrong .opt-letter{ background:var(--bad); color:var(--bg); }
   /* A mock marks your choice without saying whether it was right — revealing
      that is what the results screen is for, once the paper is over. */
-  .opt.picked{ border-color:var(--accent-soft); background:#dbe6e0; }
+  .opt.picked{ border-color:var(--accent-soft); background:var(--surface-2-border); }
   .opt.picked .opt-letter{ background:var(--accent-soft); color:var(--bg); }
   .opt[disabled]{ cursor:default; }
   .quiz-actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
@@ -150,14 +182,14 @@
     background:transparent; color:var(--bad); border:1px solid #dc262655;
     padding:8px 14px; border-radius:9px; cursor:pointer; font-size:13px;
   }
-  .progress-bar{ height:5px; background:#dbe6e0; border-radius:20px; overflow:hidden; margin-bottom:14px; }
+  .progress-bar{ height:5px; background:var(--surface-2-border); border-radius:20px; overflow:hidden; margin-bottom:14px; }
   .progress-fill{ height:100%; background:var(--accent); transition:width .2s ease; }
   .result-big{ font-size:34px; font-weight:700; text-align:center; margin:8px 0 4px; }
   .result-sub{ text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px; }
   .tag-row{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 14px; }
   .tag{
     padding:5px 10px; border-radius:20px; font-size:12px;
-    border:1px solid var(--panel-border); background:#eef3f0; cursor:pointer;
+    border:1px solid var(--panel-border); background:var(--surface-2); cursor:pointer;
   }
   .tag.active{ background:var(--accent); color:var(--bg); font-weight:700; border-color:transparent; }
   .hidden{ display:none !important; }
@@ -171,7 +203,7 @@
   .rev-item .ans{ color:var(--muted); margin-top:4px; }
 
   /* Explanation */
-  .explain{ margin-top:14px; border-radius:10px; padding:14px 16px; background:#eef3f0; border:1px solid var(--panel-border); }
+  .explain{ margin-top:14px; border-radius:10px; padding:14px 16px; background:var(--surface-2); border:1px solid var(--panel-border); }
   .explain .verdict{ font-weight:700; font-size:14px; margin-bottom:10px; }
   .explain .lbl{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent-soft); font-weight:700; margin-bottom:3px; }
   .explain .why{ font-size:13.5px; line-height:1.65; margin-bottom:12px; }
@@ -186,7 +218,7 @@
   /* Rotation */
   .rotate-bar{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    font-size:12.5px; color:var(--muted); background:#eef3f0;
+    font-size:12.5px; color:var(--muted); background:var(--surface-2);
     border:1px solid var(--panel-border); border-radius:9px; padding:8px 12px; margin-bottom:12px;
   }
   .rotate-bar strong{ color:var(--accent-soft); font-variant-numeric:tabular-nums; }
@@ -198,7 +230,7 @@
   .mock-intro .mi-shortfall{ border-left:3px solid var(--warn); background:#f59e0b14;
     border-radius:0 9px 9px 0; padding:10px 13px; margin:12px 0; font-size:12.5px; line-height:1.6; }
   .mock-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px;
-    font-size:13px; background:#eef3f0; border:1px solid var(--panel-border);
+    font-size:13px; background:var(--surface-2); border:1px solid var(--panel-border);
     border-radius:9px; padding:9px 13px; margin-bottom:12px; }
   .mock-bar .mb-time{ font-weight:700; font-variant-numeric:tabular-nums; color:var(--accent-soft); }
   .mock-bar.is-low .mb-time{ color:var(--warn); }
@@ -215,13 +247,13 @@
 
   /* Weak areas */
   .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-  .stat{ background:#eef3f0; border:1px solid var(--panel-border); border-radius:10px; padding:12px 8px; text-align:center; }
+  .stat{ background:var(--surface-2); border:1px solid var(--panel-border); border-radius:10px; padding:12px 8px; text-align:center; }
   .stat .n{ font-size:21px; font-weight:700; }
   .stat .l{ font-size:10.5px; color:var(--dim); margin-top:2px; line-height:1.3; }
   .bar-row{ margin-bottom:14px; }
   .bar-head{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; gap:8px; }
   .bar-head .pct{ font-variant-numeric:tabular-nums; font-weight:700; white-space:nowrap; }
-  .bar-track{ height:7px; background:#dbe6e0; border-radius:20px; overflow:hidden; }
+  .bar-track{ height:7px; background:var(--surface-2-border); border-radius:20px; overflow:hidden; }
   .bar-fill{ height:100%; border-radius:20px; }
   .bar-note{ font-size:11.5px; color:var(--dim); margin-top:4px; }
   .focus-box{ border-left:3px solid var(--bad); background:#dc26261a; padding:10px 14px; border-radius:0 9px 9px 0; margin-bottom:12px; font-size:13.5px; line-height:1.65; }
@@ -232,7 +264,7 @@
   /* Pace. Neutral by default — a time is information, not a telling-off. Only
      going over the exam's own budget for that section colours it. */
   .pace{ margin-top:10px; font-size:12.5px; line-height:1.55; color:var(--muted);
-         background:#eef3f0; border:1px solid var(--panel-border);
+         background:var(--surface-2); border:1px solid var(--panel-border);
          border-radius:9px; padding:9px 12px; }
   .pace.is-ok strong{ color:var(--good); }
   .pace.is-slow{ border-color:#f59e0b55; }
@@ -259,7 +291,7 @@
      reasoning and the ladder still carries the full rule one tap deeper. */
   .skill-tag{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
   .skill-tag .tag-chip{ font-size:11px; font-weight:700; padding:3px 9px;
-                border-radius:20px; background:#2563eb1f; color:#1d4ed8; }
+                border-radius:20px; background:#2563eb1f; color:var(--link); }
   /* The alert is warm rather than red: it is not a telling-off, it is the app
      noticing the same gap twice and offering to close it. */
   .skill-alert{ border-left:3px solid var(--warn); background:#f59e0b1a;
@@ -312,14 +344,14 @@
   .ls-why{ font-size:12px; color:var(--muted); margin-top:3px; line-height:1.45; }
   .ls-badge{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; }
   .ls-badge.done{ background:#16a34a33; color:var(--good); }
-  .ls-badge.open{ background:#2563eb1f; color:#1d4ed8; }
+  .ls-badge.open{ background:#2563eb1f; color:var(--link); }
   .ls-badge.lock{ background:#47556933; color:var(--dim); }
   .ls-meta{ font-size:11.5px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; margin-top:12px; }
   .ls-main{ font-size:19px; margin:4px 0 14px; color:var(--text); }
   .ls-h{ font-size:14px; color:var(--accent-soft); margin:18px 0 6px; }
   .ls-p{ font-size:14px; line-height:1.7; margin:0 0 10px; }
   .ls-l{ font-size:14px; line-height:1.7; }
-  .ls-c{ background:#eef3f0; border:1px solid var(--panel-border); border-radius:8px;
+  .ls-c{ background:var(--surface-2); border:1px solid var(--panel-border); border-radius:8px;
          padding:12px; font-size:12.5px; line-height:1.55; overflow-x:auto;
          font-family:ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre; }
   .ls-k{ border-left:3px solid var(--warn); background:#f59e0b12; border-radius:0 8px 8px 0;
@@ -334,9 +366,26 @@
   .ls-video-head span{ color:var(--dim); }
   /* 16:9 without relying on aspect-ratio, which older Android WebViews lack. */
   .ls-video-frame{ position:relative; width:100%; padding-top:56.25%;
-                   border-radius:10px; overflow:hidden; background:#eef3f0;
+                   border-radius:10px; overflow:hidden; background:var(--surface-2);
                    border:1px solid var(--panel-border); }
   .ls-video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+  /* A subject, once opened, IS the screen. Scrolling out of Data Structures
+     and finding the other ten subjects, today's list and the 19-day run still
+     sitting there is the same "which one am I in?" question the exam picker
+     exists to answer, asked one level down. prep/sync.js sets .subject-open;
+     what it hides is decided here. */
+  #learn-list.subject-open #subjects-card,
+  #learn-list.subject-open #today-card,
+  #learn-list.subject-open #today-plan-card,
+  #learn-list.subject-open #plan-fold{ display:none; }
+  /* The fold becomes the screen: no disclosure arrow to close the thing you
+     are looking at, and no card border around the whole page. */
+  #learn-list.subject-open #path-fold > summary{ display:none; }
+  #learn-list.subject-open #path-fold{ border:0; background:transparent;
+                                       padding:0; box-shadow:none; margin:0; }
+  #learn-list.subject-open .fold-body{ margin-top:0; }
+  #learn-list.subject-open #path-fold .fold-body > .muted{ display:none; }
 
   /* Subjects strip — every subject on screen at once, wrapped, never scrolled
      sideways. The count is the honest state of the subject: mastered of total
@@ -344,7 +393,7 @@
   .subj-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
   .subj-chip{
     display:flex; align-items:baseline; gap:7px; min-height:42px;
-    background:#eef3f0; border:1px solid var(--panel-border); border-radius:10px;
+    background:var(--surface-2); border:1px solid var(--panel-border); border-radius:10px;
     padding:9px 12px; color:var(--text); font-family:inherit; font-size:13px;
     font-weight:600; cursor:pointer; text-align:left;
   }
@@ -357,7 +406,7 @@
   /* Test — the five modes */
   .mode-row{
     display:flex; align-items:center; gap:12px; width:100%; text-align:left;
-    background:#eef3f0; border:1px solid var(--panel-border); border-radius:12px;
+    background:var(--surface-2); border:1px solid var(--panel-border); border-radius:12px;
     padding:13px 14px; margin-top:10px; color:var(--text); font-family:inherit; cursor:pointer;
     min-height:56px;
   }
@@ -369,7 +418,7 @@
               text-align:right; max-width:34%; line-height:1.35; }
 
   /* Progress — the instruction, before the numbers */
-  .next-task{ border-color:#22c55e55; background:linear-gradient(180deg,#eef8f1,#f3f7f5); }
+  .next-task{ border-color:#22c55e55; background:linear-gradient(180deg,var(--tint),var(--tint-2)); }
   .nt-kicker{ font-size:10px; letter-spacing:.8px; text-transform:uppercase;
               font-weight:800; color:var(--accent); }
   .nt-title{ font-size:17px; font-weight:700; margin-top:5px; line-height:1.3; }
@@ -398,7 +447,7 @@
   .plan-day.is-done{ opacity:.55; }
   .plan-top{ display:flex; gap:12px; align-items:flex-start; }
   .plan-tick{ flex:0 0 auto; width:26px; height:26px; border-radius:8px; cursor:pointer;
-              background:#eef3f0; border:1px solid var(--panel-border); color:var(--bg);
+              background:var(--surface-2); border:1px solid var(--panel-border); color:var(--bg);
               font-weight:900; font-size:15px; line-height:1; }
   .plan-day.is-done .plan-tick{ background:var(--accent); border-color:transparent; }
   .plan-main{ flex:1; min-width:0; }
@@ -545,7 +594,7 @@
         <div class="td-chips" id="today-budget"></div>
         <div id="today-head" style="margin-top:12px;"></div>
       </div>
-      <div class="card"><div id="today-plan"></div></div>
+      <div class="card" id="today-plan-card"><div id="today-plan"></div></div>
 
       <!-- The run to the exam. Its length is the days actually left, not a
            fixed four weeks. -->
@@ -756,9 +805,18 @@ window.gotoSection = function(id){
   try{ history.replaceState(null, '', location.pathname + location.search + '#' + id); }catch(e){}
   if(id === 'progress') renderProgress();
   if(id === 'study'){
+    /* A bottom-bar tab is a destination, not a resume point. Tapping Study
+       shows Study — subjects and today's list — rather than dropping you back
+       inside whichever subject you were last reading, which since a subject
+       now takes over the whole screen would look like the tab was broken.
+       Callers that mean to open something specific (openLessonByKey, a task's
+       Start button) set their view AFTER calling this, so they still win. */
+    if(window.learnGoHome) window.learnGoHome();
+    else if(window.renderLearnPath) window.renderLearnPath();
+    const fold = document.getElementById('path-fold');
+    if(fold) fold.open = false;
     if(window.renderToday) window.renderToday();
     if(window.renderPlan) window.renderPlan();
-    if(window.renderLearnPath) window.renderLearnPath();
     renderSubjectChips();
   }
   if(id === 'test') renderTestModes();
@@ -788,14 +846,24 @@ function renderSubjectChips(){
   }).join('');
 }
 
+/* "← All subjects" comes back to Study itself — the chips at the top already
+   are the subject list, so leaving the full path expanded underneath them
+   would show the same eleven subjects twice. */
 document.addEventListener('click', e=>{
+  if(e.target.closest && e.target.closest('#ls-to-subjects')){
+    const fold = document.getElementById('path-fold');
+    if(fold) fold.open = false;
+    window.scrollTo(0, 0);
+    return;
+  }
   const b = e.target.closest && e.target.closest('[data-subj]');
   if(!b) return;
   const fold = document.getElementById('path-fold');
   if(fold) fold.open = true;
   if(window.openSubject) window.openSubject(b.getAttribute('data-subj'));
-  const path = document.getElementById('learn-path');
-  if(path) path.scrollIntoView({ behavior:'smooth', block:'start' });
+  // The subject is the whole screen now, so start at the top of it rather
+  // than scrolling to where it used to sit under everything else.
+  window.scrollTo(0, 0);
 });
 
 /* #mock is not a section — it is Practice with the full paper already open.

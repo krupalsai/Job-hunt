@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Job Hunt</title>
 <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
 <link rel="apple-touch-icon" href="/icon-192.svg" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -15,26 +16,65 @@
      stylesheet lands after the one below. -->
 <script src="/nav.js" defer></script>
 <style>
-  :root { color-scheme: light; }
+  /* Light is the base; dark is the same tokens redefined under the system
+     preference, so the app follows the phone. Literal hexes below were
+     replaced by these — a literal is a colour that only works in one scheme. */
+  :root {
+    color-scheme: light dark;
+    --bg:#ffffff;
+    --panel:#f8faf9;
+    --panel-border:#e2e8ec;
+    --surface-2:#eef3f0;
+    --surface-2-border:#dbe6e0;
+    --tint:#eef8f1;
+    --header-bg:#ffffffee;
+    --accent:#16a34a;
+    --accent-soft:#15803d;
+    --text:#0f172a;
+    --muted:#5b6b7a;
+    --dim:#8794a1;
+    --bad:#dc2626;
+    --warn:#b45309;
+    --on-accent:#ffffff;        /* text on a filled accent button */
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b1120;
+      --panel:#131c31;
+      --panel-border:#1e293b;
+      --surface-2:#0f172a;
+      --surface-2-border:#243049;
+      --tint:#14351f;
+      --header-bg:#0b1120ee;
+      --accent:#22c55e;
+      --accent-soft:#4ade80;
+      --text:#e2e8f0;
+      --muted:#94a3b8;
+      --dim:#64748b;
+      --bad:#f87171;
+      --warn:#f59e0b;
+      --on-accent:#0b1120;
+    }
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0; font-family: -apple-system, system-ui, sans-serif;
-    background: #ffffff; color: #0f172a;
+    background: var(--bg); color: var(--text);
     /* Cleared by nav.js too; stated here so the bottom bar never covers the
        last job card during the moment before that stylesheet lands. */
     padding-bottom: calc(74px + env(safe-area-inset-bottom));
   }
   header {
     padding: 10px 12px; position: sticky; top: 0;
-    background: #ffffffee; backdrop-filter: blur(8px); z-index: 10;
-    border-bottom: 1px solid #e2e8ec;
+    background: var(--header-bg); backdrop-filter: blur(8px); z-index: 10;
+    border-bottom: 1px solid var(--panel-border);
   }
   h1 { font-size: 17px; margin: 0; }
-  .sub { color: #64748b; font-size: 11.5px; line-height: 1.35; }
+  .sub { color: var(--dim); font-size: 11.5px; line-height: 1.35; }
 
   /* Card sections: a title, and where there is more behind it, a way through. */
   .sec { padding: 14px 12px 0; }
-  .view-all { background: none; border: 0; padding: 0; color: #15803d; font: inherit;
+  .view-all { background: none; border: 0; padding: 0; color: var(--accent-soft); font: inherit;
               font-size: 12px; font-weight: 700; cursor: pointer; }
 
   /* ── The exam you chose ────────────────────────────────────────────────
@@ -48,32 +88,32 @@
 
   .list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
   .card {
-    background: #f8faf9; border: 1px solid #e2e8ec; border-radius: 14px; padding: 14px;
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 14px; padding: 14px;
     box-shadow: 0 1px 3px rgba(15,23,42,.06);
   }
   /* A tap should feel like it landed — the same rule learn.html uses. */
   button:active:not(:disabled), a.syllabus-link:active, .hero-cta:active { filter: brightness(.92); }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .org { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; }
+  .org { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.4px; }
   .post { font-size: 15px; font-weight: 600; margin: 3px 0 8px; }
   .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
-  .badge.NEW { background: #16a34a22; color: #15803d; }
-  .badge.UPDATED { background: #2563eb1f; color: #1d4ed8; }
-  .badge.DEADLINE_APPROACHING { background: #dc262622; color: #b91c1c; }
-  .badge.CLOSED { background: #64748b22; color: #64748b; }
-  .meta { font-size: 12.5px; color: #475569; line-height: 1.7; }
-  .meta b { color: #0f172a; }
+  .badge.NEW { background: #16a34a22; color: var(--accent-soft); }
+  .badge.UPDATED { background: #2563eb1f; color: var(--accent-soft); }
+  .badge.DEADLINE_APPROACHING { background: #dc262622; color: var(--bad); }
+  .badge.CLOSED { background: #64748b22; color: var(--dim); }
+  .meta { font-size: 12.5px; color: var(--dim); line-height: 1.7; }
+  .meta b { color: var(--text); }
   .links { display: flex; gap: 10px; margin-top: 10px; }
   .links a {
-    font-size: 12.5px; color: #15803d; text-decoration: none; font-weight: 600;
+    font-size: 12.5px; color: var(--accent-soft); text-decoration: none; font-weight: 600;
   }
-  .empty { text-align: center; color: #94a3b8; padding: 40px 20px; font-size: 13.5px; line-height: 1.6; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 13.5px; line-height: 1.6; }
   .retry { margin-top: 12px; font-family: inherit; font-size: 12.5px; font-weight: 700;
-           color: #ffffff; background: #16a34a; border: 0; border-radius: 8px;
+           color: var(--on-accent); background: var(--accent); border: 0; border-radius: 8px;
            padding: 9px 16px; min-height: 38px; cursor: pointer; }
   .install-banner {
-    margin: 14px 12px 0; padding: 12px 14px; background: #eef8f1; border: 1px solid #16a34a55;
-    border-radius: 10px; font-size: 12.5px; color: #3f5a4c; display: none;
+    margin: 14px 12px 0; padding: 12px 14px; background: var(--tint); border: 1px solid #16a34a55;
+    border-radius: 10px; font-size: 12.5px; color: var(--muted); display: none;
   }
   .install-banner.show { display: block; }
   /* Refreshing sits with the data age it refreshes, not in a floating circle
@@ -81,47 +121,66 @@
      the home screen is the exam rather than one long list. */
   .age-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   #refreshBtn { min-height: 34px; padding: 0 4px; }
-  .est { font-size: 11px; color: #b45309; border: 1px solid #f59e0b55;
+  .est { font-size: 11px; color: var(--warn); border: 1px solid #f59e0b55;
          border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
-  #lastUpdated.stale { color: #b45309; }
+  #lastUpdated.stale { color: var(--warn); }
   /* The qualification picker itself lives in the drawer with the other
      settings. This is the nudge on the list that opens it — without one, a
      first-time visitor would never find the control that makes the list
      theirs. */
   .qual-prompt { margin: 0 12px 10px; padding: 11px 13px; border-radius: 10px;
-                 background: #eef8f1; border: 1px solid #16a34a55; color: #3f5a4c;
+                 background: var(--tint); border: 1px solid #16a34a55; color: var(--muted);
                  font-size: 12.5px; text-align: left; width: calc(100% - 24px);
                  font-family: inherit; cursor: pointer; display: none; }
   .qual-prompt.show { display: block; }
-  .qual-prompt b { color: #15803d; }
+  .qual-prompt b { color: var(--accent-soft); }
   /* Job card rows — label on the left, answer on the right, so "have I
      applied / which exam / when is it" are read without hunting. */
   .jrow { display: flex; gap: 10px; align-items: baseline; padding: 7px 0;
-          border-top: 1px solid #e2e8ec; font-size: 12.5px; }
-  .jlab { flex: 0 0 88px; color: #8794a1; font-size: 11px; text-transform: uppercase;
+          border-top: 1px solid var(--panel-border); font-size: 12.5px; }
+  .jlab { flex: 0 0 88px; color: var(--dim); font-size: 11px; text-transform: uppercase;
           letter-spacing: .4px; }
-  .jval { flex: 1; min-width: 0; color: #1e293b; line-height: 1.5; }
-  .ok-tag { color: #15803d; font-weight: 700; font-size: 11px; }
-  .no-tag { color: #b45309; font-weight: 700; font-size: 11px; }
+  .jval { flex: 1; min-width: 0; color: var(--text); line-height: 1.5; }
+  .ok-tag { color: var(--accent-soft); font-weight: 700; font-size: 11px; }
+  .no-tag { color: var(--warn); font-weight: 700; font-size: 11px; }
   .study-now { display: block; margin-top: 12px; text-align: center; text-decoration: none;
-               font-size: 13.5px; font-weight: 800; color: #ffffff; background: #16a34a;
+               font-size: 13.5px; font-weight: 800; color: var(--on-accent); background: var(--accent);
                border-radius: 10px; padding: 12px 14px; }
-  .other-note { font-size: 11.5px; color: #64748b; line-height: 1.55; margin: 10px 0 0; }
+  /* Other openings — present, but plainly secondary to the exam you chose. */
+  .other-fold { padding: 14px 12px 0; }
+  .other-fold summary { cursor: pointer; font-size: 12.5px; font-weight: 700; color: var(--muted);
+                        list-style: none; display: flex; align-items: center; gap: 6px;
+                        min-height: 40px; }
+  .other-fold summary::-webkit-details-marker { display: none; }
+  .other-fold summary::after { content: "▾"; color: var(--accent-soft); font-size: 11px; }
+  .other-fold[open] summary::after { content: "▴"; }
+  .other-row { display: flex; align-items: center; gap: 10px; padding: 11px 0;
+               border-top: 1px solid var(--panel-border); }
+  .other-main { flex: 1; min-width: 0; }
+  .other-org { font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .4px; }
+  .other-post { font-size: 13px; font-weight: 600; margin-top: 2px; line-height: 1.35; }
+  .other-meta { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .other-switch { flex: 0 0 auto; font-family: inherit; font-size: 11.5px; font-weight: 700;
+                  color: var(--accent-soft); background: var(--tint);
+                  border: 1px solid var(--surface-2-border); border-radius: 20px;
+                  padding: 8px 11px; min-height: 40px; cursor: pointer; white-space: nowrap; }
+  .other-none { flex: 0 0 auto; font-size: 10.5px; color: var(--dim); text-align: right;
+                max-width: 90px; line-height: 1.3; }
   .hidden { display: none !important; }
   .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
-                 border-top:1px solid #e2e8ec; padding-top:10px; }
-  .applied-q { font-size:12.5px; color:#64748b; }
+                 border-top:1px solid var(--panel-border); padding-top:10px; }
+  .applied-q { font-size:12.5px; color:var(--dim); }
   .btn-y, .btn-n { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px;
-                   border:1px solid #dbe6e0; background:#eef3f0; color:#0f172a; cursor:pointer; }
-  .btn-y.on { background:#16a34a; color:#ffffff; border-color:transparent; }
-  .applied-tag { font-size:11px; font-weight:700; color:#15803d; }
+                   border:1px solid var(--surface-2-border); background:var(--surface-2); color:var(--text); cursor:pointer; }
+  .btn-y.on { background:var(--accent); color:var(--bg); border-color:transparent; }
+  .applied-tag { font-size:11px; font-weight:700; color:var(--accent-soft); }
   .syllabus-link { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
-                   color:#ffffff; background:#16a34a; padding:8px 14px; border-radius:8px;
+                   color:var(--bg); background:var(--accent); padding:8px 14px; border-radius:8px;
                    text-decoration:none; }
   .syllabus-box { margin-top:10px; padding:12px; border-radius:10px;
-                  background:#eef3f0; border:1px solid #16a34a33; }
-  .syllabus-pattern { font-size:12px; color:#15803d; font-weight:600; }
-  .syllabus-sections { font-size:12px; color:#64748b; margin-top:4px; line-height:1.6; }
+                  background:var(--surface-2); border:1px solid #16a34a33; }
+  .syllabus-pattern { font-size:12px; color:var(--accent-soft); font-weight:600; }
+  .syllabus-sections { font-size:12px; color:var(--dim); margin-top:4px; line-height:1.6; }
 </style>
 </head>
 <body data-page="jobs">
@@ -148,8 +207,12 @@
     <span class="sub" id="lastUpdated">Loading…</span>
     <button class="view-all" id="refreshBtn" onclick="load()">↻ Refresh</button>
   </div>
-  <p class="other-note" id="otherNote"></p>
 </div>
+
+<details class="sec other-fold hidden" id="otherFold">
+  <summary id="otherCount">Other openings</summary>
+  <div id="otherJobs"></div>
+</details>
 
 <button class="qual-prompt" id="qualPrompt">
   <b>Tell the app what you studied</b><br>
@@ -297,15 +360,42 @@ function render() {
       escapeHtml(exam ? exam.short : 'this exam') + ' right now.<br>' +
       'The nightly run adds them as they are published — your preparation carries on either way.</div>';
 
-  /* The openings for other exams are not hidden, but they are not mixed in
-     either: they belong to a different exam, and seeing them means switching
-     to it. Saying how many exist stops the app quietly losing the student's
-     own tracked data. */
-  const others = allJobs.length - mine.length;
-  document.getElementById('otherNote').textContent = others
-    ? `${others} other opening${others === 1 ? '' : 's'} tracked for the other exams. Change exam in the ☰ menu to see them.`
-    : '';
+  /* Everything else, behind a fold.
+
+     This screen is scoped to the selected exam, and it leads with it — but
+     scoping it to ONLY that exam lost three of the seven openings entirely:
+     the Air Force, railway and Singareni notifications match no exam in the
+     app, so no amount of switching would ever reveal them. A tracker that
+     silently drops what it tracked is a worse failure than a mixed list, so
+     the rest are here, folded away, each saying which exam it belongs to. */
+  const others = allJobs.filter(j => mine.indexOf(j) === -1);
+  const box = document.getElementById('otherJobs');
+  document.getElementById('otherFold').classList.toggle('hidden', others.length === 0);
+  document.getElementById('otherCount').textContent =
+    `Other openings (${others.length})`;
+  box.innerHTML = others.map(j => {
+    const e = examForJob(j);
+    return `<div class="other-row">
+      <div class="other-main">
+        <div class="other-org">${escapeHtml(j.organization)}</div>
+        <div class="other-post">${escapeHtml(j.post_name)}</div>
+        <div class="other-meta">${escapeHtml(j.deadline_text || 'closing date TBA')}${
+          applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}</div>
+      </div>
+      ${e
+        ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">${escapeHtml(e.short)} →</button>`
+        : `<span class="other-none">no syllabus yet</span>`}
+    </div>`;
+  }).join('');
 }
+
+/* Switching from an opening is the same switch the ☰ menu offers — one route,
+   so the app cannot end up with two ways to change the thing everything else
+   depends on. */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-switch-exam]');
+  if (b && window.JobhuntNav) window.JobhuntNav.openChangeExam();
+});
 
 /* One card, answering the four things a tracked opening has to answer: have I
    applied, which exam is it, when is that exam, and what do I do about it. */

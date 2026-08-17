@@ -252,6 +252,15 @@
 
   function render() {
     if (!el("learn-path")) return;
+    /* One subject is a context, not a panel on a page about everything.
+       Opening one marks the Study screen so the page can put the other
+       subjects, today's list and the run away — scrolling out of a subject
+       and finding the other ten still sitting there is the same "which one am
+       I in?" question the exam picker exists to answer, asked one level down.
+       learn.html owns what the class hides; this only says which state it is
+       in. */
+    const list = el("learn-list");
+    if (list) list.classList.toggle("subject-open", view.level === "lessons");
     if (view.level === "subjects") return renderSubjects();
     if (view.level === "lessons") return renderLessons(view.subject);
   }
@@ -410,6 +419,15 @@
   function renderLessons(name) {
     const s = subjects().find(x => x.name === name);
     if (!s) { view = { level: "subjects" }; return render(); }
+
+    /* Put the list back on screen and the reader away. renderSubjects has
+       always done this and renderLessons never did, so "← <subject>" at the
+       top of an open lesson set the state correctly, re-rendered a list nobody
+       could see, and left the reader sitting on top of it — a back button that
+       did nothing. Every route into this view needs it, so it belongs here
+       rather than in each caller. */
+    el("learn-reader").classList.add("hidden");
+    el("learn-list").classList.remove("hidden");
 
     el("learn-progress").innerHTML =
       `<button class="ghost" id="ls-to-subjects">← All subjects</button>`;

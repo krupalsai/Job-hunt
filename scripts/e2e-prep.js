@@ -304,7 +304,7 @@ function check(name, cond, detail){
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
   // Into a subject that has a path.
-  await page.locator('#learn-path [data-subject="Data Structures"]').click();
+  await page.locator('#subject-chips [data-subj="Data Structures"]').click();
   const lessonRows = await page.locator('#learn-path .ls-row').count();
   check('the subject opens its own lesson list', lessonRows === 7, `got ${lessonRows}`);
   check('only the first lesson of the subject is unlocked',
@@ -373,12 +373,15 @@ function check(name, cond, detail){
     await page.locator('#ls-practice-now').count() === 1);
 
   await page.click('nav#nav-bottom [data-tab="study"]');
-  // Returning to Learn keeps you inside the subject you were studying rather
-  // than dumping you back at the top — so only navigate in if it did reset.
-  if (await page.locator('#learn-path [data-subject="Data Structures"]').count()) {
-    await page.locator('#learn-path [data-subject="Data Structures"]').click();
-  }
-  check('coming back to Learn keeps you in the subject you were in',
+  /* A bottom-bar tab is a destination, not a resume point: tapping Study
+     shows Study. That matters more now that an open subject takes over the
+     whole screen — landing back inside one would read as the tab being
+     broken. The subject is one tap away at the top. */
+  check('tapping Study comes back to Study, not into the last subject',
+    await page.locator('#subjects-card').isVisible() &&
+    await page.locator('#today-card').isVisible());
+  await page.locator('#subject-chips [data-subj="Data Structures"]').click();
+  check('and the subject is one tap away, with its lessons intact',
     (await page.locator('#learn-path .ls-row').count()) === 7);
   check('mastering a lesson unlocks the next one',
     (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
@@ -394,7 +397,7 @@ function check(name, cond, detail){
      imply it by which one has more questions. */
   await page.click('nav#nav-bottom [data-tab="study"]');
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.locator('#subject-chips [data-subj="English"]').click();
   await page.waitForSelector('#learn-path .ls-group');
 
   const groups = await page.locator('#learn-path .ls-group').allTextContents();
@@ -433,7 +436,7 @@ function check(name, cond, detail){
      start by setting one. */
   const rerenderEnglish = () => page.evaluate(() => {
     window.learnGoHome();
-    document.querySelector('#learn-path [data-subject="English"]').click();
+    document.querySelector('#subject-chips [data-subj="English"]').click();
   });
 
   await page.evaluate(() => { state.skills = {}; save(); });
@@ -497,7 +500,7 @@ function check(name, cond, detail){
   // A subject nobody has split into grammar/vocabulary must show no chapters
   // at all — this is additive, not a change to how every subject renders.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#learn-path [data-subject="Data Structures"]').click();
+  await page.locator('#subject-chips [data-subj="Data Structures"]').click();
   check('a subject with no grammar/vocabulary split shows no chapters block',
     (await page.locator('#learn-path .ls-group').count()) === 0);
   check('and its lesson list is completely unaffected',
@@ -506,7 +509,7 @@ function check(name, cond, detail){
   // Opening a chapter goes straight into the same micro-drill Progress and
   // the quiz alert already use — rule taught first, then the questions.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.locator('#subject-chips [data-subj="English"]').click();
   await page.waitForSelector('#learn-path .ls-group');
   const tenseRow = page.locator('#learn-path [data-skill="verb-tenses-forms"]');
   await tenseRow.click();
@@ -1397,7 +1400,7 @@ function check(name, cond, detail){
   await page.click('nav#nav-bottom [data-tab="study"]');
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await openPath();
-  await page.locator('#learn-path [data-subject="Telangana Movement & State Formation"]').click();
+  await page.locator('#subject-chips [data-subj="Telangana Movement & State Formation"]').click();
   const tmRows = await page.locator('#learn-path .ls-row').count();
   check('Telangana Movement opens its own lesson list inside TS SI', tmRows >= 3, `${tmRows} rows`);
   await page.locator('#learn-path .ls-row').first().click();

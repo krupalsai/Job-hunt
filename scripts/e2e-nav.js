@@ -357,6 +357,34 @@ async function reachable(page, selector, where, minH){
     (await page.locator('#learn-path .ls-row').count()) >= 1 &&
     /Normal|SQL|Keys|ACID|Transaction/i.test(await page.locator('#learn-path').innerText()),
     (await page.locator('#learn-path').innerText()).replace(/\s+/g, ' ').slice(0, 100));
+
+  /* An open subject IS the screen. Scrolling out of it and finding the other
+     ten subjects, today's list and the run still sitting there is the same
+     "which one am I in?" question the exam picker exists to answer, asked one
+     level down — so the rest of Study goes away, on the whole page and not
+     just above the fold. */
+  const shown = sel => page.evaluate(s => {
+    const e = document.querySelector(s);
+    return !!(e && e.offsetParent !== null);
+  }, sel);
+  check('the other subjects are gone while one is open', !(await shown('#subjects-card')));
+  check('so is today\'s list', !(await shown('#today-card')) && !(await shown('#today-plan-card')));
+  check('and so is the run to the exam', !(await shown('#plan-fold')));
+  check('no other subject is anywhere on the page, scrolled or not',
+    !/DBMS practice|Reasoning|Operating Systems|Telangana|General Awareness/.test(
+      await page.locator('#learn-list').innerText()),
+    (await page.locator('#learn-list').innerText()).replace(/\s+/g, ' ').slice(0, 120));
+  check('and there is a way back out of it', await shown('#ls-to-subjects'));
+
+  await page.locator('#ls-to-subjects').click();
+  await page.waitForFunction(() => {
+    const e = document.querySelector('#subjects-card');
+    return !!(e && e.offsetParent !== null);
+  });
+  check('coming back restores Study: subjects, today and the run',
+    (await shown('#subjects-card')) && (await shown('#today-card')) && (await shown('#plan-fold')));
+  check('and does not leave the full path expanded under the chips, listing them twice',
+    !(await page.locator('#path-fold').evaluate(e => e.open)));
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await reachable(page, '#today-budget .td-chip', 'study-time chip');
   await reachable(page, '#today-plan .td-go', 'start button');
@@ -385,7 +413,7 @@ async function reachable(page, selector, where, minH){
   });
   await page.waitForSelector('#learn-path');
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#learn-path [data-subject="English"]').click();
+  await page.locator('#subject-chips [data-subj="English"]').click();
   await page.waitForSelector('#learn-path .ls-group');
   check('the "what to open next" banner is on screen, not just the chapter list',
     (await page.locator('#learn-path .ls-recommend').count()) === 1);
@@ -672,6 +700,40 @@ async function reachable(page, selector, where, minH){
   await reachable(page, '.tabs .tab', 'job list filter', 36);
 
   console.log('\n── Jobs is the openings for THIS exam ───────────────────');
+  /* Scoping Jobs to the selected exam once lost three of seven openings
+     outright: the Air Force, railway and Singareni notifications match no
+     exam in the app, so no amount of switching would ever have revealed them.
+     A tracker that silently drops what it tracked is worse than a mixed list. */
+  await page.route('**/rest/v1/jobs**', r => r.fulfill({ status: 200,
+    contentType: 'application/json', body: JSON.stringify([
+      { id: 'a', organization: 'Hindustan Aeronautics Limited (HAL)', post_name: 'Management Trainee',
+        status: 'NEW', deadline_text: '12 Sep 2026', updated_at: new Date().toISOString() },
+      { id: 'b', organization: 'Staff Selection Commission', post_name: 'CGL 2026',
+        status: 'UPDATED', deadline_text: '30 Aug 2026', updated_at: new Date().toISOString() },
+      { id: 'c', organization: 'Indian Air Force', post_name: 'Agniveervayu 02/2027',
+        status: 'UPDATED', deadline_text: '22 Sep 2026', updated_at: new Date().toISOString() },
+    ]) }));
+  await page.evaluate(() => localStorage.setItem('jobhunt_current_exam', 'hal-cs'));
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#examJobs .card');
+  check('the selected exam\'s opening leads the screen',
+    (await page.locator('#examJobs .card').count()) === 1 &&
+    /Hindustan Aeronautics/i.test(await page.locator('#examJobs').innerText()),
+    await page.locator('#examJobs').innerText());
+  check('and every other tracked opening is still reachable, not dropped',
+    /Other openings \(2\)/.test(await page.locator('#otherCount').textContent()),
+    await page.locator('#otherCount').textContent());
+  await page.locator('#otherFold summary').click();
+  const otherText = await page.locator('#otherJobs').innerText();
+  check('including one that belongs to another exam, which says which',
+    /SSC CGL/i.test(otherText), otherText.replace(/\s+/g, ' ').slice(0, 120));
+  check('and one that belongs to no exam at all, which says so honestly',
+    /Air Force/i.test(otherText) && /no syllabus yet/i.test(otherText),
+    otherText.replace(/\s+/g, ' ').slice(0, 160));
+  await reachable(page, '.other-fold summary', 'other-openings toggle', 40);
+  await page.unroute('**/rest/v1/jobs**');
+
   await page.goto('about:blank');
   await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#examJobs');
@@ -803,6 +865,42 @@ async function reachable(page, selector, where, minH){
   check('no HAL content survives a switch to TS SI, on any screen',
     !/DBMS|Theory of Computation|Software Engineering|160 MCQs/.test(seen.join(' ')),
     seen.join(' ').replace(/\s+/g, ' ').slice(0, 200));
+
+  /* ── The app follows the phone's light/dark setting ─────────────────────
+     Every colour is a token defined twice; a literal hex in a component is a
+     colour that only works in one scheme, which is exactly how the subject
+     chips shipped black-on-black. */
+  console.log('\n── light and dark both work ─────────────────────────────');
+  const luminance = c => {
+    const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map(Number);
+    const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
+    return .2126 * f(r) + .7152 * f(g) + .0722 * f(b);
+  };
+  const paint = async scheme => {
+    const c = await browser.newContext({ viewport: PHONE, colorScheme: scheme });
+    await c.addInitScript(() => localStorage.setItem('jobhunt_current_exam', 'hal-cs'));
+    const pg = await c.newPage();
+    await pg.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+    const out = await pg.evaluate(() => ({
+      body: getComputedStyle(document.body).backgroundColor,
+      text: getComputedStyle(document.body).color,
+      bar: getComputedStyle(document.querySelector('nav#nav-bottom')).backgroundColor,
+      chip: getComputedStyle(document.querySelector('.subj-chip')).backgroundColor,
+    }));
+    await c.close();
+    return out;
+  };
+  const lightPaint = await paint('light');
+  const darkPaint = await paint('dark');
+  check('a light phone gets a light app',
+    luminance(lightPaint.body) > 0.7 && luminance(lightPaint.text) < 0.2, JSON.stringify(lightPaint));
+  check('a dark phone gets a dark app',
+    luminance(darkPaint.body) < 0.1 && luminance(darkPaint.text) > 0.6, JSON.stringify(darkPaint));
+  check('the bottom bar follows too, rather than staying white over a dark page',
+    luminance(darkPaint.bar) < 0.15, darkPaint.bar);
+  check('and so does every raised surface inside a card',
+    luminance(darkPaint.chip) < 0.15 && luminance(lightPaint.chip) > 0.7,
+    `${darkPaint.chip} / ${lightPaint.chip}`);
 
   /* ── Nothing broke ──────────────────────────────────────────────────── */
   console.log('\n── clean run ────────────────────────────────────────────');

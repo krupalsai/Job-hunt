@@ -184,7 +184,21 @@
 :root{
   --nav-bg:#ffffff; --nav-panel:#f8faf9; --nav-line:#e2e8ec; --nav-accent:#16a34a;
   --nav-accent-soft:#15803d; --nav-text:#0f172a; --nav-muted:#5b6b7a; --nav-dim:#8794a1;
+  --nav-bar-bg:#ffffffef; --nav-scrim:#0f172a66; --nav-on-accent:#ffffff;
+  --nav-tint:#16a34a14; --nav-tint-line:var(--nav-tint-line);
   --nav-h:60px;
+}
+/* The navigation follows the phone's setting, same as both pages do. Its own
+   namespace is redefined rather than reusing theirs, because index.html has
+   never declared page variables and a bar that renders unstyled on one of the
+   two pages is worse than one that repeats a dozen values. */
+@media (prefers-color-scheme: dark){
+  :root{
+    --nav-bg:#0b1120; --nav-panel:#131c31; --nav-line:#1e293b; --nav-accent:#22c55e;
+    --nav-accent-soft:#4ade80; --nav-text:#e2e8f0; --nav-muted:#94a3b8; --nav-dim:#64748b;
+    --nav-bar-bg:#0f172af7; --nav-scrim:#020617b8; --nav-on-accent:#0b1120;
+    --nav-tint:#16a34a1f; --nav-tint-line:#22c55e55;
+  }
 }
 html{ -webkit-text-size-adjust:100%; }
 body{ overflow-x:hidden; padding-bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom)); }
@@ -212,7 +226,7 @@ body{ overflow-x:hidden; padding-bottom:calc(var(--nav-h) + 14px + env(safe-area
 nav#nav-bottom{
   position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex;
   margin:0; padding:0 0 env(safe-area-inset-bottom); overflow:visible; max-width:none;
-  background:#ffffffee; border-top:1px solid var(--nav-line);
+  background:var(--nav-bar-bg); border-top:1px solid var(--nav-line);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
 }
 nav#nav-bottom .nav-item{
@@ -250,8 +264,8 @@ nav#nav-bottom .nav-item.is-on::before{
   border-bottom:1px solid var(--nav-line); background:var(--nav-panel);
 }
 .nav-avatar{
-  flex:0 0 auto; width:42px; height:42px; border-radius:50%; background:#16a34a2e;
-  border:1px solid #22c55e55; display:flex; align-items:center; justify-content:center;
+  flex:0 0 auto; width:42px; height:42px; border-radius:50%; background:var(--nav-tint);
+  border:1px solid var(--nav-tint-line); display:flex; align-items:center; justify-content:center;
   font-size:19px;
 }
 .nav-acct-main{ min-width:0; flex:1; }
@@ -292,7 +306,7 @@ nav#nav-bottom .nav-item.is-on::before{
 }
 .nav-danger{ color:#dc2626; }
 .nav-danger .nav-ico{ color:#dc2626; }
-.nav-foot{ margin-top:auto; padding:18px 16px 4px; font-size:10.5px; color:#475569; line-height:1.5; }
+.nav-foot{ margin-top:auto; padding:18px 16px 4px; font-size:10.5px; color:var(--nav-dim); line-height:1.5; }
 
 /* ── The exam screen ──────────────────────────────────────────────────────
    One component, two jobs: the question asked on first open, and Change exam.
@@ -307,7 +321,7 @@ nav#nav-bottom .nav-item.is-on::before{
 #nav-picker.is-open{ display:block; }
 .pick-inner{ max-width:520px; margin:0 auto; }
 .pick-mark{
-  width:50px; height:50px; border-radius:15px; background:#16a34a2e; border:1px solid #22c55e55;
+  width:50px; height:50px; border-radius:15px; background:var(--nav-tint); border:1px solid var(--nav-tint-line);
   display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:14px;
 }
 .pick-h{ font-size:21px; line-height:1.28; margin:0 0 8px; color:var(--nav-text); }
@@ -339,7 +353,7 @@ nav#nav-bottom .nav-item.is-on::before{
 .pick-meta{ display:block; font-size:11.5px; color:var(--nav-muted); margin-top:5px; line-height:1.5; }
 .pick-when{ color:var(--nav-accent-soft); font-weight:600; }
 .pick-warn{ color:#dc2626; font-weight:600; }
-.pick-current{ border-color:#22c55e55; background:#16a34a14; }
+.pick-current{ border-color:var(--nav-tint-line); background:var(--nav-tint); }
 .pick-tick{ flex:0 0 auto; color:var(--nav-accent); font-size:17px; line-height:1; margin-top:2px; }
 .pick-foot{ font-size:11.5px; color:var(--nav-dim); line-height:1.55; margin-top:14px; }
 /* The commit button is pinned: on a small screen the third exam can push it
@@ -348,7 +362,7 @@ nav#nav-bottom .nav-item.is-on::before{
 .pick-bar{
   position:fixed; left:0; right:0; bottom:0; z-index:201;
   padding:12px 16px calc(12px + env(safe-area-inset-bottom));
-  background:#fffffff2; border-top:1px solid var(--nav-line);
+  background:var(--nav-bar-bg); border-top:1px solid var(--nav-line);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
 }
 .pick-go{
