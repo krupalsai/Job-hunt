@@ -48,15 +48,36 @@ const EXAMS = [
     examDateEnd: "2026-09-06",
 
     // Those same sources describe the 100-mark discipline section as following
-    // GATE Computer Science scope, which would mean four subjects this bank has
-    // nothing for at all. They are NAMED here rather than silently generated:
-    // writing a hundred questions against an unverified syllabus three weeks
-    // before the paper is a good way to spend the last three weeks on the wrong
-    // subjects. See HAL-SYLLABUS-AUDIT.md for the full classification.
-    pendingVerification: {
-      note: "Reported to follow GATE CS scope, but not checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026) — the official PDF could not be retrieved. Nothing has been written for these. See HAL-SYLLABUS-AUDIT.md.",
-      subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete / Engineering Mathematics"],
+    // GATE Computer Science scope, which meant four subjects — Digital Logic,
+    // Algorithms, Compiler Design and Discrete Mathematics — that this bank had
+    // nothing for at all. They were NAMED and left empty rather than silently
+    // generated, because writing a hundred questions against an unverified
+    // syllabus is a good way to spend the last weeks on the wrong subjects.
+    //
+    // The candidate lifted that block on 17 August 2026, preparing from GATE CS
+    // previous-year papers and asking for the full GATE scope. The four
+    // subjects are now in the section below and have lessons and questions.
+    //
+    // What has NOT changed is the verification status: the notification still
+    // has not been read. That is recorded here rather than quietly dropped,
+    // because the screen has to be able to say what the syllabus rests on.
+    // See HAL-SYLLABUS-AUDIT.md.
+    syllabusBasis: {
+      status: "candidate-authorised",
+      on: "2026-08-17",
+      note: "Reported to follow GATE CS scope, and covered on that basis at the candidate's instruction. Still NOT checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026) — the official PDF could not be retrieved. See HAL-SYLLABUS-AUDIT.md.",
     },
+    // Where to drill beyond this app's own bank. HAL does not publish a
+    // question paper, so the nearest real papers are the ones named here —
+    // and a source list is the one part of exam prep an app cannot host
+    // itself, because these are other people's question banks.
+    practiceSources: [
+      "1-mark GATE CS PYQs (2010-2023), filtered to 1-markers — closest match for difficulty and phrasing",
+      "ISRO Scientist/Engineer CS PYQs — the closest PSU pattern match",
+      "BEL / ECIL Technical Officer CS PYQs — good for speed drills",
+      "Made Easy / GATE Overflow topic-wise banks — for formula numericals",
+    ],
+    dailyRoutine: "25 technical MCQs + 10 reasoning + 5 GK, timed.",
     pattern: "160 MCQs · 150 minutes · no negative marking",
     // Every correct answer is worth one mark, nothing is deducted, an
     // unanswered question scores zero. Stated as numbers, not just as
@@ -72,7 +93,11 @@ const EXAMS = [
       { name: "English & Reasoning",  marks: 40,  questions: 40,  budget: 38, subjects: ["Reasoning", "English"] },
       { name: "CS Technical",         marks: 100, questions: 100, budget: 97, subjects: [
           "Data Structures", "Operating Systems", "DBMS", "Computer Networks",
-          "COA", "Theory of Computation", "Programming & OOP", "Software Engineering"] },
+          "COA", "Theory of Computation", "Programming & OOP", "Software Engineering",
+          // Added 17 Aug 2026 with the syllabus block lifted — see
+          // syllabusBasis above. Ordered after the eight that were already
+          // covered, so the study path still opens on a subject with depth.
+          "Digital Logic", "Algorithms", "Compiler Design", "Discrete Mathematics"] },
     ],
     tactics: [
       "Attempt all 160. A blank scores zero and so does a wrong answer, so a guess is free.",

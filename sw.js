@@ -16,7 +16,7 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v4';
+const CACHE = 'jobhunt-v5';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -29,9 +29,15 @@ const PREP_ASSETS = [
   '/prep/exams.js',
   '/prep/skills.js',
   '/prep/hal-cs.js',
+  '/prep/gate-cs.js',
   '/prep/ts-si.js',
+  // What each subject EXAMINES. Missing offline, the Learn screen would fall
+  // back to showing only the lessons that exist — which is the exact gap this
+  // file was added to close, so it would close only while online.
+  '/prep/syllabus.js',
   '/prep/lessons.js',
   '/prep/ts-si-lessons.js',
+  '/prep/gate-cs-lessons.js',
   '/prep/sync.js',
   '/prep/today.js',
   '/manifest.json',

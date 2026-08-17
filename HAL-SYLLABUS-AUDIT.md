@@ -1,12 +1,49 @@
 # HAL CSE syllabus audit
 
 **Advertisement:** HAL/CHRC-TM/RECT-02/2026 · Management Trainee (Computer Science)
-**Audited:** 13 August 2026 · **Status: BLOCKED — official syllabus not obtained**
+**Audited:** 13 August 2026 · **Updated:** 17 August 2026
+**Status: BLOCK LIFTED BY THE CANDIDATE — the syllabus is still unverified**
 
 This file exists so that nothing gets written for HAL on the strength of a
 guess. Every technical subject below is classified, and the classification
 decides whether material may be produced for it. Update this file when the
 notification is in hand; it is the gate, not a report.
+
+---
+
+## 17 August 2026 — the block, and who lifted it
+
+The four UNCERTAIN subjects below — Digital Logic, Algorithms, Compiler Design
+and Discrete / Engineering Mathematics — were blocked because the notification
+could not be retrieved. **The candidate lifted that block**, in their own words,
+having decided to prepare from GATE CS previous-year papers and asked for the
+full GATE CS scope to be covered.
+
+That is a decision, and it is theirs to make. It is **not** a verification, and
+this file will not record it as one:
+
+- The notification PDF has still not been read. Nothing in "The verification
+  problem" below has changed.
+- What changed is the instruction. The candidate, who is the one who loses the
+  weeks if the scope is wrong, chose to cover the reported scope rather than
+  leave four subjects empty. Sitting the paper cold on a subject that turns out
+  to be examined is the worse of the two risks, and it is their call which risk
+  to take.
+- Every screen that shows this syllabus says it is unverified —
+  `syllabusBasis` in `prep/exams.js` carries the status, the date and the
+  reason, and Exam info renders it in full. `prep/syllabus.js` carries
+  `verified: false` on every subject, and the Learn screen prints it under each
+  subject's topic list.
+
+**What now exists for the four subjects** (see `prep/gate-cs.js` and
+`prep/gate-cs-lessons.js`): 3 lessons and 12–13 questions each, at the same
+1-mark GATE/ISRO level as the rest of the bank. Lessons were written before
+questions, per rule 3 below.
+
+**If the notification arrives and contradicts this**, the reversal is cheap and
+prepared for: the four subjects are in two files of their own and a single
+section entry in `prep/exams.js`. Remove the subjects from that section and
+archive the two files — no other subject's material is entangled with them.
 
 ---
 
@@ -86,23 +123,33 @@ app has real material for these, and whether the paper examines them is still
 unconfirmed. The risk they carry is not wasted writing — it is already written —
 but wasted *studying*, which is why the classification stays honest.
 
-### Reported present in the syllabus, absent from the app
+### Reported present in the syllabus — written on 17 Aug 2026, still unverified
 
 | Subject | Questions | Lessons | Class |
 |---|---:|---:|---|
-| Digital Logic | 0 | 0 | **UNCERTAIN — do not write** |
-| Algorithms (distinct from Data Structures) | 0 | 0 | **UNCERTAIN — do not write** |
-| Compiler Design | 0 | 0 | **UNCERTAIN — do not write** |
-| Discrete / Engineering Mathematics | 0 | 0 | **UNCERTAIN — do not write** |
+| Digital Logic | 13 | 3 | UNCERTAIN + covered (candidate-authorised) |
+| Algorithms (distinct from Data Structures) | 13 | 3 | UNCERTAIN + covered (candidate-authorised) |
+| Compiler Design | 12 | 3 | UNCERTAIN + covered (candidate-authorised) |
+| Discrete Mathematics | 13 | 3 | UNCERTAIN + covered (candidate-authorised) |
 
 Multiple secondary sources describe the 100-mark discipline section as
 following GATE Computer Science scope, which would place all four in the paper.
-If that is right, four subjects worth a substantial share of 100 marks have no
-material at all. If it is wrong, writing them costs the last three weeks before
-the exam.
+That is still not confirmed. What changed on 17 August 2026 is not the evidence
+but the instruction — see the note at the top of this file.
 
-**This is the single highest-stakes open question in the project.** It is not
-resolvable by more searching — it needs the notification.
+**This remains the single highest-stakes open question in the project.** It is
+not resolvable by more searching; it needs the notification. Covering the four
+subjects reduces the cost of being right about GATE scope and does nothing to
+reduce the cost of being wrong, so the question stays open and stays flagged on
+screen.
+
+Two boundaries were kept while writing them, so a later reversal stays clean and
+so no subject's weak-area verdict is polluted by another's:
+
+- Number-system conversion and 2's complement stay in **COA**, which already
+  teaches and tests them. Digital Logic starts at Boolean algebra.
+- Sorting and heap operations stay in **Data Structures**. Algorithms covers
+  design — recurrences, greedy vs DP, graph algorithms, complexity classes.
 
 ### Non-technical sections
 
@@ -141,8 +188,14 @@ In this order, and not before:
 
 ## Rules this audit enforces
 
-- No questions for an UNCERTAIN subject. None.
+- No questions for an UNCERTAIN subject **unless the candidate explicitly
+  authorises it**, as they did on 17 August 2026. The authorisation is recorded
+  here with a date, it never silently upgrades the subject to VERIFIED, and the
+  unverified status stays on screen for as long as it is true.
 - No syllabus fact enters `prep/exams.js` from a coaching site.
+- A syllabus topic list carries its provenance in the data, not in a comment.
+  `prep/syllabus.js` gives every subject a `basis` and a `verified` flag, and
+  the Learn screen prints both under the subject's topics.
 - No individual exam date is invented; the window is a window until an admit
   card says otherwise.
 - If a subject is dropped from the paper, its questions are archived rather

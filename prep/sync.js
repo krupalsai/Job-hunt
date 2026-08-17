@@ -167,10 +167,21 @@
     document.title = CURRENT_EXAM.short + " Prep · Job Tracker";
   })();
 
-  /** The subjects this exam examines — all of them when no exam is named. */
+  /** The subjects this exam examines that there are QUESTIONS for — what the
+      quiz may draw on. A subject with an empty bank cannot be practised, so it
+      must not appear as a practice topic. */
   function examSubjects() {
     if (!CURRENT_EXAM) return Object.keys(QUESTION_BANK);
     return subjectsForExam(CURRENT_EXAM).filter(x => QUESTION_BANK[x]);
+  }
+
+  /** Every subject the exam examines, INCLUDING any with nothing written for
+      it yet. The Learn screen uses this one. Dropping an empty subject here
+      was the bug: a syllabus gap rendered as no row at all, so the screen
+      looked complete while a whole subject was missing from it. */
+  function examSubjectsAll() {
+    if (!CURRENT_EXAM) return Object.keys(QUESTION_BANK);
+    return subjectsForExam(CURRENT_EXAM);
   }
 
   /* Hide topics the chosen exam does not test. Offering Theory of Computation
@@ -193,14 +204,105 @@
 
   /* Every subject the exam examines, whether or not it has lessons yet. */
   function subjects() {
-    return examSubjects().map(name => {
+    return examSubjectsAll().map(name => {
       const lessons = CURRICULUM.filter(l => l.subject === name);
       return {
         name,
         lessons,
         questions: (QUESTION_BANK[name] || []).length,
         mastered: lessons.filter(l => lessonState(l.key).mastered).length,
+        syllabus: syllabusView(name),
       };
+    });
+  }
+
+  /* ── The syllabus map ─────────────────────────────────────────────────────
+     What the paper examines, as opposed to what has been written for it. The
+     Learn screen used to show only the lessons that exist, so a subject with
+     two lessons looked like a two-topic subject — SSC CGL Reasoning is a
+     fifty-mark section and it was reading as two topics. Every topic in the
+     syllabus is rendered now, with the honest state of each one against it. */
+
+  function syllabusView(name) {
+    if (typeof syllabusFor === "undefined") return null;
+    return syllabusFor(name, CURRENT_EXAM ? CURRENT_EXAM.key : null);
+  }
+
+  /** What this app can actually offer for one syllabus topic, in the order
+      that matters to someone deciding what to open next.
+
+      A topic whose lesson is still gated reports "locked", not "lesson" — the
+      map may not become a side door around the dependency order, because the
+      order is the reason nothing arrives before the thing it depends on. */
+  function topicState(t, s) {
+    const lessons = (t.lessons || [])
+      .map(k => CURRICULUM.find(l => l.key === k)).filter(Boolean);
+    if (lessons.length) {
+      const l = lessons[0];
+      const i = s.lessons.findIndex(x => x.key === l.key);
+      if (i >= 0 && !unlockedIn(s.lessons, i)) {
+        return { kind: "locked", cls: "lock", text: "locked" };
+      }
+      const done = lessons.every(x => lessonState(x.key).mastered);
+      return { kind: "lesson", lesson: l,
+               cls: done ? "done" : "open", text: done ? "mastered" : "lesson" };
+    }
+    const skills = (t.skills || [])
+      .filter(k => typeof SKILLS !== "undefined" && SKILLS.some(x => x.key === k));
+    if (skills.length) {
+      return { kind: "skill", skill: skills[0], cls: "open", text: "drill" };
+    }
+    if (s.questions > 0) return { kind: "questions", cls: "open", text: "practice" };
+    return { kind: "none", cls: "lock", text: "not covered" };
+  }
+
+  /** The syllabus block shown under a subject's lessons. Rows are clickable
+      wherever there is something to open — a lesson, or the micro-drill for a
+      basic — so the map is a way into the material rather than a list to read
+      and then navigate away from. */
+  function syllabusHtml(s) {
+    const syl = s.syllabus;
+    if (!syl) return "";
+    const rows = syl.topics.map(t => {
+      const st = topicState(t, s);
+      const attr = st.kind === "lesson" ? ` data-syl-lesson="${esc(st.lesson.key)}"`
+                 : st.kind === "skill" ? ` data-syl-skill="${esc(st.skill)}"` : "";
+      return `<div class="ls-row syl-row${attr ? "" : " is-flat"}"${attr}>
+        <div class="ls-row-main">
+          <div class="ls-title syl-t">${esc(t.t)}</div>
+          ${t.note ? `<div class="ls-why">${esc(t.note)}</div>` : ""}
+        </div>
+        <span class="ls-badge ${st.cls}">${esc(st.text)}</span>
+      </div>`;
+    }).join("");
+
+    const gaps = syl.topics.filter(t => topicState(t, s).kind === "none").length;
+    return `<div class="syl-block">
+      <div class="ls-subject">Full syllabus — ${syl.topics.length} topic${syl.topics.length === 1 ? "" : "s"}</div>
+      <p class="ls-p syl-basis">${esc(syl.basis)}${
+        syl.verified ? "" : ` <strong class="syl-unverified">Not verified against the official notification.</strong>`}</p>
+      ${rows}
+      ${gaps ? `<p class="ls-p syl-gap">${gaps} topic${gaps === 1 ? " has" : "s have"} nothing written
+        here yet. That is stated rather than hidden: a gap you know about is one you can read up
+        elsewhere, and a gap you cannot see is a section you walk into cold.</p>` : ""}
+    </div>`;
+  }
+
+  /** Wire the clickable syllabus rows. Called after any render that emits
+      them, and safe to call when there are none. */
+  function bindSyllabusRows(root) {
+    root.querySelectorAll("[data-syl-lesson]").forEach(row => {
+      row.addEventListener("click", () => {
+        const key = row.dataset.sylLesson;
+        const l = CURRICULUM.find(x => x.key === key);
+        if (!l) return;
+        const list = subjects().find(x => x.name === l.subject);
+        const i = list ? list.lessons.findIndex(x => x.key === key) : -1;
+        if (i >= 0) openLesson(l.subject, i);
+      });
+    });
+    root.querySelectorAll("[data-syl-skill]").forEach(row => {
+      row.addEventListener("click", () => openSkillDrill(row.dataset.sylSkill));
     });
   }
 
@@ -252,7 +354,18 @@
       ".ls-dots{display:flex;gap:5px;margin:0 0 16px;}" +
       ".ls-dot{height:3px;flex:1;border-radius:2px;background:#1e293b;}" +
       ".ls-dot.past{background:#22c55e66;}" +
-      ".ls-dot.on{background:#22c55e;}";
+      ".ls-dot.on{background:#22c55e;}" +
+      /* The syllabus map. Rows are deliberately lighter than lesson rows —
+         this is the reference list under the study path, not a second study
+         path competing with it. */
+      ".syl-block{margin-top:26px;padding-top:4px;border-top:1px solid #1e293b;}" +
+      ".syl-basis{font-size:12.5px;color:#94a3b8;margin:-4px 0 10px;}" +
+      ".syl-unverified{color:#fbbf24;font-weight:600;}" +
+      ".syl-row{padding-top:11px;padding-bottom:11px;}" +
+      ".syl-row.is-flat{cursor:default;}" +
+      ".syl-t{font-size:14px;font-weight:500;}" +
+      ".syl-gap{font-size:12.5px;color:#94a3b8;margin-top:12px;}" +
+      ".ls-topics{font-size:11.5px;color:#64748b;margin-top:3px;}";
     document.head.appendChild(css);
   })();
 
@@ -269,8 +382,13 @@
     el("learn-list").classList.remove("hidden");
 
     const subs = subjects();
-    const totalLessons = CURRICULUM.length;
-    const totalMastered = CURRICULUM.filter(l => lessonState(l.key).mastered).length;
+    // Count THIS exam's lessons. It used to count every lesson in CURRICULUM,
+    // which included the ones written for other exams — a HAL screen reporting
+    // progress out of a total that includes Telangana Movement is measuring
+    // against work that is not on the paper.
+    const examLessons = subs.reduce((a, s) => a.concat(s.lessons), []);
+    const totalLessons = examLessons.length;
+    const totalMastered = examLessons.filter(l => lessonState(l.key).mastered).length;
     el("learn-progress").innerHTML =
       `<div class="bar-track"><div class="bar-fill" style="width:${
         totalLessons ? Math.round(totalMastered / totalLessons * 100) : 0}%;background:var(--accent)"></div></div>
@@ -279,15 +397,30 @@
     el("learn-path").innerHTML = subs.map(s => {
       const has = s.lessons.length > 0;
       const done = has && s.mastered === s.lessons.length;
+      // The syllabus count goes on every row, because it is the number that
+      // says how big the subject actually is. "2 lessons" on a fifty-mark
+      // section reads as a small subject; "2 lessons · 13 topics" does not.
+      // Two lines, not one: what has been WRITTEN, then how big the subject
+      // actually IS. Run together on a phone they wrap into an unreadable
+      // ribbon, and the second number is the one that was missing.
+      const meta = has
+        ? `${s.lessons.length} lesson${s.lessons.length === 1 ? "" : "s"} · ${s.mastered} mastered · ${s.questions} questions`
+        : s.questions
+          ? `${s.questions} questions · lessons being written`
+          : `Nothing written for this subject yet — examined, and uncovered here`;
+      const topics = s.syllabus
+        ? `<div class="ls-topics">${s.syllabus.topics.length} syllabus topic${
+             s.syllabus.topics.length === 1 ? "" : "s"}</div>`
+        : "";
       return `<div class="ls-row" data-subject="${esc(s.name)}">
         <div class="ls-row-main">
           <div class="ls-title">${esc(s.name)}</div>
-          <div class="ls-why">${
-            has ? `${s.lessons.length} lesson${s.lessons.length === 1 ? "" : "s"} · ${s.mastered} mastered · ${s.questions} questions`
-                : `${s.questions} questions · lessons being written`}</div>
+          <div class="ls-why">${meta}</div>
+          ${topics}
         </div>
         <span class="ls-badge ${done ? "done" : has ? "open" : "lock"}">${
-          done ? "done" : has ? (s.mastered ? "continue" : "start") : "practice only"}</span>
+          done ? "done" : has ? (s.mastered ? "continue" : "start")
+               : s.questions ? "practice only" : "not covered"}</span>
       </div>`;
     }).join("");
 
@@ -424,17 +557,26 @@
 
     const chapters = chaptersFor(name);
     const chaptersBlock = chapters ? chaptersHtml(name, chapters) : "";
+    // The syllabus sits UNDER the lessons: what to do next comes first, what
+    // the paper examines comes second. Both are on one screen, so neither has
+    // to be remembered while looking at the other.
+    const syllabusBlock = syllabusHtml(s);
 
     if (!s.lessons.length) {
       // Be straight about it rather than showing an empty screen: the hourly
       // run writes these, and practice is available in the meantime.
       el("learn-path").innerHTML = chaptersBlock + `
         <div class="ls-subject">${esc(name)}</div>
-        <p class="ls-p">No lessons written for this subject yet — the scheduled
-        run is working through them. The ${s.questions} questions are ready now,
-        and each one explains its answer, so practice still teaches.</p>
-        <button class="primary" id="ls-practice-only">Practise ${esc(name)}</button>`;
-      el("ls-practice-only").onclick = () => practiseSubject(name);
+        <p class="ls-p">${s.questions
+          ? `No lessons written for this subject yet — the scheduled run is working
+             through them. The ${s.questions} questions are ready now, and each one
+             explains its answer, so practice still teaches.`
+          : `This subject is examined and nothing has been written for it here yet —
+             neither lessons nor questions. The syllabus below is what it covers, so
+             it can be revised from a book or a previous-year paper in the meantime.`}</p>
+        ${s.questions ? `<button class="primary" id="ls-practice-only">Practise ${esc(name)}</button>` : ""}
+        ${syllabusBlock}`;
+      if (el("ls-practice-only")) el("ls-practice-only").onclick = () => practiseSubject(name);
     } else {
       el("learn-path").innerHTML = chaptersBlock +
         `<div class="ls-subject">${chapters ? "Full lessons" : esc(name)}</div>` +
@@ -450,7 +592,8 @@
               st.mastered ? "mastered" : open ? (st.read ? "take the test" : "learn") : "locked"}</span>
           </div>`;
         }).join("") +
-        `<button class="ghost" id="ls-practice-all" style="margin-top:14px;">Practise ${esc(name)} without a lesson</button>`;
+        `<button class="ghost" id="ls-practice-all" style="margin-top:14px;">Practise ${esc(name)} without a lesson</button>` +
+        syllabusBlock;
 
       el("learn-path").querySelectorAll(".ls-row[data-i]").forEach(row => {
         row.addEventListener("click", () => {
@@ -466,6 +609,7 @@
     el("learn-path").querySelectorAll("[data-skill]").forEach(row => {
       row.addEventListener("click", () => openSkillDrill(row.dataset.skill));
     });
+    bindSyllabusRows(el("learn-path"));
     el("ls-to-subjects").onclick = () => { view = { level: "subjects" }; render(); window.scrollTo(0, 0); };
   }
 
@@ -654,9 +798,24 @@
     const lessons = [];
     order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
 
+    /* Two lessons a day was a fixed number, and a fixed number breaks the
+       moment the curriculum grows: HAL went from 41 lessons to 53 when the
+       four GATE-scope subjects were added, which at two a day is 27 days and
+       leaves exactly one day for revision and none for the mock. The plan
+       quietly deleted its own mock day.
+
+       So the RESERVED DAYS are the fixed thing now and the pace follows. The
+       last four days are revision and the full mock whatever happens, and the
+       lessons are spread across what is left — three a day when there are
+       more than 48, two when there are fewer. If the curriculum ever grows
+       past that, the pace rises again rather than the mock disappearing. */
+    const RESERVED = 4;
+    const learnDays = Math.max(1, 28 - RESERVED);
+    const perDay = Math.max(2, Math.ceil(lessons.length / learnDays));
+
     let n = 0;
-    for (let i = 0; i < lessons.length; i += 2) {
-      const chunk = lessons.slice(i, i + 2);
+    for (let i = 0; i < lessons.length; i += perDay) {
+      const chunk = lessons.slice(i, i + perDay);
       n++;
       days.push({
         id: "d" + n,

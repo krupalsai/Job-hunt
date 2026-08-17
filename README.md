@@ -49,12 +49,39 @@ per-exam, because those are what differ. Four destinations in the bottom bar —
 Practice, Plan, Progress — plus **Exam info** in the drawer, which holds what
 used to be the Overview, Topics and Time Strategy tabs.
 
+## Syllabus — `prep/syllabus.js`
+
+The Learn screen shows **every topic the paper examines**, not only the ones a
+lesson has been written for. That distinction was a real failure: SSC CGL
+Reasoning is a fifty-mark section with two lessons, so the screen showed two
+rows and the subject read as a two-topic subject. Each topic now carries the
+honest state of what exists for it — `lesson`, `drill`, `practice`,
+`not covered` or `locked` — and a subject row shows both its lesson count and
+its syllabus size.
+
+Topic lists carry their **provenance in the data**, not in a comment: every
+subject has a `basis` string and a `verified` flag, and both are printed under
+the topic list. Nothing in the app currently claims to be verified against an
+official notification, and the screen says so where it matters.
+
+Subjects are shared between exams; their syllabuses are not. A topic may carry
+`exams: [...]` to restrict it — HAL and SSC CGL both examine Reasoning, but
+non-verbal reasoning is SSC and TS SI scope, and offering it on a HAL plan would
+send someone to revise for a paper that has never asked for it.
+
 Exam info is generated from `prep/exams.js` rather than written for HAL: the
 snapshot, the per-section time budget and the exam-hall tactics all come from
 the exam being studied. That matters most for the tactics. "Attempt every
 question, never leave a blank" is right for HAL and would cost you marks on
 SSC CGL, which deducts 0.50 for a wrong answer — so the advice travels with the
 exam instead of sitting on a page both share.
+
+Exam info also states **what the syllabus rests on** — HAL's is covered on the
+candidate's instruction and has still not been checked against the notification,
+so the screen says exactly that — and lists the **practice sources** worth using
+beyond this app's own bank (1-mark GATE CS PYQs, ISRO, BEL/ECIL). An app cannot
+host other people's question papers, but for a paper that publishes none of its
+own, naming the nearest ones is part of the preparation.
 
 ## The quiz
 
@@ -71,7 +98,7 @@ question whose answer you never see is one you will skip again in the hall.
 ### Questions do not repeat
 
 Selection is ordered **never seen → previously wrong → longest since last seen**.
-With 235 questions drawn 10 at a time, roughly 23 consecutive quizzes pass before
+With 333 questions drawn 10 at a time, roughly 33 consecutive quizzes pass before
 anything comes back. A right answer pays down a question's debt so it stops
 resurfacing; a wrong one brings it back sooner. A 10-minute timer rotates the
 pool and says so on screen.
@@ -126,28 +153,39 @@ wrong and write material aimed at it. That mirror is fire-and-forget: the UI
 never waits on it and a failed request is queued, so losing signal costs
 nothing.
 
-## Bank — `prep/hal-cs.js` + `prep/ts-si.js`
+## Bank — `prep/hal-cs.js` + `prep/gate-cs.js` + `prep/ts-si.js`
 
-235 questions across three exams. `prep/hal-cs.js` holds the subjects HAL
-examines (several shared with SSC CGL); `prep/ts-si.js` adds the ones only the
-Telangana SI paper asks for.
+333 questions across three exams. `prep/hal-cs.js` holds the subjects HAL
+examines (several shared with SSC CGL); `prep/gate-cs.js` adds the four
+GATE-scope subjects; `prep/ts-si.js` adds the ones only the Telangana SI paper
+asks for.
 
 | Subject | Qs | Subject | Qs |
 |---|---|---|---|
-| Data Structures | 24 | General Studies | 15 |
-| Reasoning | 23 | Programming & OOP | 15 |
-| Quantitative Aptitude | 22 | Telangana Movement & State Formation | 12 |
-| Operating Systems | 20 | Theory of Computation | 10 |
-| DBMS | 20 | General Awareness | 10 |
-| Computer Networks | 20 | Software Engineering | 8 |
-| COA | 19 | English | 17 |
+| English | 40 | Programming & OOP | 15 |
+| General Studies | 29 | Digital Logic | 13 |
+| Data Structures | 24 | Algorithms | 13 |
+| Reasoning | 23 | Discrete Mathematics | 13 |
+| Quantitative Aptitude | 22 | Compiler Design | 12 |
+| Telangana Movement & State Formation | 22 | Theory of Computation | 10 |
+| Operating Systems | 20 | General Awareness | 10 |
+| DBMS | 20 | Software Engineering | 8 |
+| Computer Networks | 20 | | |
+| COA | 19 | | |
+
+Two subject boundaries are deliberate, because a question written on the wrong
+side of one would be a duplicate and would pollute both subjects' weak-area
+verdicts: number-system conversion and 2's complement live in **COA**, not
+Digital Logic; sorting and heap operations live in **Data Structures**, while
+**Algorithms** covers design — recurrences, greedy vs DP, graph algorithms and
+complexity classes.
 
 Every question carries `kind`: `pyq`, `verified` or `generated`. It defaults to
 `generated` when absent, so nothing can become a PYQ by omission, and the build
 refuses a `pyq` that cannot name its exam, year and source. **Nothing in the
 bank is currently a PYQ.**
 
-90 of them are tagged with the basics they test (`prep/skills.js`, 28 basics).
+113 of them are tagged with the basics they test (`prep/skills.js`, 33 basics).
 Tagging is deliberately incomplete: a wrong tag sends someone to drill a basic
 they do not have a problem with, which is worse than no tag at all.
 

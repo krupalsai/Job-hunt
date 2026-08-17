@@ -78,7 +78,7 @@ function check(name, cond, detail){
   console.log('\n── quiz: explanation + memory trick ─────────────────────');
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const bankText = await page.locator('#bank-count').textContent();
-  check('bank size is shown and is the full bank', /\/ 282 seen/.test(bankText), `got "${bankText}"`);
+  check('bank size is shown and is the full bank', /\/ 333 seen/.test(bankText), `got "${bankText}"`);
   check('rotation countdown is running', /Fresh set in \d+:\d\d/.test(await page.locator('#rotate-text').textContent()));
 
   await page.click('#start-quiz');
@@ -186,7 +186,10 @@ function check(name, cond, detail){
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
-  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 14);
+  // 18 subjects in the bank: the original 14, plus the four GATE-scope
+  // subjects written on 17 Aug 2026 (Digital Logic, Algorithms, Compiler
+  // Design, Discrete Mathematics).
+  check('per-subject bars are rendered', (await page.locator('#topic-bars .bar-row').count()) === 18);
   const focus = await page.locator('#focus-list').textContent();
   check('weak-area verdict is stated (or honestly withheld)', focus.length > 30, focus);
 
@@ -220,7 +223,7 @@ function check(name, cond, detail){
   // app deliberately remembers where you were. Step back out first.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
-  check('every subject is listed, not only the ones with lessons', subjectRows === 14, `got ${subjectRows}`);
+  check('every subject is listed, not only the ones with lessons', subjectRows === 18, `got ${subjectRows}`);
   const listing = await page.locator('#learn-path').textContent();
   // Every subject has a path now. If one ever loses it, the UI must say so
   // rather than showing a blank screen — that branch is still in the code and
@@ -228,14 +231,42 @@ function check(name, cond, detail){
   check('a subject without lessons says so honestly', /practice only|lessons being written/i.test(listing),
     listing.replace(/\s+/g,' ').slice(0,140));
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
+  // The size of the SUBJECT, not just the size of what has been written for
+  // it. Two lessons against a fifty-mark section reads as a small subject
+  // until the topic count is next to it.
+  check('and how many syllabus topics the subject actually has',
+    /\d+ syllabus topics/.test(listing), listing.replace(/\s+/g,' ').slice(0,160));
 
   // Into a subject that has a path.
   await page.locator('#learn-path [data-subject="Data Structures"]').click();
-  const lessonRows = await page.locator('#learn-path .ls-row').count();
+  const lessonRows = await page.locator('#learn-path .ls-row[data-i]').count();
   check('the subject opens its own lesson list', lessonRows === 7, `got ${lessonRows}`);
   check('only the first lesson of the subject is unlocked',
-    (await page.locator('#learn-path .ls-row.is-locked').count()) === lessonRows - 1);
+    (await page.locator('#learn-path .ls-row[data-i].is-locked').count()) === lessonRows - 1);
   check('there is a way back to all subjects', await page.locator('#ls-to-subjects').isVisible());
+
+  // ── the full syllabus, under the lessons ───────────────────────────────
+  // The complaint this answers: the screen showed the lessons that had been
+  // written and nothing else, so a subject looked exactly as big as the
+  // material for it. Every topic the paper examines is listed now.
+  const dsPath = await page.locator('#learn-path').textContent();
+  check('the subject screen lists the full syllabus, not only what is written',
+    /Full syllabus — \d+ topics/.test(dsPath), dsPath.replace(/\s+/g,' ').slice(0,200));
+  check('a syllabus topic with no material says "not covered" rather than vanishing',
+    (await page.locator('#learn-path .syl-row .ls-badge.lock').count()) >= 1);
+  check('and the topic list says where it came from and that it is unverified',
+    /Not verified against the official notification/.test(dsPath));
+  // Hashing has no lesson in this app. If it silently disappeared from the
+  // screen again, this is what would catch it.
+  check('a named gap is on screen by name', /Hashing/.test(dsPath));
+  // The map must not be a side door around the dependency order.
+  const sylLocked = await page.evaluate(() => {
+    const rows = [...document.querySelectorAll('#learn-path .syl-row')];
+    const trees = rows.find(r => /Trees, binary search trees/.test(r.textContent));
+    return trees ? trees.querySelector('.ls-badge').textContent.trim() : null;
+  });
+  check('a syllabus row whose lesson is still gated reads "locked", not "lesson"',
+    sylLocked === 'locked', String(sylLocked));
 
   await page.locator('#learn-path .ls-row').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
@@ -305,9 +336,9 @@ function check(name, cond, detail){
     await page.locator('#learn-path [data-subject="Data Structures"]').click();
   }
   check('coming back to Learn keeps you in the subject you were in',
-    (await page.locator('#learn-path .ls-row').count()) === 7);
+    (await page.locator('#learn-path .ls-row[data-i]').count()) === 7);
   check('mastering a lesson unlocks the next one',
-    (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
+    (await page.locator('#learn-path .ls-row[data-i].is-locked').count()) === 5,
     `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
 
   console.log('\n── English: grammar is bounded, vocabulary is not ──────');
@@ -427,7 +458,7 @@ function check(name, cond, detail){
   check('a subject with no grammar/vocabulary split shows no chapters block',
     (await page.locator('#learn-path .ls-group').count()) === 0);
   check('and its lesson list is completely unaffected',
-    (await page.locator('#learn-path .ls-row').count()) === 7);
+    (await page.locator('#learn-path .ls-row[data-i]').count()) === 7);
 
   // Opening a chapter goes straight into the same micro-drill Progress and
   // the quiz alert already use — rule taught first, then the questions.
@@ -1118,6 +1149,33 @@ function check(name, cond, detail){
     names.indexOf('DBMS') === -1,
     names.join(' | '));
 
+  // The complaint that started this: SSC CGL Reasoning is a fifty-mark section
+  // with two lessons written for it, and the screen showed two rows. Two rows
+  // is an honest count of the LESSONS and a wildly dishonest picture of the
+  // SUBJECT, and there was nothing on screen to tell the two apart.
+  await page.locator('#learn-path [data-subject="Reasoning"]').click();
+  const sscReasoning = await page.locator('#learn-path').textContent();
+  const sscTopicRows = await page.locator('#learn-path .syl-row').count();
+  check('SSC CGL Reasoning shows the whole section, not just its two lessons',
+    sscTopicRows >= 10, `${sscTopicRows} topic rows`);
+  check('including the question types nothing has been written for',
+    /paper folding/i.test(sscReasoning) && /Seating arrangement/i.test(sscReasoning),
+    sscReasoning.replace(/\s+/g,' ').slice(0, 200));
+  check('and it names SSC as the source, not some other exam',
+    /SSC/.test(sscReasoning), sscReasoning.replace(/\s+/g,' ').slice(0, 200));
+  // Subjects are shared between exams; their syllabuses are not. Non-verbal
+  // reasoning is SSC and TS SI scope — offering it on a HAL plan would send
+  // someone to revise for a paper that has never asked for it.
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs`, { waitUntil: 'networkidle' });
+  await page.click('nav#nav-bottom [data-tab="learn"]');
+  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.locator('#learn-path [data-subject="Reasoning"]').click();
+  const halReasoning = await page.locator('#learn-path').textContent();
+  check('the same subject shows a different syllabus under a different exam',
+    !/paper folding/i.test(halReasoning) && /Number and letter series/.test(halReasoning),
+    halReasoning.replace(/\s+/g,' ').slice(0, 200));
+
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ssc-cgl`, { waitUntil: 'networkidle' });
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const tags = await page.locator('#topic-tags .tag').allTextContents();
   check('the quiz offers only SSC topics',
@@ -1308,16 +1366,20 @@ function check(name, cond, detail){
 
   // Nothing written for TS SI may touch the exams it is not for.
   const untouched = await page.evaluate(() => ({
-    halPending: (EXAMS.find(e => e.key === 'hal-cs').pendingVerification || {}).subjects || [],
-    halInvented: Object.keys(QUESTION_BANK).filter(k =>
-      /Digital Logic|Compiler Design|Discrete|^Algorithms$/.test(k)),
+    // The four GATE-scope subjects, blocked until the candidate authorised
+    // them on 17 Aug 2026. They are covered now — what must stay true is that
+    // each one has BOTH lessons and questions, because a subject with practice
+    // and no teaching only shows someone they are wrong.
+    gateSubjects: ['Digital Logic', 'Algorithms', 'Compiler Design', 'Discrete Mathematics']
+      .map(k => ({ k, q: (QUESTION_BANK[k] || []).length,
+                   l: CURRICULUM.filter(x => x.subject === k).length })),
     halTech: (QUESTION_BANK['Data Structures'] || []).length,
     cglQuant: (QUESTION_BANK['Quantitative Aptitude'] || []).length,
     cglReasoning: (QUESTION_BANK['Reasoning'] || []).length,
   }));
-  check('the four uncertain HAL subjects still have nothing written for them',
-    untouched.halPending.length === 4 && untouched.halInvented.length === 0,
-    JSON.stringify(untouched.halInvented));
+  check('the four GATE-scope subjects have lessons AND questions, not one or the other',
+    untouched.gateSubjects.every(s => s.q >= 10 && s.l >= 3),
+    JSON.stringify(untouched.gateSubjects));
   check('HAL technical content is untouched', untouched.halTech === 24, String(untouched.halTech));
   check('and SSC CGL content is untouched',
     untouched.cglQuant === 22 && untouched.cglReasoning === 23,
@@ -1330,30 +1392,43 @@ function check(name, cond, detail){
   check('an exam with a single stage shows no stages card',
     await page.locator('#ei-stages').isHidden());
 
-  // The four CS subjects the paper may examine and this bank has nothing for.
-  // Naming them is the point: a gap you know about is something you can go and
-  // read elsewhere; a gap you do not know about is a section you walk into cold.
+  // The syllabus this screen shows is still unverified. Covering the four
+  // subjects moved the risk; it did not remove it, and the screen has to keep
+  // saying so — every pace target and mark split here inherits that status.
   const pending = (await page.locator('#ei-pending').textContent()).replace(/\s+/g, ' ');
-  check('HAL names the subjects it has no material for yet',
-    /Digital Logic/.test(pending) && /Compiler Design/.test(pending) &&
-    /Algorithms/.test(pending) && /Mathematics/.test(pending), pending.slice(0, 160));
-  check('and says plainly that the syllabus is unverified',
-    /pending syllabus verification/i.test(pending) && /notification/i.test(pending),
-    pending.slice(0, 160));
+  check('HAL says plainly that its syllabus is not verified',
+    /Not verified against the official notification/i.test(pending) && /notification/i.test(pending),
+    pending.slice(0, 200));
+  check('and says who decided to cover it anyway, and when',
+    /2026-08-17/.test(pending) && /GATE CS scope/i.test(pending), pending.slice(0, 200));
   check('the exam is named as Management Trainee, not MT/DT',
     await page.evaluate(() => {
       const e = EXAMS.find(x => x.key === 'hal-cs');
       return /Management Trainee/.test(e.name) && !/DT/.test(e.name);
     }));
-  // Nothing was generated for them: a subject with no verified syllabus must
-  // not quietly acquire questions.
-  check('and no questions were invented for those subjects',
-    await page.evaluate(() => !Object.keys(QUESTION_BANK).some(k =>
-      /Digital Logic|Compiler Design|Discrete/.test(k))));
-  // TS SI has no unverified gap list, so it must not show the card at all.
+  // The four subjects are examined, so they must appear in the section that
+  // examines them — being absent from the syllabus screen is the failure this
+  // whole change is about.
+  check('the four GATE-scope subjects are in the CS Technical section',
+    await page.evaluate(() => {
+      const sec = EXAMS.find(x => x.key === 'hal-cs').sections.find(s => /Technical/.test(s.name));
+      return ['Digital Logic', 'Algorithms', 'Compiler Design', 'Discrete Mathematics']
+        .every(k => sec.subjects.indexOf(k) !== -1);
+    }));
+  // An app cannot host other people's question papers, but for a paper with no
+  // published PYQs of its own, naming the nearest ones IS part of the prep.
+  const sources = (await page.locator('#ei-sources').textContent()).replace(/\s+/g, ' ');
+  check('HAL names where to practise beyond this app',
+    /GATE CS PYQs/.test(sources) && /ISRO/.test(sources) && /BEL/.test(sources),
+    sources.slice(0, 200));
+  check('and the daily routine is stated with the clock on it',
+    /25 technical MCQs/.test(sources) && /[Tt]imed/.test(sources), sources.slice(0, 200));
+  // TS SI carries no basis note and no source list, so it must show neither card.
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#examinfo`, { waitUntil: 'networkidle' });
-  check('an exam with no unverified subjects shows no such card',
+  check('an exam with no syllabus-basis note shows no such card',
     await page.locator('#ei-pending').isHidden());
+  check('and an exam with no source list shows no sources card',
+    await page.locator('#ei-sources').isHidden());
 
   // And the default page is unchanged.
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });

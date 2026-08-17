@@ -340,8 +340,13 @@
     <!-- Only rendered for an exam that has more than one stage. -->
     <div class="card hidden" id="ei-stages"></div>
 
-    <!-- Subjects the paper may examine that the app has nothing for yet. -->
+    <!-- What the syllabus on this screen rests on, and how far it has been
+         checked. Never hidden behind a tap: every count and pace target below
+         is only as good as this. -->
     <div class="card hidden" id="ei-pending"></div>
+
+    <!-- Where to practise beyond this app's own bank. -->
+    <div class="card hidden" id="ei-sources"></div>
 
     <div class="card">
       <h2>Time budget</h2>
@@ -578,13 +583,22 @@
 <!-- Before the bank, because the bank's questions name skills from it. -->
 <script src="/prep/skills.js"></script>
 <script src="/prep/hal-cs.js"></script>
+<!-- The four GATE-scope subjects HAL's discipline paper was reported to
+     examine and this app had nothing for. After the bank, because it extends
+     the same QUESTION_BANK. -->
+<script src="/prep/gate-cs.js"></script>
 <!-- Adds the subjects TS SI examines and HAL does not. After the bank,
      because it extends the same QUESTION_BANK. -->
 <script src="/prep/ts-si.js"></script>
+<!-- What each subject EXAMINES, as opposed to what has been written for it.
+     Read by the Learn screen and by Exam info; independent of the bank. -->
+<script src="/prep/syllabus.js"></script>
 <script src="/prep/lessons.js"></script>
 <!-- TS SI lessons, appended to the same CURRICULUM so the Learn path, the
      gating and the plan work on them with no new engine code. -->
 <script src="/prep/ts-si-lessons.js"></script>
+<!-- Lessons for the four GATE-scope subjects, appended the same way. -->
+<script src="/prep/gate-cs-lessons.js"></script>
 <script>
 /* ==========================================================================
    Sections
@@ -699,20 +713,31 @@ function renderExamInfo(){
     s.subjects.map((sub, i)=>{
       const qn = (typeof QUESTION_BANK !== 'undefined' && QUESTION_BANK[sub]) ? QUESTION_BANK[sub].length : 0;
       const ln = lessonsFor(sub);
+      // The syllabus topic count belongs next to the material count, because
+      // the two together are the only honest measure of coverage: 24 questions
+      // means nothing until you know whether the subject has 8 topics or 30.
+      const syl = (typeof syllabusFor !== 'undefined') ? syllabusFor(sub, exam.key) : null;
       return `<tr>${i === 0
         ? `<td rowspan="${s.subjects.length}"><strong>${escHtml(s.name)}</strong><br>` +
           `<span class="muted">${s.marks} marks</span></td>` : ''}` +
-        `<td>${escHtml(sub)}</td>` +
+        `<td>${escHtml(sub)}${syl ? `<br><span class="muted">${syl.topics.length} syllabus topics</span>` : ''}</td>` +
         `<td>${qn} question${qn === 1 ? '' : 's'}${ln ? ` · ${ln} lesson${ln === 1 ? '' : 's'}` : ' · no lessons yet'}</td></tr>`;
     }).join('')
   ).join('');
 
-  // Subjects the paper may examine that this app has nothing for yet. Stated
-  // plainly rather than left as a blank space on a syllabus screen: a gap you
-  // know about is something you can go and read elsewhere, and a gap you do not
-  // know about is a section you walk into cold.
+  // Where this syllabus came from, and how far it has been checked.
+  //
+  // This card used to list the four subjects the paper may examine and the app
+  // had nothing for. They are covered now, at the candidate's instruction — but
+  // the notification still has not been read, and that has to keep being said.
+  // The gap moved; it did not close. Every pace target and mark split on this
+  // screen inherits whatever this card admits to.
+  //
+  // `pendingVerification` is still honoured for any exam that carries it, so an
+  // exam with genuinely empty subjects reads exactly as it did before.
   const pv = document.getElementById('ei-pending');
   if(pv){
+    const sb = exam.syllabusBasis;
     if(exam.pendingVerification && exam.pendingVerification.subjects.length){
       pv.classList.remove('hidden');
       pv.innerHTML = `<h2>Not covered yet — pending syllabus verification</h2>
@@ -721,8 +746,41 @@ function renderExamInfo(){
         <p class="muted" style="margin-bottom:0;">Nothing has been written for these on purpose. Material aimed at a
           syllabus that turns out to be wrong costs more than material that does not exist, because it also costs
           the time spent studying it.</p>`;
+    } else if(sb){
+      pv.classList.remove('hidden');
+      pv.innerHTML = `<h2>What this syllabus rests on</h2>
+        <p class="muted" style="margin-top:-4px;">${escHtml(sb.note)}</p>
+        <p style="font-size:13.5px;line-height:1.6;margin-bottom:0;">
+          <strong style="color:#fbbf24;">Not verified against the official notification.</strong>
+          ${sb.status === 'candidate-authorised'
+            ? `The subjects below are covered because you asked for the full GATE CS scope${
+                sb.on ? ` on ${escHtml(sb.on)}` : ''} — which is a decision, not a verification.
+               If the notification turns out to scope the paper differently, this is the first
+               thing to change and the audit file says what changes with it.`
+            : ''}</p>`;
     } else {
       pv.classList.add('hidden');
+    }
+  }
+
+  // Where to drill beyond this app's bank. An app cannot host other people's
+  // question papers, but it can say which ones are worth the time — and for a
+  // paper with no published PYQs of its own, that list IS part of the prep.
+  const srcEl = document.getElementById('ei-sources');
+  if(srcEl){
+    const list = exam.practiceSources || [];
+    if(list.length || exam.dailyRoutine){
+      srcEl.classList.remove('hidden');
+      srcEl.innerHTML = '<h2>Practice sources beyond this app</h2>' +
+        (list.length ? `<ul>${list.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>` : '') +
+        (exam.dailyRoutine
+          ? `<p style="font-size:13.5px;line-height:1.6;margin-bottom:0;"><strong>Daily routine:</strong>
+             ${escHtml(exam.dailyRoutine)} Timed is the operative word — untimed practice on a paper
+             with a ${exam.minutes ? escHtml(String(exam.minutes)) + '-minute' : 'fixed'} clock trains
+             the wrong thing.</p>`
+          : '');
+    } else {
+      srcEl.classList.add('hidden');
     }
   }
 
