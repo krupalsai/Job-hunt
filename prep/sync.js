@@ -10,8 +10,11 @@
       failure is queued for the next flush. Losing signal on a bus must not
       cost you a quiz, and must never block a question from rendering.
 
-   2. LEARN — the from-zero path. Read a lesson, prove it, unlock the next.
-      A topic that has not been mastered does not open the one after it.
+   2. LEARN — the from-zero path. Read a lesson, prove it, move on.
+      Lessons are shown in the order they build on each other and the screen
+      says which to open next, but none of them is locked: someone who needs
+      Normalisation tonight should not have to pass a test on SQL basics to
+      reach it.
    ========================================================================== */
 
 (function () {
@@ -109,10 +112,11 @@
 
   /* ── LEARN: subject → lesson → video → test → practice ──────────────────
      The path is subject-first because that is how the syllabus is organised
-     and how you decide what to study today. Inside a subject the order is
-     fixed: read (with a video if one exists), pass the test, then practise.
-     A topic does not unlock the next until it is mastered, so nothing arrives
-     before the thing it depends on. */
+     and how you decide what to study today. Inside a subject the intended
+     order is read (with a video if one exists), pass the test, then practise —
+     but it is an order, not a gate. Locking later topics behind earlier ones
+     hid most of a subject from someone who could already see what they needed
+     to revise. */
   const PASS_MARK = 4;
   const CHECK_SIZE = 5;
   const LESSON_KEY = "jobhunt_lessons";
@@ -196,8 +200,29 @@
     });
   }
 
-  /** Within a subject: the first lesson is open, and each next one opens when
-      the previous is mastered. */
+  /** Where a subject's topic list came from. Some subjects carry one basis,
+      others carry a different one per exam — SSC's Reasoning is not HAL's. */
+  function basisOf(syl, exKey) {
+    const b = syl.basis;
+    if (!b) return "Topic list basis not recorded";
+    return typeof b === "string" ? b : (b[exKey] || Object.values(b)[0] || "");
+  }
+
+  /** Open a lesson by key from inside the subject view, without going through
+      the section switch that window.openLessonByKey does. */
+  function openLessonByKeyLocal(key) {
+    const l = CURRICULUM.find(x => x.key === key);
+    if (!l) return;
+    const list = subjects().find(x => x.name === l.subject).lessons;
+    const i = list.findIndex(x => x.key === key);
+    if (i === -1) return;
+    view = { level: "lessons", subject: l.subject };
+    openLesson(l.subject, i, 0);
+  }
+
+  /** Kept for the "what to open next" recommendation: the first lesson whose
+      predecessor is mastered is the natural next one. It no longer gates
+      anything — every lesson opens on demand. */
   function unlockedIn(list, i) {
     return i === 0 || lessonState(list[i - 1].key).mastered;
   }
@@ -435,6 +460,72 @@
     const chapters = chaptersFor(name);
     const chaptersBlock = chapters ? chaptersHtml(name, chapters) : "";
 
+    /* ── The whole syllabus, not just what has been written ─────────────
+       The list used to be the lessons that exist, so Reasoning — a fifty-mark
+       section with thirteen question types — rendered as two rows and read
+       like a two-topic subject. A gap you can see is something you can go and
+       read elsewhere; a gap you cannot see is a section you walk into cold.
+
+       Every topic the paper examines is listed with an honest state: a lesson
+       to read, a drill for the ones taught as a single rule, practice where
+       there are questions but no writing yet, and "not written yet" where
+       there is neither. Coverage is derived from CURRICULUM and SKILLS at
+       render time, so deleting a lesson can never leave this claiming one. */
+    const syl = (typeof SYLLABUS !== "undefined") ? SYLLABUS[name] : null;
+    if (syl) {
+      const exKey = CURRENT_EXAM ? CURRENT_EXAM.key : null;
+      const topics = syl.topics.filter(t => !t.exams || !exKey || t.exams.indexOf(exKey) !== -1);
+      const lessonByKey = {};
+      CURRICULUM.forEach(l => { lessonByKey[l.key] = l; });
+
+      el("learn-path").innerHTML = chaptersBlock +
+        `<div class="ls-subject">${esc(name)} · ${topics.length} topic${topics.length === 1 ? "" : "s"}</div>` +
+        `<p class="ls-basis">${esc(basisOf(syl, exKey))}${
+          syl.verified ? "" : " · not yet checked against the official notification"}</p>` +
+        topics.map((t, i) => {
+          const ls = (t.lessons || []).map(k => lessonByKey[k]).filter(Boolean);
+          const sk = (t.skills || []).filter(k => typeof SKILL_BY_KEY !== "undefined" && SKILL_BY_KEY[k]);
+          const done = ls.length && ls.every(l => lessonState(l.key).mastered);
+          const state = ls.length ? (done ? "done" : "open") : sk.length ? "drill" : "none";
+          const label = ls.length ? (done ? "mastered" : "read it")
+                      : sk.length ? "drill it" : "practice only";
+          const act = ls.length ? `data-topic-lesson="${esc(ls[0].key)}"`
+                    : sk.length ? `data-topic-skill="${esc(sk[0])}"`
+                    : `data-topic-practise="${esc(name)}"`;
+          return `<div class="ls-row syl-row" ${act}>
+            <div class="ls-row-main">
+              <div class="ls-title">${i + 1}. ${esc(t.t)}${
+                ls.length && ls[0].video ? ' <span class="ls-vtag">video</span>' : ""}</div>
+              <div class="ls-why">${esc(t.note || (ls.length ? ls[0].why : "") ||
+                (sk.length ? "Taught as a single rule, with a short drill." :
+                 "No lesson written yet — the questions still explain every answer."))}</div>
+            </div>
+            <span class="ls-badge ${state}">${label}</span>
+          </div>`;
+        }).join("");
+
+      el("learn-path").querySelectorAll("[data-topic-lesson]").forEach(r => {
+        r.addEventListener("click", () => openLessonByKeyLocal(r.dataset.topicLesson));
+      });
+      el("learn-path").querySelectorAll("[data-topic-skill]").forEach(r => {
+        r.addEventListener("click", () => {
+          if (window.openSkillDrill) window.openSkillDrill(r.dataset.topicSkill);
+        });
+      });
+      el("learn-path").querySelectorAll("[data-topic-practise]").forEach(r => {
+        r.addEventListener("click", () => practiseSubject(r.dataset.topicPractise));
+      });
+      /* The chapter rows above the syllabus (English's grammar/vocabulary map)
+         and the way back are bound at the foot of this function, which this
+         path returns before reaching — so they are bound here too rather than
+         silently losing their handlers. */
+      el("learn-path").querySelectorAll("[data-skill]").forEach(row => {
+        row.addEventListener("click", () => openSkillDrill(row.dataset.skill));
+      });
+      el("ls-to-subjects").onclick = () => { view = { level: "subjects" }; render(); window.scrollTo(0, 0); };
+      return;
+    }
+
     if (!s.lessons.length) {
       // Be straight about it rather than showing an empty screen: the hourly
       // run writes these, and practice is available in the meantime.
@@ -450,11 +541,11 @@
         `<div class="ls-subject">${chapters ? "Full lessons" : esc(name)}</div>` +
         s.lessons.map((l, i) => {
           const st = lessonState(l.key);
-          const open = unlockedIn(s.lessons, i);
-          return `<div class="ls-row ${open ? "" : "is-locked"}" data-i="${i}">
+          const mastered = lessonState(l.key).mastered;
+          return `<div class="ls-row" data-i="${i}">
             <div class="ls-row-main">
               <div class="ls-title">${i + 1}. ${esc(l.title)}${l.video ? ' <span class="ls-vtag">video</span>' : ""}</div>
-              <div class="ls-why">${open ? esc(l.why) : "Master the topic above to unlock this."}</div>
+              <div class="ls-why">${esc(l.why)}</div>
             </div>
             <span class="ls-badge ${st.mastered ? "done" : open ? "open" : "lock"}">${
               st.mastered ? "mastered" : open ? (st.read ? "take the test" : "learn") : "locked"}</span>
@@ -465,7 +556,7 @@
       el("learn-path").querySelectorAll(".ls-row[data-i]").forEach(row => {
         row.addEventListener("click", () => {
           const i = +row.dataset.i;
-          if (!unlockedIn(s.lessons, i)) return;
+          /* every lesson opens — see the note on unlockedIn */
           openLesson(name, i);
         });
       });
@@ -610,7 +701,7 @@
     view = { level: "lessons", subject: l.subject };
     // A day may point at a lesson still gated by an earlier one. Send them to
     // the subject rather than silently opening something out of order.
-    if (!unlockedIn(list, i)) { render(); return; }
+    /* no gate: any lesson opens on demand */
     openLesson(l.subject, i);
   };
 

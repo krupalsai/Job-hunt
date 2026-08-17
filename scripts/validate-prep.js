@@ -138,6 +138,34 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
   });
 }
 
+/* Every lesson and skill the syllabus points at must exist. A dead reference
+   renders as a topic row that opens nothing, which is worse than a row
+   honestly marked "not written yet". */
+const rd = f => fs.readFileSync(path.join(__dirname, '..', 'prep', f), 'utf8');
+const SYLLABUS = new Function(rd('syllabus.js') + '; return SYLLABUS;')();
+// The curriculum is loaded here for the first time: the syllabus points at
+// lesson keys, and a reference can only be checked against the real list.
+const CURRICULUM = new Function(rd('lessons.js') + ';' + rd('ts-si-lessons.js') + '; return CURRICULUM;')();
+const lessonKeys = new Set(CURRICULUM.map(l => l.key));
+let sylTopics = 0;
+for (const [subject, entry] of Object.entries(SYLLABUS)) {
+  if (!Array.isArray(entry.topics) || !entry.topics.length)
+    problems.push(`syllabus ${subject}: no topics listed`);
+  if (!entry.basis) problems.push(`syllabus ${subject}: no basis recorded for where the topic list came from`);
+  (entry.topics || []).forEach((t, i) => {
+    sylTopics++;
+    const at = `syllabus ${subject}[${i}]`;
+    if (!t.t) problems.push(`${at}: topic has no name`);
+    (t.lessons || []).forEach(k => {
+      if (!lessonKeys.has(k)) problems.push(`${at}: points at lesson "${k}", which does not exist`);
+    });
+    (t.skills || []).forEach(k => {
+      if (!skillByKey.has(k)) problems.push(`${at}: points at skill "${k}", which does not exist`);
+    });
+  });
+}
+console.log(`\nSyllabus: ${sylTopics} topics across ${Object.keys(SYLLABUS).length} subjects`);
+
 console.log('\nBasics (skills) and the questions that drill them');
 console.log('─'.repeat(46));
 SKILLS.forEach(s => {

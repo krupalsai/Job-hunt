@@ -866,6 +866,44 @@ async function reachable(page, selector, where, minH){
     !/DBMS|Theory of Computation|Software Engineering|160 MCQs/.test(seen.join(' ')),
     seen.join(' ').replace(/\s+/g, ' ').slice(0, 200));
 
+  /* ── The focus watch ────────────────────────────────────────────────────
+     Five minutes on Reasoning, five on DBMS and five on Telangana is fifteen
+     minutes and nothing learned. The app measures which topic is actually on
+     screen and says so when nothing is settling — once, and never as a block. */
+  console.log('\n── it notices when nothing is settling ──────────────────');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  const longStretch = await page.evaluate(() => {
+    focusOn('DBMS');
+    __focus.since = Date.now() - 9 * 60 * 1000;
+    focusOn('Reasoning');
+    return __focus.switches.length;
+  });
+  check('a real stretch on one topic is not counted as thrashing', longStretch === 0,
+    String(longStretch));
+  check('and no warning is shown for it',
+    await page.locator('#focus-warn').evaluate(e => e.classList.contains('hidden')));
+
+  const thrash = await page.evaluate(() => {
+    ['DBMS', 'Reasoning', 'English', 'COA'].forEach(t => {
+      focusOn(t);
+      __focus.since = Date.now() - 60 * 1000;
+    });
+    focusOn('Data Structures');
+    const box = document.getElementById('focus-warn');
+    return { shown: !box.classList.contains('hidden'), text: box.innerText.replace(/\s+/g, ' ') };
+  });
+  check('but four topics in as many minutes earns one warning', thrash.shown, thrash.text.slice(0, 80));
+  check('which names the topic worth going back to, not just a scolding',
+    /Back to /.test(thrash.text) && /got the most/.test(thrash.text), thrash.text.slice(0, 160));
+  await reachable(page, '#focus-warn .fw-actions button', 'focus warning button', 40);
+  await noSideScroll(page, 'Study with the focus warning up');
+  check('dismissing it stops the nagging',
+    await page.evaluate(() => {
+      document.querySelector('[data-focus-dismiss]').click();
+      return document.getElementById('focus-warn').classList.contains('hidden');
+    }));
+
   /* ── The app follows the phone's light/dark setting ─────────────────────
      Every colour is a token defined twice; a literal hex in a component is a
      colour that only works in one scheme, which is exactly how the subject

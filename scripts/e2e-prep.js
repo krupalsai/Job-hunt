@@ -303,12 +303,23 @@ function check(name, cond, detail){
   const listing = await page.locator('#learn-path').textContent();
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
-  // Into a subject that has a path.
+  /* A subject opens its whole SYLLABUS, not just the lessons that happen to
+     have been written. Data Structures has 7 lessons and 8 examinable topics,
+     so the eighth is listed too, honestly marked — a gap you can see is one
+     you can go and read elsewhere, and a gap you cannot see is a topic you
+     walk into cold. */
   await page.locator('#subject-chips [data-subj="Data Structures"]').click();
-  const lessonRows = await page.locator('#learn-path .ls-row').count();
-  check('the subject opens its own lesson list', lessonRows === 7, `got ${lessonRows}`);
-  check('only the first lesson of the subject is unlocked',
-    (await page.locator('#learn-path .ls-row.is-locked').count()) === lessonRows - 1);
+  const topicRows = await page.locator('#learn-path .ls-row').count();
+  const written = await page.evaluate(() => CURRICULUM.filter(l => l.subject === 'Data Structures').length);
+  check('the subject opens its full syllabus, not only what has been written',
+    topicRows === 8 && topicRows > written, `${topicRows} topics vs ${written} lessons`);
+  check('and every topic says honestly what is behind it',
+    (await page.locator('#learn-path .ls-badge').count()) === topicRows);
+  check('nothing is locked — any topic can be opened when you need it',
+    (await page.locator('#learn-path .ls-row.is-locked').count()) === 0);
+  check('the topic list says where it came from, and that it is unverified',
+    /not yet checked against the official notification/.test(
+      await page.locator('#learn-path .ls-basis').textContent()));
   check('there is a way back to all subjects', await page.locator('#ls-to-subjects').isVisible());
 
   await page.locator('#learn-path .ls-row').first().click();
@@ -381,11 +392,17 @@ function check(name, cond, detail){
     await page.locator('#subjects-card').isVisible() &&
     await page.locator('#today-card').isVisible());
   await page.locator('#subject-chips [data-subj="Data Structures"]').click();
-  check('and the subject is one tap away, with its lessons intact',
-    (await page.locator('#learn-path .ls-row').count()) === 7);
-  check('mastering a lesson unlocks the next one',
-    (await page.locator('#learn-path .ls-row.is-locked').count()) === 5,
-    `${await page.locator('#learn-path .ls-row.is-locked').count()} still locked`);
+  check('and the subject is one tap away, with its full syllabus intact',
+    (await page.locator('#learn-path .ls-row').count()) === 8);
+  /* Mastering a lesson used to unlock the next. Nothing is locked now — the
+     order is a recommendation, not a gate, because gating hid most of a
+     subject from someone who already knew which part they needed tonight.
+     What a mastered lesson changes is the badge, not the access. */
+  check('a mastered topic is marked as mastered',
+    (await page.locator('#learn-path .ls-badge.done').count()) >= 1,
+    await page.locator('#learn-path').innerText());
+  check('and nothing is gated behind it',
+    (await page.locator('#learn-path .ls-row.is-locked').count()) === 0);
 
   console.log('\n── English: grammar is bounded, vocabulary is not ──────');
   /* The problem this section exists for: answering a tense question right
@@ -492,10 +509,11 @@ function check(name, cond, detail){
   // The existing full lessons (Error spotting, Vocabulary by word roots) must
   // still be there, unlost, just filed below the finer-grained chapter map.
   check('the existing English lessons are still reachable, not replaced',
-    (await page.locator('#learn-path .ls-row[data-i]').count()) >= 2,
-    await page.locator('#learn-path').textContent());
-  check('and labelled as the fuller lessons, once chapters are shown',
-    /Full lessons/.test(engPath));
+    (await page.locator('#learn-path [data-topic-lesson]').count()) >= 2,
+    await page.locator('#learn-path').innerText().then(t => t.slice(0, 160)));
+  check('and the syllabus around them names the topics with no lesson yet',
+    (await page.locator('#learn-path .ls-badge.none, #learn-path .ls-badge.drill').count()) >= 1,
+    await page.locator('#learn-path').innerText().then(t => t.slice(0, 160)));
 
   // A subject nobody has split into grammar/vocabulary must show no chapters
   // at all — this is additive, not a change to how every subject renders.
@@ -503,8 +521,8 @@ function check(name, cond, detail){
   await page.locator('#subject-chips [data-subj="Data Structures"]').click();
   check('a subject with no grammar/vocabulary split shows no chapters block',
     (await page.locator('#learn-path .ls-group').count()) === 0);
-  check('and its lesson list is completely unaffected',
-    (await page.locator('#learn-path .ls-row').count()) === 7);
+  check('and its syllabus renders the same way as any other subject',
+    (await page.locator('#learn-path .ls-row').count()) === 8);
 
   // Opening a chapter goes straight into the same micro-drill Progress and
   // the quiz alert already use — rule taught first, then the questions.

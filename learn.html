@@ -403,6 +403,19 @@
                          font-variant-numeric:tabular-nums; }
   .subj-chip.is-done .subj-meta{ color:var(--accent); }
 
+  /* The focus watch — a warning, not a wall. Warm, not alarming. */
+  #focus-warn{ border-color:#f59e0b66; background:#f59e0b14; }
+  .fw-head{ font-size:14px; font-weight:700; color:var(--warn); }
+  .fw-body{ font-size:12.5px; color:var(--text); margin-top:6px; line-height:1.55; }
+  .fw-actions{ display:flex; gap:8px; margin-top:12px; }
+  .fw-actions button{ flex:1; min-height:42px; font-size:12.5px; }
+
+  /* The syllabus rows: provenance line, then every topic with its honest state. */
+  .ls-basis{ font-size:11px; color:var(--dim); line-height:1.5; margin:-4px 0 10px; }
+  .syl-row{ cursor:pointer; }
+  .ls-badge.drill{ background:#f59e0b1f; color:var(--warn); }
+  .ls-badge.none{ background:var(--surface-2); color:var(--dim); }
+
   /* Test — the five modes */
   .mode-row{
     display:flex; align-items:center; gap:12px; width:100%; text-align:left;
@@ -582,6 +595,8 @@
            times you already know what you want to open. Every subject the exam
            examines is here, all visible at once — a strip that scrolled off the
            edge is the failure the whole navigation was rebuilt to end. -->
+      <div class="card hidden" id="focus-warn"></div>
+
       <div class="card" id="subjects-card">
         <h2>Subjects</h2>
         <p class="muted" style="margin-top:-4px;">Tap one to open its lessons.</p>
@@ -759,6 +774,8 @@
 <!-- Adds the subjects TS SI examines and HAL does not. After the bank,
      because it extends the same QUESTION_BANK. -->
 <script src="/prep/ts-si.js"></script>
+<!-- Every topic each paper examines, whether or not a lesson exists for it. -->
+<script src="/prep/syllabus.js"></script>
 <script src="/prep/lessons.js"></script>
 <!-- TS SI lessons, appended to the same CURRICULUM so the Learn path, the
      gating and the plan work on them with no new engine code. -->
@@ -804,6 +821,9 @@ window.gotoSection = function(id){
   // the way it arrived, not walk back through every tab you touched.
   try{ history.replaceState(null, '', location.pathname + location.search + '#' + id); }catch(e){}
   if(id === 'progress') renderProgress();
+  // Leaving the prep screens entirely is not thrashing between topics; it just
+  // means nothing is on screen to be focused on.
+  if(id === 'progress' || id === 'syllabus') focusOn(null);
   if(id === 'study'){
     /* A bottom-bar tab is a destination, not a resume point. Tapping Study
        shows Study — subjects and today's list — rather than dropping you back
@@ -823,6 +843,83 @@ window.gotoSection = function(id){
   if(id === 'syllabus') renderExamInfo();
   window.scrollTo(0, 0);
 };
+
+/* ── The focus watch ──────────────────────────────────────────────────────
+   Jumping between topics feels like studying and is not: five minutes on
+   Reasoning, five on DBMS and five on Telangana is fifteen minutes and nothing
+   learned, because none of them got long enough to stick. This watches which
+   topic is actually on screen, and if you keep moving before settling it says
+   so — once, quietly, with the topic you were on longest offered as the one to
+   go back to.
+
+   It measures, it does not block. The threshold is deliberately generous: a
+   switch is only counted when you leave a topic having spent under the settle
+   time on it, and the warning needs three of those inside the window. Looking
+   something up and coming back is not thrashing. */
+const FOCUS = {
+  SETTLE_MS: 5 * 60 * 1000,     // under five minutes on a topic is not settling
+  WINDOW_MS: 15 * 60 * 1000,    // how far back the switch count looks
+  SWITCHES: 3,                  // that many unsettled switches earns one warning
+  topic: null, since: 0, switches: [], warnedAt: 0,
+};
+
+/** Called whenever the topic on screen changes. `null` means no topic. */
+function focusOn(topic){
+  const now = Date.now();
+  if(FOCUS.topic === topic) return;
+  if(FOCUS.topic && FOCUS.since){
+    const spent = now - FOCUS.since;
+    if(spent < FOCUS.SETTLE_MS) FOCUS.switches.push({ at: now, topic: FOCUS.topic, spent });
+    else FOCUS.switches.length = 0;     // one real stretch clears the record
+  }
+  FOCUS.topic = topic;
+  FOCUS.since = topic ? now : 0;
+  FOCUS.switches = FOCUS.switches.filter(x => now - x.at < FOCUS.WINDOW_MS);
+  renderFocusWarning();
+}
+
+function renderFocusWarning(){
+  const box = document.getElementById('focus-warn');
+  if(!box) return;
+  const now = Date.now();
+  const recent = FOCUS.switches.filter(x => now - x.at < FOCUS.WINDOW_MS);
+  if(recent.length < FOCUS.SWITCHES || now - FOCUS.warnedAt < FOCUS.WINDOW_MS){
+    box.classList.add('hidden');
+    return;
+  }
+  // The topic that got the most of your time is the one worth going back to.
+  const by = {};
+  recent.forEach(x => { by[x.topic] = (by[x.topic] || 0) + x.spent; });
+  const best = Object.keys(by).sort((a,b) => by[b] - by[a])[0];
+  const mins = Math.max(1, Math.round(by[best] / 60000));
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="fw-head">You have moved between ${recent.length} topics in the last few minutes</div>
+    <div class="fw-body">None of them got five minutes. <strong>${escHtml(best)}</strong> got the most —
+      about ${mins} minute${mins === 1 ? '' : 's'}. Going back to it and finishing one thing will
+      buy more marks than another new start.</div>
+    <div class="fw-actions">
+      <button class="primary" data-focus-back="${escHtml(best)}">Back to ${escHtml(best)}</button>
+      <button class="ghost" data-focus-dismiss>I am fine</button>
+    </div>`;
+}
+
+document.addEventListener('click', e=>{
+  const back = e.target.closest && e.target.closest('[data-focus-back]');
+  if(back){
+    FOCUS.warnedAt = Date.now();
+    FOCUS.switches.length = 0;
+    renderFocusWarning();
+    if(window.openSubject) window.openSubject(back.getAttribute('data-focus-back'));
+    return;
+  }
+  if(e.target.closest && e.target.closest('[data-focus-dismiss]')){
+    FOCUS.warnedAt = Date.now();
+    FOCUS.switches.length = 0;
+    renderFocusWarning();
+  }
+});
+window.__focus = FOCUS;          // the tests drive the clock through this
 
 /* ── Subjects, at the top of Study ────────────────────────────────────────
    Built from the same subjects() the lesson path below uses (exposed by
@@ -858,6 +955,7 @@ document.addEventListener('click', e=>{
   }
   const b = e.target.closest && e.target.closest('[data-subj]');
   if(!b) return;
+  focusOn(b.getAttribute('data-subj'));
   const fold = document.getElementById('path-fold');
   if(fold) fold.open = true;
   if(window.openSubject) window.openSubject(b.getAttribute('data-subj'));
@@ -1681,6 +1779,8 @@ function renderQuestion(){
   const item = currentQuiz[currentIndex];
   document.getElementById('q-counter').textContent = `Question ${currentIndex+1} / ${currentQuiz.length}`;
   document.getElementById('q-topic').textContent = item.topic;
+  // A question on screen is time spent on its subject, same as a lesson is.
+  focusOn(item.topic);
   document.getElementById('progress-fill').style.width = `${(currentIndex/currentQuiz.length)*100}%`;
   document.getElementById('q-text').textContent = item.q;
   document.getElementById('explain-slot').innerHTML = '';
@@ -1942,10 +2042,11 @@ function openSkillDrill(key){
   const pool = skillPool(key);
   const stat = skillStat(key);
   const size = Math.min(5, pool.length);
-  window.gotoSection('quiz');
-  document.getElementById('quiz-setup').classList.add('hidden');
-  document.getElementById('quiz-live').classList.add('hidden');
-  document.getElementById('quiz-result').classList.add('hidden');
+  window.gotoSection('test');
+  ['test-modes','quiz-setup','quiz-live','quiz-result','mock-intro'].forEach(id=>{
+    const e = document.getElementById(id);
+    if(e) e.classList.add('hidden');
+  });
   const box = document.getElementById('skill-drill');
   box.classList.remove('hidden');
   box.innerHTML = `
@@ -1959,7 +2060,8 @@ function openSkillDrill(key){
     <button class="primary drill-btn" id="drill-start">Start the drill — ${size} question${size === 1 ? '' : 's'}</button>`;
   document.getElementById('drill-back').onclick = ()=>{
     box.classList.add('hidden');
-    document.getElementById('quiz-setup').classList.remove('hidden');
+    document.getElementById('test-modes').classList.remove('hidden');
+    window.scrollTo(0, 0);
   };
   document.getElementById('drill-start').onclick = ()=>{
     box.classList.add('hidden');
