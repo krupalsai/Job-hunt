@@ -153,6 +153,9 @@ body{ overflow-x:hidden; padding-bottom:calc(var(--nav-h) + 14px + env(safe-area
   color:var(--nav-text); cursor:pointer; padding:0;
 }
 .nav-burger:active{ background:var(--nav-line); }
+/* A tap should feel like it landed — every reachable control in the nav
+   dims a touch on press, same rule the two pages use for their own buttons. */
+.nav-item:active, .nav-row:active, .nav-exam-chip:active{ filter:brightness(.88); }
 .nav-title{ flex:1 1 auto; min-width:0; }
 .nav-title h1{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 /* The subtitle wraps rather than truncating. On SSC CGL it carries "wrong

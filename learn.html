@@ -53,8 +53,12 @@
   main{ max-width:960px; margin:0 auto; padding:12px 12px 40px; }
   .card{
     background:var(--panel); border:1px solid var(--panel-border);
-    border-radius:12px; padding:16px 18px; margin-bottom:12px;
+    border-radius:14px; padding:16px 18px; margin-bottom:12px;
+    box-shadow:0 1px 3px rgba(0,0,0,.35);
   }
+  /* A tap should feel like it landed. One rule, every button in the app —
+     quiz options, plan ticks, chips, CTAs — dims a touch on press. */
+  button:active:not([disabled]){ filter:brightness(.92); }
   .card h2{ margin-top:0; font-size:15px; color:var(--accent-soft); }
   .card h3{ font-size:13.5px; color:var(--text); margin-bottom:6px; }
   table{ width:100%; border-collapse:collapse; font-size:13px; }
@@ -79,16 +83,27 @@
   .quiz-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12.5px; color:var(--muted); }
   .qtext{ font-size:15px; margin:10px 0 14px; line-height:1.5; }
   .opt{
-    display:block; width:100%; text-align:left; background:#0f172a;
-    border:1px solid var(--panel-border); color:var(--text); padding:11px 13px;
+    display:flex; align-items:center; gap:11px; width:100%; text-align:left;
+    background:#111b30; border:1px solid #263349; color:var(--text); padding:11px 13px;
     border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:14px;
   }
+  /* A. B. C. D. — the shape of the real answer sheet, and a lot easier to
+     scan than four unlabelled rows. */
+  .opt-letter{
+    flex:0 0 auto; width:22px; height:22px; border-radius:50%;
+    background:#1e293b; color:var(--muted); font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .opt-label{ flex:1; min-width:0; }
   .opt:hover:not([disabled]){ border-color:var(--accent); }
   .opt.correct{ border-color:var(--good); background:#16a34a26; }
+  .opt.correct .opt-letter{ background:var(--good); color:var(--bg); }
   .opt.wrong{ border-color:var(--bad); background:#dc262626; }
+  .opt.wrong .opt-letter{ background:var(--bad); color:var(--bg); }
   /* A mock marks your choice without saying whether it was right — revealing
      that is what the results screen is for, once the paper is over. */
   .opt.picked{ border-color:var(--accent-soft); background:#1e293b; }
+  .opt.picked .opt-letter{ background:var(--accent-soft); color:var(--bg); }
   .opt[disabled]{ cursor:default; }
   .quiz-actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
   button.primary{
@@ -254,6 +269,7 @@
   .ls-recommend.is-weak{ border-left-color:var(--warn); background:#f59e0b14; }
   .ls-recommend.is-weak strong{ color:var(--warn); }
   .ls-recommend.is-done{ color:var(--muted); }
+  .ls-row:active{ background:#161f38; margin:0 -18px; padding-left:18px; padding-right:18px; }
   .ls-row{ display:flex; align-items:center; gap:10px; padding:12px 0;
            border-bottom:1px solid var(--panel-border); cursor:pointer; }
   .ls-row:last-child{ border-bottom:none; }
@@ -261,7 +277,7 @@
   .ls-row.is-recommended .ls-title{ color:var(--accent-soft); }
   .ls-row-main{ flex:1; min-width:0; }
   .ls-title{ font-size:14px; font-weight:600; }
-  .ls-why{ font-size:12px; color:var(--dim); margin-top:3px; line-height:1.45; }
+  .ls-why{ font-size:12px; color:var(--muted); margin-top:3px; line-height:1.45; }
   .ls-badge{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; }
   .ls-badge.done{ background:#16a34a33; color:var(--good); }
   .ls-badge.open{ background:#2563eb33; color:#60a5fa; }
@@ -1266,7 +1282,14 @@ function renderQuestion(){
   item.opts.forEach((opt, idx)=>{
     const b = document.createElement('button');
     b.className = 'opt';
-    b.textContent = opt;
+    const letter = document.createElement('span');
+    letter.className = 'opt-letter';
+    letter.textContent = String.fromCharCode(65 + idx);
+    const label = document.createElement('span');
+    label.className = 'opt-label';
+    label.textContent = opt;
+    b.appendChild(letter);
+    b.appendChild(label);
     b.addEventListener('click', ()=> selectAnswer(idx));
     optsDiv.appendChild(b);
   });

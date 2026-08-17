@@ -623,7 +623,7 @@
       ".td-mins{font-size:12.5px;font-weight:700;color:var(--accent-soft);white-space:nowrap;" +
         "font-variant-numeric:tabular-nums;}" +
       ".td-detail{font-size:12.5px;color:var(--text);margin-top:3px;line-height:1.45;}" +
-      ".td-why{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.5;}" +
+      ".td-why{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;}" +
       ".td-block.kind-basic .td-title{color:var(--warn);}" +
       ".td-block.kind-speed .td-title{color:var(--accent-soft);}" +
       ".td-go{margin-top:9px;padding:9px 12px;font-size:12.5px;width:100%;min-height:44px;text-align:center;}";
