@@ -1,24 +1,25 @@
 /* ============================================================================
-   SHARED NAVIGATION — one bottom bar, one drawer, one exam switcher, on both
-   the job list and the prep page.
+   SHARED NAVIGATION — one bottom bar, one menu, one exam.
 
-   Why this file exists at all:
+   The rule this file exists to enforce:
 
-   The prep page had seven tabs in a strip that scrolled off both edges of a
-   phone. You could not see them all, so you could not know what was there, and
-   the tab you wanted was as often off-screen as on it. The job list and the
-   prep were separate pages joined by a link at the top, which on a phone means
-   scrolling up to leave.
+       THE SELECTED EXAM IS THE ROOT CONTEXT OF THE ENTIRE APP.
 
-   So: five destinations always visible at the bottom where a thumb reaches,
-   everything else behind a drawer, and the exam you are preparing for named in
-   the header where it can be changed. Reference material — the syllabus, the
-   weightings, the time budget — is one destination in the drawer rather than
-   three tabs competing with the things you actually do every day.
+   Nothing is shown before that choice is made, everything below it is scoped
+   to it, and there is exactly one way to change it. The app used to assume
+   HAL, which meant an SSC CGL candidate was handed HAL's paper and HAL's
+   "attempt everything, a guess is free" advice — advice that costs marks on a
+   paper with negative marking.
 
-   It lives in its own file, injecting its own CSS, so that the two pages share
-   one navigation rather than two that drift apart, and so that editing the
-   navigation does not mean editing either page's stylesheet.
+   Four destinations, one name each:
+
+       Jobs · Study · Test · Progress          the bottom bar, always visible
+       ☰ → Change exam · Syllabus · Settings   everything else
+
+   There used to be five destinations, a drawer that repeated them, a row of
+   home-screen tiles that repeated them again, and three of them carried a
+   different name in each place — Learn/Lessons, Practice/Test, Plan/Today's
+   plan, Exam info/Syllabus. One vocabulary now, one route to each screen.
 
    Loaded with `defer` from <head> on both pages: it needs EXAMS and a body to
    attach to, and deferring puts its stylesheet after the page's own so its
@@ -42,6 +43,7 @@
     "jobhunt_prep_hal_cs_v1",
     "jobhunt_lessons",
     "jobhunt_plan_done",
+    "jobhunt_today_done",
     "jobhunt_pending_attempts",
   ];
 
@@ -55,29 +57,78 @@
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
     c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  /* ── Which exam is on screen ─────────────────────────────────────────────
-     On the prep page the URL is the authority, because the URL is what decides
-     which syllabus that page renders. Anything else and the header could name
-     one exam while the questions came from another — a lie in the one place
-     you cannot afford one.
-
-     On the job list there is no syllabus on screen, so the last exam chosen is
-     the right answer, and it is what the Learn/Practice/Plan/Progress links are
-     built from. */
+  /* ── Which exam ──────────────────────────────────────────────────────────
+     One answer, read the same way everywhere. On the prep page the URL is the
+     authority, because that page renders a syllabus and the header must never
+     name one exam while the questions come from another; with no ?exam= it
+     falls back to the stored choice and the address is corrected to match.
+     prep/sync.js and currentExamObj() in learn.html resolve it in the same
+     order — three readers of one answer. */
   const validKey = k => !!exams.find(e => e.key === k);
   const urlExam = new URLSearchParams(location.search).get("exam");
+  const storedKey = ls.get(EXAM_KEY);
+
+  /** False until an exam has actually been chosen. Nothing may render before it. */
+  const hasChosen = validKey(storedKey) || (IS_LEARN && validKey(urlExam));
 
   let currentKey;
   if (IS_LEARN) {
-    currentKey = validKey(urlExam) ? urlExam : DEFAULT_EXAM;
-    if (validKey(urlExam)) ls.set(EXAM_KEY, urlExam);   // remember it for the job list
+    if (validKey(urlExam)) {
+      currentKey = urlExam;
+      ls.set(EXAM_KEY, urlExam);
+    } else if (validKey(storedKey)) {
+      currentKey = storedKey;
+      // replaceState, not a reload: re-fetching would abandon any progress
+      // still in flight to /api/progress.
+      try {
+        history.replaceState(null, "",
+          location.pathname + "?exam=" + encodeURIComponent(storedKey) + (location.hash || ""));
+      } catch (e) {}
+    } else {
+      currentKey = DEFAULT_EXAM;
+    }
   } else {
-    currentKey = validKey(ls.get(EXAM_KEY)) ? ls.get(EXAM_KEY) : DEFAULT_EXAM;
+    currentKey = validKey(storedKey) ? storedKey : DEFAULT_EXAM;
   }
   const currentExam = () => exams.find(e => e.key === currentKey) || null;
 
+  /* ── When is the exam ────────────────────────────────────────────────────
+     Some exams carry a date, some a window of days, and some nothing yet. All
+     three are stated plainly — "not announced" is a real answer and a made-up
+     date is not. Shared through JobhuntNav so the header, the job cards and
+     the plan all count the days the same way. */
+  function daysUntil(iso) {
+    if (!iso) return null;
+    const d = new Date(iso + "T00:00:00");
+    if (isNaN(d.getTime())) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Math.round((d.getTime() - today.getTime()) / 86400000);
+  }
+  function fmtDay(iso) {
+    const d = new Date(iso + "T00:00:00");
+    return isNaN(d.getTime()) ? iso
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+  function examWhen(e) {
+    if (!e || !e.examDateStart) return { text: "Exam date not announced", days: null, short: "date TBA" };
+    const n = daysUntil(e.examDateStart);
+    // "5 – 6 Sept 2026", not the month twice: a window is nearly always inside
+    // one month, and the line also has to carry the countdown.
+    const sameMonth = e.examDateEnd && e.examDateStart.slice(0, 7) === e.examDateEnd.slice(0, 7);
+    const window_ = !e.examDateEnd || e.examDateEnd === e.examDateStart
+      ? fmtDay(e.examDateStart)
+      : sameMonth
+        ? String(Number(e.examDateStart.slice(8, 10))) + " – " + fmtDay(e.examDateEnd)
+        : fmtDay(e.examDateStart) + " – " + fmtDay(e.examDateEnd);
+    if (n === null) return { text: window_, days: null, short: window_ };
+    if (n > 0)  return { text: window_ + " · " + n + " day" + (n === 1 ? "" : "s") + " to go", days: n, short: n + " days to go" };
+    if (n === 0) return { text: window_ + " · today", days: 0, short: "today" };
+    return { text: window_ + " · date passed", days: n, short: "date passed" };
+  }
+
   /* Device id, the same one the quiz and the job list use. Created here too
-     because the drawer can write a qualification before either of them runs. */
+     because the menu can write a qualification before either of them runs. */
   let deviceId = ls.get(DEVICE_KEY);
   if (!deviceId) {
     deviceId = (crypto.randomUUID && crypto.randomUUID()) ||
@@ -95,30 +146,24 @@
   }
   const ICON = {
     jobs:  svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A2.5 2.5 0 0 1 10.5 3h3A2.5 2.5 0 0 1 16 5.5V7"/><path d="M3 12.5h18"/>'),
-    learn: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
-    quiz:  svg('<path d="M9 11.5l2.5 2.5L21 4.5"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'),
-    plan:  svg('<rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M16 2.5v4M8 2.5v4M3 10.5h18"/>'),
+    study: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
+    test:  svg('<path d="M9 11.5l2.5 2.5L21 4.5"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'),
     stats: svg('<path d="M18 20V10M12 20V4M6 20v-6"/>'),
     exam:  svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>'),
-    info:  svg('<circle cx="12" cy="12" r="9"/><path d="M12 11.2v5"/><path d="M12 7.4v.9"/>'),
+    book:  svg('<path d="M12 6.5C10.5 5 8.5 4.5 4 4.5v13c4.5 0 6.5.5 8 2 1.5-1.5 3.5-2 8-2v-13c-4.5 0-6.5.5-8 2z"/><path d="M12 6.5V21"/>'),
     gear:  svg('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'),
-    menu:  svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
-    tick:  svg('<path d="M5 12.5l4.5 4.5L19 7"/>'),
   };
 
-  /* ── The five destinations ───────────────────────────────────────────────
-     Five, not seven, and every one of them is something you do rather than
-     something you read. Reference material is one drawer entry ("Exam info")
-     because you consult it in week one and rarely again, and giving it a
-     permanent slot at the bottom of the screen would cost a slot that Practice
-     or Plan needs every day. */
+  /* ── The four destinations ───────────────────────────────────────────────
+     Jobs is a page; the other three are sections of the prep page. Syllabus is
+     deliberately NOT here: it is read in week one and rarely again, and giving
+     it a permanent slot would cost one that Study or Test needs every day. */
   const DESTS = [
-    { id: "jobs",     label: "Jobs",     icon: ICON.jobs,  href: "/" },
-    { id: "learn",    label: "Learn",    icon: ICON.learn, section: "learn" },
-    { id: "quiz",     label: "Practice", icon: ICON.quiz,  section: "quiz" },
-    { id: "schedule", label: "Plan",     icon: ICON.plan,  section: "schedule" },
+    { id: "study",    label: "Study",    icon: ICON.study, section: "study" },
+    { id: "test",     label: "Test",     icon: ICON.test,  section: "test" },
     { id: "progress", label: "Progress", icon: ICON.stats, section: "progress" },
   ];
 
@@ -127,7 +172,7 @@
     return "/learn.html?exam=" + encodeURIComponent(currentKey) + (section ? "#" + section : "");
   }
 
-  let activeId = IS_LEARN ? "learn" : "jobs";
+  let activeId = IS_LEARN ? "study" : "jobs";
 
   /* ── Styles ──────────────────────────────────────────────────────────────
      Own namespace (--nav-*) rather than the pages' variables: index.html has
@@ -137,15 +182,14 @@
     const s = document.createElement("style");
     s.textContent = `
 :root{
-  --nav-bg:#0b1120; --nav-panel:#131c31; --nav-line:#1e293b; --nav-accent:#22c55e;
-  --nav-accent-soft:#4ade80; --nav-text:#e2e8f0; --nav-muted:#94a3b8; --nav-dim:#64748b;
+  --nav-bg:#ffffff; --nav-panel:#f8faf9; --nav-line:#e2e8ec; --nav-accent:#16a34a;
+  --nav-accent-soft:#15803d; --nav-text:#0f172a; --nav-muted:#5b6b7a; --nav-dim:#8794a1;
   --nav-h:60px;
 }
 html{ -webkit-text-size-adjust:100%; }
 body{ overflow-x:hidden; padding-bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom)); }
 
-/* Top bar — hamburger, title, exam switcher. The pages own the markup so each
-   can put its own title in it; these are the shared shapes. */
+/* Top bar — the menu, and the exam this whole screen is about. */
 .nav-bar{ display:flex; align-items:center; gap:10px; }
 .nav-burger{
   flex:0 0 auto; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
@@ -153,37 +197,22 @@ body{ overflow-x:hidden; padding-bottom:calc(var(--nav-h) + 14px + env(safe-area
   color:var(--nav-text); cursor:pointer; padding:0;
 }
 .nav-burger:active{ background:var(--nav-line); }
-/* A tap should feel like it landed — every reachable control in the nav
-   dims a touch on press, same rule the two pages use for their own buttons. */
-.nav-item:active, .nav-row:active, .nav-exam-chip:active{ filter:brightness(.88); }
+.nav-item:active, .nav-row:active, .pick-row:active{ filter:brightness(.88); }
 .nav-title{ flex:1 1 auto; min-width:0; }
 .nav-title h1{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-/* The subtitle wraps rather than truncating. On SSC CGL it carries "wrong
-   answers lose marks", and an ellipsis eating that would hide the single most
-   consequential fact about the exam. */
-.nav-title .sub{ overflow:hidden; }
-/* On the prep page the title IS the switcher, the way "My Exams ▾" is: the
-   header already names the exam, so a second chip saying the same thing would
-   only take width away from the name. */
-.nav-switch{ cursor:pointer; }
-/* The caret belongs beside the title, not stranded at the far right of the
-   header — next to the words it applies to it reads as "this is tappable". */
-.nav-h1row{ display:flex; align-items:center; gap:7px; min-width:0; }
-.nav-h1row h1{ min-width:0; }
-.nav-caret{ flex:0 0 auto; color:var(--nav-accent-soft); font-size:12px; line-height:1; }
-.nav-exam-chip{
-  flex:0 0 auto; display:flex; align-items:center; gap:5px; max-width:42vw;
-  background:#16a34a1f; border:1px solid #22c55e55; color:var(--nav-accent-soft);
-  border-radius:20px; padding:7px 11px; font-size:12px; font-weight:700;
-  cursor:pointer; font-family:inherit;
+/* The exam name is on every screen, in the same place, so the question "which
+   exam is this for?" is answered before it is asked. */
+.nav-exam{
+  display:block; font-size:11.5px; line-height:1.35; color:var(--nav-accent-soft);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-.nav-exam-chip span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nav-exam .nav-when{ color:var(--nav-dim); }
 
 /* Bottom bar */
 nav#nav-bottom{
   position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex;
   margin:0; padding:0 0 env(safe-area-inset-bottom); overflow:visible; max-width:none;
-  background:#0f172af7; border-top:1px solid var(--nav-line);
+  background:#ffffffee; border-top:1px solid var(--nav-line);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
 }
 nav#nav-bottom .nav-item{
@@ -191,19 +220,18 @@ nav#nav-bottom .nav-item{
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
   background:transparent; border:0; border-radius:0; padding:0 2px;
   color:var(--nav-dim); text-decoration:none; cursor:pointer;
-  font-family:inherit; font-size:10px; font-weight:600; white-space:nowrap;
+  font-family:inherit; font-size:10.5px; font-weight:600; white-space:nowrap;
 }
 nav#nav-bottom .nav-item .nav-lbl{ max-width:100%; overflow:hidden; text-overflow:ellipsis; }
 nav#nav-bottom .nav-item .nav-ico{ width:21px; height:21px; }
 nav#nav-bottom .nav-item.is-on{ color:var(--nav-accent); }
 nav#nav-bottom .nav-item.is-on .nav-lbl{ font-weight:800; }
-/* A short bar above the current tab: colour alone is easy to miss in sunlight. */
 nav#nav-bottom .nav-item.is-on::before{
   content:""; position:absolute; top:0; left:50%; margin-left:-13px;
   width:26px; height:3px; border-radius:0 0 3px 3px; background:var(--nav-accent);
 }
 
-/* Drawer */
+/* Menu */
 #nav-scrim{
   position:fixed; inset:0; z-index:70; background:#020617b8; opacity:0;
   transition:opacity .18s ease; pointer-events:none;
@@ -227,7 +255,8 @@ nav#nav-bottom .nav-item.is-on::before{
   font-size:19px;
 }
 .nav-acct-main{ min-width:0; flex:1; }
-.nav-acct-name{ font-size:14.5px; font-weight:700; color:var(--nav-text); }
+.nav-acct-name{ font-size:14.5px; font-weight:700; color:var(--nav-text);
+                overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .nav-acct-sub{ font-size:11.5px; color:var(--nav-muted); margin-top:2px; line-height:1.4; }
 .nav-drawer-close{
   flex:0 0 auto; width:32px; height:32px; background:transparent; border:0; padding:0;
@@ -245,8 +274,6 @@ nav#nav-bottom .nav-item.is-on::before{
 .nav-row:active{ background:var(--nav-panel); }
 .nav-row .nav-ico{ flex:0 0 auto; width:19px; height:19px; color:var(--nav-muted); }
 .nav-row-main{ display:block; flex:1; min-width:0; }
-/* Both are spans so a row can be an <a> or a <button> without invalid nesting;
-   they still have to stack, or the title and its subtitle run together. */
 .nav-row-main > span{ display:block; }
 .nav-row-sub{ font-size:11px; color:var(--nav-dim); margin-top:2px; line-height:1.4;
               overflow:hidden; text-overflow:ellipsis; }
@@ -256,7 +283,6 @@ nav#nav-bottom .nav-item.is-on::before{
   flex:0 0 auto; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
   padding:3px 8px; border-radius:20px; background:#16a34a33; color:var(--nav-accent-soft);
 }
-.nav-chip.grey{ background:#47556933; color:var(--nav-muted); }
 .nav-sep{ height:1px; background:var(--nav-line); margin:10px 16px 0; }
 .nav-field{ padding:6px 16px 4px; }
 .nav-field label{ display:block; font-size:11.5px; color:var(--nav-muted); margin-bottom:6px; }
@@ -264,31 +290,80 @@ nav#nav-bottom .nav-item.is-on::before{
   width:100%; background:var(--nav-panel); color:var(--nav-text); font-family:inherit;
   border:1px solid var(--nav-line); border-radius:9px; padding:9px 10px; font-size:13px;
 }
-.nav-danger{ color:#f87171; }
-.nav-danger .nav-ico{ color:#f87171; }
+.nav-danger{ color:#dc2626; }
+.nav-danger .nav-ico{ color:#dc2626; }
 .nav-foot{ margin-top:auto; padding:18px 16px 4px; font-size:10.5px; color:#475569; line-height:1.5; }
 
-/* Exam sheet — a sheet from the bottom rather than a menu from the top,
-   because the switcher is reached with a thumb and the answers should be too. */
-#nav-sheet{
-  position:fixed; left:0; right:0; bottom:0; z-index:90;
-  background:var(--nav-bg); border-top:1px solid var(--nav-line);
-  border-radius:16px 16px 0 0; transform:translateY(102%); transition:transform .2s ease;
-  padding-bottom:calc(10px + env(safe-area-inset-bottom)); max-height:82vh; overflow-y:auto;
+/* ── The exam screen ──────────────────────────────────────────────────────
+   One component, two jobs: the question asked on first open, and Change exam.
+   Same list and same control both times, so the second time you already know
+   how it works. It covers the app because with no exam chosen there is
+   nothing behind it that means anything. */
+#nav-picker{
+  position:fixed; inset:0; z-index:200; display:none; background:var(--nav-bg);
+  overflow-y:auto; overscroll-behavior:contain;
+  padding:calc(26px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));
 }
-#nav-sheet.is-open{ transform:translateY(0); }
-.nav-sheet-grip{ width:38px; height:4px; border-radius:4px; background:var(--nav-line); margin:10px auto 2px; }
-.nav-sheet-head{ padding:6px 16px 2px; font-size:13.5px; font-weight:700; }
-.nav-sheet-note{ padding:2px 16px 8px; font-size:11.5px; color:var(--nav-dim); line-height:1.5; }
+#nav-picker.is-open{ display:block; }
+.pick-inner{ max-width:520px; margin:0 auto; }
+.pick-mark{
+  width:50px; height:50px; border-radius:15px; background:#16a34a2e; border:1px solid #22c55e55;
+  display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:14px;
+}
+.pick-h{ font-size:21px; line-height:1.28; margin:0 0 8px; color:var(--nav-text); }
+.pick-p{ font-size:12.5px; line-height:1.55; color:var(--nav-muted); margin:0 0 18px; }
+.pick-group{
+  font-size:10px; text-transform:uppercase; letter-spacing:.8px; font-weight:700;
+  color:var(--nav-dim); margin:18px 0 8px;
+}
+.pick-row{
+  display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left;
+  margin-bottom:10px; cursor:pointer; background:var(--nav-panel);
+  border:1px solid var(--nav-line); border-radius:14px; padding:14px 15px;
+  color:var(--nav-text); font-family:inherit;
+}
+.pick-row[aria-checked="true"]{ border-color:var(--nav-accent); background:#16a34a1a; }
+.pick-row[disabled]{ cursor:default; opacity:1; }
+.pick-dot{
+  flex:0 0 auto; width:20px; height:20px; border-radius:50%; margin-top:2px;
+  border:2px solid var(--nav-dim); display:flex; align-items:center; justify-content:center;
+}
+.pick-row[aria-checked="true"] .pick-dot{ border-color:var(--nav-accent); }
+.pick-row[aria-checked="true"] .pick-dot::after{
+  content:""; width:10px; height:10px; border-radius:50%; background:var(--nav-accent);
+}
+.pick-body{ flex:1; min-width:0; }
+/* Block, not inline: these are spans so they can sit inside a <button>, and
+   without this the exam's name and its pattern run together on one line. */
+.pick-name{ display:block; font-size:15px; font-weight:700; line-height:1.3; }
+.pick-meta{ display:block; font-size:11.5px; color:var(--nav-muted); margin-top:5px; line-height:1.5; }
+.pick-when{ color:var(--nav-accent-soft); font-weight:600; }
+.pick-warn{ color:#dc2626; font-weight:600; }
+.pick-current{ border-color:#22c55e55; background:#16a34a14; }
+.pick-tick{ flex:0 0 auto; color:var(--nav-accent); font-size:17px; line-height:1; margin-top:2px; }
+.pick-foot{ font-size:11.5px; color:var(--nav-dim); line-height:1.55; margin-top:14px; }
+/* The commit button is pinned: on a small screen the third exam can push it
+   below the fold, and a button you have to hunt for is a button that gets
+   missed. */
+.pick-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:201;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:#fffffff2; border-top:1px solid var(--nav-line);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+}
+.pick-go{
+  display:block; width:100%; max-width:520px; margin:0 auto; min-height:48px;
+  border:0; border-radius:12px; font-family:inherit; font-size:15px; font-weight:800;
+  letter-spacing:.02em; background:var(--nav-accent); color:#0b1120; cursor:pointer;
+}
+.pick-go[disabled]{ background:var(--nav-line); color:var(--nav-dim); cursor:default; }
 
 @media (min-width:820px){
   nav#nav-bottom{ justify-content:center; }
   nav#nav-bottom .nav-item{ flex:0 0 132px; }
 }
-/* Respect a reduced-motion preference: the drawer still opens, it just does
-   not slide. */
 @media (prefers-reduced-motion:reduce){
-  #nav-drawer, #nav-sheet, #nav-scrim{ transition:none; }
+  #nav-drawer, #nav-scrim{ transition:none; }
 }
 `;
     document.head.appendChild(s);
@@ -302,7 +377,7 @@ nav#nav-bottom .nav-item.is-on::before{
       const cls = "nav-item" + (on ? " is-on" : "");
       const body = d.icon + '<span class="nav-lbl">' + esc(d.label) + "</span>";
       const cur = on ? ' aria-current="page"' : "";
-      // On the prep page four of the five are sections of the page you are
+      // On the prep page three of the four are sections of the page you are
       // already on, so they switch rather than navigate — no reload, no losing
       // your place in a lesson.
       if (d.section && IS_LEARN) {
@@ -313,67 +388,33 @@ nav#nav-bottom .nav-item.is-on::before{
     }).join("");
   }
 
-  function examRowsHtml() {
-    if (!exams.length) return '<div class="nav-row-sub" style="padding:0 16px 8px">No syllabus loaded.</div>';
-    return exams.map(e => {
-      const on = e.key === currentKey;
-      const marks = e.sections.reduce((n, s) => n + s.marks, 0);
-      return '<a class="nav-row' + (on ? " is-on" : "") + '" data-exam="' + esc(e.key) + '" ' +
-        'href="/learn.html?exam=' + encodeURIComponent(e.key) + '#examinfo">' +
-        ICON.exam +
-        '<span class="nav-row-main"><span>' + esc(e.short) + '</span>' +
-        '<span class="nav-row-sub">' + esc(e.name) + ' · ' + marks + ' marks</span></span>' +
-        (on ? '<span class="nav-chip">current</span>' : '<span class="nav-chip grey">syllabus</span>') +
-        "</a>";
-    }).join("");
-  }
-
-  function sheetHtml() {
-    const list = exams.map(e => {
-      const on = e.key === currentKey;
-      return '<button type="button" class="nav-row' + (on ? " is-on" : "") +
-        '" data-pick-exam="' + esc(e.key) + '">' + ICON.exam +
-        '<span class="nav-row-main"><span>' + esc(e.short) + '</span>' +
-        '<span class="nav-row-sub">' + esc(e.pattern) + "</span></span>" +
-        (on ? '<span class="nav-chip">current</span>' : "") + "</button>";
-    }).join("");
-    return '<div class="nav-sheet-grip"></div>' +
-      '<div class="nav-sheet-head">Which exam are you preparing for?</div>' +
-      '<div class="nav-sheet-note">Switching changes the syllabus, the questions, the 28-day plan and the timing advice.</div>' +
-      list;
-  }
-
   const QUALS = ["B.Tech CSE", "Graduate", "Intermediate"];
   const QUAL_LABEL = { "B.Tech CSE": "B.Tech CSE", "Graduate": "Graduate (any degree)", "Intermediate": "Intermediate / 12th" };
 
   function drawerHtml() {
     const qual = ls.get(QUAL_KEY) || "";
-    const dest = DESTS.map(d => {
-      const on = d.id === activeId;
-      return '<a class="nav-row' + (on ? " is-on" : "") + '" data-goto="' + d.id + '" href="' +
-        esc(d.section ? learnHref(d.section) : d.href) + '">' + d.icon +
-        '<span class="nav-row-main">' + esc(d.label) + "</span>" +
-        (on ? '<span class="nav-chip">here</span>' : "") + "</a>";
-    }).join("");
-
+    const ex = currentExam();
     return '' +
       '<div class="nav-acct">' +
         '<div class="nav-avatar">🎯</div>' +
         '<div class="nav-acct-main">' +
-          '<div class="nav-acct-name">My prep</div>' +
+          '<div class="nav-acct-name" id="nav-acct-name">' + esc(ex ? ex.short : "No exam") + "</div>" +
           '<div class="nav-acct-sub" id="nav-acct-sub"></div>' +
         "</div>" +
         '<button type="button" class="nav-drawer-close" id="nav-close" aria-label="Close menu">' + ICON.close + "</button>" +
       "</div>" +
 
-      '<div class="nav-group">Preparing for</div>' +
-      examRowsHtml() +
-      '<a class="nav-row" data-goto="examinfo" href="' + esc(learnHref("examinfo")) + '">' + ICON.info +
-        '<span class="nav-row-main">Exam info' +
-        '<span class="nav-row-sub">Pattern, weightage, time budget, tactics</span></span></a>' +
+      '<button type="button" class="nav-row" id="nav-change-exam">' + ICON.swap +
+        '<span class="nav-row-main"><span>Change exam</span>' +
+        '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
 
-      '<div class="nav-sep"></div>' +
-      '<div class="nav-group">Go to</div>' + dest +
+      '<a class="nav-row' + (activeId === "jobs" ? " is-on" : "") + '" data-goto="jobs" href="/">' + ICON.jobs +
+        '<span class="nav-row-main"><span>Jobs</span>' +
+        '<span class="nav-row-sub">Openings tracked for this exam</span></span></a>' +
+
+      '<a class="nav-row" data-goto="syllabus" href="' + esc(learnHref("syllabus")) + '">' + ICON.book +
+        '<span class="nav-row-main"><span>Syllabus</span>' +
+        '<span class="nav-row-sub">Pattern, marking, time budget, exam-hall tactics</span></span></a>' +
 
       '<div class="nav-sep"></div>' +
       '<div class="nav-group">Settings</div>' +
@@ -386,11 +427,63 @@ nav#nav-bottom .nav-item.is-on::before{
         "</select>" +
       "</div>" +
       '<button type="button" class="nav-row nav-danger" id="nav-reset">' + ICON.trash +
-        '<span class="nav-row-main">Reset prep progress' +
-        '<span class="nav-row-sub">Quiz history, mastery and ticked plan days. Applied jobs are kept.</span></span></button>' +
+        '<span class="nav-row-main"><span>Reset prep progress</span>' +
+        '<span class="nav-row-sub">Quiz history, mastery and ticked days. Applied jobs are kept.</span></span></button>' +
 
       '<div class="nav-foot">Device ' + esc(String(deviceId).slice(0, 8)) +
         " · progress is mirrored so it is not only on this phone.</div>";
+  }
+
+  /** One exam, as a row of the exam screen. */
+  function pickRowHtml(e, opts) {
+    const when = examWhen(e);
+    // The pattern already carries the marks for all three exams; repeating the
+    // total after it just makes the line wrap on a phone.
+    const body =
+      '<span class="pick-body">' +
+        '<span class="pick-name">' + esc(e.name) + "</span>" +
+        '<span class="pick-meta">' + esc(e.pattern) + "<br>" +
+          '<span class="' + (when.days !== null && when.days >= 0 ? "pick-when" : "") + '">' +
+          esc(when.text) + "</span>" +
+          (e.negative ? ' · <span class="pick-warn">wrong answers lose marks</span>' : "") +
+        "</span>" +
+      "</span>";
+    if (opts && opts.current) {
+      return '<div class="pick-row pick-current" data-current-exam="' + esc(e.key) + '">' +
+        '<span class="pick-tick" aria-hidden="true">✓</span>' + body + "</div>";
+    }
+    const on = pickerChoice === e.key;
+    return '<button type="button" class="pick-row" role="radio" aria-checked="' + (on ? "true" : "false") +
+      '" data-pick-exam="' + esc(e.key) + '">' +
+      '<span class="pick-dot" aria-hidden="true"></span>' + body + "</button>";
+  }
+
+  function pickerHtml() {
+    const change = pickerMode === "change";
+    const ex = currentExam();
+    const others = exams.filter(e => !change || e.key !== currentKey);
+    const rows = others.map(e => pickRowHtml(e, null)).join("");
+
+    return '<div class="pick-inner">' +
+      (change
+        ? '<h2 class="pick-h">Change exam</h2>' +
+          '<p class="pick-p">Everything — jobs, study, test, progress and the syllabus — is rebuilt ' +
+          'around the exam you pick. Nothing you have already studied is lost.</p>' +
+          '<div class="pick-group">Current</div>' +
+          (ex ? pickRowHtml(ex, { current: true }) : "") +
+          '<div class="pick-group">Switch to</div>' + rows
+        : '<div class="pick-mark">🎯</div>' +
+          '<h2 class="pick-h">Which exam are you preparing for?</h2>' +
+          '<p class="pick-p">Everything in the app follows this one answer: the syllabus, the ' +
+          'lessons, the practice questions, what to study today, the marking and timing advice, ' +
+          'and which openings you are shown.</p>' +
+          (rows || '<p class="pick-p">No syllabus loaded.</p>') +
+          '<p class="pick-foot">You can change it later from the ☰ menu.</p>'
+      ) +
+      "</div>" +
+      '<div class="pick-bar"><button type="button" class="pick-go" id="pick-go"' +
+        (pickerChoice ? "" : " disabled") + ">" +
+        (change ? "Switch exam" : "Continue") + "</button></div>";
   }
 
   /* ── Mount ───────────────────────────────────────────────────────────── */
@@ -404,71 +497,120 @@ nav#nav-bottom .nav-item.is-on::before{
   drawer.setAttribute("aria-hidden", "true");
   drawer.innerHTML = drawerHtml();
 
-  const sheet = document.createElement("div");
-  sheet.id = "nav-sheet";
-  sheet.setAttribute("aria-hidden", "true");
-  sheet.innerHTML = sheetHtml();
-
   const bottom = document.createElement("nav");
   bottom.id = "nav-bottom";
   bottom.setAttribute("aria-label", "Main");
   bottom.innerHTML = bottomHtml();
 
+  let pickerMode = null;     // 'first' | 'change' | null
+  let pickerChoice = null;   // the exam key selected but not yet committed
+
+  const picker = document.createElement("div");
+  picker.id = "nav-picker";
+  picker.setAttribute("role", "dialog");
+  picker.setAttribute("aria-modal", "true");
+  picker.setAttribute("aria-label", "Choose your exam");
+  picker.setAttribute("aria-hidden", "true");
+
   document.body.appendChild(scrim);
   document.body.appendChild(drawer);
-  document.body.appendChild(sheet);
   document.body.appendChild(bottom);
+  document.body.appendChild(picker);
 
   /* ── Open / close ────────────────────────────────────────────────────── */
 
-  let openThing = null;          // 'drawer' | 'sheet' | null
-  function setOpen(what) {
-    openThing = what;
-    drawer.classList.toggle("is-open", what === "drawer");
-    sheet.classList.toggle("is-open", what === "sheet");
-    scrim.classList.toggle("is-open", !!what);
-    drawer.setAttribute("aria-hidden", what === "drawer" ? "false" : "true");
-    sheet.setAttribute("aria-hidden", what === "sheet" ? "false" : "true");
-    document.body.style.overflow = what ? "hidden" : "";
+  let drawerOpen = false;
+  function setDrawer(open) {
+    drawerOpen = !!open;
+    drawer.classList.toggle("is-open", drawerOpen);
+    scrim.classList.toggle("is-open", drawerOpen);
+    drawer.setAttribute("aria-hidden", drawerOpen ? "false" : "true");
+    document.body.style.overflow = (drawerOpen || pickerMode) ? "hidden" : "";
     const burger = document.getElementById("nav-hamburger");
-    if (burger) burger.setAttribute("aria-expanded", what === "drawer" ? "true" : "false");
+    if (burger) burger.setAttribute("aria-expanded", drawerOpen ? "true" : "false");
   }
-  const closeAll = () => setOpen(null);
+  const closeAll = () => setDrawer(false);
 
   scrim.addEventListener("click", closeAll);
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && openThing) closeAll(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    // The first-open question has no way out: there is nothing behind it.
+    if (pickerMode === "change") { closePicker(); return; }
+    if (drawerOpen) closeAll();
+  });
 
   document.addEventListener("click", e => {
     const t = e.target;
     if (!t || !t.closest) return;
-    if (t.closest("#nav-hamburger")) { e.preventDefault(); setOpen(openThing === "drawer" ? null : "drawer"); return; }
-    if (t.closest("#exam-switch"))   { e.preventDefault(); setOpen(openThing === "sheet" ? null : "sheet"); return; }
+    if (t.closest("#nav-hamburger")) { e.preventDefault(); setDrawer(!drawerOpen); return; }
     if (t.closest("#nav-close"))     { e.preventDefault(); closeAll(); return; }
+    if (t.closest("#nav-change-exam")) { e.preventDefault(); openPicker("change"); return; }
   });
 
-  /* ── Switching exam ──────────────────────────────────────────────────── */
+  /* ── The exam screen ─────────────────────────────────────────────────── */
 
-  function pickExam(key) {
-    if (!validKey(key)) return;
-    ls.set(EXAM_KEY, key);
-    if (key === currentKey) { closeAll(); return; }
-    if (IS_LEARN) {
-      // The prep page renders one syllabus, chosen at load from the URL.
-      // Switching means loading the other one — keeping the section you were on
-      // so you land on Practice for SSC if you were on Practice for HAL.
-      location.href = "/learn.html?exam=" + encodeURIComponent(key) + "#" + activeId;
+  function drawPicker() {
+    picker.innerHTML = pickerHtml();
+  }
+
+  function openPicker(mode) {
+    pickerMode = mode;
+    pickerChoice = null;               // a switch is a deliberate act, never pre-armed
+    setDrawer(false);
+    drawPicker();
+    picker.classList.add("is-open");
+    picker.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    picker.scrollTop = 0;
+  }
+
+  function closePicker() {
+    pickerMode = null;
+    pickerChoice = null;
+    picker.classList.remove("is-open");
+    picker.setAttribute("aria-hidden", "true");
+    if (!drawerOpen) document.body.style.overflow = "";
+  }
+
+  picker.addEventListener("click", e => {
+    const row = e.target.closest && e.target.closest("[data-pick-exam]");
+    if (row) {
+      e.preventDefault();
+      pickerChoice = row.getAttribute("data-pick-exam");
+      drawPicker();
       return;
     }
+    if (e.target.closest && e.target.closest("#pick-go")) {
+      e.preventDefault();
+      commitExam(pickerChoice);
+    }
+  });
+
+  /** Commit the chosen exam and rebuild everything under it. */
+  function commitExam(key) {
+    if (!validKey(key)) return;
+    const changed = key !== currentKey;
+    ls.set(EXAM_KEY, key);
     currentKey = key;
-    closeAll();
+    closePicker();
+
+    /* On the prep page the exam is baked into the URL and into every list the
+       page has already rendered, so switching means loading the other exam
+       rather than patching a dozen screens and hoping none was missed. Land on
+       Study: the first thing to do with a newly chosen exam is find out what
+       to study for it. */
+    if (IS_LEARN && changed) {
+      location.href = "/learn.html?exam=" + encodeURIComponent(key) + "#study";
+      return;
+    }
+    if (!IS_LEARN && !hasChosen) {
+      // First open, on the job list. The answer to "what now" is Study.
+      location.href = learnHref("study");
+      return;
+    }
     refresh();
     document.dispatchEvent(new CustomEvent("jobhunt:exam", { detail: { key: key, exam: currentExam() } }));
   }
-
-  sheet.addEventListener("click", e => {
-    const b = e.target.closest && e.target.closest("[data-pick-exam]");
-    if (b) { e.preventDefault(); pickExam(b.getAttribute("data-pick-exam")); }
-  });
 
   /* ── Section switching on the prep page ──────────────────────────────── */
 
@@ -486,22 +628,15 @@ nav#nav-bottom .nav-item.is-on::before{
 
   drawer.addEventListener("click", e => {
     const row = e.target.closest && e.target.closest("[data-goto]");
+    // Jobs is a different page, not a section of the prep page — it must
+    // navigate for real, never be caught as an in-page section switch.
     if (row && IS_LEARN && row.getAttribute("data-goto") !== "jobs") {
       e.preventDefault();
       closeAll();
       go(row.getAttribute("data-goto"));
       return;
     }
-    // A syllabus row for the exam already open is a section switch, not a reload.
-    const ex = e.target.closest && e.target.closest("[data-exam]");
-    if (ex && IS_LEARN && ex.getAttribute("data-exam") === currentKey) {
-      e.preventDefault();
-      closeAll();
-      go("examinfo");
-      return;
-    }
-    if (ex) ls.set(EXAM_KEY, ex.getAttribute("data-exam"));
-    if (row || ex) closeAll();
+    if (row) closeAll();
   });
 
   /* ── Qualification and reset ─────────────────────────────────────────── */
@@ -540,43 +675,37 @@ nav#nav-bottom .nav-item.is-on::before{
 
   function refresh() {
     const ex = currentExam();
+    const when = examWhen(ex);
 
+    /* The exam, on every screen, in the same place. Both pages carry a
+       #nav-exam line in their header; nav.js is the only thing that writes it,
+       so the two can never drift apart or name different exams. */
+    const line = document.getElementById("nav-exam");
+    if (line) {
+      line.innerHTML = ex
+        ? esc(ex.short) + ' <span class="nav-when">· ' + esc(when.short) + "</span>"
+        : "No exam chosen";
+    }
     const label = document.getElementById("exam-label");
     if (label) label.textContent = ex ? ex.short : "Exam";
 
     bottom.innerHTML = bottomHtml();
+
     drawer.querySelectorAll("[data-goto]").forEach(r => {
-      const on = r.getAttribute("data-goto") === activeId;
+      const goto = r.getAttribute("data-goto");
+      const on = goto === activeId;
       r.classList.toggle("is-on", on);
-      if (r.getAttribute("data-goto") !== "jobs" && !IS_LEARN) {
-        const d = DESTS.find(x => x.id === r.getAttribute("data-goto"));
-        r.setAttribute("href", d && d.section ? learnHref(d.section) : (d ? d.href : "/"));
-      }
-    });
-    const info = drawer.querySelector('[data-goto="examinfo"]');
-    if (info && !IS_LEARN) info.setAttribute("href", learnHref("examinfo"));
-
-    drawer.querySelectorAll("[data-exam]").forEach(r => {
-      const on = r.getAttribute("data-exam") === currentKey;
-      r.classList.toggle("is-on", on);
-      const chip = r.querySelector(".nav-chip");
-      if (chip) { chip.textContent = on ? "current" : "syllabus"; chip.classList.toggle("grey", !on); }
-    });
-    sheet.querySelectorAll("[data-pick-exam]").forEach(r => {
-      const on = r.getAttribute("data-pick-exam") === currentKey;
-      r.classList.toggle("is-on", on);
-      const chip = r.querySelector(".nav-chip");
-      if (on && !chip) {
-        const c = document.createElement("span");
-        c.className = "nav-chip"; c.textContent = "current";
-        r.appendChild(c);
-      } else if (!on && chip) chip.remove();
+      // Jobs always points at "/" — it is a different page, not a section of
+      // the prep page, so it never takes the ?exam=…#section shape the others do.
+      if (!IS_LEARN && goto !== "jobs") r.setAttribute("href", learnHref(goto));
     });
 
+    const name = document.getElementById("nav-acct-name");
+    if (name) name.textContent = ex ? ex.short : "No exam";
     const sub = document.getElementById("nav-acct-sub");
     if (sub) {
       const qual = ls.get(QUAL_KEY);
-      sub.textContent = (ex ? ex.short : "No exam") + (qual ? " · " + qual : " · qualification not set");
+      sub.textContent = (ex ? when.short : "no exam chosen") + (qual ? " · " + qual : "");
     }
   }
 
@@ -585,19 +714,25 @@ nav#nav-bottom .nav-item.is-on::before{
   window.JobhuntNav = {
     get examKey() { return currentKey; },
     get exam() { return currentExam(); },
+    /** False until an exam has actually been picked. */
+    get chosen() { return validKey(ls.get(EXAM_KEY)); },
+    examWhen: examWhen,
     learnHref: learnHref,
-    openDrawer: () => setOpen("drawer"),
-    openExamSheet: () => setOpen("sheet"),
+    openDrawer: () => setDrawer(true),
+    openChangeExam: () => openPicker("change"),
     close: closeAll,
     /** Called by the prep page whenever the visible section changes.
-        "examinfo" is a real destination even though it has no slot in the
-        bottom bar — it highlights in the drawer and leaves the bar unlit,
-        which is honest: you are not on any of the five. */
+        "syllabus" is a real destination even though it has no slot in the
+        bottom bar — it highlights in the menu and leaves the bar unlit, which
+        is honest: you are not on any of the four. */
     setActive(id) {
-      if (id === "examinfo" || DESTS.some(d => d.id === id)) activeId = id;
+      if (id === "syllabus" || DESTS.some(d => d.id === id)) activeId = id;
       refresh();
     },
   };
 
   refresh();
+
+  /* Ask before showing anything else. */
+  if (!hasChosen && exams.length) openPicker("first");
 })();

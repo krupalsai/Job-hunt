@@ -138,33 +138,25 @@
      content nowhere in sight and the wrong exam's pattern in the header, which
      is worse than the "no syllabus yet" message it replaced.
 
-     No parameter means the HAL syllabus, which is what the standalone prep
-     link has always meant. */
+     No parameter means the exam chosen on first open, which is stored under
+     jobhunt_current_exam. nav.js resolves it the same way and corrects the
+     address to match, so a bookmark of the bare page opens the syllabus you
+     are actually preparing for rather than whichever one used to be default. */
   const CURRENT_EXAM = (function () {
     if (typeof EXAMS === "undefined") return null;
-    const key = new URLSearchParams(location.search).get("exam");
+    let key = new URLSearchParams(location.search).get("exam");
+    if (!key) {
+      try { key = localStorage.getItem("jobhunt_current_exam"); } catch (e) { key = null; }
+    }
     return EXAMS.find(e => e.key === key) || null;
   })();
 
-  /* Retitle the page for the exam actually being studied. */
+  /* The header names the screen and, underneath it, the exam — and nav.js is
+     the only thing that writes that second line, on both pages, so the two can
+     never drift apart. All that is left here is the tab title. */
   (function () {
     if (!CURRENT_EXAM) return;
-    const h1 = document.querySelector("header h1");
-    const sub = document.querySelector("header .sub");
-    // The short name, not the full one: "HAL MT/DT (Computer Science)" does not
-    // fit a 390px header and ellipsing it tells you nothing. The full name is
-    // one tap away in the drawer, next to the syllabus it belongs to.
-    if (h1) h1.textContent = "🧠 " + CURRENT_EXAM.short + " Prep";
-    if (sub) {
-      sub.textContent = CURRENT_EXAM.pattern;
-      if (CURRENT_EXAM.negative) {
-        // Negative marking changes exam-hall behaviour completely: on HAL you
-        // guess everything, on SSC CGL a blind guess costs you. Saying it in
-        // the header means it cannot be missed.
-        sub.innerHTML += ' <strong style="color:#f87171">· wrong answers lose marks</strong>';
-      }
-    }
-    document.title = CURRENT_EXAM.short + " Prep · Job Tracker";
+    document.title = CURRENT_EXAM.short + " · Job Hunt";
   })();
 
   /** The subjects this exam examines — all of them when no exam is named. */
@@ -250,7 +242,7 @@
     const css = document.createElement("style");
     css.textContent =
       ".ls-dots{display:flex;gap:5px;margin:0 0 16px;}" +
-      ".ls-dot{height:3px;flex:1;border-radius:2px;background:#1e293b;}" +
+      ".ls-dot{height:3px;flex:1;border-radius:2px;background:var(--panel-border);}" +
       ".ls-dot.past{background:#22c55e66;}" +
       ".ls-dot.on{background:#22c55e;}";
     document.head.appendChild(css);
@@ -531,7 +523,7 @@
   /* One way to change section, owned by learn.html, so the bottom bar
      highlights correctly no matter who did the navigating. */
   function gotoQuizTab() {
-    if (window.gotoSection) { window.gotoSection("quiz"); return; }
+    if (window.gotoSection) { window.gotoSection("test"); return; }
     document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
     el("quiz").classList.remove("hidden");
     window.scrollTo(0, 0);
@@ -592,7 +584,7 @@
     if (!l) return;
     const list = subjects().find(x => x.name === l.subject).lessons;
     const i = list.findIndex(x => x.key === key);
-    if (window.gotoSection) window.gotoSection("learn");
+    if (window.gotoSection) window.gotoSection("study");
     else {
       document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
       el("learn").classList.remove("hidden");
@@ -639,14 +631,45 @@
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
     c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  /* Weeks 1-2 walk the lesson path in order, two lessons a day. Weeks 3-4 are
-     revision and mocks, which are practice rather than new material — that
-     matches how the time budget actually works out before an exam. */
+  /* ── The run to the exam ─────────────────────────────────────────────────
+     The plan used to be twenty-eight days whatever the date said. With three
+     weeks left that plans a fortnight the student does not have, and with ten
+     weeks left it stops four weeks early — and in both cases the last four
+     days say "full mock" whether or not the paper is the day after.
+
+     So the length is the days actually remaining, and the SHAPE follows the
+     time left rather than a fixed week number: new material first, then
+     revision, and the last stretch is mocks and mistake repair. Reading a new
+     chapter the night before a paper is the least valuable thing a student can
+     do with that hour.
+
+     No date announced means no countdown to plan against. The run is then the
+     lesson path plus a short revision tail, and the screen says so rather than
+     implying a deadline nobody published. */
+  const MIN_RUN = 7;
+  const MAX_RUN = 60;
+
+  function daysLeft(exam) {
+    if (!exam || !exam.examDateStart) return null;
+    const d = new Date(exam.examDateStart + "T00:00:00");
+    if (isNaN(d.getTime())) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    // Count back from the EARLIEST day of a window: being ready a day early
+    // costs nothing, being ready a day late costs the exam.
+    return Math.max(0, Math.round((d.getTime() - today.getTime()) / 86400000));
+  }
+
+  function planExam() {
+    let key = new URLSearchParams(location.search).get("exam");
+    if (!key) { try { key = localStorage.getItem("jobhunt_current_exam"); } catch (e) {} }
+    return (typeof EXAMS !== "undefined") ? (EXAMS.find(e => e.key === key) || null) : null;
+  }
+
   function buildPlan() {
     const days = [];
     // Follow the exam being studied, so an SSC plan is not full of DBMS.
-    const examKey = new URLSearchParams(location.search).get("exam");
-    const exam = (typeof EXAMS !== "undefined") ? EXAMS.find(e => e.key === examKey) : null;
+    const exam = planExam();
     const order = exam ? subjectsForExam(exam)
       : ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
          "COA", "Theory of Computation", "Programming & OOP",
@@ -654,34 +677,47 @@
     const lessons = [];
     order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
 
-    let n = 0;
-    for (let i = 0; i < lessons.length; i += 2) {
-      const chunk = lessons.slice(i, i + 2);
+    const left = daysLeft(exam);
+    // Two lessons a day is the pace the path was written for. Where the date
+    // leaves less room than that, the run is what is left and the learning
+    // days are compressed into the front of it.
+    const natural = Math.ceil(lessons.length / 2) + 7;
+    const run = left === null
+      ? Math.min(MAX_RUN, Math.max(MIN_RUN, natural))
+      : Math.min(MAX_RUN, Math.max(MIN_RUN, left));
+
+    // The last fifth of the run, at least two days and at most seven, is
+    // mocks and mistake repair rather than new material.
+    const mockDays = Math.min(7, Math.max(2, Math.round(run / 5)));
+    const learnDays = Math.max(1, run - mockDays - Math.min(5, Math.round(run / 6)));
+    const perDay = Math.max(1, Math.ceil(lessons.length / learnDays));
+
+    let n = 0, i = 0;
+    while (i < lessons.length && n < learnDays) {
+      const chunk = lessons.slice(i, i + perDay);
+      i += perDay;
       n++;
       days.push({
         id: "d" + n,
         day: n,
-        week: Math.min(4, Math.ceil(n / 7)),
+        week: Math.ceil(n / 7),
         title: chunk.map(l => l.title).join("  ·  "),
         subject: chunk[0].subject,
         lessons: chunk,
         kind: "learn",
       });
     }
-    // Whatever days remain in a 28-day run become revision and mock days.
-    while (n < 28) {
+    const mockTitle = exam
+      ? `Full mock — ${exam.questions} questions, ${exam.minutes} minutes`
+      : "Full mock — sit the real paper, timed";
+    while (n < run) {
       n++;
       const revising = order[(n - 1) % order.length];
-      // Named for the exam actually being planned, not hard-coded to HAL's
-      // numbers — a "Full mock" day on an SSC CGL plan quoting 160 questions
-      // and 150 minutes would be describing a different exam's paper.
-      const mockTitle = exam
-        ? `Full mock — ${exam.questions} questions, ${exam.minutes} minutes`
-        : "Full mock — sit the real paper, timed";
+      const isMock = n > run - mockDays;
       days.push({
-        id: "d" + n, day: n, week: Math.min(4, Math.ceil(n / 7)),
-        title: n >= 25 ? mockTitle : "Revision + practice: " + revising,
-        subject: revising, lessons: [], kind: n >= 25 ? "mock" : "revise",
+        id: "d" + n, day: n, week: Math.ceil(n / 7),
+        title: isMock ? mockTitle : "Revision + practice: " + revising,
+        subject: revising, lessons: [], kind: isMock ? "mock" : "revise",
       });
     }
     return days;
@@ -693,10 +729,24 @@
     const done = read();
     const nDone = days.filter(d => done[d.id]).length;
 
+    /* Say what the run is and why it is that long. A plan whose length is
+       decided by the exam date has to show the date it was decided from, or it
+       reads as another arbitrary twenty-eight. */
+    const exam = planExam();
+    const left = daysLeft(exam);
     el("plan-progress").innerHTML =
       `<div class="bar-track"><div class="bar-fill" style="width:${
         Math.round(nDone / days.length * 100)}%;background:var(--accent)"></div></div>
-       <div class="bar-note">${nDone} of ${days.length} days done</div>`;
+       <div class="bar-note">${nDone} of ${days.length} days done</div>
+       <div class="bar-note">${left === null
+         ? "No exam date announced, so this run is the lesson path plus a revision tail."
+         : `${days.length} days, counted back from the earliest day of the exam window.`}</div>`;
+    const summary = el("plan-summary");
+    if (summary) {
+      summary.textContent = left === null
+        ? `The run to the exam — ${days.length} days`
+        : `The run to the exam — ${days.length} days left`;
+    }
 
     let week = 0;
     el("plan-days").innerHTML = days.map(d => {
@@ -735,7 +785,7 @@
         // from one subject with a title claiming "160 questions, 150 minutes".
         // It now opens the actual mock engine, on the Quiz tab where it lives.
         else if (d.kind === "mock" && window.gotoSection && window.openMockIntro) {
-          window.gotoSection("quiz");
+          window.gotoSection("test");
           window.openMockIntro();
         }
         else if (window.practiseSubject) window.practiseSubject(d.subject);

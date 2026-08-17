@@ -6,7 +6,7 @@
 <title>Prep · Job Tracker</title>
 <meta name="description" content="HAL Management/Design Trainee (CS) preparation — syllabus, 4-week plan, timed strategy and a 170-question practice bank with explanations and weak-area analysis." />
 <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#0b1120" />
+<meta name="theme-color" content="#ffffff" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <!-- Inline so there is no extra request and no 404 for a missing file. -->
@@ -16,20 +16,23 @@
      defined EXAMS, and so its stylesheet lands after the one below. -->
 <script src="/nav.js" defer></script>
 <style>
-  /* Palette matched to index.html so the tracker and the prep read as one app. */
+  /* Palette matched to index.html so the tracker and the prep read as one app.
+     White ground, not the dark one this app started on: a light background
+     under a green accent needs the accent taken down a shade to keep 4.5:1 on
+     white, which --accent below does — the same hue, not a new one. */
   :root{
-    color-scheme: dark;
-    --bg:#0b1120;
-    --panel:#131c31;
-    --panel-border:#1e293b;
-    --accent:#22c55e;
-    --accent-soft:#4ade80;
-    --text:#e2e8f0;
-    --muted:#94a3b8;
-    --dim:#64748b;
-    --good:#4ade80;
-    --bad:#f87171;
-    --warn:#f59e0b;
+    color-scheme: light;
+    --bg:#ffffff;
+    --panel:#f8faf9;
+    --panel-border:#e2e8ec;
+    --accent:#16a34a;
+    --accent-soft:#15803d;
+    --text:#0f172a;
+    --muted:#5b6b7a;
+    --dim:#8794a1;
+    --good:#16a34a;
+    --bad:#dc2626;
+    --warn:#b45309;
   }
   *{ box-sizing:border-box; }
   body{
@@ -41,7 +44,7 @@
   }
   header{
     padding:10px 12px; position:sticky; top:0;
-    background:#0b1120ee; backdrop-filter:blur(8px); z-index:10;
+    background:#ffffffee; backdrop-filter:blur(8px); z-index:10;
     border-bottom:1px solid var(--panel-border);
   }
   /* The title is the exam switcher, the way "My Exams ▾" is: the header
@@ -71,8 +74,8 @@
   .topic-sub{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:5px; }
   th{ color:var(--dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
   .pill{ display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
-  .p1{ background:#16a34a33; color:#4ade80; }
-  .p2{ background:#2563eb33; color:#60a5fa; }
+  .p1{ background:#16a34a1f; color:#15803d; }
+  .p2{ background:#2563eb1f; color:#1d4ed8; }
   .p3{ background:#47556933; color:#94a3b8; }
   ul{ padding-left:18px; margin:6px 0; font-size:13.5px; line-height:1.65; }
   .grid2{ display:grid; grid-template-columns:1fr; gap:14px; }
@@ -81,17 +84,46 @@
 
   /* Quiz */
   .quiz-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12.5px; color:var(--muted); }
+
+  /* Fun mode — same questions, same pool, a streak that moves. */
+  .fun-streak{
+    display:flex; align-items:center; gap:8px; margin-bottom:10px; padding:9px 12px;
+    background:linear-gradient(90deg,#eef8f1,#f3f7f5); border:1px solid #16a34a33;
+    border-radius:20px; font-size:12.5px; font-weight:700; color:var(--accent-soft);
+  }
+  .fun-flame{ font-size:15px; }
+  .fun-best{ margin-left:auto; font-size:11px; font-weight:700; color:var(--dim); }
+  #quiz-live.is-fun .opt{ position:relative; overflow:visible; }
+  .fun-burst{
+    position:absolute; top:-6px; right:8px; font-size:18px; pointer-events:none;
+    animation:fun-pop .7s ease-out forwards;
+  }
+  @keyframes fun-pop{
+    0%{ opacity:0; transform:translateY(4px) scale(.6); }
+    30%{ opacity:1; transform:translateY(-10px) scale(1.15); }
+    100%{ opacity:0; transform:translateY(-30px) scale(1); }
+  }
+  @keyframes fun-shake{
+    10%,90%{ transform:translateX(-1px); }
+    20%,80%{ transform:translateX(2px); }
+    30%,50%,70%{ transform:translateX(-4px); }
+    40%,60%{ transform:translateX(4px); }
+  }
+  #quiz-live.fun-shake{ animation:fun-shake .4s ease; }
+  @media (prefers-reduced-motion: reduce){
+    .fun-burst, #quiz-live.fun-shake{ animation:none; }
+  }
   .qtext{ font-size:15px; margin:10px 0 14px; line-height:1.5; }
   .opt{
     display:flex; align-items:center; gap:11px; width:100%; text-align:left;
-    background:#111b30; border:1px solid #263349; color:var(--text); padding:11px 13px;
+    background:var(--panel); border:1px solid var(--panel-border); color:var(--text); padding:11px 13px;
     border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:14px;
   }
   /* A. B. C. D. — the shape of the real answer sheet, and a lot easier to
      scan than four unlabelled rows. */
   .opt-letter{
     flex:0 0 auto; width:22px; height:22px; border-radius:50%;
-    background:#1e293b; color:var(--muted); font-size:11px; font-weight:700;
+    background:#dbe6e0; color:var(--muted); font-size:11px; font-weight:700;
     display:flex; align-items:center; justify-content:center;
   }
   .opt-label{ flex:1; min-width:0; }
@@ -102,7 +134,7 @@
   .opt.wrong .opt-letter{ background:var(--bad); color:var(--bg); }
   /* A mock marks your choice without saying whether it was right — revealing
      that is what the results screen is for, once the paper is over. */
-  .opt.picked{ border-color:var(--accent-soft); background:#1e293b; }
+  .opt.picked{ border-color:var(--accent-soft); background:#dbe6e0; }
   .opt.picked .opt-letter{ background:var(--accent-soft); color:var(--bg); }
   .opt[disabled]{ cursor:default; }
   .quiz-actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
@@ -118,14 +150,14 @@
     background:transparent; color:var(--bad); border:1px solid #dc262655;
     padding:8px 14px; border-radius:9px; cursor:pointer; font-size:13px;
   }
-  .progress-bar{ height:5px; background:#1e293b; border-radius:20px; overflow:hidden; margin-bottom:14px; }
+  .progress-bar{ height:5px; background:#dbe6e0; border-radius:20px; overflow:hidden; margin-bottom:14px; }
   .progress-fill{ height:100%; background:var(--accent); transition:width .2s ease; }
   .result-big{ font-size:34px; font-weight:700; text-align:center; margin:8px 0 4px; }
   .result-sub{ text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px; }
   .tag-row{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 14px; }
   .tag{
     padding:5px 10px; border-radius:20px; font-size:12px;
-    border:1px solid var(--panel-border); background:#0f172a; cursor:pointer;
+    border:1px solid var(--panel-border); background:#eef3f0; cursor:pointer;
   }
   .tag.active{ background:var(--accent); color:var(--bg); font-weight:700; border-color:transparent; }
   .hidden{ display:none !important; }
@@ -139,7 +171,7 @@
   .rev-item .ans{ color:var(--muted); margin-top:4px; }
 
   /* Explanation */
-  .explain{ margin-top:14px; border-radius:10px; padding:14px 16px; background:#0f172a; border:1px solid var(--panel-border); }
+  .explain{ margin-top:14px; border-radius:10px; padding:14px 16px; background:#eef3f0; border:1px solid var(--panel-border); }
   .explain .verdict{ font-weight:700; font-size:14px; margin-bottom:10px; }
   .explain .lbl{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent-soft); font-weight:700; margin-bottom:3px; }
   .explain .why{ font-size:13.5px; line-height:1.65; margin-bottom:12px; }
@@ -154,7 +186,7 @@
   /* Rotation */
   .rotate-bar{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    font-size:12.5px; color:var(--muted); background:#0f172a;
+    font-size:12.5px; color:var(--muted); background:#eef3f0;
     border:1px solid var(--panel-border); border-radius:9px; padding:8px 12px; margin-bottom:12px;
   }
   .rotate-bar strong{ color:var(--accent-soft); font-variant-numeric:tabular-nums; }
@@ -166,7 +198,7 @@
   .mock-intro .mi-shortfall{ border-left:3px solid var(--warn); background:#f59e0b14;
     border-radius:0 9px 9px 0; padding:10px 13px; margin:12px 0; font-size:12.5px; line-height:1.6; }
   .mock-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px;
-    font-size:13px; background:#0f172a; border:1px solid var(--panel-border);
+    font-size:13px; background:#eef3f0; border:1px solid var(--panel-border);
     border-radius:9px; padding:9px 13px; margin-bottom:12px; }
   .mock-bar .mb-time{ font-weight:700; font-variant-numeric:tabular-nums; color:var(--accent-soft); }
   .mock-bar.is-low .mb-time{ color:var(--warn); }
@@ -183,13 +215,13 @@
 
   /* Weak areas */
   .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-  .stat{ background:#0f172a; border:1px solid var(--panel-border); border-radius:10px; padding:12px 8px; text-align:center; }
+  .stat{ background:#eef3f0; border:1px solid var(--panel-border); border-radius:10px; padding:12px 8px; text-align:center; }
   .stat .n{ font-size:21px; font-weight:700; }
   .stat .l{ font-size:10.5px; color:var(--dim); margin-top:2px; line-height:1.3; }
   .bar-row{ margin-bottom:14px; }
   .bar-head{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; gap:8px; }
   .bar-head .pct{ font-variant-numeric:tabular-nums; font-weight:700; white-space:nowrap; }
-  .bar-track{ height:7px; background:#1e293b; border-radius:20px; overflow:hidden; }
+  .bar-track{ height:7px; background:#dbe6e0; border-radius:20px; overflow:hidden; }
   .bar-fill{ height:100%; border-radius:20px; }
   .bar-note{ font-size:11.5px; color:var(--dim); margin-top:4px; }
   .focus-box{ border-left:3px solid var(--bad); background:#dc26261a; padding:10px 14px; border-radius:0 9px 9px 0; margin-bottom:12px; font-size:13.5px; line-height:1.65; }
@@ -200,7 +232,7 @@
   /* Pace. Neutral by default — a time is information, not a telling-off. Only
      going over the exam's own budget for that section colours it. */
   .pace{ margin-top:10px; font-size:12.5px; line-height:1.55; color:var(--muted);
-         background:#0f172a; border:1px solid var(--panel-border);
+         background:#eef3f0; border:1px solid var(--panel-border);
          border-radius:9px; padding:9px 12px; }
   .pace.is-ok strong{ color:var(--good); }
   .pace.is-slow{ border-color:#f59e0b55; }
@@ -227,7 +259,7 @@
      reasoning and the ladder still carries the full rule one tap deeper. */
   .skill-tag{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
   .skill-tag .tag-chip{ font-size:11px; font-weight:700; padding:3px 9px;
-                border-radius:20px; background:#2563eb26; color:#60a5fa; }
+                border-radius:20px; background:#2563eb1f; color:#1d4ed8; }
   /* The alert is warm rather than red: it is not a telling-off, it is the app
      noticing the same gap twice and offering to close it. */
   .skill-alert{ border-left:3px solid var(--warn); background:#f59e0b1a;
@@ -269,7 +301,7 @@
   .ls-recommend.is-weak{ border-left-color:var(--warn); background:#f59e0b14; }
   .ls-recommend.is-weak strong{ color:var(--warn); }
   .ls-recommend.is-done{ color:var(--muted); }
-  .ls-row:active{ background:#161f38; margin:0 -18px; padding-left:18px; padding-right:18px; }
+  .ls-row:active{ background:var(--panel); margin:0 -18px; padding-left:18px; padding-right:18px; }
   .ls-row{ display:flex; align-items:center; gap:10px; padding:12px 0;
            border-bottom:1px solid var(--panel-border); cursor:pointer; }
   .ls-row:last-child{ border-bottom:none; }
@@ -280,14 +312,14 @@
   .ls-why{ font-size:12px; color:var(--muted); margin-top:3px; line-height:1.45; }
   .ls-badge{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; }
   .ls-badge.done{ background:#16a34a33; color:var(--good); }
-  .ls-badge.open{ background:#2563eb33; color:#60a5fa; }
+  .ls-badge.open{ background:#2563eb1f; color:#1d4ed8; }
   .ls-badge.lock{ background:#47556933; color:var(--dim); }
   .ls-meta{ font-size:11.5px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; margin-top:12px; }
   .ls-main{ font-size:19px; margin:4px 0 14px; color:var(--text); }
   .ls-h{ font-size:14px; color:var(--accent-soft); margin:18px 0 6px; }
   .ls-p{ font-size:14px; line-height:1.7; margin:0 0 10px; }
   .ls-l{ font-size:14px; line-height:1.7; }
-  .ls-c{ background:#0f172a; border:1px solid var(--panel-border); border-radius:8px;
+  .ls-c{ background:#eef3f0; border:1px solid var(--panel-border); border-radius:8px;
          padding:12px; font-size:12.5px; line-height:1.55; overflow-x:auto;
          font-family:ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre; }
   .ls-k{ border-left:3px solid var(--warn); background:#f59e0b12; border-radius:0 8px 8px 0;
@@ -295,23 +327,62 @@
   .ls-k span{ display:block; font-size:10px; text-transform:uppercase; letter-spacing:.6px;
               color:var(--warn); font-weight:700; margin-bottom:3px; }
   .ls-vtag{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
-            background:#dc262633; color:#f87171; padding:2px 6px; border-radius:20px;
+            background:#dc262622; color:#b91c1c; padding:2px 6px; border-radius:20px;
             vertical-align:middle; margin-left:4px; }
   .ls-video{ margin:4px 0 18px; }
   .ls-video-head{ font-size:12.5px; color:var(--muted); margin-bottom:6px; }
   .ls-video-head span{ color:var(--dim); }
   /* 16:9 without relying on aspect-ratio, which older Android WebViews lack. */
   .ls-video-frame{ position:relative; width:100%; padding-top:56.25%;
-                   border-radius:10px; overflow:hidden; background:#0f172a;
+                   border-radius:10px; overflow:hidden; background:#eef3f0;
                    border:1px solid var(--panel-border); }
   .ls-video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+  /* Test — the five modes */
+  .mode-row{
+    display:flex; align-items:center; gap:12px; width:100%; text-align:left;
+    background:#eef3f0; border:1px solid var(--panel-border); border-radius:12px;
+    padding:13px 14px; margin-top:10px; color:var(--text); font-family:inherit; cursor:pointer;
+    min-height:56px;
+  }
+  .mode-row:active{ filter:brightness(.9); border-color:#22c55e55; }
+  .mode-main{ flex:1; min-width:0; }
+  .mode-name{ display:block; font-size:14.5px; font-weight:700; }
+  .mode-what{ display:block; font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.45; }
+  .mode-meta{ flex:0 0 auto; font-size:10.5px; font-weight:700; color:var(--accent-soft);
+              text-align:right; max-width:34%; line-height:1.35; }
+
+  /* Progress — the instruction, before the numbers */
+  .next-task{ border-color:#22c55e55; background:linear-gradient(180deg,#eef8f1,#f3f7f5); }
+  .nt-kicker{ font-size:10px; letter-spacing:.8px; text-transform:uppercase;
+              font-weight:800; color:var(--accent); }
+  .nt-title{ font-size:17px; font-weight:700; margin-top:5px; line-height:1.3; }
+  .nt-study{ font-size:13px; margin-top:8px; line-height:1.55; }
+  .nt-study span{ color:var(--dim); }
+  .nt-why{ font-size:12.5px; color:var(--muted); margin-top:7px; line-height:1.5; }
+  .nt-meta{ display:flex; gap:8px; margin-top:10px; }
+  .nt-meta span{ font-size:11px; font-weight:700; color:var(--accent-soft);
+                 background:#16a34a1f; border:1px solid #22c55e33; border-radius:20px; padding:4px 10px; }
+  .nt-stop{ font-size:11.5px; color:var(--dim); margin-top:8px; line-height:1.5; }
+  .nt-go{ width:100%; margin-top:12px; }
+
+  /* Folds — the run and the full path, closed by default so Study opens on
+     what to do rather than on everything there is. */
+  .fold summary{
+    cursor:pointer; font-size:14px; font-weight:700; list-style:none;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .fold summary::-webkit-details-marker{ display:none; }
+  .fold summary::after{ content:"▾"; color:var(--accent-soft); font-size:12px; }
+  .fold[open] summary::after{ content:"▴"; }
+  .fold-body{ margin-top:12px; }
 
   /* 4-week plan */
   .plan-day{ padding:14px 16px; }
   .plan-day.is-done{ opacity:.55; }
   .plan-top{ display:flex; gap:12px; align-items:flex-start; }
   .plan-tick{ flex:0 0 auto; width:26px; height:26px; border-radius:8px; cursor:pointer;
-              background:#0f172a; border:1px solid var(--panel-border); color:var(--bg);
+              background:#eef3f0; border:1px solid var(--panel-border); color:var(--bg);
               font-weight:900; font-size:15px; line-height:1; }
   .plan-day.is-done .plan-tick{ background:var(--accent); border-color:transparent; }
   .plan-main{ flex:1; min-width:0; }
@@ -330,13 +401,11 @@
       <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
            stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
-    <div class="nav-title nav-switch" id="exam-switch" role="button" tabindex="0"
-         aria-haspopup="dialog" aria-label="Switch exam">
-      <div class="nav-h1row">
-        <h1>🧠 HAL CS Prep</h1>
-        <span class="nav-caret" aria-hidden="true">▾</span>
-      </div>
-      <div class="sub">160 MCQs · 150 minutes · no negative marking</div>
+    <!-- The screen you are on, and the exam it is for. nav.js owns the second
+         line on both pages, so the two can never name different exams. -->
+    <div class="nav-title">
+      <h1 id="screen-title">Study</h1>
+      <div class="nav-exam" id="nav-exam"></div>
     </div>
   </div>
 </header>
@@ -348,7 +417,7 @@
        open every day. It is one destination now, behind the drawer, and most
        of it is generated from the exam rather than written for HAL and left to
        mislead anyone who switches. -->
-  <section id="examinfo" class="tab-section hidden">
+  <section id="syllabus" class="tab-section hidden">
     <div class="card">
       <h2>Exam snapshot</h2>
       <table><tbody id="ei-snapshot"></tbody></table>
@@ -438,52 +507,59 @@
     </div><!-- /#ei-hal -->
   </section>
 
-  <!-- SCHEDULE -->
-  <section id="schedule" class="tab-section hidden">
-    <!-- TODAY, above the 28-day map. The map says what the run looks like; this
-         says what to open now, with minutes on it, worked out from what has
-         actually been going wrong. -->
-    <div class="card">
-      <h2>Today</h2>
-      <p class="muted" style="margin-top:-4px;">Which exams are you planning for?</p>
-      <div class="td-chips" id="today-scope"></div>
-      <p class="muted" style="margin-top:10px;">How long have you got?</p>
-      <div class="td-chips" id="today-budget"></div>
-      <div id="today-head" style="margin-top:12px;"></div>
-    </div>
-    <div class="card"><div id="today-plan"></div></div>
-
-    <div class="card">
-      <h2>Your 4-Week Plan</h2>
-      <p class="muted" style="margin-top:-4px;">
-        One day at a time. Tap a day to open exactly what it asks for — the lesson, then the test,
-        then the practice. Tick it when it is done.
-      </p>
-      <div id="plan-progress" style="margin-top:12px;"></div>
-    </div>
-    <div id="plan-days"></div>
-  </section>
-
-  <!-- LEARN FROM 0 -->
-  <section id="learn" class="tab-section">
+  <!-- STUDY — what to do now, then what the run looks like, then the material.
+       It opens with today's tasks and not with a list of fifty lessons: a
+       catalogue makes the student decide what matters, and deciding is the
+       part they have no way to get right. -->
+  <section id="study" class="tab-section">
     <div id="learn-list">
-      <div class="card">
-        <h2>Learn from zero</h2>
-        <p class="muted" style="margin-top:-4px;">
-          Read a topic, then prove it. A topic stays locked until you have mastered the one
-          before it — so nothing arrives before the thing it depends on.
-        </p>
-        <div id="learn-progress" style="margin-top:12px;"></div>
+      <div class="card" id="today-card">
+        <h2>Today</h2>
+        <p class="muted" style="margin-top:-4px;">How long have you got?</p>
+        <div class="td-chips" id="today-budget"></div>
+        <div id="today-head" style="margin-top:12px;"></div>
       </div>
-      <div class="card"><div id="learn-path"></div></div>
+      <div class="card"><div id="today-plan"></div></div>
+
+      <!-- The run to the exam. Its length is the days actually left, not a
+           fixed four weeks. -->
+      <details class="card fold" id="plan-fold">
+        <summary><span id="plan-summary">The run to the exam</span></summary>
+        <div class="fold-body">
+          <p class="muted">One day at a time. Tap a day to open exactly what it asks for.
+            Tick it when it is done.</p>
+          <div id="plan-progress" style="margin-top:12px;"></div>
+          <div id="plan-days"></div>
+        </div>
+      </details>
+
+      <!-- The whole path, for when you want to pick rather than be told. Last
+           on the screen on purpose. -->
+      <details class="card fold" id="path-fold">
+        <summary>All lessons for this exam</summary>
+        <div class="fold-body">
+          <p class="muted">A topic stays locked until you have mastered the one before it,
+            so nothing arrives before the thing it depends on.</p>
+          <div id="learn-progress" style="margin-top:12px;"></div>
+          <div id="learn-path"></div>
+        </div>
+      </details>
     </div>
     <div class="card hidden" id="learn-reader"></div>
   </section>
 
-  <!-- QUIZ -->
-  <section id="quiz" class="tab-section hidden">
-    <div class="card" id="quiz-setup">
-      <h2>Practice Quiz</h2>
+  <!-- TEST -->
+  <section id="test" class="tab-section hidden">
+    <!-- Five modes, named for what they do. Everything here draws on the
+         selected exam's pool, timing and marking. -->
+    <div class="card" id="test-modes">
+      <h2>Test</h2>
+      <p class="muted" style="margin-top:-4px;" id="test-modes-note"></p>
+      <div id="mode-list"></div>
+    </div>
+
+    <div class="card hidden" id="quiz-setup">
+      <h2 id="quiz-setup-title">Practice</h2>
       <div class="rotate-bar" id="rotate-bar">
         <span id="rotate-text">Fresh set in <strong>10:00</strong></span>
         <span id="bank-count" class="muted"></span>
@@ -494,10 +570,13 @@
       </p>
       <div class="tag-row" id="topic-tags"></div>
       <div class="quiz-actions">
-        <button class="primary" id="start-quiz">Start Quiz</button>
-        <button class="ghost" id="drill-weak">Drill My Weak Areas</button>
+        <button class="primary" id="start-quiz">Start</button>
+        <button class="ghost" id="quiz-back">Back to Test</button>
       </div>
-      <button class="ghost mock-cta" id="open-mock">🕐 Full Mock Exam — sit the real paper, timed</button>
+      <!-- Kept for the mode list and for the plan's mock days to trigger; the
+           mode list is the visible way in. -->
+      <button class="ghost mock-cta hidden" id="open-mock">Full mock exam</button>
+      <button class="ghost hidden" id="drill-weak">Weak areas</button>
     </div>
 
     <!-- FULL MOCK — the real paper in one sitting: every section in order, one
@@ -515,6 +594,9 @@
 
     <div class="card hidden" id="quiz-live">
       <div class="mock-bar hidden" id="mock-bar"></div>
+      <!-- Fun mode's whole reason to exist: a streak, in the open, that moves
+           when you get one right. Hidden everywhere else. -->
+      <div class="fun-streak hidden" id="fun-streak"></div>
       <div class="quiz-top">
         <span id="q-counter">Question 1 / 10</span>
         <span id="q-topic" class="muted"></span>
@@ -543,12 +625,17 @@
 
   <!-- WEAK AREAS -->
   <section id="progress" class="tab-section hidden">
+    <!-- The one question this screen answers: how ready am I for THIS exam,
+         and what do I fix next. The answer comes first; the numbers behind it
+         come after. -->
+    <div class="card next-task" id="next-task"></div>
+
     <div class="card">
-      <h2>Where You Stand</h2>
+      <h2>Where you stand</h2>
       <div class="stat-row">
         <div class="stat"><div class="n" id="stat-answered">0</div><div class="l">Questions answered</div></div>
         <div class="stat"><div class="n" id="stat-accuracy">—</div><div class="l">Overall accuracy</div></div>
-        <div class="stat"><div class="n" id="stat-coverage">0%</div><div class="l">Bank covered</div></div>
+        <div class="stat"><div class="n" id="stat-coverage">0%</div><div class="l">Pool covered</div></div>
       </div>
       <p class="muted" id="stat-note" style="margin-top:12px;"></p>
     </div>
@@ -558,25 +645,25 @@
          English" is not something you can practise; "the verb is agreeing with
          the nearest noun instead of the subject" is. -->
     <div class="card">
-      <h2>Fix These Basics First</h2>
+      <h2>Fix these basics first</h2>
       <p class="muted" style="margin-top:-4px;">The same small gap costing you marks in different questions.
         A basic is listed once it has cost you twice, and it clears when you are answering it right.</p>
       <div id="basics-list"></div>
     </div>
 
     <div class="card">
-      <h2>Focus Here First</h2>
+      <h2>Focus here first</h2>
       <p class="muted" style="margin-top:-4px;">The subjects those basics are showing up in.</p>
       <div id="focus-list"></div>
     </div>
 
     <div class="card">
-      <h2>Accuracy by Subject</h2>
+      <h2>Accuracy by subject</h2>
       <div id="topic-bars"></div>
     </div>
 
     <div class="card">
-      <h2>Questions You Keep Missing</h2>
+      <h2>Questions you keep missing</h2>
       <p class="muted" style="margin-top:-4px;">Wrong more than once. The memory hook is repeated here — this is your error log.</p>
       <div id="missed-list"></div>
     </div>
@@ -611,30 +698,66 @@
    for it: a bottom-bar tap, a drawer row, a lesson link from the plan, or a
    #hash in the URL so the job list can link straight to Practice.
    ========================================================================== */
-const SECTION_IDS = ['examinfo','learn','quiz','schedule','progress'];
+/* One name per destination, and the name in the URL is the name on the screen.
+   The app used to call the same place Learn in the bar, Lessons on a tile and
+   #learn in the address, and Practice / Test / #quiz for another. The four
+   words below are the whole vocabulary; the aliases exist only so links and
+   bookmarks written before the rename still land somewhere sensible. */
+const SECTION_IDS = ['study','test','progress','syllabus'];
+const SECTION_ALIAS = {
+  learn: 'study', lessons: 'study', schedule: 'study', plan: 'study',
+  quiz: 'test', practice: 'test',
+  examinfo: 'syllabus', exam: 'syllabus',
+};
+const SECTION_TITLE = { study:'Study', test:'Test', progress:'Progress', syllabus:'Syllabus' };
+
+function routeOf(h){
+  h = String(h || '').replace(/^#/, '');
+  if(SECTION_ALIAS[h]) return SECTION_ALIAS[h];
+  return SECTION_IDS.indexOf(h) !== -1 ? h : null;
+}
 
 window.gotoSection = function(id){
-  if(SECTION_IDS.indexOf(id) === -1) id = 'learn';
+  id = routeOf(id) || 'study';
   document.querySelectorAll('.tab-section').forEach(s=>s.classList.add('hidden'));
   const sec = document.getElementById(id);
   if(sec) sec.classList.remove('hidden');
+  const title = document.getElementById('screen-title');
+  if(title) title.textContent = SECTION_TITLE[id] || 'Study';
   if(window.JobhuntNav) window.JobhuntNav.setActive(id);
   // replaceState, not pushState: the hardware back button should leave the app
   // the way it arrived, not walk back through every tab you touched.
   try{ history.replaceState(null, '', location.pathname + location.search + '#' + id); }catch(e){}
   if(id === 'progress') renderProgress();
-  if(id === 'learn' && window.renderLearnPath) window.renderLearnPath();
-  if(id === 'schedule'){ if(window.renderToday) window.renderToday(); if(window.renderPlan) window.renderPlan(); }
-  if(id === 'examinfo') renderExamInfo();
+  if(id === 'study'){
+    if(window.renderToday) window.renderToday();
+    if(window.renderPlan) window.renderPlan();
+    if(window.renderLearnPath) window.renderLearnPath();
+  }
+  if(id === 'test') renderTestModes();
+  if(id === 'syllabus') renderExamInfo();
   window.scrollTo(0, 0);
 };
 
-/* Landing on Learn rather than on the syllabus: the syllabus is read once and
-   the lessons are opened every day. A #hash wins — that is how the job list
-   sends you to Practice, and how switching exam keeps you where you were. */
+/* #mock is not a section — it is Practice with the full paper already open.
+   The home screen offers it as its own tile because sitting the whole paper is
+   a different decision from doing ten questions, and burying it behind two
+   taps made it look optional. */
+function openFromHash(h){
+  h = String(h || '').replace(/^#/, '');
+  if(h === 'mock'){
+    window.gotoSection('test');
+    if(typeof openMockIntro === 'function') openMockIntro();
+    return;
+  }
+  window.gotoSection(routeOf(h) || 'study');
+}
+
+/* Landing on Study: the app's job is to answer "what do I study now", and the
+   syllabus is read once in week one. A #hash wins — that is how a job card
+   sends you to the preparation for its exam. */
 document.addEventListener('DOMContentLoaded', ()=>{
-  const h = (location.hash || '').replace(/^#/, '');
-  window.gotoSection(SECTION_IDS.indexOf(h) !== -1 ? h : 'learn');
+  openFromHash(location.hash);
 });
 
 /* The section ids double as the hash targets, so the browser does its own
@@ -649,7 +772,7 @@ window.addEventListener('load', ()=>window.scrollTo(0, 0));
    on #learn would move the address bar and nothing else. */
 window.addEventListener('hashchange', ()=>{
   const h = (location.hash || '').replace(/^#/, '');
-  if(SECTION_IDS.indexOf(h) !== -1) window.gotoSection(h);
+  if(h === 'mock' || routeOf(h)) openFromHash(h);
 });
 
 /* ==========================================================================
@@ -662,9 +785,15 @@ window.addEventListener('hashchange', ()=>{
    wrong answer. So the snapshot, the budget and the tactics come from
    prep/exams.js, and only the genuinely HAL-specific reference stays static.
    ========================================================================== */
+/* ?exam= first, then the exam chosen on first open, then a default that only
+   an install with no choice and no parameter can ever reach. prep/sync.js and
+   nav.js resolve it in the same order — three readers of one answer, so the
+   header, the questions and the syllabus cannot end up describing three
+   different exams. */
 function currentExamObj(){
   if(typeof EXAMS === 'undefined') return null;
-  const k = new URLSearchParams(location.search).get('exam');
+  let k = new URLSearchParams(location.search).get('exam');
+  if(!k){ try{ k = localStorage.getItem('jobhunt_current_exam'); }catch(e){ k = null; } }
   return EXAMS.find(e=>e.key === k) || EXAMS.find(e=>e.key === 'hal-cs') || EXAMS[0] || null;
 }
 
@@ -841,6 +970,23 @@ Object.keys(QUESTION_BANK).forEach(topic=>{
   QUESTION_BANK[topic].forEach(item=>{ ALL.push({...item, topic, id: qid(item.q)}); });
 });
 
+/* ── The selected exam's pool ─────────────────────────────────────────────
+   ALL is the whole bank across every exam the app knows. Nothing a student
+   sees may come from it directly: a Theory of Computation question in an SSC
+   CGL practice run is a minute spent on a subject that paper does not examine.
+
+   POOL is the bank narrowed to the subjects the selected exam actually
+   examines, and it is what every test, every count and every percentage on
+   Progress is built from. */
+const EXAM_SUBJECTS = (function(){
+  const ex = currentExamObj();
+  if(!ex || typeof subjectsForExam !== 'function') return Object.keys(QUESTION_BANK);
+  const subs = subjectsForExam(ex).filter(s=>QUESTION_BANK[s] && QUESTION_BANK[s].length);
+  return subs.length ? subs : Object.keys(QUESTION_BANK);
+})();
+const IN_EXAM = new Set(EXAM_SUBJECTS);
+const POOL = ALL.filter(q=>IN_EXAM.has(q.topic));
+
 /* ==========================================================================
    Progress — localStorage only. No account, no server, nothing leaves the phone.
    ========================================================================== */
@@ -1011,7 +1157,7 @@ function shuffle(arr){
 
 function weakTopicSet(minAttempts=4, threshold=0.6){
   const weak = new Set();
-  Object.keys(state.topics).forEach(t=>{
+  Object.keys(state.topics).filter(t=>IN_EXAM.has(t)).forEach(t=>{
     const s = state.topics[t];
     if(s.asked >= minAttempts && (s.correct/s.asked) < threshold) weak.add(t);
   });
@@ -1070,7 +1216,7 @@ function tickRotation(){
     txt.innerHTML = `🔄 Fresh set in <strong>${m}:${String(s).padStart(2,'0')}</strong>`;
   }
   document.getElementById('bank-count').textContent =
-    `${Object.keys(state.seen).length} / ${ALL.length} seen`;
+    `${POOL.filter(q=>state.seen[q.id]).length} / ${POOL.length} seen`;
 }
 setInterval(tickRotation, 1000);
 
@@ -1078,10 +1224,20 @@ setInterval(tickRotation, 1000);
    Quiz
    ========================================================================== */
 let currentQuiz = [], currentIndex = 0, score = 0, answers = [];
-let selectedTopics = new Set(Object.keys(QUESTION_BANK));
+let funMode = false, funCombo = 0;
+// The best streak is worth remembering between visits — it is the one number
+// this mode is actually about — but it is not a study statistic, so it lives
+// on its own key rather than inside the exam's progress record.
+const FUN_KEY = 'jobhunt_fun_streak';
+let funStreak = { best: 0 };
+try{ funStreak = Object.assign({ best: 0 }, JSON.parse(localStorage.getItem(FUN_KEY)) || {}); }catch(e){}
+function saveFunStreak(){ try{ localStorage.setItem(FUN_KEY, JSON.stringify(funStreak)); }catch(e){} }
+// Scoped from the start: an unticked box for a subject this exam does not
+// examine is still a subject the student has to think about and dismiss.
+let selectedTopics = new Set(EXAM_SUBJECTS);
 
 const tagRow = document.getElementById('topic-tags');
-Object.keys(QUESTION_BANK).forEach(topic=>{
+EXAM_SUBJECTS.forEach(topic=>{
   const tag = document.createElement('div');
   tag.className = 'tag active';
   tag.textContent = `${topic} (${QUESTION_BANK[topic].length})`;
@@ -1103,31 +1259,158 @@ function beginQuiz(pool, opts){
   const want = (opts && opts.size) || 10;
   currentQuiz = pickQuestions(pool, Math.min(want, pool.length), opts || {});
   currentIndex = 0; score = 0; answers = [];
+  funMode = !!(opts && opts.fun);
+  funCombo = 0;
   rotationFresh = false;
   document.getElementById('quiz-setup').classList.add('hidden');
+  document.getElementById('test-modes').classList.add('hidden');
   document.getElementById('quiz-result').classList.add('hidden');
   document.getElementById('quiz-live').classList.remove('hidden');
+  document.getElementById('quiz-live').classList.toggle('is-fun', funMode);
+  renderFunStreak();
   renderQuestion();
 }
 
+/** The streak badge above the question. Only mounted in fun mode — everywhere
+    else the quiz stays exactly as plain as it was, because a streak counter
+    on a real practice run would misrepresent what practice measures. */
+function renderFunStreak(){
+  const box = document.getElementById('fun-streak');
+  if(!box) return;
+  box.classList.toggle('hidden', !funMode);
+  if(!funMode) return;
+  box.innerHTML = `<span class="fun-flame">${funCombo >= 3 ? '🔥' : '⭐'}</span>
+    <span>${funCombo} in a row</span>
+    <span class="fun-best">best ${funStreak.best}</span>`;
+}
+
 document.getElementById('start-quiz').addEventListener('click', ()=>{
-  beginQuiz(ALL.filter(q=>selectedTopics.has(q.topic)), { weak: weakTopicSet() });
+  beginQuiz(POOL.filter(q=>selectedTopics.has(q.topic)),
+    { weak: weakTopicSet(), size: quizSize });
+});
+
+document.getElementById('quiz-back').addEventListener('click', ()=>{
+  document.getElementById('quiz-setup').classList.add('hidden');
+  document.getElementById('test-modes').classList.remove('hidden');
 });
 
 document.getElementById('drill-weak').addEventListener('click', ()=>{
   const weak = weakTopicSet();
   if(weak.size === 0){
     // Say so rather than inventing a weakness out of two answers.
-    const missed = ALL.filter(q => (state.seen[q.id]||{}).wrong > 0);
+    const missed = POOL.filter(q => (state.seen[q.id]||{}).wrong > 0);
     if(missed.length === 0){
-      alert("Not enough data yet. Answer at least 4 questions in a subject and any weak areas will show up here — and in the 'My Weak Areas' tab.");
+      alert("Not enough data yet. Answer at least 4 questions in a subject and your weak areas will show up here — and on Progress.");
       return;
     }
     beginQuiz(missed, {});
     return;
   }
-  beginQuiz(ALL.filter(q=>weak.has(q.topic)), { weak });
+  beginQuiz(POOL.filter(q=>weak.has(q.topic)), { weak });
 });
+
+/* ── The five ways to test ────────────────────────────────────────────────
+   Named for what they do, all drawing on the selected exam's pool, timing and
+   marking. There is one route to each: the mode list. */
+let quizSize = 10;
+
+/** Questions this exam examines that have been got wrong and not yet fixed. */
+function mistakePool(){
+  return POOL.filter(q => ((state.seen[q.id] || {}).wrong || 0) > 0);
+}
+
+const TEST_MODES = [
+  { id:'practice', name:'Practice',
+    what:'A mixed set from this exam. Unseen questions first, wrong ones until you get them right.',
+    size:10 },
+  { id:'weak', name:'Weak areas',
+    what:'Only the subjects you are below 60% in.',
+    size:10 },
+  { id:'mistakes', name:'Previous mistakes',
+    what:'Questions you have already got wrong. Retest until they are gone.',
+    size:10 },
+  { id:'mock', name:'Mock exam',
+    what:'The whole paper in one sitting, timed, scored the way the exam scores it.' },
+  { id:'drill', name:'Quick drill',
+    what:'Five questions. For a queue, a bus, ten spare minutes.',
+    size:5 },
+  { id:'fun', name:'Fun mode 🎮',
+    what:'Same questions, same pool. A streak counter and a burst on every answer — for revision that does not feel like the exam.',
+    size:10, fun:true },
+];
+
+function renderTestModes(){
+  const box = document.getElementById('mode-list');
+  if(!box) return;
+  const exam = currentExamObj();
+  const note = document.getElementById('test-modes-note');
+  if(note && exam){
+    note.textContent = `${POOL.length} questions across ${EXAM_SUBJECTS.length} subjects. ` +
+      `Scored ${markingShort(exam)}.`;
+  }
+  const weakN = weakTopicSet().size;
+  const missN = mistakePool().length;
+  box.innerHTML = TEST_MODES.map(m=>{
+    let avail = '';
+    if(m.id === 'weak')     avail = weakN ? `${weakN} weak subject${weakN===1?'':'s'}` : 'nothing weak yet';
+    if(m.id === 'mistakes') avail = missN ? `${missN} to fix` : 'none outstanding';
+    if(m.id === 'mock' && exam) avail = `${exam.questions || POOL.length} Q · ${exam.minutes} min`;
+    if(m.id === 'practice') avail = `${POOL.length} in the pool`;
+    if(m.id === 'drill')    avail = '5 questions';
+    if(m.id === 'fun')      avail = funStreak.best ? `best streak ${funStreak.best}` : 'try it';
+    return `<button type="button" class="mode-row" data-mode="${m.id}">
+      <span class="mode-main">
+        <span class="mode-name">${escHtml(m.name)}</span>
+        <span class="mode-what">${escHtml(m.what)}</span>
+      </span>
+      <span class="mode-meta">${escHtml(avail)}</span>
+    </button>`;
+  }).join('');
+}
+
+/** The marking scheme in a few words — every mode is scored by it. */
+function markingShort(exam){
+  if(!exam) return 'per the exam';
+  const m = exam.marking;
+  if(!m) return exam.negative ? 'with negative marking' : 'with no negative marking';
+  return m.wrong ? `${m.correct > 0 ? '+' : ''}${m.correct} right, ${m.wrong} wrong`
+                 : `${m.correct} a right answer, nothing off for a wrong one`;
+}
+
+document.getElementById('mode-list').addEventListener('click', e=>{
+  const b = e.target.closest && e.target.closest('[data-mode]');
+  if(!b) return;
+  startMode(b.getAttribute('data-mode'));
+});
+
+function startMode(id){
+  const mode = TEST_MODES.find(m=>m.id === id);
+  if(!mode) return;
+  quizSize = mode.size || 10;
+  if(id === 'mock'){ openMockIntro(); return; }
+  if(id === 'weak'){ document.getElementById('drill-weak').click(); return; }
+  if(id === 'mistakes'){
+    const pool = mistakePool();
+    if(!pool.length){
+      alert('Nothing outstanding — you have not got anything wrong that is still unfixed. Practice adds to this list when it happens.');
+      return;
+    }
+    beginQuiz(pool, { size: Math.min(10, pool.length) });
+    return;
+  }
+  if(id === 'drill'){
+    beginQuiz(POOL, { size: 5, weak: weakTopicSet() });
+    return;
+  }
+  if(id === 'fun'){
+    beginQuiz(POOL, { size: 10, weak: weakTopicSet(), fun: true });
+    return;
+  }
+  // Practice: show the setup so the subjects can be narrowed first.
+  document.getElementById('test-modes').classList.add('hidden');
+  document.getElementById('quiz-setup').classList.remove('hidden');
+}
+window.startMode = startMode;
 
 /* ==========================================================================
    FULL MOCK — the real paper, in one sitting.
@@ -1608,8 +1891,36 @@ function selectAnswer(idx){
       explainHTML(item, isCorrect, false) + paceHTML(item, ms) +
       skillAlertHTML(item, isCorrect, false);
   }
+  if(funMode) burstFun(isCorrect, idx === -1 ? null : document.querySelectorAll('#q-options .opt')[idx]);
   document.getElementById('skip-btn').classList.add('hidden');
   document.getElementById('next-btn').classList.remove('hidden');
+}
+
+/** The whole point of fun mode: a streak that climbs, and something that moves
+    when it does. Correct grows the streak and pops an emoji burst off the
+    option you picked; wrong resets it with a short shake — never a scolding,
+    just a beat telling you the streak is over. Respects reduced motion, same
+    rule as every other animation in the app. */
+function burstFun(isCorrect, optEl){
+  if(isCorrect){
+    funCombo++;
+    if(funCombo > funStreak.best){ funStreak.best = funCombo; saveFunStreak(); }
+    if(optEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      const burst = document.createElement('div');
+      burst.className = 'fun-burst';
+      const emoji = funCombo >= 8 ? '🏆' : funCombo >= 5 ? '🔥' : funCombo >= 3 ? '⚡' : '✨';
+      burst.textContent = emoji.repeat(Math.min(3, Math.ceil(funCombo / 3)));
+      optEl.appendChild(burst);
+      burst.addEventListener('animationend', () => burst.remove());
+    }
+  } else {
+    funCombo = 0;
+    const live = document.getElementById('quiz-live');
+    if(live && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      live.classList.remove('fun-shake'); void live.offsetWidth; live.classList.add('fun-shake');
+    }
+  }
+  renderFunStreak();
 }
 
 document.getElementById('skip-btn').addEventListener('click', ()=>{
@@ -1803,21 +2114,125 @@ function barColour(pct){
   return 'var(--bad)';
 }
 
+/** Which section of the selected exam's paper the weak subjects sit in, in
+    that exam's own marks — HAL's 100-of-160 technical split is not SSC's. */
+function weightNote(){
+  const exam = currentExamObj();
+  if(!exam) return '';
+  const total = exam.sections.reduce((n,s)=>n+s.marks, 0);
+  const biggest = exam.sections.slice().sort((a,b)=>b.marks-a.marks)[0];
+  return `${biggest.name} carries ${biggest.marks} of the ${total} marks, so a gap there costs the most.`;
+}
+
+/* ── The next task ───────────────────────────────────────────────────────
+   Progress has to end in an instruction, not a number. Wrong answers name a
+   basic; a basic names a twenty-minute repair and a ten-question retest. That
+   is the whole loop: practise → miss → repair exactly the thing missed →
+   retest. Sending someone back to the full lesson for one rule they got wrong
+   is how an evening disappears. */
+function nextTask(){
+  // 1. A basic that has already cost marks twice is the cheapest repair there
+  //    is: one rule, one paragraph, one drill.
+  if(typeof SKILLS !== 'undefined' && state.skills){
+    const weakSkills = SKILLS
+      .filter(sk => IN_EXAM.has(sk.subject) || !sk.subject)
+      .map(sk => ({ sk, s: state.skills[sk.key] }))
+      .filter(x => x.s && x.s.asked >= 3 && (x.s.correct / x.s.asked) < 0.6 &&
+                   Object.keys(x.s.missed || {}).length >= 2)
+      .sort((a,b) => (a.s.correct/a.s.asked) - (b.s.correct/b.s.asked));
+    if(weakSkills.length){
+      const w = weakSkills[0];
+      return {
+        kind: 'repair',
+        title: (w.sk.subject ? w.sk.subject + ' — ' : '') + w.sk.name,
+        study: w.sk.name,
+        why: `Missed in ${Object.keys(w.s.missed).length} different questions — it is the rule, not the question.`,
+        minutes: 20,
+        then: '10-question drill',
+        stop: 'Clears when you are answering it right again.',
+        action: { label: 'Repair it now', drill: w.sk.key },
+      };
+    }
+  }
+  // 2. Otherwise the weakest judged subject in this exam.
+  const rows = EXAM_SUBJECTS.map(t=>{
+    const s = state.topics[t] || {asked:0, correct:0};
+    return { t, asked:s.asked, pct: s.asked ? Math.round((s.correct/s.asked)*100) : null };
+  }).filter(r => r.asked >= MIN_FOR_VERDICT).sort((a,b)=>a.pct-b.pct);
+  if(rows.length && rows[0].pct < 60){
+    return {
+      kind: 'subject',
+      title: rows[0].t,
+      study: 'The lesson you have not mastered in ' + rows[0].t,
+      why: `${rows[0].pct}% over ${rows[0].asked} answers — below the 60% line.`,
+      minutes: 30,
+      then: '10 questions in that subject',
+      stop: 'Repeat until you are over 60%.',
+      action: { label: 'Practise ' + rows[0].t, subject: rows[0].t },
+    };
+  }
+  // 3. Nothing judged yet: the honest next step is to generate the data.
+  return {
+    kind: 'measure',
+    title: 'Take a 10-question practice set',
+    study: null,
+    why: `Nothing is measurable yet — a weak area named from two answers would send you revising the wrong thing.`,
+    minutes: 10,
+    then: '10 questions',
+    stop: `${MIN_FOR_VERDICT} answers in a subject and this page starts naming weak areas.`,
+    action: { label: 'Start practice', mode: 'practice' },
+  };
+}
+
+function renderNextTask(){
+  const box = document.getElementById('next-task');
+  if(!box) return;
+  const t = nextTask();
+  box.innerHTML = `
+    <div class="nt-kicker">Do this next</div>
+    <div class="nt-title">${escHtml(t.title)}</div>
+    ${t.study ? `<div class="nt-study"><span>Study only:</span> ${escHtml(t.study)}</div>` : ''}
+    <div class="nt-why">${escHtml(t.why)}</div>
+    <div class="nt-meta"><span>${t.minutes} min</span><span>then ${escHtml(t.then)}</span></div>
+    <div class="nt-stop">${escHtml(t.stop)}</div>
+    <button class="primary nt-go" data-next-task>${escHtml(t.action.label)}</button>`;
+  const btn = box.querySelector('[data-next-task]');
+  if(btn) btn.addEventListener('click', ()=>{
+    const a = t.action;
+    if(a.drill){ window.gotoSection('test'); openSkillDrill(a.drill); return; }
+    if(a.subject){ window.gotoSection('test'); beginQuiz(POOL.filter(q=>q.topic === a.subject), {}); return; }
+    window.gotoSection('test');
+    if(a.mode) startMode(a.mode);
+  });
+}
+
 function renderProgress(){
-  const answered = state.answered;
-  const acc = answered ? Math.round((state.correct/answered)*100) : null;
-  const seenCount = Object.keys(state.seen).length;
+  /* Counted for THIS exam only. state.answered is a lifetime total across
+     every exam the phone has ever practised, and "how ready am I" is not a
+     question a lifetime total can answer — an SSC candidate's 300 HAL answers
+     say nothing about their SSC readiness. */
+  let answered = 0, correct = 0;
+  EXAM_SUBJECTS.forEach(t=>{
+    const s = state.topics[t];
+    if(!s) return;
+    answered += s.asked || 0;
+    correct  += s.correct || 0;
+  });
+  const acc = answered ? Math.round((correct/answered)*100) : null;
+  const seenCount = POOL.filter(q=>state.seen[q.id]).length;
 
   document.getElementById('stat-answered').textContent = answered;
   document.getElementById('stat-accuracy').textContent = acc === null ? '—' : acc + '%';
-  document.getElementById('stat-coverage').textContent = Math.round((seenCount/ALL.length)*100) + '%';
+  document.getElementById('stat-coverage').textContent = Math.round((seenCount/POOL.length)*100) + '%';
   document.getElementById('stat-note').textContent = answered
-    ? `${seenCount} of ${ALL.length} questions attempted at least once. Skipped questions are not counted in accuracy.`
-    : `Nothing recorded yet. Take a quiz and this page fills in — it needs at least ${MIN_FOR_VERDICT} answers in a subject before it will call anything a weak area.`;
+    ? `${seenCount} of ${POOL.length} questions in this exam's pool attempted at least once. Skipped questions are not counted in accuracy.`
+    : `Nothing recorded yet for this exam. Open Test and this page fills in — it needs at least ${MIN_FOR_VERDICT} answers in a subject before it will call anything a weak area.`;
+
+  renderNextTask();
 
   renderBasics();
 
-  const rows = Object.keys(QUESTION_BANK).map(topic=>{
+  const rows = EXAM_SUBJECTS.map(topic=>{
     const s = state.topics[topic] || {asked:0, correct:0};
     const pct = s.asked ? Math.round((s.correct/s.asked)*100) : null;
     return {topic, asked:s.asked, correct:s.correct, pct};
@@ -1841,7 +2256,7 @@ function renderProgress(){
     const verdict = thin ? null : speedVerdict(r.pct, p.avg, p.target);
     return `<div class="bar-row">
       <div class="bar-head"><span>${r.topic}</span><span class="pct" style="color:${thin?'var(--dim)':barColour(r.pct)}">${r.pct}%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${r.pct}%; background:${thin?'#334155':barColour(r.pct)}"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${r.pct}%; background:${thin?'var(--panel-border)':barColour(r.pct)}"></div></div>
       <div class="bar-note">${r.correct}/${r.asked} correct${
         p.avg !== null ? ` · ${p.avg}s a question${p.target ? ` against ${p.target}s allowed` : ''}` : ''}${
         thin?` — too few answers to judge yet (need ${MIN_FOR_VERDICT})`:''}</div>
@@ -1863,10 +2278,10 @@ function renderProgress(){
       Below 60% — these are costing you marks:<br>
       ${weak.map(w=>`<strong>${w.topic}</strong> — ${w.pct}% (${w.correct}/${w.asked})`).join('<br>')}
     </div>
-    <p class="muted">Technical subjects carry 100 of the 160 marks, so a weak P1 subject (DS, OS, DBMS) costs far more than a weak P3 one. Use <strong>Drill My Weak Areas</strong> on the Quiz tab.</p>`;
+    <p class="muted">${escHtml(weightNote())} Fix them with <strong>Test → Weak areas</strong>.</p>`;
   }
 
-  const missed = ALL
+  const missed = POOL
     .map(q=>({q, s: state.seen[q.id]}))
     .filter(x=>x.s && x.s.wrong >= 2)
     .sort((a,b)=> b.s.wrong - a.s.wrong)

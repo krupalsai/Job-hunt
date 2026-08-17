@@ -122,20 +122,111 @@ async function reachable(page, selector, where, minH){
 
   const BAR = 'nav#nav-bottom .nav-item';
 
+  /* ── First run ──────────────────────────────────────────────────────────
+     The rule the whole app is built on: THE SELECTED EXAM IS THE ROOT CONTEXT.
+     Nothing is shown before that choice is made. The app used to pick HAL and
+     never say so, which handed an SSC CGL candidate HAL's paper and HAL's
+     "attempt everything, a guess is free" advice — advice that costs marks on
+     a paper with negative marking. */
+  console.log('\n── the app opens by asking which exam ───────────────────');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#nav-picker.is-open');
+  const gateText = await page.locator('#nav-picker').innerText();
+  check('a first open asks which exam before anything else',
+    /Which exam are you preparing for/i.test(gateText), gateText.slice(0, 80));
+  const choices = await page.locator('#nav-picker [data-pick-exam]').count();
+  check('it offers every exam the app has a syllabus for',
+    choices === await page.evaluate(() => EXAMS.length) && choices >= 2, `${choices} choices`);
+  check('each choice states the paper, so it is a decision and not a guess',
+    /160 MCQs/.test(gateText) && /100 questions/.test(gateText));
+  check('and warns where wrong answers cost marks',
+    /wrong answers lose marks/i.test(gateText));
+
+  /* Nothing else may be reachable underneath it — not the bar, not the menu,
+     not a job list glimpsed behind a scrim. */
+  const gbox = await page.locator('#nav-picker').boundingBox();
+  check('it covers the app rather than sitting behind it',
+    gbox.y <= 0.5 && gbox.height >= PHONE.height - 1, JSON.stringify(gbox));
+  check('the bottom bar cannot be tapped through it',
+    await page.evaluate(() => {
+      const bar = document.querySelector('nav#nav-bottom .nav-item');
+      if (!bar) return true;
+      const r = bar.getBoundingClientRect();
+      const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      return !!(top && top.closest('#nav-picker'));
+    }));
+  check('nothing is assumed until it is answered',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === null);
+
+  /* Select, then commit — the spec asks for a list and a CONTINUE, not a
+     one-tap choice that fires on a mis-tap. */
+  check('Continue is inert until an exam is chosen', await page.locator('#pick-go').isDisabled());
+  check('and it is labelled Continue on a first open',
+    /Continue/i.test(await page.locator('#pick-go').textContent()));
+  await reachable(page, '#nav-picker .pick-row', 'exam choice');
+  await noSideScroll(page, 'the first-run exam question');
+
+  await page.locator('#nav-picker [data-pick-exam="hal-cs"]').click();
+  check('choosing one marks it chosen',
+    (await page.locator('#nav-picker [data-pick-exam="hal-cs"]').getAttribute('aria-checked')) === 'true');
+  check('and arms Continue', !(await page.locator('#pick-go').isDisabled()));
+  check('still nothing stored before Continue is pressed',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === null);
+
+  await page.locator('#pick-go').click();
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForSelector('#study:not(.hidden)');
+  check('Continue stores the choice',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === 'hal-cs');
+  check('and lands on Study — the answer to "what do I do now"',
+    /#study$/.test(page.url()), page.url());
+  check('the exam is named in the header of the screen you land on',
+    /HAL CS/.test(await page.locator('#nav-exam').textContent()),
+    await page.locator('#nav-exam').textContent());
+  check('and Study opens with today\'s tasks',
+    (await page.locator('#today-plan .td-block').count()) >= 1);
+  await noSideScroll(page, 'Study on a first open');
+
+  /* Every task has to say what to study, exactly, for how long, and when it is
+     finished — the failure being guarded is "Study DBMS", which is a category
+     and not an instruction. */
+  const task = (await page.locator('#today-plan .td-block').first().innerText()).replace(/\s+/g, ' ');
+  check('a task names the exact topic, not just the subject', / — /.test(task), task.slice(0, 90));
+  check('it lists the exact subtopics to study', /Study only:/.test(task), task.slice(0, 160));
+  check('it puts a time on it', /\d+ min/.test(task));
+  check('it says what to solve afterwards', /\d+ questions/.test(task));
+  check('and it says when the task is over',
+    /passes it|Ends when|Clears when/.test(task), task.slice(0, 300));
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#study:not(.hidden)');
+  check('a second open does not ask again',
+    !(await page.locator('#nav-picker').evaluate(e => e.classList.contains('is-open'))));
+  check('and the choice survived the reload',
+    /HAL CS/.test(await page.locator('#nav-exam').textContent()));
+
   /* ── The bottom bar ─────────────────────────────────────────────────── */
-  console.log('\n── the bottom bar is on both pages ──────────────────────');
+  console.log('\n── one vocabulary, three destinations, Jobs in the menu ──');
   await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector(BAR);
 
   const jobsLabels = await page.locator(BAR + ' .nav-lbl').allTextContents();
-  check('the job list has a bottom bar of 4-6 destinations',
-    jobsLabels.length >= 4 && jobsLabels.length <= 6, jobsLabels.join(' | '));
-  check('the destinations are the five chosen',
-    jobsLabels.join('|') === 'Jobs|Learn|Practice|Plan|Progress', jobsLabels.join('|'));
-  check('the current page is the highlighted one',
-    (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'jobs');
-  check('only one destination is highlighted',
-    (await page.locator(BAR + '.is-on').count()) === 1);
+  // Jobs is a different page, not a prep section — it lives in the ☰ menu, so
+  // it never competes with Study/Test/Progress for a bar slot.
+  check('the bar is exactly three destinations', jobsLabels.length === 3, jobsLabels.join(' | '));
+  check('and they are Study, Test, Progress',
+    jobsLabels.join('|') === 'Study|Test|Progress', jobsLabels.join('|'));
+  check('no competing names for the same destination anywhere in the chrome',
+    !/Learn|Lessons|Practice|Plan|Exam info/.test(
+      jobsLabels.join(' ') + ' ' + (await page.locator('#nav-drawer').innerText())),
+    jobsLabels.join(' | '));
+  check('nothing in the bar is highlighted on the job screen — Jobs is not one of its four',
+    (await page.locator(BAR + '.is-on').count()) === 0);
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  check('the menu marks Jobs as where you are',
+    await page.locator('#nav-drawer [data-goto="jobs"]').evaluate(e => e.classList.contains('is-on')));
+  await page.keyboard.press('Escape');
 
   const bar = await page.locator('nav#nav-bottom').boundingBox();
   check('the bar is pinned to the bottom of the viewport',
@@ -153,14 +244,14 @@ async function reachable(page, selector, where, minH){
   await page.evaluate(() => window.scrollTo(0, 0));
 
   console.log('\n── it carries you to the prep and highlights where you are ──');
-  await page.locator(BAR + '[data-tab="quiz"]').click();
+  await page.locator(BAR + '[data-tab="test"]').click();
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('#quiz:not(.hidden)');
-  check('tapping Practice from the job list opens the practice screen',
-    await page.locator('#start-quiz').isVisible());
-  check('and Practice is the highlighted destination there',
-    (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'quiz');
-  check('the URL says which section you are on', /#quiz$/.test(page.url()), page.url());
+  await page.waitForSelector('#test:not(.hidden)');
+  check('tapping Test from the job list opens the test screen',
+    await page.locator('#mode-list').isVisible());
+  check('and Test is the highlighted destination there',
+    (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'test');
+  check('the URL uses the same word as the label', /#test$/.test(page.url()), page.url());
   await noSideScroll(page, 'the prep page');
   await reachable(page, BAR, 'bottom bar on prep');
 
@@ -168,18 +259,15 @@ async function reachable(page, selector, where, minH){
   check('the horizontally-scrolling tab strip no longer exists',
     (await page.locator('#tabs').count()) === 0);
   const secs = await page.locator('main .tab-section').evaluateAll(els => els.map(e => e.id));
-  check('there are five in-page sections, not seven',
-    secs.length === 5, secs.join(', '));
-  check('Overview, Topics and Time Strategy folded into one Exam info section',
-    secs.includes('examinfo') && !secs.includes('overview') &&
-    !secs.includes('topics') && !secs.includes('strategy'), secs.join(', '));
+  check('there are four in-page screens: study, test, progress, syllabus',
+    secs.sort().join(',') === 'progress,study,syllabus,test', secs.join(', '));
   check('exactly one section is visible at a time',
     (await page.locator('main .tab-section:not(.hidden)').count()) === 1);
 
   console.log('\n── switching sections keeps you on the page ─────────────');
-  for (const [tab, sel] of [['learn','#learn-path'], ['schedule','#plan-days'], ['progress','#topic-bars'], ['quiz','#quiz-setup']]) {
+  for (const [tab, sel] of [['study','#today-plan'], ['progress','#topic-bars'], ['test','#mode-list']]) {
     await page.locator(BAR + `[data-tab="${tab}"]`).click();
-    await page.waitForSelector(`#${tab === 'quiz' ? 'quiz' : tab}:not(.hidden)`);
+    await page.waitForSelector(`#${tab}:not(.hidden)`);
     const ok = await page.locator(sel).count() > 0 &&
                (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === tab;
     check(`${tab} opens and lights its own tab`, ok);
@@ -193,8 +281,8 @@ async function reachable(page, selector, where, minH){
   // sideways, or a "fix it now" button too small to hit, is the same failure
   // this suite was written for — just on a new screen.
   console.log('\n── the basics fit the phone they are read on ────────────');
-  await page.locator(BAR + '[data-tab="quiz"]').click();
-  await page.waitForSelector('#quiz-setup');
+  await page.locator(BAR + '[data-tab="test"]').click();
+  await page.waitForSelector('#mode-list');
   const skillKey = await page.evaluate(() => {
     // A basic that has already cost marks on two different questions, which is
     // the condition the app treats as a signal rather than an accident.
@@ -212,7 +300,7 @@ async function reachable(page, selector, where, minH){
 
   await page.evaluate(k => {
     window.__lessonCheck = null;
-    beginQuiz(ALL.filter(q => (q.skills || []).indexOf(k) !== -1), { size: 2 });
+    beginQuiz(POOL.filter(q => (q.skills || []).indexOf(k) !== -1), { size: 2 });
   }, skillKey);
   await page.waitForSelector('#quiz-live:not(.hidden)');
   const wrongIdx = await page.evaluate(() => currentQuiz[currentIndex].correct === 0 ? 1 : 0);
@@ -232,31 +320,39 @@ async function reachable(page, selector, where, minH){
   // The one screen opened every morning, on a phone, usually in a hurry. The
   // time chips and the start buttons are the two things tapped there.
   console.log('\n── today\'s plan is usable with a thumb ──────────────────');
-  await page.locator(BAR + '[data-tab="schedule"]').click();
+  await page.locator(BAR + '[data-tab="study"]').click();
   await page.waitForSelector('#today-plan .td-block');
-  check('today lists blocks with minutes on them',
+  check('today lists tasks with minutes on them',
     (await page.locator('#today-plan .td-mins').count()) >= 3);
-  await reachable(page, '#today-scope .td-chip', 'exam-scope chip');
+  check('and every one of them names its exact subtopics',
+    (await page.locator('#today-plan .td-only').count()) >= 1);
+  check('there is no all-exams switch to mix three papers on one screen',
+    (await page.locator('#today-scope').count()) === 0);
   await reachable(page, '#today-budget .td-chip', 'study-time chip');
   await reachable(page, '#today-plan .td-go', 'start button');
   await noSideScroll(page, "today's plan");
 
-  // Planning for all three exams at once is the densest this screen ever gets:
-  // more blocks, domain headings, and a longer reason on every one of them.
-  await page.locator('#today-scope [data-scope="all"]').click();
-  await page.waitForSelector('#today-plan .td-domain');
-  check('all-exams mode groups the day by domain',
-    (await page.locator('#today-plan .td-domain').count()) >= 2);
-  await noSideScroll(page, "today's plan across all three exams");
-  await reachable(page, '#today-plan .td-go', 'start button in all-exams mode');
-  await page.evaluate(() => { localStorage.removeItem('jobhunt_plan_scope'); window.renderToday(); });
+  // The longest day this screen ever renders: five hours of tasks, each with
+  // its subtopics, its questions and its stopping condition.
+  await page.locator('#today-budget [data-mins="300"]').click();
+  await page.waitForSelector('#today-plan .td-block');
+  await noSideScroll(page, "a five-hour day of tasks");
+  await reachable(page, '#today-plan .td-go', 'start button on a long day');
+  await page.evaluate(() => { localStorage.setItem('jobhunt_daily_minutes', '180'); window.renderToday(); });
 
   /* ── English grammar chapters ──────────────────────────────────────── */
   // The newest, densest screen: two grouped chapter lists plus the existing
   // full lessons, all on one subject page. If anything on this build scrolls
   // sideways or shrinks a tap target, it is here.
   console.log('\n── English grammar chapters fit the phone ───────────────');
-  await page.locator(BAR + '[data-tab="learn"]').click();
+  await page.locator(BAR + '[data-tab="study"]').click();
+  await page.waitForSelector('#today-plan .td-block');
+  // The full path is folded away — Study opens on today's tasks, not on a
+  // catalogue. Open it the way a student browsing it would.
+  await page.evaluate(() => {
+    const d = document.getElementById('path-fold');
+    if (d && !d.open) d.open = true;
+  });
   await page.waitForSelector('#learn-path');
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await page.locator('#learn-path [data-subject="English"]').click();
@@ -289,9 +385,9 @@ async function reachable(page, selector, where, minH){
   // page.goto to a URL differing only by fragment is a same-document
   // navigation that would NOT actually reload or reset any of that state.
   await page.goto('about:blank');
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#quiz`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('#open-mock');
-  await page.click('#open-mock');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#test`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('[data-mode="mock"]');
+  await page.click('[data-mode="mock"]');
   await page.waitForSelector('#mock-intro:not(.hidden)');
   await noSideScroll(page, 'the mock exam instructions screen');
   // 38px, same as every .quiz-actions button across the whole app — never
@@ -319,32 +415,38 @@ async function reachable(page, selector, where, minH){
   await reachable(page, '#quiz-result .quiz-actions button', 'mock results button', 36);
 
   /* ── Deep links ─────────────────────────────────────────────────────── */
-  console.log('\n── deep links land on the right section, at its top ─────');
-  for (const h of ['examinfo', 'learn', 'quiz', 'schedule', 'progress']) {
-    // about:blank first: going straight from #learn to #quiz changes only the
+  console.log('\n── deep links land on the right screen, at its top ──────');
+  for (const h of ['syllabus', 'study', 'test', 'progress']) {
+    // about:blank first: going straight from #study to #test changes only the
     // fragment, which is a same-document navigation and would test the
     // hashchange path instead of the fresh-load path meant here.
     await page.goto('about:blank');
     await page.goto(`http://localhost:${PORT}/learn.html#${h}`, { waitUntil: 'load' });
     await page.waitForSelector(`#${h}:not(.hidden)`);
     const shown = await page.locator('main .tab-section:not(.hidden)').evaluateAll(e => e.map(x => x.id));
-    // The ids double as hash targets, so the browser scrolls them into view by
-    // itself. Landing behind the sticky header is the failure being guarded.
     const y = await page.evaluate(() => window.scrollY);
     check(`#${h} opens ${h} alone, scrolled to the top`,
       shown.length === 1 && shown[0] === h && y <= 2, `${shown.join(',')} at scrollY ${y}`);
   }
+  /* The old names still resolve: a link written before the rename, or a page
+     served from an old service-worker cache, must not land on a blank screen. */
+  for (const [old_, now] of [['learn','study'], ['quiz','test'], ['schedule','study'], ['examinfo','syllabus']]) {
+    await page.goto('about:blank');
+    await page.goto(`http://localhost:${PORT}/learn.html#${old_}`, { waitUntil: 'load' });
+    await page.waitForSelector(`#${now}:not(.hidden)`);
+    check(`the old #${old_} link still lands on ${now}`, true);
+  }
   await page.goto('about:blank');
   await page.goto(`http://localhost:${PORT}/learn.html#not-a-section`, { waitUntil: 'load' });
-  check('an unknown hash falls back to Learn, not a blank page',
-    await page.locator('#learn').isVisible() &&
+  check('an unknown hash falls back to Study, not a blank page',
+    await page.locator('#study').isVisible() &&
     (await page.locator('main .tab-section:not(.hidden)').count()) === 1);
 
   // Changing only the hash is a same-document navigation — no reload, so it
   // needs its own handler or the address bar moves and nothing else does.
   await page.evaluate(() => { location.hash = 'progress'; });
   await page.waitForSelector('#progress:not(.hidden)', { timeout: 3000 });
-  check('changing only the hash still switches section',
+  check('changing only the hash still switches screen',
     (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'progress');
 
   /* ── The drawer ─────────────────────────────────────────────────────── */
@@ -358,25 +460,27 @@ async function reachable(page, selector, where, minH){
   const dbox = await page.locator('#nav-drawer').boundingBox();
   check('the open drawer is fully on screen', dbox.x >= -1 && dbox.width <= PHONE.width, JSON.stringify(dbox));
 
-  const drawerText = await page.locator('#nav-drawer').textContent();
-  check('the drawer names the account block at the top',
-    /My prep/.test(drawerText), drawerText.slice(0, 60));
-  check('the drawer says which exam you are preparing for',
-    (await page.locator('#nav-drawer [data-exam].is-on .nav-chip').textContent()) === 'current');
-  const examRows = await page.locator('#nav-drawer [data-exam]').count();
-  check('the drawer links to every syllabus, not only the current one',
-    examRows === await page.evaluate(() => EXAMS.length) && examRows >= 2, `${examRows} rows`);
-  check('the drawer reaches the job list',
-    (await page.locator('#nav-drawer [data-goto="jobs"]').getAttribute('href')) === '/');
-  check('the drawer holds the Exam info destination',
-    (await page.locator('#nav-drawer [data-goto="examinfo"]').count()) === 1);
+  const drawerText = await page.locator('#nav-drawer').innerText();
+  check('the menu names the exam at the top',
+    /HAL CS/.test(drawerText), drawerText.slice(0, 60));
+  /* Four entries: changing exam, Jobs (a different page, not a prep section),
+     Syllabus, and reset — nothing that repeats a bottom-bar destination under
+     a second name. */
+  const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
+    .map(t => t.trim().split('\n')[0].trim());
+  check('the menu holds Change exam, Jobs, Syllabus and Settings — and nothing else',
+    rows.length === 4 && /Change exam/.test(rows[0]) && /Jobs/.test(rows[1]) &&
+    /Syllabus/.test(rows[2]) && /Reset prep progress/.test(rows[3]), rows.join(' | '));
+  check('changing exam is one obvious action, not a list of exams to tap by mistake',
+    (await page.locator('#nav-change-exam').count()) === 1 &&
+    (await page.locator('#nav-drawer [data-pick-exam]').count()) === 0);
   check('settings: the qualification picker is here',
     await page.locator('#nav-drawer #qualSel').count() === 1);
   check('settings: resetting progress is here',
     await page.locator('#nav-drawer #nav-reset').count() === 1);
   check('reset says it keeps your applied jobs',
     /Applied jobs are kept/i.test(await page.locator('#nav-reset').textContent()));
-  await reachable(page, '#nav-drawer .nav-row', 'drawer row');
+  await reachable(page, '#nav-drawer .nav-row', 'menu row');
 
   console.log('\n── the drawer closes every way it should ────────────────');
   await page.locator('#nav-scrim').click({ position: { x: 370, y: 400 } });
@@ -390,28 +494,28 @@ async function reachable(page, selector, where, minH){
   check('the page is scrollable again once it is closed',
     (await page.evaluate(() => document.body.style.overflow)) === '');
 
-  console.log('\n── the drawer navigates ─────────────────────────────────');
+  console.log('\n── the menu reaches the syllabus ────────────────────────');
   await page.locator('#nav-hamburger').click();
   await settled(page, '#nav-drawer');
-  await page.locator('#nav-drawer [data-goto="examinfo"]').click();
-  await page.waitForSelector('#examinfo:not(.hidden)');
-  check('Exam info opens from the drawer', true);
-  check('opening it closes the drawer behind you',
+  await page.locator('#nav-drawer [data-goto="syllabus"]').click();
+  await page.waitForSelector('#syllabus:not(.hidden)');
+  check('Syllabus opens from the menu', true);
+  check('opening it closes the menu behind you',
     !(await page.locator('#nav-drawer').evaluate(e => e.classList.contains('is-open'))));
-  check('Exam info is reference material, so no bottom tab claims it',
+  check('the syllabus is reference material, so no bottom tab claims it',
     (await page.locator(BAR + '.is-on').count()) === 0);
-  check('the drawer marks Exam info as where you are',
-    await page.locator('#nav-drawer [data-goto="examinfo"]').evaluate(e => e.classList.contains('is-on')));
-  await noSideScroll(page, 'Exam info');
+  check('the menu marks Syllabus as where you are',
+    await page.locator('#nav-drawer [data-goto="syllabus"]').evaluate(e => e.classList.contains('is-on')));
+  await noSideScroll(page, 'the syllabus');
 
   /* ── Exam info content ──────────────────────────────────────────────── */
-  console.log('\n── Exam info replaces three tabs of HAL prose ───────────');
+  console.log('\n── the syllabus replaces three tabs of HAL prose ────────');
   // The section ids double as hash targets, so the browser jumps to them on
   // its own. Arriving mid-page with the sticky header over the first card is
   // the bug this guards.
   const scrolled = await page.evaluate(() => window.scrollY);
   check('a linked section opens at its top, not under the header', scrolled <= 2, `scrollY ${scrolled}`);
-  const infoText = await page.locator('#examinfo').innerText();
+  const infoText = await page.locator('#syllabus').innerText();
   check('it states the pattern', /160 MCQs/.test(infoText));
   // Case-insensitive: the table headers are uppercased in CSS, and innerText
   // reports what is rendered.
@@ -424,73 +528,136 @@ async function reachable(page, selector, where, minH){
   check('HAL-only reference is shown for HAL',
     !(await page.locator('#ei-hal').evaluate(e => e.classList.contains('hidden'))));
 
-  /* ── The exam switcher ──────────────────────────────────────────────── */
-  console.log('\n── the exam switcher ────────────────────────────────────');
-  check('the header offers a switcher', await page.locator('#exam-switch').isVisible());
-  check('it names the exam currently being studied',
-    /HAL/i.test(await page.locator('header h1').textContent()));
-  await page.locator('#exam-switch').click();
-  await page.waitForFunction(() => document.querySelector('#nav-sheet').classList.contains('is-open'));
-  await settled(page, '#nav-sheet');
-  const picks = await page.locator('#nav-sheet [data-pick-exam]').count();
-  check('it lists every exam the app has a syllabus for',
-    picks === await page.evaluate(() => EXAMS.length) && picks >= 2, `${picks} choices`);
-  check('the current one is marked as current',
-    (await page.locator('#nav-sheet [data-pick-exam="hal-cs"] .nav-chip').textContent()) === 'current');
-  await reachable(page, '#nav-sheet [data-pick-exam]', 'exam sheet');
-
-  await page.locator('#nav-sheet [data-pick-exam="ssc-cgl"]').click();
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('nav#nav-bottom');
-  check('picking another exam switches the whole page to it',
-    /SSC CGL/i.test(await page.locator('header h1').textContent()),
-    await page.locator('header h1').textContent());
-  check('and does it without anyone editing the URL by hand',
-    /exam=ssc-cgl/.test(page.url()), page.url());
-  check('SSC CGL warns that wrong answers cost marks',
-    /lose marks/i.test(await page.locator('header .sub').textContent()));
-
-  console.log('\n── switching carries the exam, not just the header ──────');
+  /* ── Changing exam ──────────────────────────────────────────────────────
+     One obvious action, in one place: ☰ → Change exam. It shows what you are
+     on, what you can move to, and commits only when you say so. And after it
+     commits, EVERY screen must be about the new exam — a leftover HAL block on
+     an SSC screen is the failure this whole redesign exists to end. */
+  console.log('\n── ☰ → Change exam ─────────────────────────────────────');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
   await page.locator('#nav-hamburger').click();
   await settled(page, '#nav-drawer');
-  await page.locator('#nav-drawer [data-goto="examinfo"]').click();
-  await page.waitForSelector('#examinfo:not(.hidden)');
-  // innerText, not textContent: the HAL-only block is still in the DOM, just
-  // display:none, and textContent would happily read out of it.
-  const sscInfo = await page.locator('#examinfo').innerText();
-  check('the snapshot is the SSC pattern, not the HAL one',
+  await page.locator('#nav-change-exam').click();
+  await page.waitForSelector('#nav-picker.is-open');
+  const changeText = await page.locator('#nav-picker').innerText();
+  check('the change screen says what you are on now',
+    /current/i.test(changeText) && /HAL Management Trainee/.test(changeText),
+    changeText.replace(/\s+/g, ' ').slice(0, 140));
+  check('and offers the others to switch to',
+    /switch to/i.test(changeText) && /SSC CGL/.test(changeText) && /Telangana/.test(changeText));
+  check('the current exam is not offered as a switch target',
+    (await page.locator('#nav-picker [data-pick-exam="hal-cs"]').count()) === 0);
+  check('the button says Switch exam', /Switch exam/i.test(await page.locator('#pick-go').textContent()));
+  check('and it is inert until one is picked', await page.locator('#pick-go').isDisabled());
+  await reachable(page, '#nav-picker .pick-row[role="radio"]', 'switch-to choice');
+  await noSideScroll(page, 'the change-exam screen');
+
+  await page.keyboard.press('Escape');
+  check('backing out of the change screen leaves the exam alone',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === 'hal-cs');
+
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-change-exam').click();
+  await page.waitForSelector('#nav-picker.is-open');
+  await page.locator('#nav-picker [data-pick-exam="ssc-cgl"]').click();
+  await page.locator('#pick-go').click();
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForSelector('#study:not(.hidden)');
+
+  console.log('\n── and the whole app is now that exam ───────────────────');
+  check('the stored exam changed',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === 'ssc-cgl');
+  check('the URL carries it, without anyone editing it by hand',
+    /exam=ssc-cgl/.test(page.url()), page.url());
+  check('the header names it', /SSC CGL/.test(await page.locator('#nav-exam').textContent()),
+    await page.locator('#nav-exam').textContent());
+  check('it lands on Study, not wherever you happened to be',
+    /#study$/.test(page.url()), page.url());
+
+  /* Study, Test, Progress and Syllabus each have to be free of the old exam.
+     HAL's technical subjects are the tell: SSC CGL examines none of them. */
+  const HAL_ONLY = /DBMS|Operating Systems|Theory of Computation|Computer Networks|Software Engineering/;
+  const studyText = await page.locator('#study').innerText();
+  check('Study holds no HAL subject after switching to SSC CGL',
+    !HAL_ONLY.test(studyText), studyText.replace(/\s+/g, ' ').slice(0, 200));
+  check('and its tasks are SSC subjects',
+    /Reasoning|English|Quantitative|General Awareness/.test(studyText));
+
+  await page.locator(BAR + '[data-tab="test"]').click();
+  await page.waitForSelector('#test:not(.hidden)');
+  await page.click('[data-mode="practice"]');
+  const tagText = (await page.locator('#topic-tags').allTextContents()).join(' | ');
+  check('Test offers only SSC subjects', !HAL_ONLY.test(tagText), tagText);
+  const poolCheck = await page.evaluate(() => ({
+    pool: POOL.length, all: ALL.length,
+    leaked: POOL.filter(q => /DBMS|Operating Systems|Theory of Computation/.test(q.topic)).length,
+  }));
+  check('and the question pool itself is scoped, not just the tags',
+    poolCheck.leaked === 0 && poolCheck.pool < poolCheck.all, JSON.stringify(poolCheck));
+  check('the marking rules shown are this exam\'s',
+    /wrong/i.test(await page.locator('#test-modes-note').textContent()) ||
+    /-0.5/.test(await page.locator('#test-modes-note').textContent()),
+    await page.locator('#test-modes-note').textContent());
+
+  await page.locator(BAR + '[data-tab="progress"]').click();
+  await page.waitForSelector('#progress:not(.hidden)');
+  const progText = await page.locator('#progress').innerText();
+  check('Progress holds no HAL subject either',
+    !HAL_ONLY.test(progText), progText.replace(/\s+/g, ' ').slice(0, 200));
+  check('and it still ends in an instruction',
+    /Do this next/i.test(await page.locator('#next-task').innerText()));
+
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-drawer [data-goto="syllabus"]').click();
+  await page.waitForSelector('#syllabus:not(.hidden)');
+  const sscInfo = await page.locator('#syllabus').innerText();
+  check('the syllabus is the SSC pattern, not the HAL one',
     /100 questions/.test(sscInfo) && !/160 MCQs/.test(sscInfo));
   check('the tactics are the negative-marking ones',
     /do not guess blind/i.test(sscInfo), sscInfo.replace(/\s+/g,' ').slice(0, 200));
   check('the GATE formula shortlist is not shown for SSC',
     await page.locator('#ei-hal').evaluate(e => e.classList.contains('hidden')));
-  check('Quantitative Aptitude is listed as examined',
-    /Quantitative Aptitude/.test(sscInfo));
+  check('Quantitative Aptitude is listed as examined', /Quantitative Aptitude/.test(sscInfo));
   check('DBMS is not', !/DBMS/.test(sscInfo));
 
-  console.log('\n── and the job list remembers which exam you chose ──────');
-  await page.locator(BAR + '[data-tab="jobs"]').click();
+  console.log('\n── and Jobs is that exam too ───────────────────────────');
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-drawer [data-goto="jobs"]').click();
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('#tiles .tile');
-  check('the job list header shows the exam you switched to',
-    (await page.locator('#exam-label').textContent()) === 'SSC CGL',
-    await page.locator('#exam-label').textContent());
-  const tileHref = await page.locator('#tiles [data-tile="quiz"]').getAttribute('href');
-  check('its quick actions point at that exam too', /exam=ssc-cgl#quiz/.test(tileHref), tileHref);
-  const barHref = await page.locator(BAR + '[data-tab="learn"]').getAttribute('href');
-  check('so does the bottom bar', /exam=ssc-cgl#learn/.test(barHref), barHref);
+  await page.waitForSelector('#examJobs');
+  check('the job screen names the exam it is filtered to',
+    /SSC CGL/.test(await page.locator('#nav-exam').textContent()),
+    await page.locator('#nav-exam').textContent());
+  const barHref = await page.locator(BAR + '[data-tab="study"]').getAttribute('href');
+  check('and every link out of it carries the exam', /exam=ssc-cgl#study/.test(barHref), barHref);
+  check('there are no tiles repeating the bottom bar under other names',
+    (await page.locator('#tiles').count()) === 0);
+  await noSideScroll(page, 'the job screen');
 
   console.log('\n── the list filters are thumb-sized too ─────────────────');
-  await reachable(page, 'header .tab', 'job list filter', 36);
+  await reachable(page, '.tabs .tab', 'job list filter', 36);
 
-  console.log('\n── quick actions ────────────────────────────────────────');
-  const tiles = await page.locator('#tiles .tile').count();
-  check('the job list has a row of round quick-action tiles', tiles === 4, `${tiles} tiles`);
-  await reachable(page, '#tiles .tile', 'quick action');
-  await page.locator('#tiles [data-tile="schedule"]').click();
-  await page.waitForSelector('#schedule:not(.hidden)');
-  check('a tile lands on the section it names',
-    (await page.locator('#plan-days .plan-day').count()) > 0);
+  console.log('\n── Jobs is the openings for THIS exam ───────────────────');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#examJobs');
+  check('the screen is named, and the exam named under it',
+    (await page.locator('#screen-title').textContent()).trim() === 'Jobs' &&
+    /SSC CGL|HAL CS|TS SI/.test(await page.locator('#nav-exam').textContent()));
+  check('there is no hub of tiles repeating the bottom bar',
+    (await page.locator('#tiles').count()) === 0);
+  check('and no eligible/applied/all filter to sort through',
+    (await page.locator('.tabs').count()) === 0);
+  await noSideScroll(page, 'the job screen');
+
+  /* ── Settings live in the menu, once ─────────────────────────────────── */
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#examJobs');
 
   /* ── Qualification, now a shared setting ────────────────────────────── */
   console.log('\n── qualification is one setting, in the drawer ──────────');
@@ -504,9 +671,9 @@ async function reachable(page, selector, where, minH){
     await page.locator('#nav-acct-sub').textContent());
   await page.keyboard.press('Escape');
 
-  await page.locator(BAR + '[data-tab="jobs"]').click();
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('#tiles .tile');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#examJobs');
   check('the job list picks the same setting up',
     (await page.locator('#nav-drawer #qualSel').inputValue()) === 'B.Tech CSE');
   check('and stops nagging for it',
@@ -525,7 +692,7 @@ async function reachable(page, selector, where, minH){
   await settled(page, '#nav-drawer');
   await page.locator('#nav-reset').click();
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('#tiles .tile');
+  await page.waitForSelector('#examJobs');
   const left = await page.evaluate(() => ({
     prep: localStorage.getItem('jobhunt_prep_hal_cs_v1'),
     lessons: localStorage.getItem('jobhunt_lessons'),
@@ -538,6 +705,74 @@ async function reachable(page, selector, where, minH){
   check('ticked plan days are gone', left.plan === null);
   check('which jobs you applied for is NOT touched', left.applied !== null, String(left.applied));
   check('nor is your qualification', left.qual === 'B.Tech CSE');
+
+  /* ── The guarantees the redesign is judged on ───────────────────────────
+     One block, asserting the acceptance criteria directly rather than leaving
+     them implied by twenty smaller checks: a student must never have to ask
+     "which exam is this for?", and the answer must survive a reload, a switch
+     and the loss of the network. */
+  console.log('\n── the acceptance criteria, stated as tests ─────────────');
+
+  await page.evaluate(() => localStorage.setItem('jobhunt_current_exam', 'ts-si'));
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
+  check('a bare prep address resolves to the chosen exam, not a default',
+    /TS SI/.test(await page.locator('#nav-exam').textContent()) && /exam=ts-si/.test(page.url()),
+    page.url());
+
+  /* Every screen names the exam, in the same place, without being asked. */
+  const named = {};
+  for (const tab of ['study', 'test', 'progress']) {
+    await page.locator(BAR + `[data-tab="${tab}"]`).click();
+    await page.waitForSelector(`#${tab}:not(.hidden)`);
+    named[tab] = (await page.locator('#nav-exam').textContent()).trim();
+  }
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-drawer [data-goto="syllabus"]').click();
+  await page.waitForSelector('#syllabus:not(.hidden)');
+  named.syllabus = (await page.locator('#nav-exam').textContent()).trim();
+  check('every screen answers "which exam is this for?" without being asked',
+    Object.values(named).every(v => /TS SI/.test(v)), JSON.stringify(named));
+
+  /* Offline: the prep is the half that must keep working. */
+  await page.context().setOffline(true);
+  await page.locator(BAR + '[data-tab="test"]').click();
+  await page.waitForSelector('#test:not(.hidden)');
+  await page.click('[data-mode="drill"]');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('a drill still runs with the network cut',
+    (await page.locator('#q-text').textContent()).length > 10);
+  await page.locator('#q-options .opt').first().click();
+  await page.waitForSelector('.explain');
+  check('and the explanation still appears — questions never wait on a server',
+    (await page.locator('.explain .why').textContent()).length > 20);
+  const queued = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('jobhunt_pending_attempts') || '[]').length);
+  check('the answer is queued for the mirror rather than lost',
+    queued >= 1, `${queued} queued`);
+  await page.context().setOffline(false);
+
+  /* Nothing of the previous exam may survive a switch — checked against the
+     rendered text of every screen, not against a variable. */
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-change-exam').click();
+  await page.waitForSelector('#nav-picker.is-open');
+  await page.locator('#nav-picker [data-pick-exam="ts-si"]').click();
+  await page.locator('#pick-go').click();
+  await page.waitForSelector('#study:not(.hidden)');
+  const seen = [];
+  for (const tab of ['study', 'test', 'progress']) {
+    await page.locator(BAR + `[data-tab="${tab}"]`).click();
+    await page.waitForSelector(`#${tab}:not(.hidden)`);
+    seen.push(await page.locator(`#${tab}`).innerText());
+  }
+  check('no HAL content survives a switch to TS SI, on any screen',
+    !/DBMS|Theory of Computation|Software Engineering|160 MCQs/.test(seen.join(' ')),
+    seen.join(' ').replace(/\s+/g, ' ').slice(0, 200));
 
   /* ── Nothing broke ──────────────────────────────────────────────────── */
   console.log('\n── clean run ────────────────────────────────────────────');
