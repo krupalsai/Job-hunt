@@ -84,10 +84,12 @@ function check(name, cond, detail){
   // bar. The count is the point: every destination is on screen at once, so
   // none of them can be scrolled out of sight — and there is one name for each,
   // not a tile and a drawer row calling the same screen something else.
-  check('the bottom bar offers four destinations, all visible at once',
-    (await page.locator('nav#nav-bottom .nav-item').count()) === 4);
-  check('and they are Jobs, Study, Test, Progress',
-    (await page.locator('nav#nav-bottom .nav-lbl').allTextContents()).join('|') === 'Jobs|Study|Test|Progress');
+  // Jobs is a different page, not a section of the prep page — it lives in
+  // the ☰ menu, not the bottom bar, which is Study/Test/Progress only.
+  check('the bottom bar offers three destinations, all visible at once',
+    (await page.locator('nav#nav-bottom .nav-item').count()) === 3);
+  check('and they are Study, Test, Progress',
+    (await page.locator('nav#nav-bottom .nav-lbl').allTextContents()).join('|') === 'Study|Test|Progress');
   check('the scrolling tab strip is gone', (await page.locator('#tabs').count()) === 0);
   check('"My Weak Areas" is now Progress, one tap away',
     await page.locator('nav#nav-bottom [data-tab="progress"]').isVisible());

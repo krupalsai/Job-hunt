@@ -58,11 +58,11 @@ function check(name, cond, detail){
   check('manifest.json is served', requested.includes('/manifest.json'));
 
   console.log('\n── the job list reaches the prep ────────────────────────');
-  // Four destinations, one name each, on both pages. There are no home-screen
-  // tiles repeating them under other names any more.
+  // Three destinations on the bottom bar; Jobs is a different page, reached
+  // from the ☰ menu rather than competing for a bar slot.
   const labels = await page.locator('nav#nav-bottom .nav-lbl').allTextContents();
-  check('the bottom bar is the four destinations',
-    labels.join('|') === 'Jobs|Study|Test|Progress', labels.join('|'));
+  check('the bottom bar is the three prep destinations',
+    labels.join('|') === 'Study|Test|Progress', labels.join('|'));
   const link = page.locator('nav#nav-bottom [data-tab="study"]');
   check('the prep is one tap away from the job list', await link.count() === 1);
   const href = await link.getAttribute('href');
@@ -86,10 +86,11 @@ function check(name, cond, detail){
     await page.evaluate(()=>ALL.every(q => (q.skills||[]).every(k => !!SKILL_BY_KEY[k]))));
 
   console.log('\n── and the prep reaches back ────────────────────────────');
-  // No "← Back to job list" at the top of the page any more: on a phone that
-  // meant scrolling up to leave. Jobs is a permanent destination instead.
-  const back = page.locator('nav#nav-bottom [data-tab="jobs"]');
-  check('the job list is a destination on the prep page too', await back.count() === 1);
+  // Jobs is reached from the ☰ menu on the prep page, not the bottom bar.
+  await page.click('#nav-hamburger');
+  await page.waitForFunction(() => document.querySelector('#nav-drawer').classList.contains('is-open'));
+  const back = page.locator('#nav-drawer [data-goto="jobs"]');
+  check('the job list is reachable from the menu', await back.count() === 1);
   check('and it is a real link, not a history step',
     (await back.getAttribute('href')) === '/');
   await back.click();

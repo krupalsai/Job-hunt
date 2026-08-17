@@ -206,24 +206,27 @@ async function reachable(page, selector, where, minH){
     /HAL CS/.test(await page.locator('#nav-exam').textContent()));
 
   /* ── The bottom bar ─────────────────────────────────────────────────── */
-  console.log('\n── one vocabulary, four destinations ────────────────────');
+  console.log('\n── one vocabulary, three destinations, Jobs in the menu ──');
   await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector(BAR);
 
   const jobsLabels = await page.locator(BAR + ' .nav-lbl').allTextContents();
-  check('the bar is exactly four destinations', jobsLabels.length === 4, jobsLabels.join(' | '));
-  check('and they are Jobs, Study, Test, Progress',
-    jobsLabels.join('|') === 'Jobs|Study|Test|Progress', jobsLabels.join('|'));
-  /* The names that used to compete for the same screen. One of each now, and
-     the URL uses the same word as the label. */
+  // Jobs is a different page, not a prep section — it lives in the ☰ menu, so
+  // it never competes with Study/Test/Progress for a bar slot.
+  check('the bar is exactly three destinations', jobsLabels.length === 3, jobsLabels.join(' | '));
+  check('and they are Study, Test, Progress',
+    jobsLabels.join('|') === 'Study|Test|Progress', jobsLabels.join('|'));
   check('no competing names for the same destination anywhere in the chrome',
     !/Learn|Lessons|Practice|Plan|Exam info/.test(
       jobsLabels.join(' ') + ' ' + (await page.locator('#nav-drawer').innerText())),
     jobsLabels.join(' | '));
-  check('the current page is the highlighted one',
-    (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'jobs');
-  check('only one destination is highlighted',
-    (await page.locator(BAR + '.is-on').count()) === 1);
+  check('nothing in the bar is highlighted on the job screen — Jobs is not one of its four',
+    (await page.locator(BAR + '.is-on').count()) === 0);
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  check('the menu marks Jobs as where you are',
+    await page.locator('#nav-drawer [data-goto="jobs"]').evaluate(e => e.classList.contains('is-on')));
+  await page.keyboard.press('Escape');
 
   const bar = await page.locator('nav#nav-bottom').boundingBox();
   check('the bar is pinned to the bottom of the viewport',
@@ -460,13 +463,14 @@ async function reachable(page, selector, where, minH){
   const drawerText = await page.locator('#nav-drawer').innerText();
   check('the menu names the exam at the top',
     /HAL CS/.test(drawerText), drawerText.slice(0, 60));
-  /* Three entries, and nothing that repeats a bottom-bar destination under a
-     second name. */
+  /* Four entries: changing exam, Jobs (a different page, not a prep section),
+     Syllabus, and reset — nothing that repeats a bottom-bar destination under
+     a second name. */
   const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
     .map(t => t.trim().split('\n')[0].trim());
-  check('the menu holds Change exam, Syllabus and Settings — and nothing else',
-    rows.length === 3 && /Change exam/.test(rows[0]) && /Syllabus/.test(rows[1]) &&
-    /Reset prep progress/.test(rows[2]), rows.join(' | '));
+  check('the menu holds Change exam, Jobs, Syllabus and Settings — and nothing else',
+    rows.length === 4 && /Change exam/.test(rows[0]) && /Jobs/.test(rows[1]) &&
+    /Syllabus/.test(rows[2]) && /Reset prep progress/.test(rows[3]), rows.join(' | '));
   check('changing exam is one obvious action, not a list of exams to tap by mistake',
     (await page.locator('#nav-change-exam').count()) === 1 &&
     (await page.locator('#nav-drawer [data-pick-exam]').count()) === 0);
@@ -620,7 +624,9 @@ async function reachable(page, selector, where, minH){
   check('DBMS is not', !/DBMS/.test(sscInfo));
 
   console.log('\n── and Jobs is that exam too ───────────────────────────');
-  await page.locator(BAR + '[data-tab="jobs"]').click();
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-drawer [data-goto="jobs"]').click();
   await page.waitForLoadState('domcontentloaded');
   await page.waitForSelector('#examJobs');
   check('the job screen names the exam it is filtered to',
@@ -665,8 +671,8 @@ async function reachable(page, selector, where, minH){
     await page.locator('#nav-acct-sub').textContent());
   await page.keyboard.press('Escape');
 
-  await page.locator(BAR + '[data-tab="jobs"]').click();
-  await page.waitForLoadState('domcontentloaded');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#examJobs');
   check('the job list picks the same setting up',
     (await page.locator('#nav-drawer #qualSel').inputValue()) === 'B.Tech CSE');

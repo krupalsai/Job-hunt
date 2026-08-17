@@ -162,7 +162,6 @@
      deliberately NOT here: it is read in week one and rarely again, and giving
      it a permanent slot would cost one that Study or Test needs every day. */
   const DESTS = [
-    { id: "jobs",     label: "Jobs",     icon: ICON.jobs,  href: "/" },
     { id: "study",    label: "Study",    icon: ICON.study, section: "study" },
     { id: "test",     label: "Test",     icon: ICON.test,  section: "test" },
     { id: "progress", label: "Progress", icon: ICON.stats, section: "progress" },
@@ -409,6 +408,10 @@ nav#nav-bottom .nav-item.is-on::before{
         '<span class="nav-row-main"><span>Change exam</span>' +
         '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
 
+      '<a class="nav-row' + (activeId === "jobs" ? " is-on" : "") + '" data-goto="jobs" href="/">' + ICON.jobs +
+        '<span class="nav-row-main"><span>Jobs</span>' +
+        '<span class="nav-row-sub">Openings tracked for this exam</span></span></a>' +
+
       '<a class="nav-row" data-goto="syllabus" href="' + esc(learnHref("syllabus")) + '">' + ICON.book +
         '<span class="nav-row-main"><span>Syllabus</span>' +
         '<span class="nav-row-sub">Pattern, marking, time budget, exam-hall tactics</span></span></a>' +
@@ -625,7 +628,9 @@ nav#nav-bottom .nav-item.is-on::before{
 
   drawer.addEventListener("click", e => {
     const row = e.target.closest && e.target.closest("[data-goto]");
-    if (row && IS_LEARN) {
+    // Jobs is a different page, not a section of the prep page — it must
+    // navigate for real, never be caught as an in-page section switch.
+    if (row && IS_LEARN && row.getAttribute("data-goto") !== "jobs") {
       e.preventDefault();
       closeAll();
       go(row.getAttribute("data-goto"));
@@ -687,9 +692,12 @@ nav#nav-bottom .nav-item.is-on::before{
     bottom.innerHTML = bottomHtml();
 
     drawer.querySelectorAll("[data-goto]").forEach(r => {
-      const on = r.getAttribute("data-goto") === activeId;
+      const goto = r.getAttribute("data-goto");
+      const on = goto === activeId;
       r.classList.toggle("is-on", on);
-      if (!IS_LEARN) r.setAttribute("href", learnHref(r.getAttribute("data-goto")));
+      // Jobs always points at "/" — it is a different page, not a section of
+      // the prep page, so it never takes the ?exam=…#section shape the others do.
+      if (!IS_LEARN && goto !== "jobs") r.setAttribute("href", learnHref(goto));
     });
 
     const name = document.getElementById("nav-acct-name");
