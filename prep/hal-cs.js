@@ -911,7 +911,33 @@ const QUESTION_BANK = {
    opts:["1234","2345","3456","4567"], correct:2,
    skills:["divisibility-and-primes"],
    why:"Add the digits: 1+2+3+4 = 10, 2+3+4+5 = 14, 3+4+5+6 = 18, 4+5+6+7 = 22. Only 18 is a multiple of 3, so only 3456 is divisible by 3.",
-   trick:"Divisible by 3 if the digits add to a multiple of 3; by 9 if they add to a multiple of 9."}
+   trick:"Divisible by 3 if the digits add to a multiple of 3; by 9 if they add to a multiple of 9."},
+
+  /* Four question TYPES the bank had nothing for, taken from IndiaBIX's
+     logical-reasoning index: analogy, position in a row, painted cubes and
+     letter series. The existing questions covered series, coding, blood
+     relations, odd-one-out, syllogisms and direction sense. */
+
+  {q:"Doctor : Stethoscope :: Carpenter : ?",
+   opts:["Wood","Chisel","House","Furniture"], correct:1,
+   why:"The first pair is a worker and the tool they work with, so the answer must be a tool. Wood is the material, and a house or furniture is the product — only the chisel is the instrument.",
+   trick:"Name the relation in words before looking at the options: 'X uses Y to work'. Then only one option can fit."},
+
+  {q:"In a row of 40 children, Ravi is 11th from the left. What is his position from the right?",
+   opts:["28th","29th","30th","31st"], correct:2,
+   why:"Position from the right = total − position from the left + 1 = 40 − 11 + 1 = 30. The +1 is because Ravi is counted in both directions; leaving it out gives the classic wrong answer of 29.",
+   trick:"Total minus position plus one. The +1 is the person themselves, and forgetting it is the whole trap."},
+
+  {q:"A cube painted red on all faces is cut into 27 equal smaller cubes. How many small cubes have exactly two faces painted?",
+   opts:["6","8","12","27"], correct:2,
+   why:"A 3×3×3 cube has 8 corner cubes with three painted faces, 12 edge cubes with two, 6 face-centre cubes with one, and 1 hidden cube with none. 8+12+6+1 = 27, which checks the split.",
+   trick:"Corners 3 faces, edges 2, face centres 1, the middle 0. A cube has 8 corners and 12 edges, always."},
+
+  {q:"Complete the series: AZ, BY, CX, ?",
+   opts:["DV","DW","EW","DX"], correct:1,
+   why:"The first letter moves forward through the alphabet (A, B, C, D) while the second moves backward from the end (Z, Y, X, W). So the next pair is DW.",
+   trick:"When a pair moves, check each position separately. One counting up and one counting down is the commonest pattern.",
+   skills:["series-find-the-rule"]},
 ],
 
 /* ──────────────────────────────── ENGLISH ──────────────────────────────── */
@@ -1215,7 +1241,95 @@ const QUESTION_BANK = {
   {q:"The Preamble declares India to be a?",
    opts:["Sovereign Socialist Secular Democratic Republic","Sovereign Democratic Monarchy","Federal Socialist Union","Sovereign Communist Republic"], correct:0,
    why:"The words 'Socialist' and 'Secular' were inserted by the 42nd Amendment in 1976; the original Preamble read 'Sovereign Democratic Republic'.",
-   trick:"Order: Sovereign, Socialist, Secular, Democratic, Republic. Socialist and Secular are the 1976 additions."}
+   trick:"Order: Sovereign, Socialist, Secular, Democratic, Republic. Socialist and Secular are the 1976 additions."},
+
+  /* ── Static GK beyond HAL and space ─────────────────────────────────────
+     The section is 20 marks on HAL and 25 on SSC CGL, and the ten questions
+     here were all HAL, ISRO and the Constitution — a candidate who had read
+     them was still walking into two thirds of the section cold. The spread
+     below follows the areas the big practice banks (IndiaBIX's GK index,
+     GfG's competitive-exam lists) actually drill: general science, polity,
+     geography, economy, world bodies, awards. Written here rather than
+     copied from either — their question text is theirs.
+
+     Static facts only. Current affairs are deliberately absent from this
+     bank: a hard-coded news question is wrong within months, and fifteen
+     minutes of daily reading covers those marks better than a stale list. */
+
+  {q:"The SI unit of electrical resistance is the?",
+   opts:["ampere","volt","ohm","coulomb"], correct:2,
+   why:"Resistance is measured in ohms (Ω). Ampere is current, volt is potential difference and coulomb is charge — Ohm's law V = IR ties the first three together.",
+   trick:"V = IR. Volts across it, amperes through it, ohms resisting it."},
+
+  {q:"Which instrument is used to measure atmospheric pressure?",
+   opts:["Hygrometer","Barometer","Anemometer","Seismograph"], correct:1,
+   why:"A barometer measures atmospheric pressure, and a falling reading warns of a storm. A hygrometer measures humidity, an anemometer wind speed and a seismograph earth tremors.",
+   trick:"Baro = weight of air. Hygro = water in air. Anemo = wind. Seismo = shaking."},
+
+  {q:"The chemical symbol Au stands for which element?",
+   opts:["Silver","Aluminium","Gold","Copper"], correct:2,
+   why:"Au is gold, from the Latin aurum. Silver is Ag (argentum), aluminium is Al and copper is Cu (cuprum) — the symbols that look wrong are the ones taken from Latin.",
+   trick:"Au aurum gold, Ag argentum silver, Fe ferrum iron, Pb plumbum lead. Latin, not English."},
+
+  {q:"Which part of the human body produces insulin?",
+   opts:["Liver","Pancreas","Kidney","Spleen"], correct:1,
+   why:"Insulin is secreted by the beta cells of the islets of Langerhans in the pancreas, and it lowers blood glucose. The liver stores glucose as glycogen but does not make insulin.",
+   trick:"Pancreas makes it, liver stores the sugar it acts on. Islets of Langerhans = insulin's address."},
+
+  {q:"How many Schedules does the Constitution of India currently have?",
+   opts:["8","10","12","14"], correct:2,
+   why:"The Constitution began with eight Schedules and now has twelve, the last added by the 74th Amendment. Schedules list things like the states, official languages and the subject lists.",
+   trick:"Started at 8, now 12. The Seventh is the one exams ask about — Union, State and Concurrent Lists."},
+
+  {q:"How many Fundamental Duties are listed in the Constitution of India?",
+   opts:["Nine","Ten","Eleven","Twelve"], correct:2,
+   why:"There are eleven Fundamental Duties in Article 51A. Ten were added by the 42nd Amendment in 1976 and the eleventh, on education for children, by the 86th Amendment in 2002.",
+   trick:"10 from 1976, +1 from 2002 = 11. They sit in Article 51A and, unlike rights, are not enforceable."},
+
+  {q:"Who administers the oath of office to the President of India?",
+   opts:["The Prime Minister","The Vice-President","The Chief Justice of India","The Speaker of the Lok Sabha"], correct:2,
+   why:"Article 60 requires the President to be sworn in by the Chief Justice of India, or in their absence the senior-most available Supreme Court judge. The President in turn swears in the Prime Minister.",
+   trick:"The judge swears in the President; the President swears in the government. Each is sworn by the branch it does not head."},
+
+  {q:"Which mountain range separates the Indian subcontinent from the Tibetan Plateau?",
+   opts:["Aravalli","Vindhya","Himalaya","Satpura"], correct:2,
+   why:"The Himalaya runs along the northern edge of the subcontinent and separates it from the Tibetan Plateau. The Aravalli, Vindhya and Satpura are older, far lower ranges lying within peninsular India.",
+   trick:"Himalaya is the northern wall. Aravalli, Vindhya and Satpura are inside the peninsula, not on its border."},
+
+  {q:"Which two rivers of peninsular India flow westward into the Arabian Sea?",
+   opts:["Godavari and Krishna","Narmada and Tapti","Mahanadi and Kaveri","Krishna and Kaveri"], correct:1,
+   why:"The Narmada and Tapti run west through rift valleys into the Arabian Sea. Almost every other major peninsular river — Godavari, Krishna, Kaveri, Mahanadi — flows east into the Bay of Bengal.",
+   trick:"Only Narmada and Tapti go west, and they run in rift valleys, so they build no deltas."},
+
+  {q:"Which body replaced the Planning Commission of India?",
+   opts:["Finance Commission","NITI Aayog","Economic Advisory Council","Reserve Bank of India"], correct:1,
+   why:"NITI Aayog was set up on 1 January 2015 in place of the Planning Commission. It advises rather than allocates: the Finance Commission, a constitutional body, handles the division of tax revenue.",
+   trick:"Planning Commission allocated money; NITI Aayog gives advice. The Finance Commission is the constitutional one and predates both."},
+
+  {q:"In which year was the Reserve Bank of India nationalised?",
+   opts:["1935","1947","1949","1969"], correct:2,
+   why:"The RBI was established in 1935 and nationalised in 1949, passing into government ownership. 1969 is the year fourteen major commercial banks were nationalised — a different event exams often blur together.",
+   trick:"1935 born, 1949 nationalised, 1969 the commercial banks. Three dates, three different things."},
+
+  {q:"The headquarters of UNESCO is in?",
+   opts:["Geneva","New York","Paris","Vienna"], correct:2,
+   why:"UNESCO is headquartered in Paris. Geneva hosts WHO and WTO, New York hosts the UN's own headquarters, and Vienna hosts the IAEA and OPEC.",
+   trick:"Paris UNESCO · Geneva WHO and WTO · Vienna IAEA and OPEC · New York the UN itself."},
+
+  {q:"Which is the highest civilian award of India?",
+   opts:["Padma Vibhushan","Bharat Ratna","Param Vir Chakra","Padma Bhushan"], correct:1,
+   why:"Bharat Ratna is the highest civilian award, ahead of Padma Vibhushan, Padma Bhushan and Padma Shri in that order. Param Vir Chakra is the highest wartime gallantry award, which is military and not civilian.",
+   trick:"Civilian order: Bharat Ratna, then Vibhushan, Bhushan, Shri. Param Vir Chakra is the military one — do not mix the two ladders."},
+
+  {q:"India's first satellite, launched in 1975, was named?",
+   opts:["Bhaskara","Rohini","Aryabhata","INSAT-1A"], correct:2,
+   why:"Aryabhata was launched in 1975 with Soviet help. Rohini, in 1980, was the first satellite placed in orbit by an Indian launch vehicle, the SLV-3 — the two firsts are different and are regularly swapped in options.",
+   trick:"Aryabhata 1975 = first satellite. Rohini 1980 = first launched by an Indian rocket."},
+
+  {q:"The Indian National Congress was founded in which year?",
+   opts:["1875","1885","1905","1919"], correct:1,
+   why:"The Congress was founded in 1885, with A.O. Hume among its founders and W.C. Bonnerjee presiding over the first session in Bombay. 1905 was the partition of Bengal and 1919 Jallianwala Bagh.",
+   trick:"1885 Congress founded · 1905 Bengal partitioned · 1919 Jallianwala Bagh · 1942 Quit India."},
 ],
 
 /* ─────────────────── QUANTITATIVE APTITUDE (SSC CGL) ─────────────────── */
@@ -1333,6 +1447,56 @@ const QUESTION_BANK = {
    skills:["speed-unit-conversion"],
    why:"36 km/h is 10 m/s. Crossing a PLATFORM means covering the train's length plus the platform's: 200 + 100 = 300 m, so 300 ÷ 10 = 30 s.",
    trick:"Pole means the train's own length. Platform means train plus platform. Getting the distance wrong costs more marks here than the arithmetic."},
+
+  /* ── The areas the bank had no question for at all ──────────────────────
+     Checked against IndiaBIX's aptitude index, which is the fullest public
+     list of what these papers actually ask. Of its thirty-five areas this
+     bank already covered profit and loss, time and work, trains, averages,
+     interest, percentage, ratio, area and boats. The eight below were the
+     ones with nothing at all behind them — ages, pipes, calendar, clock,
+     permutation, probability, roots and partnership. Written here, not
+     lifted: the topic list is a fact about the exam, their question text is
+     their property. */
+
+  {q:"A father is three times as old as his son. In five years he will be two and a half times as old. The son's present age is?",
+   opts:["10 years","12 years","15 years","20 years"], correct:2,
+   why:"Let the son be s, so the father is 3s. Then 3s+5 = 2.5(s+5), giving 0.5s = 7.5 and s = 15. Check: 45+5 = 50, and 2.5 × 20 = 50.",
+   trick:"Set the son as s and write the father in terms of s. One unknown, one equation — never two."},
+
+  {q:"A pipe fills a tank in 6 hours while a waste pipe empties it in 12 hours. With both open, the tank fills in?",
+   opts:["4 hours","6 hours","12 hours","18 hours"], correct:2,
+   why:"Work with rates per hour: 1/6 in, 1/12 out, so the net rate is 1/6 − 1/12 = 1/12 of the tank an hour, which takes 12 hours. Rates add and subtract; times never do.",
+   trick:"An outlet is a negative rate. Add the rates, then flip the answer to get the time."},
+
+  {q:"If 1 January 2024 was a Monday, what day was 1 January 2025?",
+   opts:["Tuesday","Wednesday","Thursday","Friday"], correct:1,
+   why:"2024 is a leap year, so it has 366 days. 366 ÷ 7 leaves a remainder of 2, so the day advances by two: Monday becomes Wednesday. An ordinary year advances by one.",
+   trick:"Ordinary year +1 day, leap year +2. The remainder after dividing by 7 is the only part that matters."},
+
+  {q:"What is the angle between the hands of a clock at 3:30?",
+   opts:["65°","70°","75°","80°"], correct:2,
+   why:"The minute hand is at 180°. The hour hand is not on the 3: it has moved half of the way to 4, so it is at 3×30 + 30×0.5 = 105°. The gap is 180 − 105 = 75°.",
+   trick:"The hour hand moves 0.5° a minute. Forgetting that it drifts is what turns 75° into a wrong 90°."},
+
+  {q:"In how many ways can the letters of the word LEADER be arranged?",
+   opts:["120","360","720","1440"], correct:1,
+   why:"LEADER has six letters with E appearing twice, so the count is 6! ÷ 2! = 720 ÷ 2 = 360. Dividing by the factorial of each repeat removes the arrangements that are identical.",
+   trick:"n! on top, then divide by the factorial of every repeated letter. Repeats always shrink the answer."},
+
+  {q:"Two dice are thrown together. What is the probability that the sum is 9?",
+   opts:["1/6","1/9","1/12","2/9"], correct:1,
+   why:"There are 36 equally likely outcomes. The sum is 9 for (3,6), (4,5), (5,4) and (6,3) — four of them — so the probability is 4/36 = 1/9. Order counts, which is why (3,6) and (6,3) are separate.",
+   trick:"Two dice = 36 outcomes, always. Count the ordered pairs that work and put them over 36."},
+
+  {q:"√0.0081 is equal to?",
+   opts:["0.9","0.09","0.009","9"], correct:1,
+   why:"81 has square root 9, and 0.0081 has four decimal places, so its root has two: 0.09. Check by squaring — 0.09 × 0.09 = 0.0081.",
+   trick:"The root has half as many decimal places as the number. Square your answer back to be sure."},
+
+  {q:"A invests ₹8,000 for 12 months and B invests ₹12,000 for 6 months. In what ratio is the profit divided?",
+   opts:["2:3","3:4","4:3","1:1"], correct:2,
+   why:"Profit follows money multiplied by time. A contributes 8000×12 = 96,000 and B 12000×6 = 72,000, so the ratio is 96:72, which reduces to 4:3. B put in more money but for half as long.",
+   trick:"Partnership shares go by rupee-months, never by rupees alone."},
 ]
 };
 

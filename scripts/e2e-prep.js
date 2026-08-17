@@ -796,12 +796,22 @@ function check(name, cond, detail){
   const introText = (await page.locator('#mock-intro').textContent()).replace(/\s+/g, ' ');
   check('the intro states the real pattern before any clock starts',
     /150/.test(introText) && /no negative marking/i.test(introText), introText.slice(0, 200));
-  // HAL's General Awareness bank (10) is short of the 20 the paper asks for —
-  // that has to be said before the attempt starts, not discovered afterwards.
-  check('a genuine content shortfall is disclosed up front, not hidden',
-    /General Awareness/.test(introText) && /10\/20/.test(introText), introText.slice(0, 300));
-  check('nothing is padded to hide the shortfall — the note says so',
-    /not repeated|would not tell you anything true/i.test(introText), introText.slice(0, 400));
+  /* HAL's General Awareness bank was 10 against the 20 the paper asks for, and
+     the intro said so. It is 25 now, so HAL can fill a full paper and there is
+     nothing left to disclose — asserting the disclosure here would be pinning
+     the test to a gap that has been closed. What must still hold is the rule:
+     a shortfall is disclosed where one is real, and never padded over. TS SI
+     is the exam that still has one. */
+  check('a full paper is now possible for HAL — nothing to disclose',
+    !/\d+\/\d+ available/.test(introText) || !/General Awareness/.test(introText),
+    introText.slice(0, 300));
+  const shortfallSeen = await page.evaluate(() => {
+    const built = buildMockSet(EXAMS.find(e => e.key === 'ts-si'));
+    return { n: built.shortfalls.length, first: built.shortfalls[0] || null,
+             items: built.items.length };
+  });
+  check('an exam that IS short still says so, rather than padding to length',
+    shortfallSeen.n >= 1 && shortfallSeen.items < 200, JSON.stringify(shortfallSeen));
 
   const built = await page.evaluate(() => buildMockSet(EXAMS.find(e => e.key === 'hal-cs')));
   check('the mock never exceeds the paper\'s real question count',
@@ -1423,8 +1433,13 @@ function check(name, cond, detail){
     untouched.halPending.length === 4 && untouched.halInvented.length === 0,
     JSON.stringify(untouched.halInvented));
   check('HAL technical content is untouched', untouched.halTech === 24, String(untouched.halTech));
-  check('and SSC CGL content is untouched',
-    untouched.cglQuant === 22 && untouched.cglReasoning === 23,
+  /* These were 22 and 23 and were asserted as "untouched by the TS SI work".
+     They are 30 and 27 now because the shared subjects were deliberately topped
+     up to cover SSC CGL's 25-per-section paper. The guarantee worth keeping is
+     the direction: shared subjects only ever grow, and SSC's sections can be
+     filled. */
+  check('SSC CGL\'s shared subjects cover its paper and never shrank',
+    untouched.cglQuant >= 25 && untouched.cglReasoning >= 25,
     `${untouched.cglQuant} / ${untouched.cglReasoning}`);
 
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#syllabus`, { waitUntil: 'networkidle' });

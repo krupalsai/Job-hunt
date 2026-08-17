@@ -76,7 +76,12 @@ function check(name, cond, detail){
     /Job Hunt/.test(await page.title()), await page.title());
   check('no missing local files on the prep page', notFound.length === 0, notFound.join(', '));
   check('the question bank loaded', await page.evaluate(()=>typeof QUESTION_BANK === 'object'));
-  check('all 282 questions are indexed', await page.evaluate(()=>ALL.length) === 282);
+  /* A count, not a constant: the bank grows whenever a gap is closed, and a
+     hard-coded total turns every addition into a failing test. What matters is
+     that every question in every bank file reaches the index. */
+  check('every question in the bank is indexed', await page.evaluate(() =>
+    ALL.length === Object.values(QUESTION_BANK).reduce((n, a) => n + a.length, 0) && ALL.length > 280),
+    String(await page.evaluate(() => ALL.length)));
   // The taxonomy of basics ships with the bank, and every skill a question
   // names has to exist in it — a page that loaded one without the other would
   // offer drills that lead nowhere.
