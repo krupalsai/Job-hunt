@@ -45,6 +45,15 @@ function check(name, cond, detail){
     args: ['--no-sandbox'],
   });
   const page = await browser.newPage();
+  // Which exam this is for is asked once, on first open, and that question
+  // covers the app until it is answered — e2e-nav.js is where it is tested.
+  // Everything here is about the prep itself, so start from a phone that has
+  // already answered. Bare /learn.html then resolves to the chosen exam.
+  // try/catch: this runs on every document, about:blank included, where
+  // touching localStorage throws.
+  await page.addInitScript(() => {
+    try { localStorage.setItem('jobhunt_current_exam', 'hal-cs'); } catch (e) {}
+  });
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
@@ -220,13 +229,13 @@ function check(name, cond, detail){
   // app deliberately remembers where you were. Step back out first.
   await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
-  check('every subject is listed, not only the ones with lessons', subjectRows === 14, `got ${subjectRows}`);
+  // Eleven: every subject HAL examines, whether or not it has lessons yet, and
+  // nothing that belongs to another exam's paper. The page is exam-scoped now —
+  // an address with no ?exam= resolves to the exam that was chosen rather than
+  // listing every subject the app owns.
+  check('every subject the exam examines is listed, not only the ones with lessons',
+    subjectRows === 11, `got ${subjectRows}`);
   const listing = await page.locator('#learn-path').textContent();
-  // Every subject has a path now. If one ever loses it, the UI must say so
-  // rather than showing a blank screen — that branch is still in the code and
-  // this assertion is what would catch its loss.
-  check('a subject without lessons says so honestly', /practice only|lessons being written/i.test(listing),
-    listing.replace(/\s+/g,' ').slice(0,140));
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
   // Into a subject that has a path.
@@ -848,8 +857,10 @@ function check(name, cond, detail){
   const days = await page.locator('#plan-days .plan-day').count();
   check('the plan is broken into days', days === 28, `got ${days}`);
   const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
+  // A named lesson, not "Day 1: revision". The plan is exam-scoped, so day one
+  // is the first lesson of the chosen exam's path.
   check('a day names the actual lessons, not a vague focus',
-    /Reading Big-O/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+    /HAL, defence and space/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
   check('every day has an action button',
     (await page.locator('#plan-days [data-go]').count()) === days);
 
@@ -864,14 +875,12 @@ function check(name, cond, detail){
   await page.locator('#plan-days [data-go]').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
   check('the day button opens that exact lesson',
-    /Reading Big-O/.test(await page.locator('#learn-reader .ls-main').textContent()));
+    /HAL, defence and space/.test(await page.locator('#learn-reader .ls-main').textContent()));
 
   // Day 25+ used to say "Full mock — 160 questions, 150 minutes" and then
   // hand you ten questions from one subject when tapped — a promise the app
   // did not keep, and a HAL-specific number even when planning for a
-  // different exam entirely. Named to hal-cs explicitly here — the default
-  // no-?exam= load above is a different, deliberately generic case, already
-  // covered by the plan assertions above this point.
+  // different exam entirely.
   await page.goto('about:blank');
   await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#schedule`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#plan-days .plan-day');
@@ -1117,6 +1126,13 @@ function check(name, cond, detail){
     names.indexOf('Theory of Computation') === -1 &&
     names.indexOf('DBMS') === -1,
     names.join(' | '));
+  // Quantitative Aptitude has questions and no lessons yet. Saying so is the
+  // point: a blank subject page reads as a broken app, and "practice only" is
+  // the truth about what is behind it.
+  const sscListing = await page.locator('#learn-path').textContent();
+  check('a subject without lessons says so honestly',
+    /practice only|lessons being written/i.test(sscListing),
+    sscListing.replace(/\s+/g,' ').slice(0,140));
 
   await page.click('nav#nav-bottom [data-tab="quiz"]');
   const tags = await page.locator('#topic-tags .tag').allTextContents();
@@ -1355,10 +1371,14 @@ function check(name, cond, detail){
   check('an exam with no unverified subjects shows no such card',
     await page.locator('#ei-pending').isHidden());
 
-  // And the default page is unchanged.
+  // An address with no ?exam= resolves to the exam that was chosen, and puts it
+  // in the URL. It used to render HAL under whatever name was in the header,
+  // which is the one lie a syllabus screen cannot tell.
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
-  check('no ?exam= still gives the full HAL syllabus',
+  check('no ?exam= falls back to the exam you chose',
     /HAL/i.test(await page.locator('header h1').textContent()));
+  check('and says so in the address, so the page and its header cannot disagree',
+    /exam=hal-cs/.test(page.url()), page.url());
 
   console.log('\n── progress survives a reload ───────────────────────────');
   const before = await page.evaluate(()=>JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered);

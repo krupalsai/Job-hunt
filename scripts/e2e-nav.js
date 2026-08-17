@@ -122,9 +122,56 @@ async function reachable(page, selector, where, minH){
 
   const BAR = 'nav#nav-bottom .nav-item';
 
+  /* ── First run ──────────────────────────────────────────────────────────
+     Every screen in this app is about one exam: the syllabus, the questions,
+     the plan, the pace advice, the openings shown first. The app used to pick
+     that exam for you and never say so, which meant an SSC CGL candidate was
+     handed HAL's paper and HAL's "never leave a blank" advice — advice that
+     costs marks on a paper with negative marking. So the first screen is the
+     question, and nothing is assumed until it is answered. */
+  console.log('\n── the app opens by asking which exam ───────────────────');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#nav-gate.is-open');
+  const gateText = await page.locator('#nav-gate').innerText();
+  check('a first open asks which exam before anything else',
+    /Which exam are you preparing for/i.test(gateText), gateText.slice(0, 80));
+  const choices = await page.locator('#nav-gate [data-gate-exam]').count();
+  check('it offers every exam the app has a syllabus for',
+    choices === await page.evaluate(() => EXAMS.length) && choices >= 2, `${choices} choices`);
+  check('each choice states the pattern, so it is a decision and not a guess',
+    /160 MCQs/.test(gateText) && /100 questions/.test(gateText));
+  check('it says where to change the answer afterwards',
+    /menu/i.test(gateText) && /switch exam/i.test(gateText));
+  const gbox = await page.locator('#nav-gate').boundingBox();
+  check('it covers the app rather than sitting behind it',
+    gbox.y <= 0.5 && gbox.height >= PHONE.height - 1, JSON.stringify(gbox));
+  check('nothing is assumed until it is answered',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === null);
+  await reachable(page, '#nav-gate .gate-card', 'exam choice');
+  await noSideScroll(page, 'the first-run exam question');
+
+  await page.locator('#nav-gate [data-gate-exam="hal-cs"]').click();
+  await page.waitForFunction(() => !document.querySelector('#nav-gate').classList.contains('is-open'));
+  check('answering it remembers the choice',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === 'hal-cs');
+  check('the home screen is then about that exam',
+    /HAL/.test(await page.locator('#hubTitle').textContent()),
+    await page.locator('#hubTitle').textContent());
+  check('and it leads with the exam, not with a job list',
+    /HAL Management Trainee/.test(await page.locator('#examCard').innerText()));
+  check('the exam card states the pattern and the date',
+    /160 MCQs/.test(await page.locator('#examCard').innerText()) &&
+    /Sept? 2026/.test(await page.locator('#examCard').innerText()),
+    (await page.locator('#examCard').innerText()).replace(/\s+/g, ' ').slice(0, 160));
+  await noSideScroll(page, 'the exam hub');
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#tiles .tile');
+  check('a second open does not ask again',
+    !(await page.locator('#nav-gate').evaluate(e => e.classList.contains('is-open'))));
+
   /* ── The bottom bar ─────────────────────────────────────────────────── */
   console.log('\n── the bottom bar is on both pages ──────────────────────');
-  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector(BAR);
 
   const jobsLabels = await page.locator(BAR + ' .nav-lbl').allTextContents();
@@ -364,8 +411,10 @@ async function reachable(page, selector, where, minH){
   check('the drawer says which exam you are preparing for',
     (await page.locator('#nav-drawer [data-exam].is-on .nav-chip').textContent()) === 'current');
   const examRows = await page.locator('#nav-drawer [data-exam]').count();
-  check('the drawer links to every syllabus, not only the current one',
+  check('the drawer lists every exam, not only the current one',
     examRows === await page.evaluate(() => EXAMS.length) && examRows >= 2, `${examRows} rows`);
+  check('and says what tapping one does',
+    /Tap another exam to switch/i.test(await page.locator('#nav-drawer').innerText()));
   check('the drawer reaches the job list',
     (await page.locator('#nav-drawer [data-goto="jobs"]').getAttribute('href')) === '/');
   check('the drawer holds the Exam info destination',
@@ -473,24 +522,76 @@ async function reachable(page, selector, where, minH){
   await page.waitForLoadState('domcontentloaded');
   await page.waitForSelector('#tiles .tile');
   check('the job list header shows the exam you switched to',
-    (await page.locator('#exam-label').textContent()) === 'SSC CGL',
-    await page.locator('#exam-label').textContent());
+    /SSC CGL/.test(await page.locator('#hubTitle').textContent()),
+    await page.locator('#hubTitle').textContent());
   const tileHref = await page.locator('#tiles [data-tile="quiz"]').getAttribute('href');
   check('its quick actions point at that exam too', /exam=ssc-cgl#quiz/.test(tileHref), tileHref);
   const barHref = await page.locator(BAR + '[data-tab="learn"]').getAttribute('href');
   check('so does the bottom bar', /exam=ssc-cgl#learn/.test(barHref), barHref);
 
   console.log('\n── the list filters are thumb-sized too ─────────────────');
-  await reachable(page, 'header .tab', 'job list filter', 36);
+  await reachable(page, '.tabs .tab', 'job list filter', 36);
 
-  console.log('\n── quick actions ────────────────────────────────────────');
+  console.log('\n── the home screen is the exam, then the prep ───────────');
+  const order = await page.evaluate(() => {
+    const y = sel => { const e = document.querySelector(sel); return e ? e.getBoundingClientRect().top + window.scrollY : -1; };
+    return { card: y('#examCard'), examJobs: y('#examJobs'), tiles: y('#tiles'), list: y('#list') };
+  });
+  check('the exam you chose is at the top', order.card > 0 && order.card < order.tiles, JSON.stringify(order));
+  check('what is open for that exam comes next',
+    order.examJobs > order.card && order.examJobs < order.tiles, JSON.stringify(order));
+  check('then the preparation, then everything else being tracked',
+    order.tiles < order.list, JSON.stringify(order));
   const tiles = await page.locator('#tiles .tile').count();
-  check('the job list has a row of round quick-action tiles', tiles === 4, `${tiles} tiles`);
+  check('preparation is a grid of tiles, one per thing you do', tiles === 6, `${tiles} tiles`);
+  const tileText = (await page.locator('#tiles .tile').allTextContents()).join('|');
+  check('including the full mock, which used to be two taps in',
+    /Mock exam/.test(tileText), tileText);
   await reachable(page, '#tiles .tile', 'quick action');
   await page.locator('#tiles [data-tile="schedule"]').click();
   await page.waitForSelector('#schedule:not(.hidden)');
   check('a tile lands on the section it names',
     (await page.locator('#plan-days .plan-day').count()) > 0);
+
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#tiles [data-tile="mock"]');
+  await page.locator('#tiles [data-tile="mock"]').click();
+  await page.waitForSelector('#mock-intro:not(.hidden)');
+  check('the mock tile opens the mock, not just the practice screen',
+    /Mock/i.test(await page.locator('#mock-intro').innerText()));
+
+  /* ── Changing exam from the menu ────────────────────────────────────── */
+  // The way the app is meant to be re-pointed: hamburger, tap another exam,
+  // and the screen you are on is now about that one. It used to throw you onto
+  // a syllabus page instead, which is not what "switch exam" means.
+  console.log('\n── the hamburger changes which exam ─────────────────────');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#tiles .tile');
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-drawer [data-exam="ts-si"]').click();
+  await page.waitForFunction(() => /TS SI/.test(document.querySelector('#hubTitle').textContent));
+  check('picking another exam in the menu switches the home screen to it', true);
+  check('it closes the menu behind you',
+    !(await page.locator('#nav-drawer').evaluate(e => e.classList.contains('is-open'))));
+  check('without leaving the page you were on',
+    await page.evaluate(() => performance.getEntriesByType('navigation').length === 1) &&
+    /\/$/.test(page.url()), page.url());
+  check('the exam card is the new exam',
+    /Telangana/.test(await page.locator('#examCard').innerText()));
+  check('and the prep links carry it',
+    /exam=ts-si/.test(await page.locator('#tiles [data-tile="quiz"]').getAttribute('href')));
+  check('the choice is remembered',
+    (await page.evaluate(() => localStorage.getItem('jobhunt_current_exam'))) === 'ts-si');
+  await noSideScroll(page, 'the hub after switching exam');
+
+  // Back to SSC CGL for the settings tests below, which is where they were.
+  await page.locator('#nav-hamburger').click();
+  await settled(page, '#nav-drawer');
+  await page.locator('#nav-drawer [data-exam="ssc-cgl"]').click();
+  await page.waitForFunction(() => /SSC CGL/.test(document.querySelector('#hubTitle').textContent));
 
   /* ── Qualification, now a shared setting ────────────────────────────── */
   console.log('\n── qualification is one setting, in the drawer ──────────');

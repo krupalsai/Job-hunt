@@ -2,12 +2,39 @@
 
 Two halves of the same job hunt:
 
-- **`/`** — government and PSU job notifications, with honest deadlines.
-  Static page on Vercel, data in Supabase (`xbjgmudcgjiompbroayr`), refreshed by
-  a cron that reads official sources.
+- **`/`** — the exam you are preparing for, what is open for it, and the way
+  into every part of the prep. Below that, the other government and PSU job
+  notifications with honest deadlines. Static page on Vercel, data in Supabase
+  (`xbjgmudcgjiompbroayr`), refreshed by a cron that reads official sources.
 - **`/learn.html`** — preparation for the exams those notifications lead to.
 
 Live: https://krupal-job-tracker.vercel.app
+
+---
+
+# Starting the app
+
+The first screen is one question: **which exam are you preparing for?** Nothing
+is assumed until it is answered, because everything downstream follows from it —
+the syllabus, the lessons, the practice bank, the day plan, the pace advice and
+which openings are pinned to the top. The app used to default silently to HAL,
+which handed an SSC CGL candidate HAL's paper *and* HAL's "never leave a blank"
+advice, which costs marks on a paper with negative marking.
+
+The answer is stored in `jobhunt_current_exam` and the question is not asked
+again. **Change it from the ☰ menu**, which lists every exam and switches the
+screen you are on — or from the title in the header, which opens the same
+picker as a sheet.
+
+Once an exam is chosen, `/` is a hub in the order the day is actually used:
+
+1. **The exam** — pattern, marking, the date or window with a countdown, marks
+   per section, and a way into the full syllabus.
+2. **Openings for that exam** — the notification the studying is for.
+3. **Preparation** — Syllabus, Lessons, Practice, Today's plan, Mock exam,
+   Progress; one tap each, every link carrying the chosen exam.
+4. **Other openings** — everything else being tracked, filtered by
+   eligible/applied/all.
 
 ---
 
@@ -21,19 +48,23 @@ first. Both pages share one navigation, injected by `nav.js`:
   bar above it. Five, not seven, and all five on screen at once: the prep page
   used to carry seven tabs in a strip that scrolled off both edges, so the tab
   you wanted was as often invisible as visible.
-- **A side drawer** behind the hamburger — the exam you are preparing for, a
-  link to each syllabus, every destination, and settings (qualification, reset
-  prep progress).
+- **A side drawer** behind the hamburger — every exam, tap one to switch to it,
+  plus every destination and the settings (qualification, reset prep progress).
 - **An exam switcher in the header** — HAL CS, SSC CGL and TS SI swap without
-  editing the URL. On `/learn.html` the title *is* the switcher; on `/` it is a chip.
+  editing the URL. On both pages the title *is* the switcher.
+- **The first-run exam question**, over everything until it is answered.
 
 Sections of the prep page are addressable: `/learn.html?exam=ssc-cgl#quiz`
-opens SSC practice directly, which is how the job list links into it.
+opens SSC practice directly, which is how the job list links into it, and
+`#mock` opens the full paper rather than the practice screen.
 
 Which exam you last chose is remembered in `jobhunt_current_exam` and every
-generated link carries it. On `/learn.html` the `?exam=` parameter is still the
+generated link carries it. On `/learn.html` the `?exam=` parameter is the
 authority, because that page renders a syllabus and the header must never name
-one exam while the questions come from another.
+one exam while the questions come from another; with no parameter it falls back
+to the stored choice and corrects the address to match. `nav.js`, `prep/sync.js`
+and `currentExamObj()` in `learn.html` resolve it in that same order — three
+readers of one answer.
 
 `npm run test:nav` drives all of this at 390x844 and fails on anything that
 needs horizontal scrolling or puts a tap target out of reach.

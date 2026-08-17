@@ -66,15 +66,79 @@
      built from. */
   const validKey = k => !!exams.find(e => e.key === k);
   const urlExam = new URLSearchParams(location.search).get("exam");
+  const storedKey = ls.get(EXAM_KEY);
+
+  /* Has anyone ever said which exam this is for?
+
+     Everything downstream — the syllabus, the questions, the plan, the pace
+     advice, which openings are shown first — is decided by that one answer,
+     and the app used to assume it. Someone preparing for SSC CGL was handed
+     HAL's paper and HAL's "never leave a blank" advice, which on a paper with
+     negative marking is the worst advice there is. So it is asked, once, on
+     first open, and can be changed from the menu afterwards. */
+  const hasChosen = validKey(storedKey) || (IS_LEARN && validKey(urlExam));
 
   let currentKey;
   if (IS_LEARN) {
-    currentKey = validKey(urlExam) ? urlExam : DEFAULT_EXAM;
-    if (validKey(urlExam)) ls.set(EXAM_KEY, urlExam);   // remember it for the job list
+    if (validKey(urlExam)) {
+      currentKey = urlExam;
+      ls.set(EXAM_KEY, urlExam);                     // remember it for the job list
+    } else if (validKey(storedKey)) {
+      /* Arriving at the prep page with no ?exam= — a bookmark, the home-screen
+         shortcut, a shared link. The page falls back to the chosen exam (see
+         prep/sync.js and currentExamObj in learn.html, which read the same two
+         places in the same order), and the address is corrected to match so
+         that what is on screen and what the URL says can never disagree.
+         replaceState, not a reload: re-fetching the page would abandon any
+         progress mid-flight to /api/progress. */
+      currentKey = storedKey;
+      try {
+        history.replaceState(null, "",
+          location.pathname + "?exam=" + encodeURIComponent(storedKey) + (location.hash || ""));
+      } catch (e) {}
+    } else {
+      currentKey = DEFAULT_EXAM;
+    }
   } else {
-    currentKey = validKey(ls.get(EXAM_KEY)) ? ls.get(EXAM_KEY) : DEFAULT_EXAM;
+    currentKey = validKey(storedKey) ? storedKey : DEFAULT_EXAM;
   }
   const currentExam = () => exams.find(e => e.key === currentKey) || null;
+
+  /* ── When is the exam ────────────────────────────────────────────────────
+     Some exams carry a date, some carry a window of days, and some carry
+     nothing yet. All three are stated plainly — "not announced" is a real
+     answer and a made-up date is not. Shared with the pages through
+     JobhuntNav so the hub and the drawer count the days the same way. */
+  function daysUntil(iso) {
+    if (!iso) return null;
+    const d = new Date(iso + "T00:00:00");
+    if (isNaN(d.getTime())) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Math.round((d.getTime() - today.getTime()) / 86400000);
+  }
+  function fmtDay(iso) {
+    const d = new Date(iso + "T00:00:00");
+    return isNaN(d.getTime()) ? iso
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+  function examWhen(e) {
+    if (!e || !e.examDateStart) return { text: "Exam date not announced", days: null };
+    const n = daysUntil(e.examDateStart);
+    // "5 – 6 Sept 2026", not "5 Sept 2026 – 6 Sept 2026": the month twice in a
+    // window that is nearly always inside one month is width spent saying
+    // nothing, on the one line that also has to carry the countdown.
+    const sameMonth = e.examDateEnd && e.examDateStart.slice(0, 7) === e.examDateEnd.slice(0, 7);
+    const window_ = !e.examDateEnd || e.examDateEnd === e.examDateStart
+      ? fmtDay(e.examDateStart)
+      : sameMonth
+        ? String(Number(e.examDateStart.slice(8, 10))) + " – " + fmtDay(e.examDateEnd)
+        : fmtDay(e.examDateStart) + " – " + fmtDay(e.examDateEnd);
+    if (n === null) return { text: window_, days: null };
+    if (n > 0)  return { text: window_ + " · " + n + " day" + (n === 1 ? "" : "s") + " to go", days: n };
+    if (n === 0) return { text: window_ + " · today", days: 0 };
+    return { text: window_ + " · date passed", days: n };
+  }
 
   /* Device id, the same one the quiz and the job list use. Created here too
      because the drawer can write a qualification before either of them runs. */
@@ -281,6 +345,39 @@ nav#nav-bottom .nav-item.is-on::before{
 .nav-sheet-head{ padding:6px 16px 2px; font-size:13.5px; font-weight:700; }
 .nav-sheet-note{ padding:2px 16px 8px; font-size:11.5px; color:var(--nav-dim); line-height:1.5; }
 
+/* First-run exam gate — the first screen of the app, over everything else.
+   Not a dialog you can dismiss: with no exam chosen there is nothing behind it
+   that means anything, because every screen in the app is about one exam. */
+#nav-gate{
+  position:fixed; inset:0; z-index:200; display:none; background:var(--nav-bg);
+  overflow-y:auto; overscroll-behavior:contain;
+  padding:calc(26px + env(safe-area-inset-top)) 16px calc(26px + env(safe-area-inset-bottom));
+}
+#nav-gate.is-open{ display:block; }
+.gate-inner{ max-width:520px; margin:0 auto; }
+.gate-mark{
+  width:52px; height:52px; border-radius:16px; background:#16a34a2e; border:1px solid #22c55e55;
+  display:flex; align-items:center; justify-content:center; font-size:25px; margin-bottom:14px;
+}
+.gate-h{ font-size:21px; line-height:1.3; margin:0 0 8px; color:var(--nav-text); }
+.gate-p{ font-size:12.5px; line-height:1.55; color:var(--nav-muted); margin:0 0 18px; }
+.gate-card{
+  display:block; width:100%; text-align:left; margin-bottom:10px; cursor:pointer;
+  background:var(--nav-panel); border:1px solid var(--nav-line); border-radius:14px;
+  padding:14px 15px; color:var(--nav-text); font-family:inherit;
+}
+.gate-card:active{ filter:brightness(.9); border-color:#22c55e55; }
+.gate-top{ display:flex; align-items:baseline; gap:8px; }
+.gate-name{ font-size:15.5px; font-weight:700; flex:1; min-width:0; }
+.gate-marks{ flex:0 0 auto; font-size:11px; font-weight:700; color:var(--nav-accent-soft); }
+/* Block, not inline: these are spans so they can live inside a <button>, and
+   without this the exam's name and its pattern run together on one line. */
+.gate-full{ display:block; font-size:12px; color:var(--nav-muted); margin-top:4px; line-height:1.45; }
+.gate-meta{ display:block; font-size:11.5px; color:var(--nav-dim); margin-top:7px; line-height:1.5; }
+.gate-when{ color:var(--nav-accent-soft); font-weight:600; }
+.gate-warn{ color:#f87171; font-weight:600; }
+.gate-foot{ font-size:11.5px; color:var(--nav-dim); line-height:1.55; margin-top:16px; }
+
 @media (min-width:820px){
   nav#nav-bottom{ justify-content:center; }
   nav#nav-bottom .nav-item{ flex:0 0 132px; }
@@ -313,19 +410,49 @@ nav#nav-bottom .nav-item.is-on::before{
     }).join("");
   }
 
+  /* The exam list in the drawer. Buttons, not links: tapping one switches the
+     exam you are preparing for and leaves you where you are, rather than
+     dumping you on a syllabus screen you did not ask for. Changing exam is the
+     single most consequential control in the app, and the menu is where the
+     person asked to find it. */
   function examRowsHtml() {
     if (!exams.length) return '<div class="nav-row-sub" style="padding:0 16px 8px">No syllabus loaded.</div>';
     return exams.map(e => {
       const on = e.key === currentKey;
       const marks = e.sections.reduce((n, s) => n + s.marks, 0);
-      return '<a class="nav-row' + (on ? " is-on" : "") + '" data-exam="' + esc(e.key) + '" ' +
-        'href="/learn.html?exam=' + encodeURIComponent(e.key) + '#examinfo">' +
+      return '<button type="button" class="nav-row' + (on ? " is-on" : "") +
+        '" data-exam="' + esc(e.key) + '">' +
         ICON.exam +
         '<span class="nav-row-main"><span>' + esc(e.short) + '</span>' +
         '<span class="nav-row-sub">' + esc(e.name) + ' · ' + marks + ' marks</span></span>' +
-        (on ? '<span class="nav-chip">current</span>' : '<span class="nav-chip grey">syllabus</span>') +
-        "</a>";
+        (on ? '<span class="nav-chip">current</span>' : '<span class="nav-chip grey">switch</span>') +
+        "</button>";
     }).join("");
+  }
+
+  function gateHtml() {
+    const cards = exams.map(e => {
+      const marks = e.sections.reduce((n, s) => n + s.marks, 0);
+      const when = examWhen(e);
+      return '<button type="button" class="gate-card" data-gate-exam="' + esc(e.key) + '">' +
+        '<span class="gate-top"><span class="gate-name">' + esc(e.short) + '</span>' +
+        '<span class="gate-marks">' + marks + ' marks</span></span>' +
+        '<span class="gate-full">' + esc(e.name) + "</span>" +
+        '<span class="gate-meta">' + esc(e.pattern) + "<br>" +
+        '<span class="' + (when.days !== null && when.days >= 0 ? "gate-when" : "") + '">' +
+        esc(when.text) + "</span>" +
+        (e.negative ? ' · <span class="gate-warn">wrong answers lose marks</span>' : "") +
+        "</span></button>";
+    }).join("");
+    return '<div class="gate-inner">' +
+      '<div class="gate-mark">🎯</div>' +
+      '<h2 class="gate-h">Which exam are you preparing for?</h2>' +
+      '<p class="gate-p">Pick one to start. The syllabus, the lessons, the practice questions, ' +
+      'the day plan, the pace advice and the openings shown first all follow this choice.</p>' +
+      (cards || '<p class="gate-p">No syllabus loaded.</p>') +
+      '<p class="gate-foot">You can switch exam at any time from the ☰ menu in the top left. ' +
+      'Nothing you have already studied is lost when you do.</p>' +
+      "</div>";
   }
 
   function sheetHtml() {
@@ -367,6 +494,7 @@ nav#nav-bottom .nav-item.is-on::before{
       "</div>" +
 
       '<div class="nav-group">Preparing for</div>' +
+      '<div class="nav-row-sub" style="padding:0 16px 6px">Tap another exam to switch to it.</div>' +
       examRowsHtml() +
       '<a class="nav-row" data-goto="examinfo" href="' + esc(learnHref("examinfo")) + '">' + ICON.info +
         '<span class="nav-row-main">Exam info' +
@@ -414,10 +542,18 @@ nav#nav-bottom .nav-item.is-on::before{
   bottom.setAttribute("aria-label", "Main");
   bottom.innerHTML = bottomHtml();
 
+  const gate = document.createElement("div");
+  gate.id = "nav-gate";
+  gate.setAttribute("role", "dialog");
+  gate.setAttribute("aria-modal", "true");
+  gate.setAttribute("aria-label", "Choose your exam");
+  gate.innerHTML = gateHtml();
+
   document.body.appendChild(scrim);
   document.body.appendChild(drawer);
   document.body.appendChild(sheet);
   document.body.appendChild(bottom);
+  document.body.appendChild(gate);
 
   /* ── Open / close ────────────────────────────────────────────────────── */
 
@@ -444,6 +580,37 @@ nav#nav-bottom .nav-item.is-on::before{
     if (t.closest("#nav-hamburger")) { e.preventDefault(); setOpen(openThing === "drawer" ? null : "drawer"); return; }
     if (t.closest("#exam-switch"))   { e.preventDefault(); setOpen(openThing === "sheet" ? null : "sheet"); return; }
     if (t.closest("#nav-close"))     { e.preventDefault(); closeAll(); return; }
+  });
+
+  /* ── The first screen: which exam ────────────────────────────────────── */
+
+  let gateOpen = false;
+  function setGate(open) {
+    gateOpen = !!open && exams.length > 0;
+    gate.classList.toggle("is-open", gateOpen);
+    gate.setAttribute("aria-hidden", gateOpen ? "false" : "true");
+    if (gateOpen) { setOpen(null); document.body.style.overflow = "hidden"; }
+    else if (!openThing) document.body.style.overflow = "";
+  }
+
+  function chooseExam(key) {
+    if (!validKey(key)) return;
+    ls.set(EXAM_KEY, key);
+    if (IS_LEARN) {
+      // The prep page is one syllabus, chosen at load. Land on Learn: the
+      // first thing to do with a freshly picked exam is start reading it.
+      location.href = "/learn.html?exam=" + encodeURIComponent(key) + "#learn";
+      return;
+    }
+    currentKey = key;
+    setGate(false);
+    refresh();
+    document.dispatchEvent(new CustomEvent("jobhunt:exam", { detail: { key: key, exam: currentExam() } }));
+  }
+
+  gate.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-gate-exam]");
+    if (b) { e.preventDefault(); chooseExam(b.getAttribute("data-gate-exam")); }
   });
 
   /* ── Switching exam ──────────────────────────────────────────────────── */
@@ -492,16 +659,15 @@ nav#nav-bottom .nav-item.is-on::before{
       go(row.getAttribute("data-goto"));
       return;
     }
-    // A syllabus row for the exam already open is a section switch, not a reload.
+    /* An exam row switches the exam. Tapping the one you are already on is a
+       no-op with the menu closed — you asked for it, you have it. */
     const ex = e.target.closest && e.target.closest("[data-exam]");
-    if (ex && IS_LEARN && ex.getAttribute("data-exam") === currentKey) {
+    if (ex) {
       e.preventDefault();
-      closeAll();
-      go("examinfo");
+      pickExam(ex.getAttribute("data-exam"));
       return;
     }
-    if (ex) ls.set(EXAM_KEY, ex.getAttribute("data-exam"));
-    if (row || ex) closeAll();
+    if (row) closeAll();
   });
 
   /* ── Qualification and reset ─────────────────────────────────────────── */
@@ -560,7 +726,7 @@ nav#nav-bottom .nav-item.is-on::before{
       const on = r.getAttribute("data-exam") === currentKey;
       r.classList.toggle("is-on", on);
       const chip = r.querySelector(".nav-chip");
-      if (chip) { chip.textContent = on ? "current" : "syllabus"; chip.classList.toggle("grey", !on); }
+      if (chip) { chip.textContent = on ? "current" : "switch"; chip.classList.toggle("grey", !on); }
     });
     sheet.querySelectorAll("[data-pick-exam]").forEach(r => {
       const on = r.getAttribute("data-pick-exam") === currentKey;
@@ -585,9 +751,14 @@ nav#nav-bottom .nav-item.is-on::before{
   window.JobhuntNav = {
     get examKey() { return currentKey; },
     get exam() { return currentExam(); },
+    /** False until an exam has actually been picked. The pages use it so they
+        do not claim, on a first run, to be tracking an exam nobody chose. */
+    get chosen() { return validKey(ls.get(EXAM_KEY)); },
+    examWhen: examWhen,
     learnHref: learnHref,
     openDrawer: () => setOpen("drawer"),
     openExamSheet: () => setOpen("sheet"),
+    openExamGate: () => setGate(true),
     close: closeAll,
     /** Called by the prep page whenever the visible section changes.
         "examinfo" is a real destination even though it has no slot in the
@@ -600,4 +771,9 @@ nav#nav-bottom .nav-item.is-on::before{
   };
 
   refresh();
+
+  /* Ask before showing anything else. A first-time visitor who has not chosen
+     is not looking at "the app with a default exam" — they are looking at the
+     wrong exam, and nothing on the screen tells them so. */
+  if (!hasChosen) setGate(true);
 })();

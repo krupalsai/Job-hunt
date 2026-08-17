@@ -40,6 +40,12 @@ function check(name, cond, detail){
     args: ['--no-sandbox'],
   });
   const ctx = await browser.newContext();
+  // A first-time visitor is asked which exam before anything else, and that
+  // question covers the app until it is answered — see e2e-nav.js, which is
+  // where that screen is tested. This suite is about the wiring BETWEEN the
+  // pages once an exam has been chosen, so it starts from a phone that has
+  // already answered.
+  await ctx.addInitScript(() => localStorage.setItem('jobhunt_current_exam', 'hal-cs'));
   const page = await ctx.newPage();
   const notFound = [];
   page.on('response', r => { if(r.status() === 404) notFound.push(new URL(r.url()).pathname); });

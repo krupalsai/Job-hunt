@@ -138,11 +138,16 @@
      content nowhere in sight and the wrong exam's pattern in the header, which
      is worse than the "no syllabus yet" message it replaced.
 
-     No parameter means the HAL syllabus, which is what the standalone prep
-     link has always meant. */
+     No parameter means the exam chosen on first open, which is stored under
+     jobhunt_current_exam. nav.js resolves it the same way and corrects the
+     address to match, so a bookmark of the bare page opens the syllabus you
+     are actually preparing for rather than whichever one used to be default. */
   const CURRENT_EXAM = (function () {
     if (typeof EXAMS === "undefined") return null;
-    const key = new URLSearchParams(location.search).get("exam");
+    let key = new URLSearchParams(location.search).get("exam");
+    if (!key) {
+      try { key = localStorage.getItem("jobhunt_current_exam"); } catch (e) { key = null; }
+    }
     return EXAMS.find(e => e.key === key) || null;
   })();
 

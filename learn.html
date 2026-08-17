@@ -629,12 +629,24 @@ window.gotoSection = function(id){
   window.scrollTo(0, 0);
 };
 
+/* #mock is not a section — it is Practice with the full paper already open.
+   The home screen offers it as its own tile because sitting the whole paper is
+   a different decision from doing ten questions, and burying it behind two
+   taps made it look optional. */
+function openFromHash(h){
+  if(h === 'mock'){
+    window.gotoSection('quiz');
+    if(typeof openMockIntro === 'function') openMockIntro();
+    return;
+  }
+  window.gotoSection(SECTION_IDS.indexOf(h) !== -1 ? h : 'learn');
+}
+
 /* Landing on Learn rather than on the syllabus: the syllabus is read once and
    the lessons are opened every day. A #hash wins — that is how the job list
    sends you to Practice, and how switching exam keeps you where you were. */
 document.addEventListener('DOMContentLoaded', ()=>{
-  const h = (location.hash || '').replace(/^#/, '');
-  window.gotoSection(SECTION_IDS.indexOf(h) !== -1 ? h : 'learn');
+  openFromHash((location.hash || '').replace(/^#/, ''));
 });
 
 /* The section ids double as the hash targets, so the browser does its own
@@ -649,7 +661,7 @@ window.addEventListener('load', ()=>window.scrollTo(0, 0));
    on #learn would move the address bar and nothing else. */
 window.addEventListener('hashchange', ()=>{
   const h = (location.hash || '').replace(/^#/, '');
-  if(SECTION_IDS.indexOf(h) !== -1) window.gotoSection(h);
+  if(h === 'mock' || SECTION_IDS.indexOf(h) !== -1) openFromHash(h);
 });
 
 /* ==========================================================================
@@ -662,9 +674,15 @@ window.addEventListener('hashchange', ()=>{
    wrong answer. So the snapshot, the budget and the tactics come from
    prep/exams.js, and only the genuinely HAL-specific reference stays static.
    ========================================================================== */
+/* ?exam= first, then the exam chosen on first open, then a default that only
+   an install with no choice and no parameter can ever reach. prep/sync.js and
+   nav.js resolve it in the same order — three readers of one answer, so the
+   header, the questions and the syllabus cannot end up describing three
+   different exams. */
 function currentExamObj(){
   if(typeof EXAMS === 'undefined') return null;
-  const k = new URLSearchParams(location.search).get('exam');
+  let k = new URLSearchParams(location.search).get('exam');
+  if(!k){ try{ k = localStorage.getItem('jobhunt_current_exam'); }catch(e){ k = null; } }
   return EXAMS.find(e=>e.key === k) || EXAMS.find(e=>e.key === 'hal-cs') || EXAMS[0] || null;
 }
 
