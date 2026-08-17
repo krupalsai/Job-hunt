@@ -74,6 +74,11 @@
       const checked = options.querySelector('input[name=exam]:checked');
       if (!checked) return;
       try { localStorage.setItem(LS_KEY, checked.value); } catch (e) {}
+      // dispatch the change event so any synchronous listeners can see it before reload
+      try {
+        const exam = (window.EXAMS || []).find(x => x.key === checked.value) || null;
+        document.dispatchEvent(new CustomEvent('jobhunt:exam', { detail: { key: checked.value, exam } }));
+      } catch (e) {}
       // tidy up in case something else reads localStorage synchronously
       try { document.documentElement.style.overflow = prevOverflow; } catch (e) {}
       // reload so the whole app initialises with a single exam key and no
@@ -82,7 +87,7 @@
       window.location.reload();
     };
 
-    function escapeHtml(s){ return String(s||'').replace(/[&<>"]+/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]||c)); }
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']+/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]||c)); }
   }
 
   function start() {
