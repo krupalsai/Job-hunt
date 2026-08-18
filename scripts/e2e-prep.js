@@ -360,14 +360,22 @@ function check(name, cond, detail){
   for (let i = 0; i < 20 && await page.locator('#ls-next').count(); i++) {
     await page.click('#ls-next');
   }
-  check('the last section offers the test', (await page.locator('#ls-check').count()) === 1);
+  /* The end of a lesson is a question, not a shove into a test. Reading is not
+     understanding, and the app used to find out which one had happened several
+     marks into a quiz — with nothing else on offer either way. */
+  check('the end of a lesson asks whether it made sense',
+    (await page.locator('#ls-checkin').count()) === 1 &&
+    /Did that make sense/i.test(await page.locator('#ls-ci-head, .ls-ci-head').first().textContent()));
+  check('and offers all three answers, not just "test me"',
+    (await page.locator('#ci-yes').count()) === 1 &&
+    (await page.locator('#ci-no').count()) === 1);
   check('the key takeaway lands on the last section',
     (await page.locator('#learn-reader .ls-k').count()) >= 1);
   check('the video is not repeated on every section',
     (await page.locator('#learn-reader .ls-video-frame').count()) === 0);
   check('you can step back a section', (await page.locator('#ls-prev').count()) === 1);
 
-  await page.click('#ls-check');
+  await page.click('#ci-yes');
   await page.waitForSelector('#quiz-live:not(.hidden)');
   const checkCount = await page.locator('#q-counter').textContent();
   check('the test is 5 questions, not 10', /\/ 5$/.test(checkCount.trim()), checkCount);
@@ -1520,6 +1528,165 @@ function check(name, cond, detail){
   check('and it counts only this exam, not every exam ever practised',
     before <= (await page.evaluate(() => JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).answered)),
     String(before));
+
+  /* ── News, which cannot be bundled ──────────────────────────────────────
+     "Most of the topic here are pre-installed not from internet, I want live
+     information." Lessons stay bundled because they have to work with no
+     signal. News is the opposite case, and the app says which is which. */
+  console.log('\n── current affairs, and what the app promises ───────────');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  await page.locator('#ca-fold summary').click();
+  const caText = await page.locator('#ca-body').innerText();
+  check('Study has a current affairs section at all',
+    (await page.locator('#ca-fold').count()) === 1);
+  check('it does not present bundled news as current',
+    /will not bundle/i.test(caText), caText.replace(/\s+/g, ' ').slice(0, 120));
+  check('and sends you to live sources instead',
+    (await page.locator('#ca-body .ls-link').count()) >= 3);
+  check('while saying plainly that those need a connection and the rest does not',
+    /need a connection/i.test(caText));
+  check('every item it does hold carries a date and a source',
+    await page.evaluate(() => (CURRENT_AFFAIRS.items || [])
+      .every(i => /^\d{4}-\d{2}-\d{2}$/.test(i.date) && i.source && i.headline)));
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#study`, { waitUntil: 'networkidle' });
+  await page.locator('#ca-fold summary').click();
+  check('and the Telangana paper gets its state source, which HAL does not',
+    /telangana\.gov\.in/i.test(await page.locator('#ca-body').innerHTML()));
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  await page.locator('#ca-fold summary').click();
+  check('exam scoping works the other way too',
+    !/telangana\.gov\.in/i.test(await page.locator('#ca-body').innerHTML()));
+
+  /* ── The topic that did not land ────────────────────────────────────────
+     "Right now studying syllogism yet not understanding" — and there was
+     nothing to be done about it: three questions in the bank, no lesson, and a
+     test as the only thing on offer at the end. */
+  console.log('\n── a topic you did not understand ───────────────────────');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => window.openLessonByKey('re-syllogism'));
+  await page.waitForSelector('#learn-reader:not(.hidden)');
+  check('syllogism has a lesson of its own now',
+    /Syllogism/i.test(await page.locator('#learn-reader .ls-main').textContent()),
+    await page.locator('#learn-reader .ls-main').textContent());
+  check('and it teaches from the beginning, not in four lines',
+    (await page.evaluate(() => {
+      const l = CURRICULUM.find(x => x.key === 're-syllogism');
+      return l.blocks.map(b => b.p || b.c || b.k || (b.l || []).join(' ') || '').join(' ').length;
+    })) > 2000);
+  check('it opens with a video from a teacher, in the app',
+    (await page.locator('#learn-reader .ls-video-frame iframe').count()) === 1);
+
+  for (let i = 0; i < 20 && await page.locator('#ls-next').count(); i++) await page.click('#ls-next');
+  const firstPass = await page.locator('#learn-reader').innerText();
+  await page.click('#ci-no');
+  await page.waitForSelector('#ls-retell');
+  const retell = await page.locator('#ls-retell').innerText();
+  check('"not yet" answers with a second explanation', retell.length > 300, `${retell.length} chars`);
+  check('and it is genuinely different text, not the same paragraphs reprinted',
+    !firstPass.includes(retell.slice(0, 200)),
+    retell.replace(/\s+/g, ' ').slice(0, 120));
+  check('it offers a video and links out to the web as well',
+    (await page.locator('#ls-retell .ls-video-frame').count()) >= 1 &&
+    (await page.locator('#ls-retell .ls-link').count()) >= 1);
+  check('and is honest that those links need a connection and the lesson does not',
+    /need a connection/i.test(await page.locator('#ls-retell .ls-links-note').innerText()));
+  check('the app records that this topic did not land',
+    await page.evaluate(() => (JSON.parse(localStorage.getItem('jobhunt_lessons'))['re-syllogism'] || {}).unclear >= 1));
+  check('and there is still a way into the test when it does land',
+    (await page.locator('#rt-test').count()) === 1);
+  /* Saying "not yet" has to leave a mark, or the answer went nowhere: the
+     topic list distinguishes read-and-not-understood from never-opened. */
+  await page.click('#rt-later');
+  await page.waitForFunction(() => document.querySelectorAll('#learn-path .ls-row').length > 0);
+  check('coming back out of a lesson lands on a list you can actually see',
+    await page.locator('#learn-path .ls-row').first().isVisible());
+  check('and the topic list now says to come back to it',
+    /come back to it/i.test(await page.locator('#learn-path').innerText()),
+    (await page.locator('#learn-path').innerText()).replace(/\s+/g, ' ').slice(0, 160));
+
+  /* ── The same drill twice ───────────────────────────────────────────────
+     "I know own old question answer were there, I remember then ans." Three
+     syllogism questions existed, so by the third drill it was a memory test. */
+  console.log('\n── drilling the same basic twice ────────────────────────');
+  const drillSet = async () => {
+    await page.evaluate(() => window.openSkillDrill('syllogism-some-proves-nothing'));
+    await page.waitForSelector('#drill-start');
+    await page.click('#drill-start');
+    await page.waitForSelector('#quiz-live:not(.hidden)');
+    return page.evaluate(() => currentQuiz.map(q => q.q));
+  };
+  const runOne = await drillSet();
+  const runTwo = await drillSet();
+  check('a drill is more than the three questions that used to exist',
+    runOne.length >= 8, `${runOne.length} questions`);
+  const repeated = runOne.filter(q => runTwo.indexOf(q) !== -1);
+  check('and drilling it again asks entirely different questions',
+    repeated.length === 0, `${repeated.length} repeated`);
+  /* Not just different from the last set — different from every question this
+     phone has ever been asked, which is the only version of the promise worth
+     making. */
+  check('and no question you have already answered comes back',
+    await page.evaluate(() => currentQuiz.every(q => {
+      const s = JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')).seen;
+      return !s[q.id] || s[q.id].times <= 1;
+    })));
+  check('each question says it was built just now, not taken from a past paper',
+    (await page.locator('#q-topic .fresh-tag').count()) === 1);
+  check('the statements are laid out on their own lines, not run together',
+    await page.evaluate(() => getComputedStyle(document.getElementById('q-text')).whiteSpace === 'pre-line'));
+  /* The answers have to be right, or unlimited questions is unlimited damage.
+     scripts/validate-generated.js re-solves thousands of them independently;
+     this checks the app is wiring the same objects through to the screen. */
+  check('every generated question carries a real explanation',
+    await page.evaluate(() => currentQuiz.every(q =>
+      q.why && q.why.length > 20 && q.opts.length === 4 &&
+      new Set(q.opts).size === 4 && q.correct >= 0 && q.correct < 4)));
+  check('and none of them claims to be a previous-year question',
+    await page.evaluate(() => currentQuiz.every(q => q.source_type === 'generated_practice')));
+  /* The rule the whole app rests on holds for built questions too. The prime
+     generator is labelled Quantitative Aptitude, which HAL does not examine —
+     but HAL's Reasoning section does ask arithmetical reasoning, so the
+     question belongs here under THAT name or not at all. Getting this wrong
+     put an off-syllabus subject into a HAL quiz. */
+  /* Kept, not thrown away. A built question you got wrong used to be
+     unrecoverable — your progress held its id and the question itself was
+     gone the moment the tab closed. */
+  const firstQ = await page.evaluate(() => currentQuiz[0]);
+  const wrongIdx = (firstQ.correct + 1) % 4;
+  await page.locator('#q-options .opt').nth(wrongIdx).click();
+  await page.click('#next-btn');
+  check('a generated question you got wrong is stored, question and all',
+    await page.evaluate(id => {
+      const store = JSON.parse(localStorage.getItem('jobhunt_generated_v1') || '{}');
+      return !!store[id] && store[id].q.length > 10 && store[id].opts.length === 4;
+    }, firstQ.id));
+  await page.reload({ waitUntil: 'networkidle' });
+  check('and it survives a reload, so Previous mistakes can ask it again',
+    await page.evaluate(id => mistakePool().some(q => q.id === id), firstQ.id));
+  check('the stored copy still knows its own answer and explanation',
+    await page.evaluate(id => {
+      const q = mistakePool().find(x => x.id === id);
+      return !!q && q.opts.length === 4 && q.why.length > 20 && q.correct >= 0;
+    }, firstQ.id));
+  await page.evaluate(() => window.openSkillDrill('syllogism-some-proves-nothing'));
+  await page.waitForSelector('#drill-start');
+  await page.click('#drill-start');
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('and a stored question is not built and asked a second time as if new',
+    await page.evaluate(() => {
+      const store = JSON.parse(localStorage.getItem('jobhunt_generated_v1') || '{}');
+      const before = Object.keys(store).filter(id => currentQuiz.some(q => q.id === id));
+      return currentQuiz.every(q => !window.__seenBefore || !window.__seenBefore.has(q.q)) &&
+             before.length === currentQuiz.length;   // stored on serve, every one of them
+    }));
+
+  check('a generated question is never from a subject this exam does not examine',
+    await page.evaluate(() => currentQuiz.every(q => IN_EXAM.has(q.topic))),
+    await page.evaluate(() => currentQuiz.map(q => q.topic).join(', ')));
+  await page.evaluate(() => { window.__genAudit = generatedQuestions(generatedSkillKeys(), 40); });
+  check('and that holds for every skill the app can generate, not just this one',
+    await page.evaluate(() => window.__genAudit.every(q => IN_EXAM.has(q.topic))),
+    await page.evaluate(() => [...new Set(window.__genAudit.map(q => q.topic))].join(', ')));
 
   check('still no JavaScript errors after the whole run', realErrors().length === 0, realErrors().join('\n     '));
 

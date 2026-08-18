@@ -28,7 +28,24 @@ you use the app  →  /api/progress  →  Supabase
   returns the real title if it exists and fails if it does not. A dead embed is
   worse than no video.
 - `prep/current-affairs.js` — refresh, because this is the one thing that
-  genuinely goes stale
+  genuinely goes stale. `items` is what the app shows: each entry needs a
+  `date` (when it happened, ISO), a `headline`, a `source` and a `url`, and
+  `updated` must be set to the day the run wrote them. An empty list renders as
+  an honest empty state pointing at the live feeds, so writing nothing is
+  always better than writing something undated.
+- `prep/generate.js` — the generators that build questions on the spot for the
+  mechanical basics. Add one when a skill is mechanical enough that its answer
+  can be COMPUTED (its correctness must be provable, not plausible), and add
+  the matching independent solver to `scripts/validate-generated.js` in the
+  same commit — that file re-solves several thousand generated questions by a
+  different method and fails the build on one disagreement. A generator whose
+  answers are not independently checked does not ship: it would teach a wrong
+  answer confidently, in unlimited quantity.
+- A lesson's `retell` — the second explanation shown when the student taps
+  "not yet" at the end of it. Write one for any lesson whose `unclear` count is
+  rising. It must be a different route into the topic, not a paraphrase; the
+  app tells the student plainly when no second explanation exists rather than
+  reprinting the first.
 - `prep/exams.js` — add an exam when the tracker shows one you are eligible for
 
 ## Rules the run must follow

@@ -779,6 +779,12 @@ const CURRICULUM = [
 {
   key: "re-series", subject: "Reasoning", topic: "Reasoning",
   title: "Number series — a method, not a guess", minutes: 6,
+  video: {url:"https://www.youtube.com/watch?v=Ob7DYU-TDsw",
+          title:"Top 10 Missing Number Series | SSC CGL, SSC CPO Reasoning", channel:"Adda247 SSC"},
+  links: [
+    {label:"Untimed practice, with solutions", url:"https://www.indiabix.com/logical-reasoning/number-series/", note:"IndiaBIX"},
+    {label:"Series completion — a second bank", url:"https://www.indiabix.com/verbal-reasoning/series-completion/", note:"IndiaBIX"},
+  ],
   why: "40 marks of Part II, and series questions fall to a fixed procedure done in order.",
   blocks: [
     {h: "The procedure"},
@@ -798,10 +804,96 @@ const CURRICULUM = [
     {p: "Squares to 20² and cubes to 10². Most series questions are a small perturbation of one of those, and recognising 361 as 19² instantly is the difference between five seconds and two minutes."},
     {k: "Differences first. If they grow fast, try dividing. Then squares, then primes, then Fibonacci."},
   ],
+  retell: [
+    {p: "Another way in, if running a checklist feels mechanical: ask how FAST the numbers are growing, and let the speed tell you which family to look in."},
+    {l: [
+      "Growing by roughly the same amount each time → adding a constant. Arithmetic.",
+      "Growing by a bit more each time → adding a growing amount. Take differences twice.",
+      "Roughly doubling or tripling → multiplying. Divide neighbouring terms to find by what.",
+      "Growing much faster than doubling → squares, cubes, or factorials. Compare against 1 4 9 16 25 and 1 8 27 64.",
+      "Jumping up and down, not steadily at all → two series interleaved. Read alternate terms.",
+    ]},
+    {p: "This is the same procedure, entered from the other end: instead of testing rules one by one, you use the growth rate to jump straight to the right family and then confirm. On a timed paper that is usually twenty seconds instead of two minutes."},
+    {c: "5, 10, 20, 40, ?\n  10→20→40 is doubling → multiply → 80\n\n2, 6, 12, 20, 30, ?\n  gaps 4, 6, 8, 10 → growing steadily → 42\n\n3, 8, 15, 24, 35, ?\n  much faster than the gaps suggest → squares minus 1 → 48"},
+    {k: "Look at the speed first, then confirm the rule. Speed tells you where to look; the differences confirm you were right."},
+  ],
+},
+{
+  /* Written because the app had a student stuck on syllogisms with nothing to
+     read: three questions in the whole bank and no lesson at all. A skill card
+     of four lines is not teaching. */
+  key: "re-syllogism", subject: "Reasoning", topic: "Reasoning",
+  title: "Syllogisms — from the beginning", minutes: 9,
+  video: {url:"https://www.youtube.com/watch?v=yLFCF8TG4No",
+          title:"Syllogism Tricks & Concepts in Reasoning | Reasoning Foundation Class", channel:"Adda247"},
+  alt_video: {url:"https://www.youtube.com/watch?v=ncumCzmj9AU",
+              title:"Syllogism Basic Concepts | Reasoning | Lec #2", channel:"Adda247"},
+  links: [
+    {label:"Practice set with worked solutions", url:"https://www.geeksforgeeks.org/ssc-banking/practice-set-for-syllogism/", note:"GeeksforGeeks"},
+    {label:"Untimed question bank to grind", url:"https://www.indiabix.com/logical-reasoning/logical-deduction/", note:"IndiaBIX — logical deduction"},
+  ],
+  why: "Four to six marks on every paper, and the only reasoning topic where being clever loses marks — the method is mechanical and the mistakes are always the same three.",
+  blocks: [
+    {h: "The question is not asking what is true"},
+    {p: "This is the misunderstanding that costs everybody their first ten marks. A syllogism does not ask whether the conclusion is TRUE. It asks whether the conclusion is FORCED by the statements — whether it is impossible for the statements to be true and the conclusion false at the same time."},
+    {p: "So you accept the statements even when they are nonsense. \"All chairs are birds\" is fine. Your own knowledge of chairs and birds is not evidence here, and using it is the single biggest source of wrong answers in this topic."},
+    {k: "Ask \"can I make the conclusion false while every statement stays true?\" If yes, it does not follow. That one question is the entire topic."},
+
+    {h: "The four statements, and what each one actually claims"},
+    {p: "Every statement on these papers is one of four shapes. Learn what each one forbids, because that is all it does — it forbids one picture and allows everything else."},
+    {c: "All A are B      → no A sits outside B\n                    (says NOTHING about B outside A)\n\nNo A are B       → nothing sits in the overlap\n                    (works both ways: No B are A too)\n\nSome A are B     → at least one thing is in the overlap\n                    (works both ways: Some B are A too)\n\nSome A are not B → at least one A sits outside B\n                    (does NOT work both ways)"},
+    {l: [
+      "'Some' means 'at least one, possibly all' — never 'only some'.",
+      "'All A are B' also gives you 'Some B are A', because there is at least one A and it is inside B.",
+      "'All A are B' never gives you 'All B are A'. Reversing an 'All' is the most common wrong answer printed in the options.",
+    ]},
+
+    {h: "The method — draw, then try to break it"},
+    {p: "Draw the smallest picture the statements allow. Then, and this is the step people skip, try to redraw it so the conclusion fails. If you manage it even once, the conclusion does not follow."},
+    {c: "Statements: All roses are flowers. Some flowers fade quickly.\nConclusion: Some roses fade quickly.\n\n    ┌──────── flowers ────────┐\n    │  ┌── roses ──┐          │\n    │  │           │  ●fading │\n    │  └───────────┘          │\n    └─────────────────────────┘\n\nThe fading ones can sit entirely outside the roses.\nBoth statements still hold. So it does NOT follow."},
+    {p: "Now the case that does follow, so you can see the difference rather than just being told there is one:"},
+    {c: "Statements: All cats are animals. All animals need water.\nConclusion: All cats need water.\n\n    ┌──── things that need water ────┐\n    │  ┌──── animals ────┐           │\n    │  │  ┌─ cats ─┐     │           │\n    │  │  └────────┘     │           │\n    │  └─────────────────┘           │\n    └────────────────────────────────┘\n\nThere is no way to drag the cats outside.\nAll-to-all chains. It FOLLOWS."},
+
+    {h: "The results worth knowing by heart"},
+    {p: "You can derive all of these by drawing, and you should — but knowing them lets you check your drawing in five seconds instead of thirty."},
+    {c: "All A are B  + All B are C   → All A are C          ✓\nAll A are B  + No B are C    → No A are C           ✓\nSome A are B + All B are C   → Some A are C         ✓\nSome A are B + Some B are C  → nothing              ✗\nNo A are B   + No B are C    → nothing              ✗\nAll A are B                  → Some B are A         ✓"},
+    {k: "Two 'some' statements together prove nothing. Two negatives together prove nothing. Something must be an 'All' for anything to travel."},
+
+    {h: "Either-or — the one everybody meets first in the exam hall"},
+    {p: "Sometimes neither conclusion follows on its own, and yet the two of them cannot both be false. Then the answer is 'either I or II follows'. It looks like a trick and it is not: it is what happens when two conclusions are complementary."},
+    {c: "Complementary pairs — one of the two must be true:\n\n   Some A are C     ←→   No A are C\n   All A are C      ←→   Some A are not C\n\nCheck: do I and II have the SAME two terms?\nAre they a pair from the list above?\nDoes neither follow on its own?\n   → then the answer is 'either I or II'."},
+    {p: "If either of the first two checks fails, it is not an either-or case, and the answer is simply 'neither follows'."},
+
+    {h: "The three traps, named"},
+    {l: [
+      "Using what you know about the world. 'All doctors are graduates' may be true in life; if the statements do not say it, it is not there.",
+      "Reversing an 'All'. All A are B never gives All B are A — but the option is always printed.",
+      "Reading 'some' as 'only some'. 'Some students passed' leaves it entirely possible that all of them did.",
+    ]},
+    {k: "Accept the statements. Draw the loosest picture. Try to break the conclusion. If you cannot break it, it follows."},
+  ],
+  /* The second explanation, offered when the first one did not land. Not a
+     summary of the same words — a different route in: no circles at all, just
+     the question of what each statement forbids. */
+  retell: [
+    {p: "Forget circles for a moment. Think of each statement as a RULE that bans certain situations, and the question as asking whether one more rule is already implied by the ones you were given."},
+    {c: "\"All A are B\"  bans:  an A that is not a B.\n\"No A are B\"   bans:  anything that is both.\n\"Some A are B\" requires: at least one thing that is both.\n\"Some A are not B\" requires: at least one A that is not a B."},
+    {p: "Now the test becomes concrete. To check a conclusion, try to INVENT one small world — three or four objects is always enough — that obeys every rule you were given while breaking the conclusion. If you can build that world, the conclusion does not follow. If every attempt gets blocked by one of the rules, it follows."},
+    {c: "Statements: All pens are objects. Some objects are red.\nConclusion: Some pens are red.\n\nTry to build a world that breaks it:\n  thing 1: a pen, and an object, not red   ✓ obeys rule 1\n  thing 2: an object, red, not a pen       ✓ obeys rule 2\n\nBoth statements hold. No pen is red.\nThe world was built, so the conclusion FAILS."},
+    {p: "This is the same procedure as drawing circles — the circles are just a faster way of holding all the possible worlds in your head at once. If the diagrams confuse you, build the little worlds instead; the marks are identical, and every question in this app is generated and checked by exactly this method."},
+    {k: "Two things to build with, and one question to ask: can I make a world where the statements hold and the conclusion fails?"},
+  ],
 },
 {
   key: "re-coding", subject: "Reasoning", topic: "Reasoning",
   title: "Coding-decoding and blood relations", minutes: 6,
+  video: {url:"https://www.youtube.com/watch?v=bUAtSjS7OAY",
+          title:"Coding Decoding Reasoning | SSC CGL Reasoning Class #2", channel:"Rojgar with Ankit"},
+  links: [
+    {label:"Blood relations, worked step by step", url:"https://www.geeksforgeeks.org/ssc-banking/blood-relation-reasoning/", note:"GeeksforGeeks"},
+    {label:"Blood relation practice bank", url:"https://www.indiabix.com/verbal-reasoning/blood-relation-test/", note:"IndiaBIX"},
+    {label:"Direction sense practice bank", url:"https://www.indiabix.com/verbal-reasoning/direction-sense-test/", note:"IndiaBIX"},
+  ],
   why: "Two mechanical topics that are pure marks once you have a method for each.",
   blocks: [
     {h: "Write the alphabet out first"},
@@ -815,6 +907,14 @@ const CURRICULUM = [
     {h: "Direction sense"},
     {p: "Draw it. Opposite legs cancel; only the leftover legs count. If two perpendicular legs remain, the distance is Pythagoras. Remember a right turn while facing north points east."},
     {k: "Write the alphabet once. Draw the family as levels. Draw the directions as a map."},
+  ],
+  retell: [
+    {p: "If the three methods blur together, notice that all three are the same instruction: turn the words into a picture BEFORE you think, because none of these questions is hard once it is drawn — they are only hard while they are still a sentence."},
+    {c: "Coding      → the alphabet, written out, with numbers under it\nRelations   → levels down the page, one generation per line\nDirections  → a map, north at the top, one leg at a time"},
+    {p: "And all three have the same trap: doing it in your head. The alphabet is the clearest case — counting letters mentally goes wrong around M and nobody notices until the answer is marked."},
+    {c: "A  B  C  D  E  F  G  H  I  J  K  L  M\n1  2  3  4  5  6  7  8  9 10 11 12 13\n\nN  O  P  Q  R  S  T  U  V  W  X  Y  Z\n14 15 16 17 18 19 20 21 22 23 24 25 26\n\nAnchors worth knowing cold: E=5, J=10, O=15, T=20, Y=25.\nThe mirror pairs add to 27: A↔Z, B↔Y, C↔X, D↔W."},
+    {p: "For relations, one more habit removes most of the errors: solve the innermost phrase first. \"That man's father is my father's son\" — start at 'my father's son', settle who that is, then move outward one phrase at a time."},
+    {k: "Write it down. Every one of these three topics is a picture pretending to be a sentence."},
   ],
 },
 {

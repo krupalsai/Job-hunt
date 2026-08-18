@@ -128,6 +128,17 @@
   function lessonState(key) {
     return readLessons()[key] || { read: false, mastered: false };
   }
+  /** "I did not understand this" — recorded per lesson, because a topic you
+      have read and not understood is not the same as one you have not opened,
+      and the app was treating them identically. It drives what Study puts in
+      front of you next, and it is the honest input to what still needs
+      writing. */
+  function markUnclear(key) {
+    const st = lessonState(key);
+    setLessonState(key, { unclear: (st.unclear || 0) + 1, understood: false,
+                          unclearAt: Date.now() });
+  }
+  function markUnderstood(key) { setLessonState(key, { understood: true }); }
   function setLessonState(key, patch) {
     const all = readLessons();
     all[key] = Object.assign(lessonState(key), patch);
@@ -261,6 +272,61 @@
     </div>`;
   }
 
+  /** Verified links out. The lessons stay in the app because they have to work
+      with no signal, but nothing here pretends the app is the only place to
+      learn — and every one of these was checked before it shipped. */
+  function linksHtml(l) {
+    if (!l.links || !l.links.length) return "";
+    return `<div class="ls-links">
+      <div class="ls-links-head">More on this, on the web</div>
+      ${l.links.map(k => `<a class="ls-link" href="${esc(k.url)}" target="_blank" rel="noopener">
+        ${esc(k.label)}${k.note ? `<span>${esc(k.note)}</span>` : ""}</a>`).join("")}
+      <p class="ls-links-note">These open outside the app and need a connection. The lesson above does not.</p>
+    </div>`;
+  }
+
+  /** The check-in at the end of a lesson. The student asked for this in as many
+      words: "app must give option like did you understand, did you want any
+      video or more better way of explaining, on every topic". Reading is not
+      understanding, and the app used to go straight from the last paragraph to
+      a test — which tells you that you did not understand it, several marks
+      later, without offering anything else. */
+  function checkInHtml(l) {
+    const hasRetell = !!(l.retell && l.retell.length);
+    const hasVideo = !!(l.video || l.alt_video);
+    return `<div class="ls-checkin" id="ls-checkin">
+      <div class="ls-ci-head">Did that make sense?</div>
+      <div class="ls-ci-btns">
+        <button class="primary" id="ci-yes">Yes — test me on it</button>
+        <button class="ghost" id="ci-no">Not yet${hasRetell ? " — explain it another way" : ""}</button>
+        ${hasVideo ? `<button class="ghost" id="ci-video">Show me a video</button>` : ""}
+      </div>
+    </div>`;
+  }
+
+  /** What "not yet" opens: the second explanation if one is written, and an
+      honest sentence if one is not. Promising a better explanation and then
+      reprinting the same paragraphs would be worse than the silence it
+      replaced. */
+  function retellHtml(l) {
+    const has = l.retell && l.retell.length;
+    return `<div class="ls-retell" id="ls-retell">
+      <div class="ls-rt-head">${has ? "Another way of looking at it" : "No second explanation written yet"}</div>
+      ${has
+        ? l.retell.map(blockHtml).join("")
+        : `<p class="ls-p">A different explanation of this one has not been written yet — and the app is
+           not going to reprint the same paragraphs and call them new. It has recorded that this topic
+           needs one. In the meantime the video and the practice links below teach the same ground from
+           a different direction.</p>`}
+      ${videoHtml(l.alt_video || l.video)}
+      ${linksHtml(l)}
+      <div class="quiz-actions">
+        <button class="primary" id="rt-test">That is clearer — test me</button>
+        <button class="ghost" id="rt-later">Still stuck — come back to it</button>
+      </div>
+    </div>`;
+  }
+
   /* Injected here rather than in learn.html so two sessions can work on the app
      at once without colliding in the same stylesheet. */
   (function () {
@@ -269,7 +335,29 @@
       ".ls-dots{display:flex;gap:5px;margin:0 0 16px;}" +
       ".ls-dot{height:3px;flex:1;border-radius:2px;background:var(--panel-border);}" +
       ".ls-dot.past{background:#22c55e66;}" +
-      ".ls-dot.on{background:#22c55e;}";
+      ".ls-dot.on{background:#22c55e;}" +
+      /* The end-of-lesson check-in. Deliberately not a quiet link: it is the
+         moment the app either helps or gives up on you. */
+      ".ls-checkin{margin-top:18px;padding:14px;border-radius:12px;" +
+        "background:var(--panel);border:1px solid var(--panel-border);}" +
+      ".ls-ci-head{font-weight:800;font-size:14.5px;margin-bottom:10px;}" +
+      ".ls-ci-btns{display:flex;flex-direction:column;gap:8px;}" +
+      ".ls-ci-btns button{width:100%;min-height:44px;}" +
+      ".ls-retell{margin-top:14px;padding:14px;border-radius:12px;" +
+        "background:var(--panel);border:1px solid var(--accent);}" +
+      ".ls-rt-head{font-weight:800;font-size:14.5px;color:var(--accent);margin-bottom:8px;}" +
+      ".ls-links{margin-top:14px;}" +
+      ".ls-links-head{font-size:12px;text-transform:uppercase;letter-spacing:.4px;" +
+        "color:var(--dim);margin-bottom:8px;}" +
+      ".ls-link{display:flex;justify-content:space-between;gap:10px;align-items:center;" +
+        "min-height:44px;padding:10px 12px;margin-bottom:8px;border-radius:10px;" +
+        "background:var(--surface-2);border:1px solid var(--surface-2-border);" +
+        "color:var(--text);text-decoration:none;font-size:13px;font-weight:600;}" +
+      ".ls-link span{color:var(--dim);font-size:11px;font-weight:600;white-space:nowrap;}" +
+      ".ls-links-note{color:var(--dim);font-size:11.5px;line-height:1.5;margin:2px 0 0;}" +
+      /* The badge for a topic you said had not landed. Warm rather than red:
+         it is a bookmark, not a mark against you. */
+      ".ls-badge.unclear{background:var(--warn);color:var(--bg);border-color:transparent;}";
     document.head.appendChild(css);
   })();
 
@@ -286,6 +374,13 @@
        in. */
     const list = el("learn-list");
     if (list) list.classList.toggle("subject-open", view.level === "lessons");
+    /* The syllabus is rendered inside a <details>, so the view is not open
+       until the element is. The subject chips set that themselves, but every
+       other route in — a task on Today, a day in the plan, the way back out of
+       a lesson — did not, and left the list rendered into a closed fold with
+       nothing on screen. It belongs here, with the state it depends on. */
+    const fold = document.getElementById("path-fold");
+    if (fold) fold.open = view.level === "lessons";
     if (view.level === "subjects") return renderSubjects();
     if (view.level === "lessons") return renderLessons(view.subject);
   }
@@ -489,8 +584,16 @@
           const ls = (t.lessons || []).map(k => lessonByKey[k]).filter(Boolean);
           const sk = (t.skills || []).filter(k => typeof SKILL_BY_KEY !== "undefined" && SKILL_BY_KEY[k]);
           const done = ls.length && ls.every(l => lessonState(l.key).mastered);
-          const state = ls.length ? (done ? "done" : "open") : sk.length ? "drill" : "none";
-          const label = ls.length ? (done ? "mastered" : "read it")
+          /* A topic you read and told the app you did not understand is not
+             the same as one you have not opened, and the list used to show
+             them identically. Saying "not yet" has to leave a mark, or the
+             answer went nowhere. */
+          const unclear = ls.length && !done &&
+            ls.some(l => (lessonState(l.key).unclear || 0) > 0 && !lessonState(l.key).understood);
+          const state = unclear ? "unclear"
+                      : ls.length ? (done ? "done" : "open") : sk.length ? "drill" : "none";
+          const label = unclear ? "come back to it"
+                      : ls.length ? (done ? "mastered" : "read it")
                       : sk.length ? "drill it" : "practice only";
           const act = ls.length ? `data-topic-lesson="${esc(ls[0].key)}"`
                     : sk.length ? `data-topic-skill="${esc(sk[0])}"`
@@ -619,12 +722,11 @@
       ${sec.blocks.map(blockHtml).join("")}
       <div class="quiz-actions">
         ${p > 0 ? `<button class="ghost" id="ls-prev">← Back</button>` : ""}
-        ${last
-          ? `<button class="primary" id="ls-check">Take the test — ${CHECK_SIZE} questions</button>`
-          : `<button class="primary" id="ls-next">Next section →</button>`}
+        ${last ? "" : `<button class="primary" id="ls-next">Next section →</button>`}
       </div>
       ${last
-        ? `<p class="muted" style="margin-top:8px;">${PASS_MARK} of ${CHECK_SIZE} masters this and unlocks the next topic. Practice comes after.</p>`
+        ? checkInHtml(l) +
+          `<p class="muted" style="margin-top:8px;">${PASS_MARK} of ${CHECK_SIZE} in the test marks this topic mastered. Practice comes after.</p>`
         : `<p class="muted" style="margin-top:8px;">${secs.length - p - 1} section${secs.length - p - 1 === 1 ? "" : "s"} left, then the test.</p>`}`;
     window.scrollTo(0, 0);
     // Only count it as read once the last section is reached, so "read" means
@@ -633,7 +735,37 @@
     el("ls-back").onclick = () => { view = { level: "lessons", subject: name }; render(); window.scrollTo(0, 0); };
     if (el("ls-next")) el("ls-next").onclick = () => openLesson(name, i, p + 1);
     if (el("ls-prev")) el("ls-prev").onclick = () => openLesson(name, i, p - 1);
-    if (el("ls-check")) el("ls-check").onclick = () => startCheck(name, i);
+    if (last) bindCheckIn(name, i, l);
+  }
+
+  /** The three answers to "did that make sense?", and what each one does. */
+  function bindCheckIn(name, i, l) {
+    const yes = el("ci-yes"), no = el("ci-no"), vid = el("ci-video");
+    if (yes) yes.onclick = () => { markUnderstood(l.key); startCheck(name, i); };
+    if (vid) vid.onclick = () => showRetell(name, i, l, { videoOnly: true });
+    if (no) no.onclick = () => { markUnclear(l.key); showRetell(name, i, l, {}); };
+  }
+
+  /** Opens the second explanation underneath, rather than replacing the page —
+      the first explanation stays on screen to be compared against. */
+  function showRetell(name, i, l, opts) {
+    const box = el("ls-checkin");
+    if (!box || el("ls-retell")) return;
+    box.insertAdjacentHTML("afterend", retellHtml(l));
+    if (opts.videoOnly) {
+      const head = document.querySelector("#ls-retell .ls-rt-head");
+      if (head) head.textContent = "The video for this topic";
+      document.querySelectorAll("#ls-retell .ls-p, #ls-retell .ls-c, #ls-retell .ls-l, #ls-retell .ls-k")
+        .forEach(n => n.remove());
+    }
+    el("rt-test").onclick = () => { markUnderstood(l.key); startCheck(name, i); };
+    el("rt-later").onclick = () => {
+      markUnclear(l.key);
+      view = { level: "lessons", subject: name };
+      render();
+      window.scrollTo(0, 0);
+    };
+    el("ls-retell").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   /* One way to change section, owned by learn.html, so the bottom bar

@@ -145,7 +145,23 @@
   @media (prefers-reduced-motion: reduce){
     .fun-burst, #quiz-live.fun-shake{ animation:none; }
   }
-  .qtext{ font-size:15px; margin:10px 0 14px; line-height:1.5; }
+  /* pre-line because a syllogism is three lines — statements, conclusions,
+     question — and running them into one paragraph is how you misread it. */
+  .qtext{ font-size:15px; margin:10px 0 14px; line-height:1.5; white-space:pre-line; }
+  /* Current affairs: dated entries read as a feed, not as lesson prose. */
+  /* A stored syllogism is three lines in the missed list too. */
+  .miss-item .mq{ white-space: pre-line; }
+  .ca-items{ display:flex; flex-direction:column; gap:12px; margin-bottom:14px; }
+  .ca-item{ padding:11px 12px; border-radius:10px; background:var(--surface-2);
+            border:1px solid var(--surface-2-border); }
+  .ca-date{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--dim); }
+  .ca-head{ font-size:13.5px; font-weight:700; margin-top:3px; line-height:1.4; }
+  .ca-why{ font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.5; }
+  .ca-src{ display:inline-block; margin-top:6px; font-size:12px; font-weight:700;
+           color:var(--accent); text-decoration:none; min-height:24px; }
+  .fresh-tag{ font-size:10px; font-weight:800; letter-spacing:.3px; text-transform:uppercase;
+              color:var(--accent); background:var(--tint); border:1px solid var(--accent);
+              border-radius:20px; padding:2px 7px; margin-left:6px; }
   .opt{
     display:flex; align-items:center; gap:11px; width:100%; text-align:left;
     background:var(--panel); border:1px solid var(--panel-border); color:var(--text); padding:11px 13px;
@@ -378,6 +394,7 @@
   #learn-list.subject-open #subjects-card,
   #learn-list.subject-open #today-card,
   #learn-list.subject-open #today-plan-card,
+  #learn-list.subject-open #ca-fold,
   #learn-list.subject-open #plan-fold{ display:none; }
   /* The fold becomes the screen: no disclosure arrow to close the thing you
      are looking at, and no card border around the whole page. */
@@ -641,6 +658,14 @@
         </div>
       </details>
 
+      <!-- Current affairs: the one thing the app refuses to bundle, because
+           bundled news is stale news. Written items when a scheduled run has
+           found dated, sourced ones; the live feeds either way. -->
+      <details class="card fold" id="ca-fold">
+        <summary><span id="ca-summary">Current affairs</span></summary>
+        <div class="fold-body" id="ca-body"></div>
+      </details>
+
       <!-- The whole path, for when you want to pick rather than be told. Last
            on the screen on purpose. -->
       <details class="card fold" id="path-fold">
@@ -795,6 +820,13 @@
 <!-- Every topic each paper examines, whether or not a lesson exists for it. -->
 <script src="/prep/syllabus.js"></script>
 <script src="/prep/lessons.js"></script>
+<!-- Questions built on the spot for the mechanical topics, so a drill on one
+     of them cannot run out or repeat. Loaded before the app script, which asks
+     it for questions the moment a drill starts. -->
+<script src="/prep/generate.js"></script>
+<!-- News, kept apart from everything else because it is the only part that
+     goes out of date on its own. -->
+<script src="/prep/current-affairs.js"></script>
 <!-- TS SI lessons, appended to the same CURRICULUM so the Learn path, the
      gating and the plan work on them with no new engine code. -->
 <script src="/prep/ts-si-lessons.js"></script>
@@ -856,6 +888,7 @@ window.gotoSection = function(id){
     if(window.renderToday) window.renderToday();
     if(window.renderPlan) window.renderPlan();
     renderSubjectChips();
+    renderCurrentAffairs();
   }
   if(id === 'test') renderTestModes();
   if(id === 'syllabus') renderExamInfo();
@@ -1019,6 +1052,45 @@ function renderSubjectChips(){
       <span class="subj-meta">${escHtml(meta)}</span>
     </button>`;
   }).join('');
+}
+
+/* ── Current affairs ──────────────────────────────────────────────────────
+   The app does not pretend to hold today's news. It holds whatever a
+   scheduled run has written with a date and a source, says how old that is,
+   and otherwise sends you to the live feeds — which is the honest version of
+   "live information" for something that has to work with no signal. */
+function renderCurrentAffairs(){
+  const body = document.getElementById('ca-body');
+  const head = document.getElementById('ca-summary');
+  if(!body || typeof CURRENT_AFFAIRS === 'undefined') return;
+  const exam = currentExamObj();
+  const mine = x => !x.exams || !exam || x.exams.indexOf(exam.key) !== -1;
+  const items = (CURRENT_AFFAIRS.items || []).filter(mine)
+    .slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const feeds = (CURRENT_AFFAIRS.feeds || []).filter(mine);
+  head.textContent = items.length ? `Current affairs (${items.length})` : 'Current affairs';
+
+  const age = CURRENT_AFFAIRS.updated
+    ? `Last written into the app on ${escHtml(CURRENT_AFFAIRS.updated)}.`
+    : 'Nothing has been written into the app yet.';
+
+  body.innerHTML = `
+    ${items.length ? `<div class="ca-items">${items.map(i => `
+      <div class="ca-item">
+        <div class="ca-date">${escHtml(i.date)}${i.source ? ` · ${escHtml(i.source)}` : ''}</div>
+        <div class="ca-head">${escHtml(i.headline)}</div>
+        ${i.why ? `<div class="ca-why">${escHtml(i.why)}</div>` : ''}
+        ${i.url ? `<a class="ca-src" href="${escHtml(i.url)}" target="_blank" rel="noopener">source →</a>` : ''}
+      </div>`).join('')}</div>` : ''}
+    <p class="muted">${age} News is the one thing this app will not bundle and call current —
+      a fact written in last month and answered confidently in the hall costs the same mark as not
+      knowing it. Read today's here:</p>
+    <div class="ls-links">
+      ${feeds.map(f => `<a class="ls-link" href="${escHtml(f.url)}" target="_blank" rel="noopener">
+        ${escHtml(f.label)}${f.note ? `<span>${escHtml(f.note)}</span>` : ''}</a>`).join('')}
+      <p class="ls-links-note">These open outside the app and need a connection. Everything else
+        in here — lessons, questions, the plan — does not.</p>
+    </div>`;
 }
 
 /* "← All subjects" comes back to Study itself — the chips at the top already
@@ -1485,7 +1557,15 @@ function pickQuestions(pool, n, opts={}){
     return {item, p: p + Math.random() * 25};
   });
   scored.sort((a,b)=> b.p - a.p);
-  const slice = scored.slice(0, Math.min(pool.length, Math.max(n * 2, n + 6)));
+  /* Widen the top of the list before shuffling, so two runs are not the same
+     ten in a different order — but never so wide that a question you have
+     already answered comes back while unseen ones are still waiting. That
+     widening was letting seen questions into the draw whenever the unseen
+     count fell below the window, which is exactly when a repeat is most
+     obvious and most discouraging. */
+  const unseen = scored.filter(x => !state.seen[x.item.id]);
+  const from = unseen.length >= n ? unseen : scored;
+  const slice = from.slice(0, Math.min(from.length, Math.max(n * 2, n + 6)));
   return shuffle(slice.map(s=>s.item)).slice(0, n);
 }
 
@@ -1551,8 +1631,136 @@ EXAM_SUBJECTS.forEach(topic=>{
   tagRow.appendChild(tag);
 });
 
+/* ── Fresh questions ──────────────────────────────────────────────────────
+   The bank held three syllogism questions, so the third drill was a memory
+   test. prep/generate.js builds them instead, and every generated question is
+   re-solved by an independent method in scripts/validate-generated.js before
+   it can ship. Which skills are bottomless is a fact the app knows, so it can
+   say so rather than implying every topic is. */
+const GEN_KEYS = (typeof generatedSkillKeys === 'function')
+  ? new Set(generatedSkillKeys()) : new Set();
+function hasGenerator(key){ return GEN_KEYS.has(key); }
+
+/** Which subject a skill is examined under HERE. A basic can sit under
+    different subjects in different papers — "arithmetical reasoning" is part
+    of HAL's Reasoning section and part of SSC's Quantitative Aptitude — and
+    the generator only knows one of those names. Taking the subject from the
+    bank questions that carry the skill keeps a generated question inside the
+    paper it is being practised for, which is the rule the whole app is built
+    on: nothing on screen may come from a subject this exam does not examine. */
+/* ── Generated questions are kept ─────────────────────────────────────────
+   A built question that vanishes when the page closes is worse than useless:
+   get one wrong and there is nothing to come back to, no "previous mistakes"
+   entry, and nothing stopping the same one being built again next week. So
+   every generated question the app has put in front of you is stored, exactly
+   as it was asked, alongside the progress record that already tracks how you
+   answered it.
+
+   Capped, and pruned oldest-first — but never dropping one you got wrong while
+   there is anything else to drop, because those are the ones the app owes you
+   another go at. */
+const GEN_STORE_KEY = 'jobhunt_generated_v1';
+const GEN_STORE_MAX = 600;
+let genStore = (function(){
+  try { return JSON.parse(localStorage.getItem(GEN_STORE_KEY)) || {}; }
+  catch(e){ return {}; }
+})();
+
+function saveGenStore(){
+  try { localStorage.setItem(GEN_STORE_KEY, JSON.stringify(genStore)); }
+  catch(e){ /* quota: the quiz on screen still works, it just is not kept */ }
+}
+
+function rememberGenerated(list){
+  list.forEach(q => {
+    genStore[q.id] = { q:q.q, opts:q.opts, correct:q.correct, why:q.why,
+                       trick:q.trick, skills:q.skills, topic:q.topic, at:Date.now() };
+  });
+  const ids = Object.keys(genStore);
+  if(ids.length > GEN_STORE_MAX){
+    const wrongOf = id => ((state.seen[id] || {}).wrong || 0);
+    ids.sort((a, b) =>
+      (wrongOf(a) > 0) !== (wrongOf(b) > 0) ? (wrongOf(a) > 0 ? 1 : -1)
+        : (genStore[a].at || 0) - (genStore[b].at || 0));
+    ids.slice(0, ids.length - GEN_STORE_MAX).forEach(id => { delete genStore[id]; });
+  }
+  saveGenStore();
+}
+
+/** Everything built for this phone before now, in the shape the quiz uses.
+    Scoped to the exam, like every other pool in the app. */
+function storedGenerated(){
+  return Object.keys(genStore)
+    .map(id => Object.assign({ id: id, gen: true, source_type: 'generated_practice' }, genStore[id]))
+    .filter(q => q.topic && IN_EXAM.has(q.topic) && q.opts && q.opts.length === 4);
+}
+
+function topicForSkill(key){
+  const host = ALL.find(q => IN_EXAM.has(q.topic) && (q.skills || []).indexOf(key) !== -1);
+  return host ? host.topic : null;
+}
+
+/** n freshly built questions across the given skills, id'd like bank ones.
+    The id includes the options because several generators share one stem —
+    "Which of these numbers is prime?" is one sentence and a thousand
+    different questions. */
+function generatedQuestions(keys, n){
+  if(typeof generateFor !== 'function' || !n) return [];
+  const usable = keys.filter(hasGenerator).filter(topicForSkill);
+  if(!usable.length) return [];
+  /* Generated three-deep, because what comes back is then filtered against
+     everything already answered. Two runs of a generator are independent, so
+     without this a set of "fresh" questions could contain one you have seen —
+     rare, but the promise being made here is that it never happens. */
+  const per = Math.ceil(n / usable.length) * 3 + 2;
+  let out = [];
+  usable.forEach(k => {
+    const topic = topicForSkill(k);
+    generateFor(k, per).forEach(q => out.push(Object.assign({}, q, { topic })));
+  });
+  const withIds = out.map(q => Object.assign({}, q, { id: qid(q.q + '|' + q.opts.join('|')) }));
+  /* Two filters, because "already answered" and "already put in front of you"
+     are different things. A question you skipped, or one from a quiz you
+     abandoned halfway, never reaches state.seen — and coming back next time
+     would still feel like a repeat. */
+  const unseen = withIds.filter(q => !state.seen[q.id] && !genStore[q.id]);
+  /* If the unseen ones ran short, fall back rather than short-change the set —
+     a repeat is better than a four-question drill. */
+  const chosen = shuffle(unseen.length >= n ? unseen : withIds).slice(0, n);
+  rememberGenerated(chosen);
+  return chosen;
+}
+
+/** Builds a quiz out of the bank and the generators together.
+
+    Hand-written questions come first — they are often sharper than anything a
+    generator produces — but never so far first that you end up answering the
+    same five again. The split is decided BEFORE the bank is asked, so the bank
+    is only ever asked for as many as it can supply unseen; whatever is left is
+    built fresh. A third is built fresh regardless, so a run of practice always
+    contains something you have not met. */
+function blendGenerated(pool, want, opts){
+  const keys = (opts && opts.noGen) ? []
+    : [...new Set([].concat.apply([], pool.map(q => q.skills || [])))].filter(hasGenerator);
+  const unseen = pool.filter(q => !state.seen[q.id]).length;
+  const genWant = keys.length
+    ? Math.min(want, Math.max(want - unseen, Math.floor(want / 3))) : 0;
+  let fresh = genWant ? generatedQuestions(keys, genWant) : [];
+  /* Ask the bank only for as many as it can supply UNSEEN when there is a
+     generator to make up the difference. Repeating a question you answered
+     yesterday, while the app could have built you a new one, is the exact
+     complaint this whole change exists to answer. */
+  const bankCap = keys.length ? Math.min(pool.length, Math.max(unseen, 0)) : pool.length;
+  const bankWant = Math.min(want - fresh.length, bankCap);
+  const bank = bankWant > 0 ? pickQuestions(pool, bankWant, opts || {}) : [];
+  if(keys.length && bank.length + fresh.length < want){
+    fresh = fresh.concat(generatedQuestions(keys, want - bank.length - fresh.length));
+  }
+  return shuffle(bank.concat(fresh));
+}
+
 function beginQuiz(pool, opts){
-  if(pool.length === 0){ alert("Select at least one topic."); return; }
+  if(pool.length === 0 && !(opts && opts.genSkills)){ alert("Select at least one topic."); return; }
   // Defensive: there is no UI path into a normal quiz while a mock is live,
   // but leaving a stale timer running would suppress answer reveals in a
   // quiz that is not a mock at all.
@@ -1560,7 +1768,12 @@ function beginQuiz(pool, opts){
   document.getElementById('mock-bar').classList.add('hidden');
   // A lesson check is shorter than a practice quiz, so the size is caller-set.
   const want = (opts && opts.size) || 10;
-  currentQuiz = pickQuestions(pool, Math.min(want, pool.length), opts || {});
+  /* A drill on one basic that has a generator is built fresh end to end —
+     that is the whole point of drilling one thing repeatedly. */
+  currentQuiz = (opts && opts.genSkills)
+    ? generatedQuestions(opts.genSkills, want)
+    : blendGenerated(pool, want, opts);
+  if(!currentQuiz.length){ alert("Select at least one topic."); return; }
   currentIndex = 0; score = 0; answers = [];
   funMode = !!(opts && opts.fun);
   funCombo = 0;
@@ -1601,12 +1814,12 @@ document.getElementById('drill-weak').addEventListener('click', ()=>{
   const weak = weakTopicSet();
   if(weak.size === 0){
     // Say so rather than inventing a weakness out of two answers.
-    const missed = POOL.filter(q => (state.seen[q.id]||{}).wrong > 0);
+    const missed = answerablePool().filter(q => (state.seen[q.id]||{}).wrong > 0);
     if(missed.length === 0){
       alert("Not enough data yet. Answer at least 4 questions in a subject and your weak areas will show up here — and on Progress.");
       return;
     }
-    beginQuiz(missed, {});
+    beginQuiz(missed, { noGen: true });
     return;
   }
   beginQuiz(POOL.filter(q=>weak.has(q.topic)), { weak });
@@ -1618,8 +1831,15 @@ document.getElementById('drill-weak').addEventListener('click', ()=>{
 let quizSize = 10;
 
 /** Questions this exam examines that have been got wrong and not yet fixed. */
+/** Everything that can be re-asked: the written bank plus every question the
+    app built and stored. A syllogism you got wrong was, until this was kept,
+    unrecoverable — the id was in your progress and the question itself was
+    gone. */
+function answerablePool(){
+  return POOL.concat(storedGenerated());
+}
 function mistakePool(){
-  return POOL.filter(q => ((state.seen[q.id] || {}).wrong || 0) > 0);
+  return answerablePool().filter(q => ((state.seen[q.id] || {}).wrong || 0) > 0);
 }
 
 const TEST_MODES = [
@@ -1648,8 +1868,12 @@ function renderTestModes(){
   const exam = currentExamObj();
   const note = document.getElementById('test-modes-note');
   if(note && exam){
-    note.textContent = `${POOL.length} questions across ${EXAM_SUBJECTS.length} subjects. ` +
-      `Scored ${markingShort(exam)}.`;
+    /* Say where practice runs out and where it does not, rather than implying
+       one number covers everything. */
+    const endless = [...GEN_KEYS].filter(k => topicForSkill(k)).length;
+    note.textContent = `${POOL.length} written questions across ${EXAM_SUBJECTS.length} subjects` +
+      (endless ? `, plus unlimited fresh ones on ${endless} basics` : '') +
+      `. Scored ${markingShort(exam)}.`;
   }
   const weakN = weakTopicSet().size;
   const missN = mistakePool().length;
@@ -1698,7 +1922,10 @@ function startMode(id){
       alert('Nothing outstanding — you have not got anything wrong that is still unfixed. Practice adds to this list when it happens.');
       return;
     }
-    beginQuiz(pool, { size: Math.min(10, pool.length) });
+    /* Nothing new blended in here: this mode is the questions you got wrong,
+       and topping it up with fresh ones would dilute the only set in the app
+       whose whole purpose is to be finished and emptied. */
+    beginQuiz(pool, { size: Math.min(10, pool.length), noGen: true });
     return;
   }
   if(id === 'drill'){
@@ -1856,7 +2083,17 @@ function tickMockTimer(){
 function renderQuestion(){
   const item = currentQuiz[currentIndex];
   document.getElementById('q-counter').textContent = `Question ${currentIndex+1} / ${currentQuiz.length}`;
-  document.getElementById('q-topic').textContent = item.topic;
+  const topicEl = document.getElementById('q-topic');
+  topicEl.textContent = item.topic;
+  /* Said out loud on the question itself: this one was built by the app just
+     now. It is not a previous-year question and never claims to be. */
+  if(item.gen){
+    const tag = document.createElement('span');
+    tag.className = 'fresh-tag';
+    tag.textContent = 'fresh';
+    tag.title = 'Built for you just now — not a past paper question';
+    topicEl.appendChild(tag);
+  }
   // A question on screen is time spent on its subject, same as a lesson is.
   focusOn(item.topic);
   document.getElementById('progress-fill').style.width = `${(currentIndex/currentQuiz.length)*100}%`;
@@ -2120,7 +2357,8 @@ function openSkillDrill(key){
   focusOn(s.subject);
   const pool = skillPool(key);
   const stat = skillStat(key);
-  const size = Math.min(5, pool.length);
+  const endless = hasGenerator(key) && !!topicForSkill(key);
+  const size = endless ? 8 : Math.min(5, pool.length);
   window.gotoSection('test');
   ['test-modes','quiz-setup','quiz-live','quiz-result','mock-intro'].forEach(id=>{
     const e = document.getElementById(id);
@@ -2136,7 +2374,11 @@ function openSkillDrill(key){
     ${s.teach.map(skillBlockHtml).join('')}
     ${stat.asked ? `<p class="muted">So far: ${stat.correct} right out of ${stat.asked}${
       stat.distinctMissed ? `, and it has cost you marks on ${stat.distinctMissed} different question${stat.distinctMissed === 1 ? '' : 's'}` : ''}.</p>` : ''}
-    <button class="primary drill-btn" id="drill-start">Start the drill — ${size} question${size === 1 ? '' : 's'}</button>`;
+    <button class="primary drill-btn" id="drill-start">Start the drill — ${size} question${size === 1 ? '' : 's'}</button>
+    ${endless
+      ? `<p class="muted">Every one of these is built fresh when you tap, so drilling this ten times
+         is ten different sets — you cannot end up remembering the answers instead of the method.</p>`
+      : `<p class="muted">This basic has ${pool.length} written question${pool.length === 1 ? '' : 's'} in the bank.</p>`}`;
   document.getElementById('drill-back').onclick = ()=>{
     box.classList.add('hidden');
     document.getElementById('test-modes').classList.remove('hidden');
@@ -2146,7 +2388,7 @@ function openSkillDrill(key){
     box.classList.add('hidden');
     window.__lessonCheck = null;
     window.__skillDrill = key;
-    beginQuiz(pool, { size: size });
+    beginQuiz(pool, endless ? { size: size, genSkills: [key] } : { size: size });
   };
   window.scrollTo(0, 0);
 }
@@ -2589,7 +2831,7 @@ function renderProgress(){
     <p class="muted">${escHtml(weightNote())} Fix them with <strong>Test → Weak areas</strong>.</p>`;
   }
 
-  const missed = POOL
+  const missed = answerablePool()
     .map(q=>({q, s: state.seen[q.id]}))
     .filter(x=>x.s && x.s.wrong >= 2)
     .sort((a,b)=> b.s.wrong - a.s.wrong)
