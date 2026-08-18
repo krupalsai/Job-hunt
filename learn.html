@@ -386,24 +386,6 @@
                    border:1px solid var(--panel-border); }
   .ls-video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
 
-  /* A subject, once opened, IS the screen. Scrolling out of Data Structures
-     and finding the other ten subjects, today's list and the 19-day run still
-     sitting there is the same "which one am I in?" question the exam picker
-     exists to answer, asked one level down. prep/sync.js sets .subject-open;
-     what it hides is decided here. */
-  #learn-list.subject-open #subjects-card,
-  #learn-list.subject-open #today-card,
-  #learn-list.subject-open #today-plan-card,
-  #learn-list.subject-open #ca-fold,
-  #learn-list.subject-open #plan-fold{ display:none; }
-  /* The fold becomes the screen: no disclosure arrow to close the thing you
-     are looking at, and no card border around the whole page. */
-  #learn-list.subject-open #path-fold > summary{ display:none; }
-  #learn-list.subject-open #path-fold{ border:0; background:transparent;
-                                       padding:0; box-shadow:none; margin:0; }
-  #learn-list.subject-open .fold-body{ margin-top:0; }
-  #learn-list.subject-open #path-fold .fold-body > .muted{ display:none; }
-
   /* Subjects strip — every subject on screen at once, wrapped, never scrolled
      sideways. The count is the honest state of the subject: mastered of total
      where lessons exist, question count where they do not. */
@@ -478,17 +460,6 @@
                  background:#16a34a1f; border:1px solid #22c55e33; border-radius:20px; padding:4px 10px; }
   .nt-stop{ font-size:11.5px; color:var(--dim); margin-top:8px; line-height:1.5; }
   .nt-go{ width:100%; margin-top:12px; }
-
-  /* Folds — the run and the full path, closed by default so Study opens on
-     what to do rather than on everything there is. */
-  .fold summary{
-    cursor:pointer; font-size:14px; font-weight:700; list-style:none;
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-  }
-  .fold summary::-webkit-details-marker{ display:none; }
-  .fold summary::after{ content:"▾"; color:var(--accent-soft); font-size:12px; }
-  .fold[open] summary::after{ content:"▴"; }
-  .fold-body{ margin-top:12px; }
 
   /* 4-week plan */
   .plan-day{ padding:14px 16px; }
@@ -620,65 +591,67 @@
     </div><!-- /#ei-hal -->
   </section>
 
-  <!-- STUDY — what to do now, then what the run looks like, then the material.
-       It opens with today's tasks and not with a list of fifty lessons: a
-       catalogue makes the student decide what matters, and deciding is the
-       part they have no way to get right. -->
+  <!-- STUDY — the two questions the app exists to answer, and nothing else:
+       which subjects there are, and what to do right now. The run to the exam,
+       current affairs and the full lesson list used to sit under these as three
+       closed folds; a fold is still something on the screen to decide about,
+       and Study is the one screen that should not ask the student to decide.
+       All three are destinations in the ☰ menu now. -->
   <section id="study" class="tab-section">
+    <!-- SUBJECTS, first. Today's list below decides for you; this is for the
+         times you already know what you want to open. Every subject the exam
+         examines is here, all visible at once — a strip that scrolled off the
+         edge is the failure the whole navigation was rebuilt to end. -->
+    <div class="card hidden" id="focus-warn"></div>
+
+    <div class="card" id="subjects-card">
+      <h2>Subjects</h2>
+      <p class="muted" style="margin-top:-4px;">Tap one to open its lessons.</p>
+      <div class="subj-chips" id="subject-chips"></div>
+    </div>
+
+    <div class="card" id="today-card">
+      <h2>Today</h2>
+      <p class="muted" style="margin-top:-4px;">How long have you got?</p>
+      <div class="td-chips" id="today-budget"></div>
+      <div id="today-head" style="margin-top:12px;"></div>
+    </div>
+    <div class="card" id="today-plan-card"><div id="today-plan"></div></div>
+  </section>
+
+  <!-- ALL LESSONS — the whole path, for when you want to pick rather than be
+       told. A subject opened from here is the whole screen, which is what it
+       was already becoming inside the fold this replaces. -->
+  <section id="lessons" class="tab-section hidden">
     <div id="learn-list">
-      <!-- SUBJECTS, first. Today's list below decides for you; this is for the
-           times you already know what you want to open. Every subject the exam
-           examines is here, all visible at once — a strip that scrolled off the
-           edge is the failure the whole navigation was rebuilt to end. -->
-      <div class="card hidden" id="focus-warn"></div>
-
-      <div class="card" id="subjects-card">
-        <h2>Subjects</h2>
-        <p class="muted" style="margin-top:-4px;">Tap one to open its lessons.</p>
-        <div class="subj-chips" id="subject-chips"></div>
+      <div class="card">
+        <div id="learn-progress"></div>
+        <div id="learn-path" style="margin-top:12px;"></div>
       </div>
-
-      <div class="card" id="today-card">
-        <h2>Today</h2>
-        <p class="muted" style="margin-top:-4px;">How long have you got?</p>
-        <div class="td-chips" id="today-budget"></div>
-        <div id="today-head" style="margin-top:12px;"></div>
-      </div>
-      <div class="card" id="today-plan-card"><div id="today-plan"></div></div>
-
-      <!-- The run to the exam. Its length is the days actually left, not a
-           fixed four weeks. -->
-      <details class="card fold" id="plan-fold">
-        <summary><span id="plan-summary">The run to the exam</span></summary>
-        <div class="fold-body">
-          <p class="muted">One day at a time. Tap a day to open exactly what it asks for.
-            Tick it when it is done.</p>
-          <div id="plan-progress" style="margin-top:12px;"></div>
-          <div id="plan-days"></div>
-        </div>
-      </details>
-
-      <!-- Current affairs: the one thing the app refuses to bundle, because
-           bundled news is stale news. Written items when a scheduled run has
-           found dated, sourced ones; the live feeds either way. -->
-      <details class="card fold" id="ca-fold">
-        <summary><span id="ca-summary">Current affairs</span></summary>
-        <div class="fold-body" id="ca-body"></div>
-      </details>
-
-      <!-- The whole path, for when you want to pick rather than be told. Last
-           on the screen on purpose. -->
-      <details class="card fold" id="path-fold">
-        <summary>All lessons for this exam</summary>
-        <div class="fold-body">
-          <p class="muted">A topic stays locked until you have mastered the one before it,
-            so nothing arrives before the thing it depends on.</p>
-          <div id="learn-progress" style="margin-top:12px;"></div>
-          <div id="learn-path"></div>
-        </div>
-      </details>
     </div>
     <div class="card hidden" id="learn-reader"></div>
+  </section>
+
+  <!-- THE RUN TO THE EXAM. Its length is the days actually left, not a fixed
+       four weeks. -->
+  <section id="plan" class="tab-section hidden">
+    <!-- No heading: the header above already says which screen this is, and a
+         card that repeats it costs a line of a phone screen for nothing. -->
+    <div class="card">
+      <p class="muted" style="margin-top:0;">One day at a time. Tap a day to open exactly
+        what it asks for. Tick it when it is done.</p>
+      <div id="plan-progress" style="margin-top:12px;"></div>
+    </div>
+    <div id="plan-days"></div>
+  </section>
+
+  <!-- CURRENT AFFAIRS: the one thing the app refuses to bundle, because
+       bundled news is stale news. Written items when a scheduled run has
+       found dated, sourced ones; the live feeds either way. -->
+  <section id="current-affairs" class="tab-section hidden">
+    <div class="card">
+      <div id="ca-body"></div>
+    </div>
   </section>
 
   <!-- TEST -->
@@ -842,16 +815,25 @@
    ========================================================================== */
 /* One name per destination, and the name in the URL is the name on the screen.
    The app used to call the same place Learn in the bar, Lessons on a tile and
-   #learn in the address, and Practice / Test / #quiz for another. The four
-   words below are the whole vocabulary; the aliases exist only so links and
-   bookmarks written before the rename still land somewhere sensible. */
-const SECTION_IDS = ['study','test','progress','syllabus'];
+   #learn in the address, and Practice / Test / #quiz for another. The words
+   below are the whole vocabulary; the aliases exist only so links and
+   bookmarks written before the rename still land somewhere sensible.
+
+   Three of these are menu destinations rather than bottom-bar tabs — they were
+   folds at the bottom of Study, and a fold is still a decision to make on the
+   screen whose whole job is to remove one. */
+const SECTION_IDS = ['study','test','progress','lessons','plan','current-affairs','syllabus'];
 const SECTION_ALIAS = {
-  learn: 'study', lessons: 'study', schedule: 'study', plan: 'study',
+  learn: 'lessons', path: 'lessons',
+  schedule: 'plan',
+  news: 'current-affairs', ca: 'current-affairs', 'current_affairs': 'current-affairs',
   quiz: 'test', practice: 'test',
   examinfo: 'syllabus', exam: 'syllabus',
 };
-const SECTION_TITLE = { study:'Study', test:'Test', progress:'Progress', syllabus:'Syllabus' };
+const SECTION_TITLE = {
+  study:'Study', test:'Test', progress:'Progress', lessons:'All lessons',
+  plan:'The run to the exam', 'current-affairs':'Current affairs', syllabus:'Syllabus',
+};
 
 function routeOf(h){
   h = String(h || '').replace(/^#/, '');
@@ -871,25 +853,25 @@ window.gotoSection = function(id){
   // the way it arrived, not walk back through every tab you touched.
   try{ history.replaceState(null, '', location.pathname + location.search + '#' + id); }catch(e){}
   if(id === 'progress') renderProgress();
-  // Leaving the prep screens entirely is not thrashing between topics; it just
-  // means nothing is on screen to be focused on.
-  if(id === 'progress' || id === 'syllabus') focusOn(null);
+  // Leaving the subjects behind is not thrashing between topics; it just means
+  // nothing is on screen to be focused on.
+  if(id !== 'lessons') focusOn(null);
   if(id === 'study'){
-    /* A bottom-bar tab is a destination, not a resume point. Tapping Study
-       shows Study — subjects and today's list — rather than dropping you back
-       inside whichever subject you were last reading, which since a subject
-       now takes over the whole screen would look like the tab was broken.
-       Callers that mean to open something specific (openLessonByKey, a task's
-       Start button) set their view AFTER calling this, so they still win. */
+    if(window.renderToday) window.renderToday();
+    renderSubjectChips();
+  }
+  if(id === 'lessons'){
+    /* A destination is not a resume point. Opening All lessons shows the
+       subject list rather than dropping you back inside whichever subject you
+       were last reading, which since a subject takes over the whole screen
+       would look like the menu row was broken. Callers that mean to open
+       something specific (openLessonByKey, openSubject, a task's Start button)
+       set their view AFTER calling this, so they still win. */
     if(window.learnGoHome) window.learnGoHome();
     else if(window.renderLearnPath) window.renderLearnPath();
-    const fold = document.getElementById('path-fold');
-    if(fold) fold.open = false;
-    if(window.renderToday) window.renderToday();
-    if(window.renderPlan) window.renderPlan();
-    renderSubjectChips();
-    renderCurrentAffairs();
   }
+  if(id === 'plan' && window.renderPlan) window.renderPlan();
+  if(id === 'current-affairs') renderCurrentAffairs();
   if(id === 'test') renderTestModes();
   if(id === 'syllabus') renderExamInfo();
   window.scrollTo(0, 0);
@@ -1061,14 +1043,12 @@ function renderSubjectChips(){
    "live information" for something that has to work with no signal. */
 function renderCurrentAffairs(){
   const body = document.getElementById('ca-body');
-  const head = document.getElementById('ca-summary');
   if(!body || typeof CURRENT_AFFAIRS === 'undefined') return;
   const exam = currentExamObj();
   const mine = x => !x.exams || !exam || x.exams.indexOf(exam.key) !== -1;
   const items = (CURRENT_AFFAIRS.items || []).filter(mine)
     .slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const feeds = (CURRENT_AFFAIRS.feeds || []).filter(mine);
-  head.textContent = items.length ? `Current affairs (${items.length})` : 'Current affairs';
 
   const age = CURRENT_AFFAIRS.updated
     ? `Last written into the app on ${escHtml(CURRENT_AFFAIRS.updated)}.`
@@ -1093,21 +1073,15 @@ function renderCurrentAffairs(){
     </div>`;
 }
 
-/* "← All subjects" comes back to Study itself — the chips at the top already
-   are the subject list, so leaving the full path expanded underneath them
-   would show the same eleven subjects twice. */
+/* A chip on Study opens that subject on the All lessons screen. Study names
+   the subjects; the lessons inside one are a screen of their own, and openSubject
+   takes you there — so a chip and the row for the same subject land in exactly
+   the same place. ("← All subjects" is bound by prep/sync.js, which owns the
+   level it goes back to.) */
 document.addEventListener('click', e=>{
-  if(e.target.closest && e.target.closest('#ls-to-subjects')){
-    const fold = document.getElementById('path-fold');
-    if(fold) fold.open = false;
-    window.scrollTo(0, 0);
-    return;
-  }
   const b = e.target.closest && e.target.closest('[data-subj]');
   if(!b) return;
   focusOn(b.getAttribute('data-subj'));
-  const fold = document.getElementById('path-fold');
-  if(fold) fold.open = true;
   if(window.openSubject) window.openSubject(b.getAttribute('data-subj'));
   // The subject is the whole screen now, so start at the top of it rather
   // than scrolling to where it used to sit under everything else.

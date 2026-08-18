@@ -268,8 +268,9 @@ async function reachable(page, selector, where, minH){
   check('the horizontally-scrolling tab strip no longer exists',
     (await page.locator('#tabs').count()) === 0);
   const secs = await page.locator('main .tab-section').evaluateAll(els => els.map(e => e.id));
-  check('there are four in-page screens: study, test, progress, syllabus',
-    secs.sort().join(',') === 'progress,study,syllabus,test', secs.join(', '));
+  check('there are seven in-page screens: three in the bar, four in the menu',
+    secs.sort().join(',') === 'current-affairs,lessons,plan,progress,study,syllabus,test',
+    secs.join(', '));
   check('exactly one section is visible at a time',
     (await page.locator('main .tab-section:not(.hidden)').count()) === 1);
 
@@ -361,24 +362,25 @@ async function reachable(page, selector, where, minH){
   await reachable(page, '#subject-chips .subj-chip', 'subject chip', 40);
 
   await page.locator('#subject-chips [data-subj="DBMS"]').click();
-  await page.waitForFunction(() => document.getElementById('path-fold').open);
+  await page.waitForSelector('#lessons:not(.hidden)');
   check('tapping a subject opens that subject\'s lessons',
     (await page.locator('#learn-path .ls-row').count()) >= 1 &&
     /Normal|SQL|Keys|ACID|Transaction/i.test(await page.locator('#learn-path').innerText()),
     (await page.locator('#learn-path').innerText()).replace(/\s+/g, ' ').slice(0, 100));
 
   /* An open subject IS the screen. Scrolling out of it and finding the other
-     ten subjects, today's list and the run still sitting there is the same
-     "which one am I in?" question the exam picker exists to answer, asked one
-     level down — so the rest of Study goes away, on the whole page and not
-     just above the fold. */
+     ten subjects and today's list still sitting there is the same "which one
+     am I in?" question the exam picker exists to answer, asked one level
+     down — so a subject is not a panel on Study at all, it is the screen the
+     chip takes you to. */
   const shown = sel => page.evaluate(s => {
     const e = document.querySelector(s);
     return !!(e && e.offsetParent !== null);
   }, sel);
   check('the other subjects are gone while one is open', !(await shown('#subjects-card')));
   check('so is today\'s list', !(await shown('#today-card')) && !(await shown('#today-plan-card')));
-  check('and so is the run to the exam', !(await shown('#plan-fold')));
+  check('and the bottom bar no longer claims you are on Study',
+    (await page.locator(BAR + '.is-on').count()) === 0);
   check('no other subject is anywhere on the page, scrolled or not',
     !/DBMS practice|Reasoning|Operating Systems|Telangana|General Awareness/.test(
       await page.locator('#learn-list').innerText()),
@@ -386,15 +388,16 @@ async function reachable(page, selector, where, minH){
   check('and there is a way back out of it', await shown('#ls-to-subjects'));
 
   await page.locator('#ls-to-subjects').click();
-  await page.waitForFunction(() => {
-    const e = document.querySelector('#subjects-card');
-    return !!(e && e.offsetParent !== null);
-  });
-  check('coming back restores Study: subjects, today and the run',
-    (await shown('#subjects-card')) && (await shown('#today-card')) && (await shown('#plan-fold')));
-  check('and does not leave the full path expanded under the chips, listing them twice',
-    !(await page.locator('#path-fold').evaluate(e => e.open)));
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  await page.waitForFunction(() => !!document.querySelector('#learn-path [data-subject]'));
+  check('coming back lands on the whole list of subjects',
+    (await page.locator('#learn-path [data-subject]').count()) >= 5);
+
+  await page.locator(BAR + '[data-tab="study"]').click();
+  await page.waitForSelector('#study:not(.hidden)');
+  check('and Study is still subjects and today, with nothing else on it',
+    (await shown('#subjects-card')) && (await shown('#today-card')) &&
+    (await page.locator('#study .card').count()) === 4,
+    (await page.locator('#study').innerText()).replace(/\s+/g, ' ').slice(0, 140));
   await reachable(page, '#today-budget .td-chip', 'study-time chip');
   await reachable(page, '#today-plan .td-go', 'start button');
   await noSideScroll(page, "today's plan");
@@ -414,15 +417,8 @@ async function reachable(page, selector, where, minH){
   console.log('\n── English grammar chapters fit the phone ───────────────');
   await page.locator(BAR + '[data-tab="study"]').click();
   await page.waitForSelector('#today-plan .td-block');
-  // The full path is folded away — Study opens on today's tasks, not on a
-  // catalogue. Open it the way a student browsing it would.
-  await page.evaluate(() => {
-    const d = document.getElementById('path-fold');
-    if (d && !d.open) d.open = true;
-  });
-  await page.waitForSelector('#learn-path');
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
   await page.locator('#subject-chips [data-subj="English"]').click();
+  await page.waitForSelector('#lessons:not(.hidden)');
   await page.waitForSelector('#learn-path .ls-group');
   check('the "what to open next" banner is on screen, not just the chapter list',
     (await page.locator('#learn-path .ls-recommend').count()) === 1);
@@ -483,7 +479,7 @@ async function reachable(page, selector, where, minH){
 
   /* ── Deep links ─────────────────────────────────────────────────────── */
   console.log('\n── deep links land on the right screen, at its top ──────');
-  for (const h of ['syllabus', 'study', 'test', 'progress']) {
+  for (const h of ['syllabus', 'study', 'test', 'progress', 'lessons', 'plan', 'current-affairs']) {
     // about:blank first: going straight from #study to #test changes only the
     // fragment, which is a same-document navigation and would test the
     // hashchange path instead of the fresh-load path meant here.
@@ -497,7 +493,7 @@ async function reachable(page, selector, where, minH){
   }
   /* The old names still resolve: a link written before the rename, or a page
      served from an old service-worker cache, must not land on a blank screen. */
-  for (const [old_, now] of [['learn','study'], ['quiz','test'], ['schedule','study'], ['examinfo','syllabus']]) {
+  for (const [old_, now] of [['learn','lessons'], ['quiz','test'], ['schedule','plan'], ['examinfo','syllabus'], ['news','current-affairs']]) {
     await page.goto('about:blank');
     await page.goto(`http://localhost:${PORT}/learn.html#${old_}`, { waitUntil: 'load' });
     await page.waitForSelector(`#${now}:not(.hidden)`);
@@ -530,14 +526,33 @@ async function reachable(page, selector, where, minH){
   const drawerText = await page.locator('#nav-drawer').innerText();
   check('the menu names the exam at the top',
     /HAL CS/.test(drawerText), drawerText.slice(0, 60));
-  /* Four entries: changing exam, Jobs (a different page, not a prep section),
-     Syllabus, and reset — nothing that repeats a bottom-bar destination under
-     a second name. */
+  /* Changing exam, then everything Study no longer carries — Jobs (a different
+     page), the lesson catalogue, the run, current affairs and the syllabus —
+     then reset. Nothing here repeats a bottom-bar destination under a second
+     name, and every row is titled exactly as the screen it opens. */
   const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
     .map(t => t.trim().split('\n')[0].trim());
-  check('the menu holds Change exam, Jobs, Syllabus and Settings — and nothing else',
-    rows.length === 4 && /Change exam/.test(rows[0]) && /Jobs/.test(rows[1]) &&
-    /Syllabus/.test(rows[2]) && /Reset prep progress/.test(rows[3]), rows.join(' | '));
+  const expected = ['Change exam', 'Jobs', 'All lessons', 'The run to the exam',
+                    'Current affairs', 'Syllabus', 'Reset prep progress'];
+  check('the menu holds Change exam, the five destinations and Settings — and nothing else',
+    rows.length === expected.length && expected.every((e, i) => rows[i].indexOf(e) === 0),
+    rows.join(' | '));
+  for (const [id, title] of [['lessons','All lessons'], ['plan','The run to the exam'],
+                             ['current-affairs','Current affairs']]) {
+    await page.locator(`#nav-drawer [data-goto="${id}"]`).click();
+    await page.waitForSelector(`#${id}:not(.hidden)`);
+    check(`the menu opens ${title}, and the screen is titled the same`,
+      (await page.locator('#screen-title').textContent()).trim() === title &&
+      (await page.locator(BAR + '.is-on').count()) === 0 &&
+      await page.locator(`#nav-drawer [data-goto="${id}"]`).evaluate(e => e.classList.contains('is-on')));
+    await noSideScroll(page, title);
+    await page.locator('#nav-hamburger').click();
+    await page.waitForFunction(() => document.querySelector('#nav-drawer').classList.contains('is-open'));
+    await settled(page, '#nav-drawer');
+  }
+  check('the run names its own length rather than a fixed four weeks',
+    /of \d+ days done/.test(await page.locator('#plan-progress').innerText()),
+    (await page.locator('#plan-progress').innerText()).replace(/\s+/g, ' '));
   check('changing exam is one obvious action, not a list of exams to tap by mistake',
     (await page.locator('#nav-change-exam').count()) === 1 &&
     (await page.locator('#nav-drawer [data-pick-exam]').count()) === 0);

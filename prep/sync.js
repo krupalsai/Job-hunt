@@ -365,22 +365,10 @@
 
   function render() {
     if (!el("learn-path")) return;
-    /* One subject is a context, not a panel on a page about everything.
-       Opening one marks the Study screen so the page can put the other
-       subjects, today's list and the run away — scrolling out of a subject
-       and finding the other ten still sitting there is the same "which one am
-       I in?" question the exam picker exists to answer, asked one level down.
-       learn.html owns what the class hides; this only says which state it is
-       in. */
-    const list = el("learn-list");
-    if (list) list.classList.toggle("subject-open", view.level === "lessons");
-    /* The syllabus is rendered inside a <details>, so the view is not open
-       until the element is. The subject chips set that themselves, but every
-       other route in — a task on Today, a day in the plan, the way back out of
-       a lesson — did not, and left the list rendered into a closed fold with
-       nothing on screen. It belongs here, with the state it depends on. */
-    const fold = document.getElementById("path-fold");
-    if (fold) fold.open = view.level === "lessons";
+    /* One subject is a context, not a panel on a page about everything. It
+       gets the whole All lessons screen: scrolling out of Data Structures and
+       finding the other ten sitting under it is the same "which one am I in?"
+       question the exam picker exists to answer, asked one level down. */
     if (view.level === "subjects") return renderSubjects();
     if (view.level === "lessons") return renderLessons(view.subject);
   }
@@ -832,10 +820,12 @@
     if (!l) return;
     const list = subjects().find(x => x.name === l.subject).lessons;
     const i = list.findIndex(x => x.key === key);
-    if (window.gotoSection) window.gotoSection("study");
+    // Lessons live on their own screen, so a lesson named by Today or by a day
+    // of the run has to take you there before it can open anything.
+    if (window.gotoSection) window.gotoSection("lessons");
     else {
       document.querySelectorAll(".tab-section").forEach(x => x.classList.add("hidden"));
-      el("learn").classList.remove("hidden");
+      el("lessons").classList.remove("hidden");
     }
     view = { level: "lessons", subject: l.subject };
     // A day may point at a lesson still gated by an earlier one. Send them to
@@ -866,6 +856,9 @@
       arriving from the strip at the top and from the path below land in
       exactly the same place. */
   window.openSubject = function (name) {
+    // gotoSection first: it resets the view to the subject list, so the line
+    // below has to come after it or the subject would be thrown away.
+    if (window.gotoSection) window.gotoSection("lessons");
     view = { level: "lessons", subject: name };
     if (el("learn-reader")) el("learn-reader").classList.add("hidden");
     if (el("learn-list")) el("learn-list").classList.remove("hidden");
@@ -1006,12 +999,6 @@
        <div class="bar-note">${left === null
          ? "No exam date announced, so this run is the lesson path plus a revision tail."
          : `${days.length} days, counted back from the earliest day of the exam window.`}</div>`;
-    const summary = el("plan-summary");
-    if (summary) {
-      summary.textContent = left === null
-        ? `The run to the exam — ${days.length} days`
-        : `The run to the exam — ${days.length} days left`;
-    }
 
     let week = 0;
     el("plan-days").innerHTML = days.map(d => {

@@ -11,10 +11,13 @@
    "attempt everything, a guess is free" advice — advice that costs marks on a
    paper with negative marking.
 
-   Four destinations, one name each:
+   One name each, and the name in the menu is the title of the screen it opens:
 
-       Jobs · Study · Test · Progress          the bottom bar, always visible
-       ☰ → Change exam · Syllabus · Settings   everything else
+       Study · Test · Progress                 the bottom bar, always visible
+       ☰ → Change exam · Jobs · All lessons
+           · The run to the exam
+           · Current affairs · Syllabus
+           · Settings                          everything else
 
    There used to be five destinations, a drawer that repeated them, a row of
    home-screen tiles that repeated them again, and three of them carried a
@@ -152,19 +155,40 @@
     exam:  svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>'),
     book:  svg('<path d="M12 6.5C10.5 5 8.5 4.5 4 4.5v13c4.5 0 6.5.5 8 2 1.5-1.5 3.5-2 8-2v-13c-4.5 0-6.5.5-8 2z"/><path d="M12 6.5V21"/>'),
     gear:  svg('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'),
+    cal:   svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3"/>'),
+    news:  svg('<path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
   };
 
-  /* ── The four destinations ───────────────────────────────────────────────
-     Jobs is a page; the other three are sections of the prep page. Syllabus is
-     deliberately NOT here: it is read in week one and rarely again, and giving
-     it a permanent slot would cost one that Study or Test needs every day. */
+  /* ── The three destinations in the bar ───────────────────────────────────
+     All three are sections of the prep page. Everything else — Jobs, the
+     lessons, the run, current affairs, the syllabus — is in the menu: they are
+     opened when you want them, not every day, and a permanent slot for one of
+     them costs a slot Study or Test needs every day. */
   const DESTS = [
     { id: "study",    label: "Study",    icon: ICON.study, section: "study" },
     { id: "test",     label: "Test",     icon: ICON.test,  section: "test" },
     { id: "progress", label: "Progress", icon: ICON.stats, section: "progress" },
+  ];
+
+  /* ── The destinations in the menu ────────────────────────────────────────
+     Study answers "what do I study now" and nothing else. These are the rest
+     of the app, one row each, named on the row exactly as they are titled on
+     the screen they open. Jobs is a page; the other four are sections of the
+     prep page. */
+  const MENU_DESTS = [
+    { id: "jobs", label: "Jobs", icon: ICON.jobs, href: "/",
+      sub: "Openings tracked for this exam" },
+    { id: "lessons", label: "All lessons", icon: ICON.book,
+      sub: "Every subject, and every topic inside it" },
+    { id: "plan", label: "The run to the exam", icon: ICON.cal,
+      sub: "One day at a time, counted back from the exam" },
+    { id: "current-affairs", label: "Current affairs", icon: ICON.news,
+      sub: "What has been written in, and today's live feeds" },
+    { id: "syllabus", label: "Syllabus", icon: ICON.exam,
+      sub: "Pattern, marking, time budget, exam-hall tactics" },
   ];
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
@@ -422,13 +446,11 @@ nav#nav-bottom .nav-item.is-on::before{
         '<span class="nav-row-main"><span>Change exam</span>' +
         '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
 
-      '<a class="nav-row' + (activeId === "jobs" ? " is-on" : "") + '" data-goto="jobs" href="/">' + ICON.jobs +
-        '<span class="nav-row-main"><span>Jobs</span>' +
-        '<span class="nav-row-sub">Openings tracked for this exam</span></span></a>' +
-
-      '<a class="nav-row" data-goto="syllabus" href="' + esc(learnHref("syllabus")) + '">' + ICON.book +
-        '<span class="nav-row-main"><span>Syllabus</span>' +
-        '<span class="nav-row-sub">Pattern, marking, time budget, exam-hall tactics</span></span></a>' +
+      MENU_DESTS.map(d =>
+        '<a class="nav-row' + (activeId === d.id ? " is-on" : "") + '" data-goto="' + d.id + '" href="' +
+          esc(d.href || learnHref(d.id)) + '">' + d.icon +
+          '<span class="nav-row-main"><span>' + esc(d.label) + "</span>" +
+          '<span class="nav-row-sub">' + esc(d.sub) + "</span></span></a>").join("") +
 
       '<div class="nav-sep"></div>' +
       '<div class="nav-group">Settings</div>' +
@@ -736,11 +758,11 @@ nav#nav-bottom .nav-item.is-on::before{
     openChangeExam: () => openPicker("change"),
     close: closeAll,
     /** Called by the prep page whenever the visible section changes.
-        "syllabus" is a real destination even though it has no slot in the
-        bottom bar — it highlights in the menu and leaves the bar unlit, which
-        is honest: you are not on any of the four. */
+        A menu destination is as real as a bar one even though it has no slot
+        in the bar — it highlights in the menu and leaves the bar unlit, which
+        is honest: you are not on any of the three. */
     setActive(id) {
-      if (id === "syllabus" || DESTS.some(d => d.id === id)) activeId = id;
+      if (MENU_DESTS.some(d => d.id === id) || DESTS.some(d => d.id === id)) activeId = id;
       refresh();
     },
   };
