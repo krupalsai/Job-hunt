@@ -166,6 +166,9 @@
                   padding: 8px 11px; min-height: 40px; cursor: pointer; white-space: nowrap; }
   .other-none { flex: 0 0 auto; font-size: 10.5px; color: var(--dim); text-align: right;
                 max-width: 90px; line-height: 1.3; }
+  /* Closed rows read as past, not as something to act on. */
+  .other-row.is-closed .other-post { color: var(--muted); }
+  .other-row.is-closed .other-org { opacity: .75; }
   .hidden { display: none !important; }
   .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
                  border-top:1px solid var(--panel-border); padding-top:10px; }
@@ -212,6 +215,11 @@
 <details class="sec other-fold hidden" id="otherFold">
   <summary id="otherCount">Other openings</summary>
   <div id="otherJobs"></div>
+</details>
+
+<details class="sec other-fold hidden" id="closedFold">
+  <summary id="closedCount">Closed</summary>
+  <div id="closedJobs"></div>
 </details>
 
 <button class="qual-prompt" id="qualPrompt">
@@ -353,7 +361,14 @@ function render() {
   }
   if (!allJobs.length) { list.innerHTML = '<div class="empty">Loading…</div>'; return; }
 
-  const mine = exam ? allJobs.filter(j => { const e = examForJob(j); return e && e.key === exam.key; }) : [];
+  /* Closed applications are not openings. Two of the seven tracked rows say
+     "(applications closed)" in their own title while still carrying status
+     UPDATED — the ingestion never set CLOSED on them — so the status field
+     alone would leave them sitting among the live ones. Both signals are read,
+     and the wording matched is the explicit one, not a guess. */
+  const live = allJobs.filter(j => !isClosed(j));
+  const closed = allJobs.filter(isClosed);
+  const mine = exam ? live.filter(j => { const e = examForJob(j); return e && e.key === exam.key; }) : [];
   list.innerHTML = mine.length
     ? mine.map(cardHtml).join('')
     : '<div class="empty">No opening is being tracked for ' +
@@ -368,7 +383,7 @@ function render() {
      app, so no amount of switching would ever reveal them. A tracker that
      silently drops what it tracked is a worse failure than a mixed list, so
      the rest are here, folded away, each saying which exam it belongs to. */
-  const others = allJobs.filter(j => mine.indexOf(j) === -1);
+  const others = live.filter(j => mine.indexOf(j) === -1);
   const box = document.getElementById('otherJobs');
   document.getElementById('otherFold').classList.toggle('hidden', others.length === 0);
   document.getElementById('otherCount').textContent =
@@ -387,6 +402,35 @@ function render() {
         : `<span class="other-none">no syllabus yet</span>`}
     </div>`;
   }).join('');
+
+  /* Closed, kept rather than dropped: one you applied for is still the exam
+     you are sitting, and one you missed is worth seeing once so the next
+     cycle is not a surprise. */
+  document.getElementById('closedFold').classList.toggle('hidden', closed.length === 0);
+  document.getElementById('closedCount').textContent = `Closed (${closed.length})`;
+  document.getElementById('closedJobs').innerHTML = closed.map(j => {
+    const e = examForJob(j);
+    return `<div class="other-row is-closed">
+      <div class="other-main">
+        <div class="other-org">${escapeHtml(j.organization)}</div>
+        <div class="other-post">${escapeHtml(j.post_name)}</div>
+        <div class="other-meta">${escapeHtml(j.deadline_text || 'applications closed')}${
+          applied[j.id] ? ' · <span class="ok-tag">you applied</span>' : ''}</div>
+      </div>
+      ${e && applied[j.id]
+        ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">${escapeHtml(e.short)} →</button>`
+        : `<span class="other-none">closed</span>`}
+    </div>`;
+  }).join('');
+}
+
+/** Applications closed. Read from the status where the ingestion set it, and
+    from the notification's own wording where it did not — "(applications
+    closed)" in a title is explicit, not an inference. */
+function isClosed(j){
+  if (String(j.status || '').toUpperCase() === 'CLOSED') return true;
+  const text = `${j.post_name || ''} ${j.deadline_text || ''}`;
+  return /\bapplications?\s+closed\b|\bclosed\b\s*\)/i.test(text);
 }
 
 /* Switching from an opening is the same switch the ☰ menu offers — one route,

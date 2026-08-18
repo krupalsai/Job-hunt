@@ -712,6 +712,13 @@ async function reachable(page, selector, where, minH){
         status: 'UPDATED', deadline_text: '30 Aug 2026', updated_at: new Date().toISOString() },
       { id: 'c', organization: 'Indian Air Force', post_name: 'Agniveervayu 02/2027',
         status: 'UPDATED', deadline_text: '22 Sep 2026', updated_at: new Date().toISOString() },
+      /* Its window has shut, but the ingestion never marked it CLOSED — the
+         notification says so in its own title and nowhere else. */
+      { id: 'd', organization: 'Hindustan Aeronautics Limited (HAL)',
+        post_name: 'Design Trainee (applications closed)',
+        status: 'UPDATED', deadline_text: '02 Jul 2026', updated_at: new Date().toISOString() },
+      { id: 'e', organization: 'Singareni Collieries', post_name: 'Junior Assistant',
+        status: 'CLOSED', deadline_text: '11 Jun 2026', updated_at: new Date().toISOString() },
     ]) }));
   await page.evaluate(() => localStorage.setItem('jobhunt_current_exam', 'hal-cs'));
   await page.goto('about:blank');
@@ -731,6 +738,19 @@ async function reachable(page, selector, where, minH){
   check('and one that belongs to no exam at all, which says so honestly',
     /Air Force/i.test(otherText) && /no syllabus yet/i.test(otherText),
     otherText.replace(/\s+/g, ' ').slice(0, 160));
+  check('and a closed application is not sitting among the live openings',
+    !/Design Trainee/i.test(await page.locator('#examJobs').innerText()) &&
+    !/Junior Assistant/i.test(otherText),
+    await page.locator('#examJobs').innerText().then(t => t.replace(/\s+/g, ' ').slice(0, 120)));
+  check('it is in a section of its own, counted',
+    /Closed \(2\)/.test(await page.locator('#closedCount').textContent()),
+    await page.locator('#closedCount').textContent());
+  await page.locator('#closedFold summary').click();
+  const closedText = await page.locator('#closedJobs').innerText();
+  check('holding the one whose title says the applications closed',
+    /Design Trainee/i.test(closedText), closedText.replace(/\s+/g, ' ').slice(0, 140));
+  check('and the one the ingestion marked CLOSED',
+    /Junior Assistant/i.test(closedText), closedText.replace(/\s+/g, ' ').slice(0, 140));
   await reachable(page, '.other-fold summary', 'other-openings toggle', 40);
   await page.unroute('**/rest/v1/jobs**');
 
@@ -928,9 +948,18 @@ async function reachable(page, selector, where, minH){
   check('opening a subject starts a visible timer', running.on, JSON.stringify(running));
   check('which names the topic and shows the time', /DBMS/.test(running.text) && /\d+:\d\d/.test(running.text),
     running.text);
-  const barBox = await page.locator('nav#nav-bottom').boundingBox();
-  check('it sits clear of the bottom bar and on screen',
-    running.bottom <= barBox.y + 1 && running.right <= PHONE.width + 0.5, JSON.stringify(running));
+  const headBox = await page.locator('header').boundingBox();
+  check('it sits in the top-right corner, inside the header',
+    running.bottom <= headBox.y + headBox.height + 1 && running.right <= PHONE.width - 4,
+    JSON.stringify({ pill: running, header: headBox }));
+  check('and it does not cover the screen title or the exam name',
+    await page.evaluate(() => {
+      const p = document.getElementById('focus-pill').getBoundingClientRect();
+      return ['#screen-title', '#nav-exam'].every(sel => {
+        const r = document.querySelector(sel).getBoundingClientRect();
+        return r.right <= p.left + 0.5;      // the title flexes, it is not overlapped
+      });
+    }));
 
   const later = await page.evaluate(() => {
     __focus.since = Date.now() - 5 * 60 * 1000 - 1000;
