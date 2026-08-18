@@ -904,6 +904,55 @@ async function reachable(page, selector, where, minH){
       return document.getElementById('focus-warn').classList.contains('hidden');
     }));
 
+  /* The timer you can see. The watch above measures silently, which from the
+     outside is indistinguishable from doing nothing. */
+  console.log('\n── the timer is visible and running ─────────────────────');
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
+  // offsetParent is null for position:fixed, so visibility is measured from
+  // the box and the computed display instead.
+  const pill = async () => page.evaluate(() => {
+    const e = document.getElementById('focus-pill');
+    if (!e) return { on: false };
+    const r = e.getBoundingClientRect();
+    return { on: getComputedStyle(e).display !== 'none' && r.width > 0,
+             text: e.innerText.replace(/\s+/g, ' ').trim(),
+             settled: e.classList.contains('settled'),
+             bottom: r.bottom, right: r.right };
+  });
+  check('nothing is claimed before a topic is open', !(await pill()).on);
+
+  await page.locator('#subject-chips [data-subj="DBMS"]').click();
+  await page.waitForTimeout(1200);
+  const running = await pill();
+  check('opening a subject starts a visible timer', running.on, JSON.stringify(running));
+  check('which names the topic and shows the time', /DBMS/.test(running.text) && /\d+:\d\d/.test(running.text),
+    running.text);
+  const barBox = await page.locator('nav#nav-bottom').boundingBox();
+  check('it sits clear of the bottom bar and on screen',
+    running.bottom <= barBox.y + 1 && running.right <= PHONE.width + 0.5, JSON.stringify(running));
+
+  const later = await page.evaluate(() => {
+    __focus.since = Date.now() - 5 * 60 * 1000 - 1000;
+    __tickFocus();
+    const e = document.getElementById('focus-pill');
+    return { text: e.innerText.replace(/\s+/g, ' ').trim(), settled: e.classList.contains('settled') };
+  });
+  check('and marks the five-minute settle mark when it is reached',
+    later.settled && /5:0\d/.test(later.text), JSON.stringify(later));
+
+  /* A phone locked on a lesson for an hour has not studied for an hour. */
+  const paused = await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { value: true, configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+    const away = __focus.since;
+    Object.defineProperty(document, 'hidden', { value: false, configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+    return { stoppedWhileAway: away === 0, restartedFresh: Date.now() - __focus.since < 1500 };
+  });
+  check('time away from the app is not counted as study time',
+    paused.stoppedWhileAway && paused.restartedFresh, JSON.stringify(paused));
+
   /* ── The app follows the phone's light/dark setting ─────────────────────
      Every colour is a token defined twice; a literal hex in a component is a
      colour that only works in one scheme, which is exactly how the subject

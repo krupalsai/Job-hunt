@@ -403,6 +403,27 @@
                          font-variant-numeric:tabular-nums; }
   .subj-chip.is-done .subj-meta{ color:var(--accent); }
 
+  /* The visible timer. Small, fixed above the bottom bar, out of the way of
+     the content but never off-screen while you are studying. */
+  #focus-pill{ display:none; }
+  #focus-pill.is-on{
+    display:flex; align-items:center; gap:7px;
+    position:fixed; right:12px; z-index:55;
+    bottom:calc(var(--nav-h, 60px) + 10px + env(safe-area-inset-bottom));
+    max-width:calc(100vw - 24px);
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:20px;
+    padding:7px 12px; box-shadow:0 2px 10px rgba(15,23,42,.14);
+    font-size:12px; font-weight:600; color:var(--muted);
+  }
+  #focus-pill .fp-dot{ flex:0 0 auto; width:7px; height:7px; border-radius:50%;
+                       background:var(--warn); }
+  #focus-pill .fp-topic{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+                         max-width:44vw; color:var(--text); }
+  #focus-pill .fp-time{ font-variant-numeric:tabular-nums; color:var(--muted); }
+  #focus-pill.settled{ border-color:#16a34a55; }
+  #focus-pill.settled .fp-dot{ background:var(--accent); }
+  #focus-pill.settled .fp-time{ color:var(--accent-soft); }
+
   /* The focus watch — a warning, not a wall. Warm, not alarming. */
   #focus-warn{ border-color:#f59e0b66; background:#f59e0b14; }
   .fw-head{ font-size:14px; font-weight:700; color:var(--warn); }
@@ -876,6 +897,7 @@ function focusOn(topic){
   FOCUS.since = topic ? now : 0;
   FOCUS.switches = FOCUS.switches.filter(x => now - x.at < FOCUS.WINDOW_MS);
   renderFocusWarning();
+  tickFocus();
 }
 
 function renderFocusWarning(){
@@ -919,7 +941,60 @@ document.addEventListener('click', e=>{
     renderFocusWarning();
   }
 });
+/* ── The timer you can actually see ──────────────────────────────────────
+   The watch above measures and warns, but silently — which from the outside is
+   indistinguishable from doing nothing. This is the part you can see: the topic
+   on screen and how long you have been on it, ticking, above the bottom bar
+   where it is in view on Study and on Test without covering either.
+
+   It goes green at the five-minute mark, because that is the line the warning
+   is measured against — reaching it should look like reaching something.
+
+   Time only counts while the app is actually in front of you. A phone locked
+   on a lesson for an hour has not studied for an hour, and a timer that claims
+   it would make every number on this screen worth less. */
+function focusPill(){
+  let el = document.getElementById('focus-pill');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'focus-pill';
+    el.setAttribute('aria-live', 'off');
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+function tickFocus(){
+  const el = focusPill();
+  if(!FOCUS.topic || !FOCUS.since){
+    el.classList.remove('is-on');
+    el.textContent = '';
+    return;
+  }
+  const ms = Date.now() - FOCUS.since;
+  const settled = ms >= FOCUS.SETTLE_MS;
+  const m = Math.floor(ms / 60000), sec = Math.floor(ms / 1000) % 60;
+  el.classList.add('is-on');
+  el.classList.toggle('settled', settled);
+  el.innerHTML = `<span class="fp-dot"></span><span class="fp-topic">${escHtml(FOCUS.topic)}</span>` +
+    `<span class="fp-time">${m}:${String(sec).padStart(2, '0')}</span>`;
+}
+setInterval(tickFocus, 1000);
+
+/* A locked phone is not study time. Leaving stops the clock; coming back
+   starts the current topic again from zero rather than banking the gap. */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden){
+    FOCUS.since = 0;
+  } else if(FOCUS.topic){
+    FOCUS.since = Date.now();
+  }
+  tickFocus();
+});
+
+window.focusOn = focusOn;        // prep/sync.js reports lesson opens through this
 window.__focus = FOCUS;          // the tests drive the clock through this
+window.__tickFocus = tickFocus;
 
 /* ── Subjects, at the top of Study ────────────────────────────────────────
    Built from the same subjects() the lesson path below uses (exposed by
@@ -2039,6 +2114,7 @@ function skillBlockHtml(b){
 function openSkillDrill(key){
   const s = (typeof SKILL_BY_KEY !== 'undefined') ? SKILL_BY_KEY[key] : null;
   if(!s) return;
+  focusOn(s.subject);
   const pool = skillPool(key);
   const stat = skillStat(key);
   const size = Math.min(5, pool.length);

@@ -481,7 +481,10 @@
       el("learn-path").innerHTML = chaptersBlock +
         `<div class="ls-subject">${esc(name)} · ${topics.length} topic${topics.length === 1 ? "" : "s"}</div>` +
         `<p class="ls-basis">${esc(basisOf(syl, exKey))}${
-          syl.verified ? "" : " · not yet checked against the official notification"}</p>` +
+          // Most bases already say they are unchecked; only add it where the
+          // sentence does not, rather than printing the caveat twice.
+          syl.verified || /not (yet )?(been )?(checked|verified)/i.test(basisOf(syl, exKey))
+            ? "" : " · not yet checked against the official notification"}</p>` +
         topics.map((t, i) => {
           const ls = (t.lessons || []).map(k => lessonByKey[k]).filter(Boolean);
           const sk = (t.skills || []).filter(k => typeof SKILL_BY_KEY !== "undefined" && SKILL_BY_KEY[k]);
@@ -592,6 +595,10 @@
   }
 
   function openLesson(name, i, part) {
+    // Reading a lesson is time on that subject — the visible timer in
+    // learn.html starts from here, whichever route opened it: a task on
+    // Today, a syllabus row, or a day in the plan.
+    if (window.focusOn) window.focusOn(name);
     const list = subjects().find(x => x.name === name).lessons;
     const l = list[i];
     const secs = sectionsOf(l);

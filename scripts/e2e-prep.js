@@ -317,9 +317,13 @@ function check(name, cond, detail){
     (await page.locator('#learn-path .ls-badge').count()) === topicRows);
   check('nothing is locked — any topic can be opened when you need it',
     (await page.locator('#learn-path .ls-row.is-locked').count()) === 0);
+  /* The wording varies — most bases state the caveat themselves and the screen
+     does not repeat it. What must always be true is that the row says where
+     the list came from AND that it has not been checked against the paper. */
+  const basisLine = await page.locator('#learn-path .ls-basis').textContent();
   check('the topic list says where it came from, and that it is unverified',
-    /not yet checked against the official notification/.test(
-      await page.locator('#learn-path .ls-basis').textContent()));
+    basisLine.length > 20 && /not (yet )?(been )?(checked|verified)/i.test(basisLine),
+    basisLine.slice(0, 120));
   check('there is a way back to all subjects', await page.locator('#ls-to-subjects').isVisible());
 
   await page.locator('#learn-path .ls-row').first().click();
