@@ -31,8 +31,8 @@ Once an exam is chosen, `/` is a hub in the order the day is actually used:
 1. **The exam** — pattern, marking, the date or window with a countdown, marks
    per section, and a way into the full syllabus.
 2. **Openings for that exam** — the notification the studying is for.
-3. **Preparation** — Syllabus, Lessons, Practice, Today's plan, Mock exam,
-   Progress; one tap each, every link carrying the chosen exam.
+3. **Preparation** — Study, Test, Progress and the menu destinations; one tap
+   each, every link carrying the chosen exam.
 4. **Other openings** — everything else being tracked, filtered by
    eligible/applied/all.
 
@@ -43,20 +43,27 @@ Once an exam is chosen, `/` is a hub in the order the day is actually used:
 The app is used on an Android phone in a browser, and it is built for that
 first. Both pages share one navigation, injected by `nav.js`:
 
-- **A bottom tab bar** — Jobs · Learn · Practice · Plan · Progress. Fixed to the
-  bottom, always visible, current destination highlighted with colour *and* a
-  bar above it. Five, not seven, and all five on screen at once: the prep page
-  used to carry seven tabs in a strip that scrolled off both edges, so the tab
-  you wanted was as often invisible as visible.
-- **A side drawer** behind the hamburger — every exam, tap one to switch to it,
-  plus every destination and the settings (qualification, reset prep progress).
+- **A bottom tab bar** — Study · Test · Progress. Fixed to the bottom, always
+  visible, current destination highlighted with colour *and* a bar above it.
+  Three, not seven, and all three on screen at once: the prep page used to carry
+  seven tabs in a strip that scrolled off both edges, so the tab you wanted was
+  as often invisible as visible.
+- **A side drawer** behind the hamburger — Change exam, then the destinations
+  that are opened when they are wanted rather than every day: **Jobs**, **All
+  lessons**, **The run to the exam**, **Current affairs**, **Syllabus** — and
+  the settings (qualification, reset prep progress). Every row is titled exactly
+  as the screen it opens.
 - **An exam switcher in the header** — HAL CS, SSC CGL and TS SI swap without
   editing the URL. On both pages the title *is* the switcher.
 - **The first-run exam question**, over everything until it is answered.
 
 Sections of the prep page are addressable: `/learn.html?exam=ssc-cgl#quiz`
 opens SSC practice directly, which is how the job list links into it, and
-`#mock` opens the full paper rather than the practice screen.
+`#mock` opens the full paper rather than the practice screen. The hash is the
+name on the screen — `#study`, `#test`, `#progress`, `#lessons`, `#plan`,
+`#current-affairs`, `#syllabus` — with the older spellings (`#learn`,
+`#schedule`, `#examinfo`, `#news`) still resolving so bookmarks and cached
+pages do not land on a blank screen.
 
 Which exam you last chose is remembered in `jobhunt_current_exam` and every
 generated link carries it. On `/learn.html` the `?exam=` parameter is the
@@ -76,9 +83,52 @@ needs horizontal scrolling or puts a tap target out of reach.
 Three exams: HAL **Management Trainee (Computer Science)**, **SSC CGL** and
 **Telangana SI**. Arithmetic, reasoning and English are shared between them
 rather than copied; the paper structure, marking scheme and tactics are
-per-exam, because those are what differ. Four destinations in the bottom bar — Learn,
-Practice, Plan, Progress — plus **Exam info** in the drawer, which holds what
-used to be the Overview, Topics and Time Strategy tabs.
+per-exam, because those are what differ.
+
+**Study answers one question — what do I study now — and asks nothing else of
+you.** It is the subjects, and today's list. The run to the exam, current
+affairs and the full lesson catalogue used to sit under those as three closed
+folds; a fold is still something on the screen to decide about, and the one
+screen that should not hand the student a decision is the one they open when
+they do not know where to start. All three are their own screen in the ☰ menu
+now, alongside the syllabus — which holds what used to be the Overview, Topics
+and Time Strategy tabs.
+
+A subject is not a panel on Study either: tapping one goes to **All lessons**
+with that subject open, so the subject you are in is the whole screen.
+
+## What to study first, when there is not time for all of it
+
+An exam may carry a `focus` block (`prep/exams.js`) saying what to buy first.
+HAL's says: English & Reasoning, then five CS subjects, and General Awareness
+never gets a day of its own.
+
+The reasoning is written into the file, because it is a judgement and not a
+measurement. The paper is 20 General Awareness + 40 English & Reasoning + 100
+CS, and clause 7.6 of the notification requires 50% — 80 of 160 — just to stay
+in the selection. A candidate starting from scratch cannot cover 100 marks of
+Computer Science in the weeks before the paper, and spreading across all eight
+CS subjects is how someone ends up knowing a little of everything and clearing
+nothing. So the run buys those 80 marks in the cheapest order: 40 marks that
+need no CS background first, then the CS subjects whose answers can be
+*computed* — scheduling and cache formulas, normal forms, subnetting, Big-O —
+rather than recalled.
+
+Three things follow from it, and all three are visible on screen rather than
+only in the source:
+
+- **The run to the exam** teaches in that order, capped at `maxLessonsPerDay`
+  because three new topics is a day's work for someone starting cold and five
+  is a reading list nobody finishes.
+- **Whatever does not fit is named.** The plan says which topics fell off the
+  end and that they are what to lose, instead of quietly dropping them and
+  implying the run covered everything.
+- **Today** applies the same order as a multiplier on need, not as a hard
+  sequence — a subject you are actually failing still outranks one the strategy
+  likes, or the list stops responding to how you are doing.
+
+Delete the `focus` block and everything falls back to section order, which is
+the right default for a candidate who is not starting from zero.
 
 Exam info is generated from `prep/exams.js` rather than written for HAL: the
 snapshot, the per-section time budget and the exam-hall tactics all come from

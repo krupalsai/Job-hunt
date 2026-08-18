@@ -239,7 +239,12 @@ function check(name, cond, detail){
     await startPractice();
     await page.waitForSelector('#quiz-live:not(.hidden)');
     for(let i=0;i<10;i++){
-      seen.push(await page.locator('#q-text').textContent());
+      /* The id, not the sentence. Several generators deliberately share one
+         stem — "Which of these numbers is prime?" is one sentence and a
+         thousand different questions — so comparing the text on screen calls
+         two different questions a repeat, and the check fails on a run where
+         the generator happened to build two primes questions. */
+      seen.push(await page.evaluate(() => currentQuiz[currentIndex].id));
       const opts = page.locator('#q-options .opt');
       await opts.first().click();
       await page.click('#next-btn');
@@ -253,14 +258,19 @@ function check(name, cond, detail){
   const overlap = setB.filter(t=>firstIds.has(t)).length;
   check('consecutive quizzes share no questions', overlap === 0, `${overlap} repeated`);
 
-  /* The full lesson path is behind "All lessons for this exam" — Study opens on
-     today's tasks, not on a catalogue. Open it the way a student browsing it
-     would. */
+  /* The full lesson path is its own screen, reached from the ☰ menu — Study
+     opens on subjects and today's tasks, not on a catalogue. */
   const openPath = async () => {
-    await page.evaluate(() => {
-      const d = document.getElementById('path-fold');
-      if (d && !d.open) d.open = true;
-    });
+    await page.evaluate(() => window.gotoSection && window.gotoSection('lessons'));
+    await page.waitForSelector('#lessons:not(.hidden)');
+  };
+
+  /* A subject chip lives on Study and opens that subject on All lessons. Going
+     back to Study is how a student picks a different one. */
+  const openSubjectChip = async (name) => {
+    await page.evaluate(() => window.gotoSection && window.gotoSection('study'));
+    await page.locator(`#subject-chips [data-subj="${name}"]`).click();
+    await page.waitForSelector('#lessons:not(.hidden)');
   };
 
   console.log('\n── fun mode: same pool, a streak that moves ─────────────');
@@ -287,11 +297,9 @@ function check(name, cond, detail){
     rec.best >= 1, JSON.stringify(rec));
 
   console.log('\n── learn: subjects first ────────────────────────────────');
-  await page.click('nav#nav-bottom [data-tab="study"]');
-  await openPath();
   // Earlier steps navigated into a subject (via "Teach me this topic"), and the
-  // app deliberately remembers where you were. Step back out first.
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
+  // app deliberately remembers where you were. Opening the screen from the menu
+  // steps back out on its own — a destination is not a resume point.
   await openPath();
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
   // Eleven: every subject HAL examines, whether or not it has lessons yet, and
@@ -308,7 +316,7 @@ function check(name, cond, detail){
      so the eighth is listed too, honestly marked — a gap you can see is one
      you can go and read elsewhere, and a gap you cannot see is a topic you
      walk into cold. */
-  await page.locator('#subject-chips [data-subj="Data Structures"]').click();
+  await openSubjectChip('Data Structures');
   const topicRows = await page.locator('#learn-path .ls-row').count();
   const written = await page.evaluate(() => CURRICULUM.filter(l => l.subject === 'Data Structures').length);
   check('the subject opens its full syllabus, not only what has been written',
@@ -403,7 +411,7 @@ function check(name, cond, detail){
   check('tapping Study comes back to Study, not into the last subject',
     await page.locator('#subjects-card').isVisible() &&
     await page.locator('#today-card').isVisible());
-  await page.locator('#subject-chips [data-subj="Data Structures"]').click();
+  await openSubjectChip('Data Structures');
   check('and the subject is one tap away, with its full syllabus intact',
     (await page.locator('#learn-path .ls-row').count()) === 8);
   /* Mastering a lesson used to unlock the next. Nothing is locked now — the
@@ -424,9 +432,7 @@ function check(name, cond, detail){
      what turns exposure into something that transfers. And grammar is a
      FINISHABLE list; vocabulary is not; the screen has to say so, not just
      imply it by which one has more questions. */
-  await page.click('nav#nav-bottom [data-tab="study"]');
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#subject-chips [data-subj="English"]').click();
+  await openSubjectChip('English');
   await page.waitForSelector('#learn-path .ls-group');
 
   const groups = await page.locator('#learn-path .ls-group').allTextContents();
@@ -463,10 +469,7 @@ function check(name, cond, detail){
      answer wrong to exercise weak-area detection, and by design that now
      reorders this very list, so asserting against a specific state has to
      start by setting one. */
-  const rerenderEnglish = () => page.evaluate(() => {
-    window.learnGoHome();
-    document.querySelector('#subject-chips [data-subj="English"]').click();
-  });
+  const rerenderEnglish = () => openSubjectChip('English');
 
   await page.evaluate(() => { state.skills = {}; save(); });
   await rerenderEnglish();
@@ -529,8 +532,7 @@ function check(name, cond, detail){
 
   // A subject nobody has split into grammar/vocabulary must show no chapters
   // at all — this is additive, not a change to how every subject renders.
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#subject-chips [data-subj="Data Structures"]').click();
+  await openSubjectChip('Data Structures');
   check('a subject with no grammar/vocabulary split shows no chapters block',
     (await page.locator('#learn-path .ls-group').count()) === 0);
   check('and its syllabus renders the same way as any other subject',
@@ -538,8 +540,7 @@ function check(name, cond, detail){
 
   // Opening a chapter goes straight into the same micro-drill Progress and
   // the quiz alert already use — rule taught first, then the questions.
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await page.locator('#subject-chips [data-subj="English"]').click();
+  await openSubjectChip('English');
   await page.waitForSelector('#learn-path .ls-group');
   const tenseRow = page.locator('#learn-path [data-skill="verb-tenses-forms"]');
   await tenseRow.click();
@@ -955,11 +956,10 @@ function check(name, cond, detail){
   await page.goto(`http://localhost:${PORT}/learn.html`, { waitUntil: 'networkidle' });
 
   console.log('\n── the run to the exam is as long as the time left ──────');
-  await page.click('nav#nav-bottom [data-tab="study"]');
-  const openRun = async () => page.evaluate(() => {
-    const d = document.getElementById('plan-fold');
-    if (d && !d.open) d.open = true;
-  });
+  const openRun = async () => {
+    await page.evaluate(() => window.gotoSection && window.gotoSection('plan'));
+    await page.waitForSelector('#plan:not(.hidden)');
+  };
   await openRun();
   const days = await page.locator('#plan-days .plan-day').count();
   /* It used to be twenty-eight days whatever the date said — a fortnight the
@@ -979,9 +979,28 @@ function check(name, cond, detail){
     /Full mock/.test(await page.locator('#plan-days .plan-day').last().textContent()));
   const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
   // A named lesson, not "Day 1: revision". The plan is exam-scoped, so day one
-  // is the first lesson of the chosen exam's path.
+  // is the first lesson of the order the exam's `focus` asks for — English,
+  // because 40 marks of English & Reasoning need no Computer Science at all
+  // and are the cheapest marks on the paper for someone starting cold.
   check('a day names the actual lessons, not a vague focus',
-    /HAL, defence and space/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+    /Error spotting/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+  check('and the run opens on the focus subject, not on the paper\'s first section',
+    /Day 1 · English/.test(firstDay.replace(/\s+/g, ' ')), firstDay.replace(/\s+/g,' ').slice(0,60));
+
+  /* General Awareness is 20 marks and is deliberately NOT a day of the run:
+     it is recall, it does not reward a whole day, and the strategy gives it a
+     standing daily trickle instead. A run that spent a scarce day on it would
+     be buying the least learnable marks on the paper. */
+  const runSubjects = await page.locator('#plan-days .plan-daynum').allTextContents();
+  check('the trickle subject never takes a whole day of the run',
+    !runSubjects.some(t => /· General Awareness/.test(t)),
+    runSubjects.slice(0, 6).join(' | '));
+
+  const why = await page.locator('#plan-progress .plan-why').innerText();
+  check('the run argues its own order instead of leaving it a mystery',
+    /English first/i.test(why) && /80 of 160/.test(why), why.replace(/\s+/g, ' ').slice(0, 160));
+  check('and says plainly what does not fit in the days left',
+    /do not fit|does not fit/.test(why), why.replace(/\s+/g, ' ').slice(0, 200));
   check('every day has an action button',
     (await page.locator('#plan-days [data-go]').count()) === days);
 
@@ -997,7 +1016,7 @@ function check(name, cond, detail){
   await page.locator('#plan-days [data-go]').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
   check('the day button opens that exact lesson',
-    /HAL, defence and space/.test(await page.locator('#learn-reader .ls-main').textContent()));
+    /Error spotting/.test(await page.locator('#learn-reader .ls-main').textContent()));
 
   // Day 25+ used to say "Full mock — 160 questions, 150 minutes" and then
   // hand you ten questions from one subject when tapped — a promise the app
@@ -1437,10 +1456,7 @@ function check(name, cond, detail){
 
   // The lesson has to be openable from inside TS SI, or it is a file nobody
   // reaches. Learn → subject → first lesson.
-  await page.click('nav#nav-bottom [data-tab="study"]');
-  await page.evaluate(() => window.learnGoHome && window.learnGoHome());
-  await openPath();
-  await page.locator('#subject-chips [data-subj="Telangana Movement & State Formation"]').click();
+  await openSubjectChip('Telangana Movement & State Formation');
   const tmRows = await page.locator('#learn-path .ls-row').count();
   check('Telangana Movement opens its own lesson list inside TS SI', tmRows >= 3, `${tmRows} rows`);
   await page.locator('#learn-path .ls-row').first().click();
@@ -1534,11 +1550,11 @@ function check(name, cond, detail){
      information." Lessons stay bundled because they have to work with no
      signal. News is the opposite case, and the app says which is which. */
   console.log('\n── current affairs, and what the app promises ───────────');
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
-  await page.locator('#ca-fold summary').click();
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#current-affairs`, { waitUntil: 'networkidle' });
   const caText = await page.locator('#ca-body').innerText();
-  check('Study has a current affairs section at all',
-    (await page.locator('#ca-fold').count()) === 1);
+  check('current affairs is a screen of its own, reached from the menu',
+    (await page.locator('#nav-drawer [data-goto="current-affairs"]').count()) === 1 &&
+    await page.locator('#current-affairs').isVisible());
   check('it does not present bundled news as current',
     /will not bundle/i.test(caText), caText.replace(/\s+/g, ' ').slice(0, 120));
   check('and sends you to live sources instead',
@@ -1548,12 +1564,10 @@ function check(name, cond, detail){
   check('every item it does hold carries a date and a source',
     await page.evaluate(() => (CURRENT_AFFAIRS.items || [])
       .every(i => /^\d{4}-\d{2}-\d{2}$/.test(i.date) && i.source && i.headline)));
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#study`, { waitUntil: 'networkidle' });
-  await page.locator('#ca-fold summary').click();
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#current-affairs`, { waitUntil: 'networkidle' });
   check('and the Telangana paper gets its state source, which HAL does not',
     /telangana\.gov\.in/i.test(await page.locator('#ca-body').innerHTML()));
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
-  await page.locator('#ca-fold summary').click();
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#current-affairs`, { waitUntil: 'networkidle' });
   check('exam scoping works the other way too',
     !/telangana\.gov\.in/i.test(await page.locator('#ca-body').innerHTML()));
 
