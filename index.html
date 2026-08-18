@@ -428,13 +428,22 @@ function render() {
   }).join('');
 }
 
-/** Applications closed. Read from the status where the ingestion set it, and
-    from the notification's own wording where it did not — "(applications
-    closed)" in a title is explicit, not an inference. */
+/** Applications closed. Three signals, because no single one is reliable
+    here: the status where the ingestion set it; the notification's own
+    wording where it did not — "(applications closed)" in a title is explicit,
+    not an inference; and a real closing date that has passed. The date is
+    only trusted when the row is not an estimate — closing an opening on a
+    guessed date would hide one you could still apply for, the more damaging
+    of the two mistakes. */
 function isClosed(j){
   if (String(j.status || '').toUpperCase() === 'CLOSED') return true;
   const text = `${j.post_name || ''} ${j.deadline_text || ''}`;
-  return /\bapplications?\s+closed\b|\bclosed\b\s*\)/i.test(text);
+  if (/\bapplications?\s+closed\b|\bclosed\b\s*\)/i.test(text)) return true;
+  if (j.deadline && !j.is_estimated) {
+    const t = new Date(j.deadline).getTime();
+    if (t && t < Date.now()) return true;
+  }
+  return false;
 }
 
 /* Switching from an opening is the same switch the ☰ menu offers — one route,

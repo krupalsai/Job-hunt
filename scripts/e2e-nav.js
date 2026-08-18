@@ -728,6 +728,17 @@ async function reachable(page, selector, where, minH){
         status: 'UPDATED', deadline_text: '02 Jul 2026', updated_at: new Date().toISOString() },
       { id: 'e', organization: 'Singareni Collieries', post_name: 'Junior Assistant',
         status: 'CLOSED', deadline_text: '11 Jun 2026', updated_at: new Date().toISOString() },
+      /* A real closing date, two days gone, still badged DEADLINE_APPROACHING. */
+      { id: 'f', organization: 'BHEL', post_name: 'Graduate Apprenticeship',
+        status: 'DEADLINE_APPROACHING', is_estimated: false,
+        deadline: new Date(Date.now() - 2 * 864e5).toISOString(),
+        deadline_text: 'closed two days ago', updated_at: new Date().toISOString() },
+      /* An estimated date, equally past — but a guess is not evidence that
+         applications shut, so this one stays among the openings. */
+      { id: 'g', organization: 'Telangana Police', post_name: 'Constable',
+        status: 'NEW', is_estimated: true,
+        deadline: new Date(Date.now() - 2 * 864e5).toISOString(),
+        deadline_text: 'window not yet open', updated_at: new Date().toISOString() },
     ]) }));
   await page.evaluate(() => localStorage.setItem('jobhunt_current_exam', 'hal-cs'));
   await page.goto('about:blank');
@@ -738,7 +749,7 @@ async function reachable(page, selector, where, minH){
     /Hindustan Aeronautics/i.test(await page.locator('#examJobs').innerText()),
     await page.locator('#examJobs').innerText());
   check('and every other tracked opening is still reachable, not dropped',
-    /Other openings \(2\)/.test(await page.locator('#otherCount').textContent()),
+    /Other openings \(3\)/.test(await page.locator('#otherCount').textContent()),
     await page.locator('#otherCount').textContent());
   await page.locator('#otherFold summary').click();
   const otherText = await page.locator('#otherJobs').innerText();
@@ -752,7 +763,7 @@ async function reachable(page, selector, where, minH){
     !/Junior Assistant/i.test(otherText),
     await page.locator('#examJobs').innerText().then(t => t.replace(/\s+/g, ' ').slice(0, 120)));
   check('it is in a section of its own, counted',
-    /Closed \(2\)/.test(await page.locator('#closedCount').textContent()),
+    /Closed \(3\)/.test(await page.locator('#closedCount').textContent()),
     await page.locator('#closedCount').textContent());
   await page.locator('#closedFold summary').click();
   const closedText = await page.locator('#closedJobs').innerText();
@@ -760,6 +771,11 @@ async function reachable(page, selector, where, minH){
     /Design Trainee/i.test(closedText), closedText.replace(/\s+/g, ' ').slice(0, 140));
   check('and the one the ingestion marked CLOSED',
     /Junior Assistant/i.test(closedText), closedText.replace(/\s+/g, ' ').slice(0, 140));
+  check('and the one whose real closing date has already passed',
+    /Graduate Apprenticeship/i.test(closedText), closedText.replace(/\s+/g, ' ').slice(0, 200));
+  check('while a merely estimated date is not treated as proof it shut',
+    /Constable/i.test(otherText) && !/Constable/i.test(closedText),
+    otherText.replace(/\s+/g, ' ').slice(0, 200));
   await reachable(page, '.other-fold summary', 'other-openings toggle', 40);
   await page.unroute('**/rest/v1/jobs**');
 
