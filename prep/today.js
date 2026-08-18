@@ -266,6 +266,26 @@
     };
   }
 
+  /* The exam's own judgement about what to buy first when there is not time
+     for everything (prep/exams.js → `focus`). Applied as a MULTIPLIER on need
+     rather than as a hard order: a subject you are actually failing should
+     still be able to outrank one the strategy likes, or the list stops
+     responding to how you are doing and becomes a fixed syllabus with the
+     word "today" on it.
+
+     The trickle subject is damped hardest. It is not being dismissed — it is
+     20 marks — but it is recall, and recall does not reward an hour when the
+     hour could go on something learnable. */
+  function focusWeight(subject, exam) {
+    const f = exam && exam.focus;
+    if (!f) return 1;
+    const i = (f.order || []).indexOf(subject);
+    if (i !== -1) return 1.6 - Math.min(0.3, i * 0.05);
+    if ((f.last || []).indexOf(subject) !== -1) return 0.45;
+    if (f.trickle && f.trickle.subject === subject) return 0.5;
+    return 1;
+  }
+
   function needOf(subject, exam, paceExams) {
     const s = (state.topics || {})[subject] || { asked: 0, correct: 0 };
     const pool = ALL.filter(q => q.topic === subject);
@@ -314,7 +334,9 @@
       subject, weight, pct, asked: s.asked, pool: pool.length,
       accuracyGap, speedGap, coverage, staleness, lessonGap,
       nextLesson: unmastered[0] || null,
-      score: raw * (0.4 + weight * 3),   // never zero out a low-weight subject
+      // never zero out a low-weight subject, and never let the strategy
+      // silence a subject that is genuinely going wrong
+      score: raw * (0.4 + weight * 3) * focusWeight(subject, exam),
       pace,
     };
   }

@@ -924,14 +924,43 @@
     return (typeof EXAMS !== "undefined") ? (EXAMS.find(e => e.key === key) || null) : null;
   }
 
+  /* The order the run TEACHES subjects in, which is not the order the paper
+     PRINTS them in. An exam may carry a `focus` saying what to buy first when
+     there is not time for everything (see prep/exams.js); without one this is
+     section order, which is the right default for someone who is not starting
+     from zero.
+
+     The trickle subject — General Awareness on HAL — is deliberately left out
+     of the run entirely. It is recall, it does not reward a whole day, and it
+     is shown as a standing daily item instead. */
+  function planOrder(exam) {
+    const all = exam ? subjectsForExam(exam)
+      : ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
+         "COA", "Theory of Computation", "Programming & OOP",
+         "Software Engineering", "Reasoning", "English", "General Awareness"];
+    const f = exam && exam.focus;
+    if (!f) return all;
+    const trickle = f.trickle && f.trickle.subject;
+    const out = [];
+    const take = list => (list || []).forEach(x => {
+      if (all.indexOf(x) !== -1 && out.indexOf(x) === -1) out.push(x);
+    });
+    take(f.order);
+    take(f.last);
+    // Anything the focus forgot is still taught, after everything it named —
+    // a subject silently dropped because nobody listed it is a gap the student
+    // walks into cold.
+    all.forEach(x => {
+      if (out.indexOf(x) === -1 && x !== trickle) out.push(x);
+    });
+    return out;
+  }
+
   function buildPlan() {
     const days = [];
     // Follow the exam being studied, so an SSC plan is not full of DBMS.
     const exam = planExam();
-    const order = exam ? subjectsForExam(exam)
-      : ["Data Structures", "Operating Systems", "DBMS", "Computer Networks",
-         "COA", "Theory of Computation", "Programming & OOP",
-         "Software Engineering", "Reasoning", "English", "General Awareness"];
+    const order = planOrder(exam);
     const lessons = [];
     order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
 
@@ -948,7 +977,14 @@
     // mocks and mistake repair rather than new material.
     const mockDays = Math.min(7, Math.max(2, Math.round(run / 5)));
     const learnDays = Math.max(1, run - mockDays - Math.min(5, Math.round(run / 6)));
-    const perDay = Math.max(1, Math.ceil(lessons.length / learnDays));
+    /* An exam's focus may cap how much new material a day can carry. Three new
+       topics is a day's work for someone starting cold; five is a reading list
+       nobody finishes, and a plan that cannot be held is worse than a short one
+       because it makes falling behind the normal state. Where the cap means the
+       path does not fit the days left, `unplaced` says which topics did not
+       make it rather than letting the run pretend it covered everything. */
+    const cap = (exam && exam.focus && exam.focus.maxLessonsPerDay) || Infinity;
+    const perDay = Math.max(1, Math.min(cap, Math.ceil(lessons.length / learnDays)));
 
     let n = 0, i = 0;
     while (i < lessons.length && n < learnDays) {
@@ -961,6 +997,11 @@
         week: Math.ceil(n / 7),
         title: chunk.map(l => l.title).join("  ·  "),
         subject: chunk[0].subject,
+        /* A day's chunk is a fixed number of lessons, so it can run over the
+           end of one subject and into the next. Naming only the first left a
+           day headed "COA" that also taught C fundamentals — so the label
+           names every subject the day actually covers. */
+        subjects: chunk.map(l => l.subject).filter((x, j, a) => a.indexOf(x) === j),
         lessons: chunk,
         kind: "learn",
       });
@@ -970,7 +1011,11 @@
       : "Full mock — sit the real paper, timed";
     while (n < run) {
       n++;
-      const revising = order[(n - 1) % order.length];
+      // Revise what the run actually taught. Cycling over the full subject
+      // list would send you to revise a subject no day of this run opened.
+      const taught = order.filter(sub => days.some(d => d.subject === sub));
+      const cycle = taught.length ? taught : order;
+      const revising = cycle[(n - 1) % cycle.length];
       const isMock = n > run - mockDays;
       days.push({
         id: "d" + n, day: n, week: Math.ceil(n / 7),
@@ -978,12 +1023,44 @@
         subject: revising, lessons: [], kind: isMock ? "mock" : "revise",
       });
     }
-    return days;
+    return { days: days, unplaced: lessons.slice(i), exam: exam };
+  }
+
+  /* Why the run teaches things in this order, on the screen rather than only
+     in a source comment. A student who opens the plan and finds English on day
+     one when the paper opens with General Awareness will assume it is broken
+     unless it says otherwise — and the whole argument for the order is one the
+     student is entitled to disagree with. */
+  function strategyHtml(exam, unplaced) {
+    const f = exam && exam.focus;
+    if (!f) return "";
+    const first = (f.order || [])[0];
+    const marks = (exam.sections || []).reduce((n, x) => n + (x.marks || 0), 0);
+    const pass = Math.round(marks * 0.5);
+    const t = f.trickle;
+    return `<div class="plan-why">
+      <strong>${esc(first)} first, not General Awareness.</strong>
+      ${pass ? `You need ${pass} of ${marks} to stay in the selection, and this is the
+      cheapest order to buy them in: ` : ""}English and Reasoning are ${
+        (exam.sections || []).reduce((n, x) => n + (/English|Reasoning/.test(x.name) ? x.marks : 0), 0)
+      } marks that need no Computer Science at all, then the CS subjects whose
+      answers can be worked out rather than remembered.
+      ${t ? `${esc(t.subject)} is not in the run: it is recall, so it gets
+        <strong>${t.minutes} minutes every day</strong> on top, not a day of its own.` : ""}
+      ${unplaced && unplaced.length
+        ? `<br><br><strong>${unplaced.length} topic${unplaced.length === 1 ? "" : "s"} do not fit
+           in the days left</strong> at ${f.maxLessonsPerDay || "this"} a day —
+           ${esc([...new Set(unplaced.map(l => l.subject))].join(", "))}.
+           They are last on purpose: if the run gets ahead of schedule they are
+           what to pick up, and if it does not, they are what to lose.`
+        : ""}
+    </div>`;
   }
 
   function render() {
     if (!el("plan-days")) return;
-    const days = buildPlan();
+    const plan = buildPlan();
+    const days = plan.days;
     const done = read();
     const nDone = days.filter(d => done[d.id]).length;
 
@@ -998,7 +1075,8 @@
        <div class="bar-note">${nDone} of ${days.length} days done</div>
        <div class="bar-note">${left === null
          ? "No exam date announced, so this run is the lesson path plus a revision tail."
-         : `${days.length} days, counted back from the earliest day of the exam window.`}</div>`;
+         : `${days.length} days, counted back from the earliest day of the exam window.`}</div>
+       ${strategyHtml(exam, plan.unplaced)}`;
 
     let week = 0;
     el("plan-days").innerHTML = days.map(d => {
@@ -1013,7 +1091,11 @@
           <div class="plan-top">
             <button class="plan-tick" data-tick="${d.id}" aria-label="Mark day ${d.day} done">${isDone ? "✓" : ""}</button>
             <div class="plan-main">
-              <div class="plan-daynum">Day ${d.day} · ${esc(d.subject)}</div>
+              <div class="plan-daynum">Day ${d.day}${
+                // A mock is the whole paper. Naming one subject beside it reads
+                // as if that is what the mock covers.
+                d.kind === "mock" ? "" : " · " + esc((d.subjects || [d.subject]).join(" · "))
+              }</div>
               <div class="plan-title">${esc(d.title)}</div>
             </div>
           </div>

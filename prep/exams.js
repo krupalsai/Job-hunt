@@ -31,10 +31,17 @@ const EXAMS = [
     // implied a syllabus that does not apply.
     name: "HAL Management Trainee (Computer Science)",
     short: "HAL CS",
-    // The pattern below (160 questions, 150 minutes, 20/40/100, no negative
-    // marking) matches what several independent sources report for advertisement
-    // HAL/CHRC-TM/RECT-02/2026 — but it has NOT been checked against the
-    // notification itself, which is the only authority.
+    // VERIFIED against the notification itself (Advt. HAL/CHRC-TM/RECT-02/2026
+    // dated 29.07.2026, clause 7.5): "The test will be of Two and Half hours
+    // duration. The test will be in three parts & comprising of Multiple-Choice
+    // Questions (MCQs). Part - I will consist of 20 MCQs on General Awareness.
+    // Part - II will consist of 40 MCQs on English & Reasoning. Part - III will
+    // consist of 100 MCQs on the concerned discipline."
+    //
+    // The notification says NOTHING about negative marking — see `markingBasis`
+    // below. It also contains no syllabus of any kind: Part III is described
+    // only as "the concerned discipline", which is why every topic list in this
+    // app carries its own derived basis instead of citing an official one.
     //
     // The online test is advertised as a WINDOW, not a day: reporting on this
     // advertisement puts the CBT on 5-6 September 2026. Which of those two days
@@ -57,12 +64,19 @@ const EXAMS = [
       note: "Reported to follow GATE CS scope, but not checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026) — the official PDF could not be retrieved. Nothing has been written for these. See HAL-SYLLABUS-AUDIT.md.",
       subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete / Engineering Mathematics"],
     },
-    pattern: "160 MCQs · 150 minutes · no negative marking",
-    // Every correct answer is worth one mark, nothing is deducted, an
-    // unanswered question scores zero. Stated as numbers, not just as
-    // "no negative marking", so the mock-exam scorer and HAL's own SSC/TS SI
+    pattern: "160 MCQs · 150 minutes",
+    // Every correct answer is worth one mark, an unanswered question scores
+    // zero. Stated as numbers so the mock-exam scorer and HAL's SSC/TS SI
     // siblings can all be totalled the same way.
+    //
+    // `wrong: 0` is what every aggregator reports and it is what the mock has
+    // to total with — but the notification does not say it, and this app does
+    // not get to turn a silence into a fact. The tactics below tell the
+    // candidate to settle it from the admit card, because the difference
+    // between "guess everything" and "guess only when you can eliminate one"
+    // is worth more marks than any single subject on the paper.
     marking: { correct: 1, wrong: 0, unanswered: 0 },
+    markingBasis: "Advt. HAL/CHRC-TM/RECT-02/2026 states no marking scheme. Reported as no negative marking, unconfirmed — check your admit card.",
     minutes: 150,
     questions: 160,
     buffer: 5,
@@ -74,11 +88,52 @@ const EXAMS = [
           "Data Structures", "Operating Systems", "DBMS", "Computer Networks",
           "COA", "Theory of Computation", "Programming & OOP", "Software Engineering"] },
     ],
+    /* ── What to study first, when there is not time for all of it ─────────
+       A JUDGEMENT, not a fact from the notification, written down here so it
+       can be argued with rather than hidden inside the plan generator.
+
+       The paper is 20 General Awareness + 40 English & Reasoning + 100 CS, and
+       clause 7.6 requires 50% — 80 of 160 — just to stay in the selection. A
+       candidate starting from scratch cannot cover 100 marks of Computer
+       Science in the weeks before the paper, and spreading thin across all
+       eight CS subjects is how people end up knowing a little of everything
+       and clearing nothing. So the run buys those 80 marks in the cheapest
+       order there is:
+
+         · English & Reasoning FIRST. Forty marks, no CS background needed, and
+           grammar is a bounded, finishable list — the fastest marks on the
+           paper for someone starting cold.
+         · Then five CS subjects whose answers can be COMPUTED rather than
+           recalled: scheduling and cache formulas, normal forms, subnetting,
+           Big-O. Mechanical beats encyclopaedic when the clock is short.
+         · General Awareness is not a study block at all. It is recall, it does
+           not reward hours, and it gets a fixed daily trickle instead — which
+           is also what the exam-hall tactic above says about it.
+         · `last` is not "worthless". It is what gets cut first when the days
+           run out, and the plan says so out loud instead of quietly dropping
+           it.
+
+       Remove this block and the run falls back to section order, which is the
+       right default for a candidate who is not starting from zero. */
+    focus: {
+      basis: "For a candidate starting from scratch, aiming first at the 50% (80/160) needed to stay in the selection. A judgement, not from the notification.",
+      order: ["English", "Reasoning", "Operating Systems", "DBMS",
+              "Computer Networks", "Data Structures", "COA"],
+      last: ["Programming & OOP", "Theory of Computation", "Software Engineering"],
+      // Recall, not study. Fifteen minutes daily beats two hours once, and it
+      // never takes a whole day of the run.
+      trickle: { subject: "General Awareness", minutes: 15 },
+      // A beginner does not absorb five new topics in a day. Where the days
+      // left cannot fit the path at this pace, the plan reports the shortfall
+      // rather than inventing a pace nobody can hold.
+      maxLessonsPerDay: 3,
+    },
+
     tactics: [
-      "Attempt all 160. A blank scores zero and so does a wrong answer, so a guess is free.",
+      "Settle the marking scheme from your admit card BEFORE the paper. The notification does not state one. If there is no penalty, attempt all 160 — a guess is free and 60 blind guesses are worth about 15 marks. If there is a penalty, guess only where you can rule out at least one option.",
       "Pass 1: answer everything you know inside 20 seconds and mark the rest. Never spend over 90 seconds on one question in this pass.",
       "Pass 2: work the marked questions, hardest last.",
-      "Final 2 minutes: fill in every remaining blank, even blind.",
+      "Final 2 minutes: no blanks left, if and only if the admit card confirms nothing is deducted.",
       "General Awareness is recall — if it does not come in 30 seconds it is not coming. Move on.",
     ],
   },

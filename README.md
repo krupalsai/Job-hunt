@@ -97,6 +97,39 @@ and Time Strategy tabs.
 A subject is not a panel on Study either: tapping one goes to **All lessons**
 with that subject open, so the subject you are in is the whole screen.
 
+## What to study first, when there is not time for all of it
+
+An exam may carry a `focus` block (`prep/exams.js`) saying what to buy first.
+HAL's says: English & Reasoning, then five CS subjects, and General Awareness
+never gets a day of its own.
+
+The reasoning is written into the file, because it is a judgement and not a
+measurement. The paper is 20 General Awareness + 40 English & Reasoning + 100
+CS, and clause 7.6 of the notification requires 50% — 80 of 160 — just to stay
+in the selection. A candidate starting from scratch cannot cover 100 marks of
+Computer Science in the weeks before the paper, and spreading across all eight
+CS subjects is how someone ends up knowing a little of everything and clearing
+nothing. So the run buys those 80 marks in the cheapest order: 40 marks that
+need no CS background first, then the CS subjects whose answers can be
+*computed* — scheduling and cache formulas, normal forms, subnetting, Big-O —
+rather than recalled.
+
+Three things follow from it, and all three are visible on screen rather than
+only in the source:
+
+- **The run to the exam** teaches in that order, capped at `maxLessonsPerDay`
+  because three new topics is a day's work for someone starting cold and five
+  is a reading list nobody finishes.
+- **Whatever does not fit is named.** The plan says which topics fell off the
+  end and that they are what to lose, instead of quietly dropping them and
+  implying the run covered everything.
+- **Today** applies the same order as a multiplier on need, not as a hard
+  sequence — a subject you are actually failing still outranks one the strategy
+  likes, or the list stops responding to how you are doing.
+
+Delete the `focus` block and everything falls back to section order, which is
+the right default for a candidate who is not starting from zero.
+
 Exam info is generated from `prep/exams.js` rather than written for HAL: the
 snapshot, the per-section time budget and the exam-hall tactics all come from
 the exam being studied. That matters most for the tactics. "Attempt every

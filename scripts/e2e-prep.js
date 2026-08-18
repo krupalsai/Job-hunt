@@ -979,9 +979,28 @@ function check(name, cond, detail){
     /Full mock/.test(await page.locator('#plan-days .plan-day').last().textContent()));
   const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
   // A named lesson, not "Day 1: revision". The plan is exam-scoped, so day one
-  // is the first lesson of the chosen exam's path.
+  // is the first lesson of the order the exam's `focus` asks for — English,
+  // because 40 marks of English & Reasoning need no Computer Science at all
+  // and are the cheapest marks on the paper for someone starting cold.
   check('a day names the actual lessons, not a vague focus',
-    /HAL, defence and space/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+    /Error spotting/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+  check('and the run opens on the focus subject, not on the paper\'s first section',
+    /Day 1 · English/.test(firstDay.replace(/\s+/g, ' ')), firstDay.replace(/\s+/g,' ').slice(0,60));
+
+  /* General Awareness is 20 marks and is deliberately NOT a day of the run:
+     it is recall, it does not reward a whole day, and the strategy gives it a
+     standing daily trickle instead. A run that spent a scarce day on it would
+     be buying the least learnable marks on the paper. */
+  const runSubjects = await page.locator('#plan-days .plan-daynum').allTextContents();
+  check('the trickle subject never takes a whole day of the run',
+    !runSubjects.some(t => /· General Awareness/.test(t)),
+    runSubjects.slice(0, 6).join(' | '));
+
+  const why = await page.locator('#plan-progress .plan-why').innerText();
+  check('the run argues its own order instead of leaving it a mystery',
+    /English first/i.test(why) && /80 of 160/.test(why), why.replace(/\s+/g, ' ').slice(0, 160));
+  check('and says plainly what does not fit in the days left',
+    /do not fit|does not fit/.test(why), why.replace(/\s+/g, ' ').slice(0, 200));
   check('every day has an action button',
     (await page.locator('#plan-days [data-go]').count()) === days);
 
@@ -997,7 +1016,7 @@ function check(name, cond, detail){
   await page.locator('#plan-days [data-go]').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
   check('the day button opens that exact lesson',
-    /HAL, defence and space/.test(await page.locator('#learn-reader .ls-main').textContent()));
+    /Error spotting/.test(await page.locator('#learn-reader .ls-main').textContent()));
 
   // Day 25+ used to say "Full mock — 160 questions, 150 minutes" and then
   // hand you ten questions from one subject when tapped — a promise the app
