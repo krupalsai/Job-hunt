@@ -116,7 +116,16 @@ async function reachable(page, selector, where, minH){
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  page.on('console', m => { if(m.type()==='error') errors.push(m.text()); });
+  /* One test cuts the job request on purpose. The browser logs that as a
+     failed resource load, which is the expected outcome there — but a page
+     error thrown while handling it is still a real bug, so only the resource
+     line is excused, and only while the cut is deliberate. */
+  let offlineOnPurpose = false;
+  page.on('console', m => {
+    if (m.type() !== 'error') return;
+    if (offlineOnPurpose && /Failed to load resource/i.test(m.text())) return;
+    errors.push(m.text());
+  });
   const EXTERNAL = /supabase|youtube|ytimg|googlevideo|favicon/i;
   const realErrors = () => errors.filter(e => !EXTERNAL.test(e));
 
@@ -753,6 +762,21 @@ async function reachable(page, selector, where, minH){
     /Junior Assistant/i.test(closedText), closedText.replace(/\s+/g, ' ').slice(0, 140));
   await reachable(page, '.other-fold summary', 'other-openings toggle', 40);
   await page.unroute('**/rest/v1/jobs**');
+
+  console.log('\n── and it says so when the openings cannot be reached ────');
+  offlineOnPurpose = true;
+  await page.route('**/rest/v1/jobs**', r => r.abort());
+  await page.goto('about:blank');
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => /Could not reach/.test(document.getElementById('examJobs').innerText));
+  check('it says the list could not be reached, and that prep still works',
+    /only this list needs a connection/i.test(await page.locator('#examJobs').innerText()));
+  check('and neither fold is left showing counts from a load that did not happen',
+    await page.evaluate(() =>
+      document.getElementById('otherFold').classList.contains('hidden') &&
+      document.getElementById('closedFold').classList.contains('hidden')));
+  await page.unroute('**/rest/v1/jobs**');
+  offlineOnPurpose = false;
 
   await page.goto('about:blank');
   await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });

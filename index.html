@@ -356,7 +356,11 @@ function render() {
     list.innerHTML = '<div class="empty">Could not reach the openings.<br>' +
       'Your preparation works offline — only this list needs a connection.' +
       '<br><button class="retry" onclick="load()">Try again</button></div>';
-    document.getElementById('otherNote').textContent = '';
+    /* Nothing loaded, so nothing belongs in either fold — and #otherNote,
+       which this used to write to, no longer exists: reading it threw and
+       left both folds showing the last successful load's counts. */
+    document.getElementById('otherFold').classList.add('hidden');
+    document.getElementById('closedFold').classList.add('hidden');
     return;
   }
   if (!allJobs.length) { list.innerHTML = '<div class="empty">Loading…</div>'; return; }
