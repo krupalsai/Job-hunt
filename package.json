@@ -4,12 +4,13 @@
   "private": true,
   "description": "Government job notification tracker with automated ingestion from official sources, plus HAL MT/DT (CS) exam preparation",
   "scripts": {
-    "test": "node scripts/validate-prep.js && node scripts/validate-generated.js && node scripts/e2e-prep.js && node scripts/e2e-integration.js && node scripts/e2e-nav.js",
+    "test": "node scripts/validate-prep.js && node scripts/validate-generated.js && node scripts/e2e-prep.js && node scripts/e2e-integration.js && node scripts/e2e-nav.js && node scripts/e2e-videos.js",
     "test:bank": "node scripts/validate-prep.js",
     "test:generated": "node scripts/validate-generated.js",
     "test:prep": "node scripts/e2e-prep.js",
     "test:integration": "node scripts/e2e-integration.js",
-    "test:nav": "node scripts/e2e-nav.js"
+    "test:nav": "node scripts/e2e-nav.js",
+    "test:videos": "node scripts/e2e-videos.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"

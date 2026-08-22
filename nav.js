@@ -159,6 +159,7 @@
     news:  svg('<path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
+    play:  svg('<rect x="2.5" y="4.5" width="19" height="15" rx="3.5"/><path d="M10.5 9.2l4.8 2.8-4.8 2.8z" fill="currentColor" stroke="none"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
   };
 
@@ -189,6 +190,8 @@
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: ICON.exam,
       sub: "Pattern, marking, time budget, exam-hall tactics" },
+    { id: "videos", label: "Videos", icon: ICON.play,
+      sub: "Search YouTube for a topic — results only, played here" },
   ];
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */

@@ -294,12 +294,19 @@
   function checkInHtml(l) {
     const hasRetell = !!(l.retell && l.retell.length);
     const hasVideo = !!(l.video || l.alt_video);
+    /* "Show me a video" plays the ONE video written into this lesson, and only
+       some lessons have one. "Search videos" is the other half of that answer
+       and every lesson has it: it opens the Videos screen with this topic
+       already searched, so the honest answer to "is there a better explanation
+       of this?" stops being "not in the app, go and find one on YouTube" —
+       which is the trip that costs an hour to the home feed. */
     return `<div class="ls-checkin" id="ls-checkin">
       <div class="ls-ci-head">Did that make sense?</div>
       <div class="ls-ci-btns">
         <button class="primary" id="ci-yes">Yes — test me on it</button>
         <button class="ghost" id="ci-no">Not yet${hasRetell ? " — explain it another way" : ""}</button>
         ${hasVideo ? `<button class="ghost" id="ci-video">Show me a video</button>` : ""}
+        <button class="ghost" id="ci-find">Search videos on this</button>
       </div>
     </div>`;
   }
@@ -728,10 +735,19 @@
 
   /** The three answers to "did that make sense?", and what each one does. */
   function bindCheckIn(name, i, l) {
-    const yes = el("ci-yes"), no = el("ci-no"), vid = el("ci-video");
+    const yes = el("ci-yes"), no = el("ci-no"), vid = el("ci-video"), find = el("ci-find");
     if (yes) yes.onclick = () => { markUnderstood(l.key); startCheck(name, i); };
     if (vid) vid.onclick = () => showRetell(name, i, l, { videoOnly: true });
     if (no) no.onclick = () => { markUnclear(l.key); showRetell(name, i, l, {}); };
+    /* The subject goes into the query with the title: "Deadlock" alone returns
+       carpentry and traffic, "Deadlock Operating Systems" returns the lecture. */
+    /* Deliberately NOT markUnclear: wanting another angle on a topic is not
+       the same as not having understood it, and markUnclear clears the
+       understood flag — which would quietly undo progress for somebody who
+       only wanted to see it explained twice. */
+    if (find) find.onclick = () => {
+      if (window.JobhuntVideos) window.JobhuntVideos.open(`${l.title} ${l.subject || name}`);
+    };
   }
 
   /** Opens the second explanation underneath, rather than replacing the page —

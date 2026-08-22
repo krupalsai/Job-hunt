@@ -50,9 +50,9 @@ first. Both pages share one navigation, injected by `nav.js`:
   as often invisible as visible.
 - **A side drawer** behind the hamburger — Change exam, then the destinations
   that are opened when they are wanted rather than every day: **Jobs**, **All
-  lessons**, **The run to the exam**, **Current affairs**, **Syllabus** — and
-  the settings (qualification, reset prep progress). Every row is titled exactly
-  as the screen it opens.
+  lessons**, **The run to the exam**, **Current affairs**, **Syllabus**,
+  **Videos** — and the settings (qualification, reset prep progress). Every row
+  is titled exactly as the screen it opens.
 - **An exam switcher in the header** — HAL CS, SSC CGL and TS SI swap without
   editing the URL. On both pages the title *is* the switcher.
 - **The first-run exam question**, over everything until it is answered.
@@ -61,9 +61,9 @@ Sections of the prep page are addressable: `/learn.html?exam=ssc-cgl#quiz`
 opens SSC practice directly, which is how the job list links into it, and
 `#mock` opens the full paper rather than the practice screen. The hash is the
 name on the screen — `#study`, `#test`, `#progress`, `#lessons`, `#plan`,
-`#current-affairs`, `#syllabus` — with the older spellings (`#learn`,
-`#schedule`, `#examinfo`, `#news`) still resolving so bookmarks and cached
-pages do not land on a blank screen.
+`#current-affairs`, `#syllabus`, `#videos` — with the older spellings
+(`#learn`, `#schedule`, `#examinfo`, `#news`) still resolving so bookmarks and
+cached pages do not land on a blank screen.
 
 Which exam you last chose is remembered in `jobhunt_current_exam` and every
 generated link carries it. On `/learn.html` the `?exam=` parameter is the
@@ -240,6 +240,57 @@ To add another exam, drop a bank file next to `hal-cs.js` in the same shape
 (`{topic: [{q, opts, correct, why, trick}]}`) — the quiz engine reads whatever
 `QUESTION_BANK` it is handed.
 
+## Videos — YouTube's search box without YouTube's home screen
+
+The reason this exists, in the student's words: *"if I go to YouTube, I was
+seeing literally one hour nonsense thing instead of searching for the one
+important thing, because many recommended videos are showing up."*
+
+That is not a discipline problem. The YouTube app opens on a feed; its search
+box is one thing on a screen of twenty things built to be watched instead. An
+hour of a study day is a whole subject.
+
+**☰ → Videos** is the search box with the feed removed:
+
+- You type a topic. `api/youtube.ts` asks YouTube for **that** topic and returns
+  the results — id, title, channel, length, views, age. There is no home feed
+  on this screen and no way for it to show a video nobody asked for.
+- Results play **in the page**, in a `youtube-nocookie` frame with `rel=0`.
+  Watching does not mean opening YouTube.
+- **The query that leaves the app is the query on the screen.** The exam's short
+  name is appended by default — "percentage" and "percentage SSC CGL" return
+  very different videos — as a chip you can switch off, and the results state
+  what was actually searched for.
+- **The chips are your syllabus**: the subjects of the exam you chose, so the
+  screen starts at something on the paper rather than at a blank box.
+- **☆ Save** keeps the video that actually explained the thing. That list lives
+  on this phone (`jobhunt_video_saved`), not in a Watch Later you have to open
+  YouTube to reach. Recent searches are kept the same way and can be cleared.
+- **Every lesson has "Search videos on this"**, which lands here with the topic
+  and its subject already searched — "Deadlock Operating Systems", not
+  "Deadlock", which returns carpentry.
+- One link out, labelled: **Open on YouTube ↗**. The point is not to trap
+  anybody; it is that the trip has to be a decision rather than the only route
+  to a search box.
+- When the search breaks it says so and hands back the same search on
+  youtube.com. It never shows an empty list, which would read as "there are no
+  videos on this topic".
+
+The endpoint answers in one of two ways, and needs no setup for either:
+
+| `YOUTUBE_API_KEY` | How it searches | Notes |
+|---|---|---|
+| set | YouTube Data API v3 | Structured and stable. 100 quota units a search — about 90 searches a day on the free 10,000. Embeddable results only. |
+| not set | Reads YouTube's own results page | Works with nothing configured. Fragile by nature — YouTube owes that page's shape nothing — so failure is reported honestly rather than as "no results". |
+
+Repeat searches inside 30 minutes are served from a small in-process cache and a
+`s-maxage=1800` CDN header, so going back to a topic costs neither quota nor a
+second hit on youtube.com. No query is logged and nothing is written to Supabase:
+what somebody searches while studying is theirs.
+
+Search needs a connection, and the screen says so in those words when there is
+none — the lessons and the question bank do not.
+
 ## Offline
 
 `sw.js` caches the prep shell and the question bank, so revision works with no
@@ -249,16 +300,22 @@ network. `scripts/e2e-integration.js` asserts that split.
 
 ## Tests
 
-    npm test                  # all four, in order
+    npm test                  # all of them, in order
     npm run test:bank         # bank shape, duplicates, missing explanations,
                               # and that the selection engine stops repeating
     npm run test:prep         # drives Chromium through real quizzes (75 checks)
     npm run test:integration  # the two halves as one app (19 checks)
-    npm run test:nav          # the navigation at 390x844 (93 checks)
+    npm run test:nav          # the navigation at 390x844 (239 checks)
+    npm run test:videos       # the video search on a phone (37 checks)
 
 `test:bank` fails on a question missing an explanation or a memory hook, on a
 duplicate, on an id collision, and on a selection engine that repeats within a
 session.
+
+`test:videos` stubs the endpoint and drives the screen: that the query sent is
+the query shown, that a result plays in an iframe on the page rather than
+navigating to youtube.com, that a saved video survives a reload, and that a
+broken search hands back a link instead of an empty list.
 
 `test:nav` runs at a phone viewport and treats layout as a correctness
 property: it fails if the page can scroll sideways (naming the element that
@@ -305,6 +362,10 @@ Playwright is free and unmetered, rather than a Vercel function.
     SUPABASE_URL                 https://xbjgmudcgjiompbroayr.supabase.co
     SUPABASE_SERVICE_ROLE_KEY    Supabase → Settings → API (server-side only)
     CRON_SECRET                  any long random string
+    YOUTUBE_API_KEY              OPTIONAL — video search works without it.
+                                 Set it (Google Cloud → APIs → YouTube Data
+                                 API v3) and search uses the official API
+                                 instead of reading YouTube's results page.
 
 ## Running ingestion
 

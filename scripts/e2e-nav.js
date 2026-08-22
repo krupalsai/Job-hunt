@@ -264,12 +264,12 @@ async function reachable(page, selector, where, minH){
   await noSideScroll(page, 'the prep page');
   await reachable(page, BAR, 'bottom bar on prep');
 
-  console.log('\n── the seven tabs are gone ──────────────────────────────');
+  console.log('\n── the seven-tab strip is gone ─────────────────────────');
   check('the horizontally-scrolling tab strip no longer exists',
     (await page.locator('#tabs').count()) === 0);
   const secs = await page.locator('main .tab-section').evaluateAll(els => els.map(e => e.id));
-  check('there are seven in-page screens: three in the bar, four in the menu',
-    secs.sort().join(',') === 'current-affairs,lessons,plan,progress,study,syllabus,test',
+  check('there are eight in-page screens: three in the bar, five in the menu',
+    secs.sort().join(',') === 'current-affairs,lessons,plan,progress,study,syllabus,test,videos',
     secs.join(', '));
   check('exactly one section is visible at a time',
     (await page.locator('main .tab-section:not(.hidden)').count()) === 1);
@@ -533,12 +533,12 @@ async function reachable(page, selector, where, minH){
   const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
     .map(t => t.trim().split('\n')[0].trim());
   const expected = ['Change exam', 'Jobs', 'All lessons', 'The run to the exam',
-                    'Current affairs', 'Syllabus', 'Reset prep progress'];
-  check('the menu holds Change exam, the five destinations and Settings — and nothing else',
+                    'Current affairs', 'Syllabus', 'Videos', 'Reset prep progress'];
+  check('the menu holds Change exam, the six destinations and Settings — and nothing else',
     rows.length === expected.length && expected.every((e, i) => rows[i].indexOf(e) === 0),
     rows.join(' | '));
   for (const [id, title] of [['lessons','All lessons'], ['plan','The run to the exam'],
-                             ['current-affairs','Current affairs']]) {
+                             ['current-affairs','Current affairs'], ['videos','Videos']]) {
     await page.locator(`#nav-drawer [data-goto="${id}"]`).click();
     await page.waitForSelector(`#${id}:not(.hidden)`);
     check(`the menu opens ${title}, and the screen is titled the same`,
