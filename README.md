@@ -286,7 +286,7 @@ ingestion path is allowed to invent a date.
 
 | Source | Method | Status |
 |---|---|---|
-| TSLPRB | server-rendered vacancy table | ✅ working (18 posts, 7,437 vacancies) |
+| TGPRB (was TSLPRB) | React SPA — table compiled into the JS bundle | ✅ working (18 posts, 7,437 vacancies) |
 | Telegram channel | `t.me/s/<channel>` | ✅ only if the owner enables public preview |
 | SCCL | server-rendered | ⚠️ no structured job table on the landing page |
 | SSC | JavaScript SPA | ❌ needs a headless browser |
@@ -296,6 +296,29 @@ ingestion path is allowed to invent a date.
 A generic "recruitment-looking links" scraper was written first and removed —
 on these sites it produced `Notification` and `Price Notification` (a coal price
 notice). Only parsers verified against real markup ship.
+
+## The silent-source failure, and what now prevents it
+
+TSLPRB renamed itself TGPRB, moved to `tgprb.in`, and rebuilt as a React SPA.
+The old parser looked for `<tr>` rows in what is now 2KB of `<div id="root">`,
+so it matched nothing and returned `[]`. `Promise.allSettled` turned failures
+into `[]` too. The cron ran every night, wrote nothing, and reported `ok: true`
+— for a week, while the only working source in the app was dead.
+
+**"Found nothing" and "is broken" looked identical from the outside.** That is
+the bug worth remembering, more than the domain change that triggered it.
+
+So `collectAll()` returns health per source, and a source yielding zero rows is
+reported as **not ok** — every source here scrapes a board that always has
+vacancies on it, so zero means the parser lost, never that the board emptied.
+`/api/ingest` returns `ok: false` and names the broken sources while any source
+is down, so one look at the cron's response answers "is the tracker still
+tracking?".
+
+The replacement parser needs no headless browser: TGPRB compiles its vacancy
+table into the page bundle as literal objects carrying the same four fields the
+HTML table did, so the scraper reads the homepage, finds the hashed
+`/assets/index-*.js` it loads, and parses the rows out of that.
 
 SSC and HAL need a real browser; that belongs in a GitHub Actions job, where
 Playwright is free and unmetered, rather than a Vercel function.

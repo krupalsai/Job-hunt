@@ -41,16 +41,22 @@ export default async function handler(req: any, res: any) {
   const dryRun = String(req.query?.dry_run ?? "") === "1";
   const db = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
 
-  const found: RawItem[] = await collectAll();
+  const { items: found, sources } = await collectAll();
   const perSource: Record<string, number> = {};
   for (const i of found) {
     const k = i.sourceKey.split(":")[0];
     perSource[k] = (perSource[k] ?? 0) + 1;
   }
+  /* A source that yielded nothing is a BROKEN source, not a quiet one — these
+     boards always have vacancies on them. Reported at the top level so a
+     glance at the cron's response says whether the tracker is still tracking,
+     which is the question nobody could answer while tslprb.in was dead. */
+  const broken = sources.filter((s) => !s.ok);
 
   if (dryRun) {
     return res.status(200).json({
       dry_run: true, per_source: perSource, total: found.length,
+      sources, broken: broken.map((b) => b.name),
       sample: found.slice(0, 5).map((i) => ({ key: i.sourceKey, post: i.postName })),
     });
   }
@@ -102,7 +108,10 @@ export default async function handler(req: any, res: any) {
     .gte("deadline", new Date().toISOString());
 
   return res.status(200).json({
-    ok: true, per_source: perSource,
+    // Not ok when a source is down, so a failing cron shows as a failing cron.
+    ok: broken.length === 0,
+    sources, broken: broken.map((b) => b.name),
+    per_source: perSource,
     found: found.length, inserted, updated, skipped_manual: skipped,
   });
 }

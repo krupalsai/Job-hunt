@@ -142,6 +142,21 @@ function check(name, cond, detail){
   check('and still writes into the jobs table',
     /from\("jobs"\)/.test(ingest), ingest.slice(0, 0));
 
+  /* The failure this guards against actually happened: tslprb.in moved to
+     tgprb.in and became a React SPA, the parser matched nothing, and the cron
+     reported ok:true every night for a week while writing nothing. "Found
+     nothing" has to be distinguishable from "is broken", or a dead tracker
+     looks exactly like a quiet job market. */
+  const sources = fs.readFileSync(path.join(ROOT, 'lib/sources.ts'), 'utf8');
+  check('a source that finds nothing is reported as broken, not as quiet',
+    /ok: r\.value\.length > 0/.test(sources), 'collectAll no longer flags empty sources');
+  check('and the ingest response is not ok while a source is down',
+    /ok: broken\.length === 0/.test(ingest));
+  check('the police board is scraped at the domain it actually lives on now',
+    /tgprb\.in/.test(sources) && !/const url = "https:\/\/www\.tslprb\.in/.test(sources));
+  check('and the exam matcher knows the board\'s new name',
+    /tgprb/i.test(fs.readFileSync(path.join(ROOT, 'prep/exams.js'), 'utf8')));
+
   const progress = fs.readFileSync(path.join(ROOT, 'api/progress.ts'), 'utf8');
   check('the mirror still accepts every action the app sends',
     ['attempts', 'lesson', 'applied', 'profile'].every(a => progress.includes(`case "${a}"`)));

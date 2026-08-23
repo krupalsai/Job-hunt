@@ -203,7 +203,10 @@ const EXAMS = [
     // never published. The app calls the 54 seconds derived, on screen, every
     // time it shows it.
     minutes: 180,
-    match: j => /telangana.*(police|sub-?inspector)|\btslprb\b|\btglprb\b/i.test(
+    // TGPRB is the board's current name — it renamed from TSLPRB and moved to
+    // tgprb.in. Both spellings stay matchable: rows seeded under the old name
+    // are still in the table and must not fall off this exam.
+    match: j => /telangana.*(police|sub-?inspector)|\btslprb\b|\btglprb\b|\btgprb\b/i.test(
                   (j.organization || "") + " " + (j.post_name || "")),
     sections: [
       { name: "Arithmetic & Reasoning/Mental Ability", marks: 100, questions: 100,

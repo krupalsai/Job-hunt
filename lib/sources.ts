@@ -6,7 +6,8 @@
  * this app's existing wrong data came from.
  *
  * WHAT WAS TESTED (before writing any of this):
- *   tslprb.in        server-rendered tables  → parsed here, works
+ *   tslprb.in        server-rendered tables  → MOVED, see scrapeTgprb below
+ *   tgprb.in         React SPA, table in the JS bundle → parsed here, works
  *   scclmines.com    server-rendered         → link labels only, no job table
  *   ssc.gov.in       JavaScript SPA          → empty server HTML, needs a browser
  *   hal-india.co.in  JavaScript SPA          → "Please enable JavaScript", needs a browser
@@ -71,28 +72,53 @@ async function getHtml(url: string): Promise<string | null> {
 }
 
 /**
- * TSLPRB — the vacancy table on the landing page.
+ * TGPRB (formerly TSLPRB) — the Telangana police recruitment board.
  *
- * Row shape: post code | post name | pay scale | vacancies
- *   ["21", "Stipendiary Cadet Trainee (SCT) Police Constable (Civil)…", "24280–72850", "3,697"]
+ * WHY THIS LOOKS NOTHING LIKE A TABLE PARSER ANY MORE.
  *
- * All four cells are shape-checked rather than positionally trusted, so a
- * layout change yields zero rows instead of garbage rows. Verified live: 18
- * vacancies parsed from 31 table rows, 7,437 posts total.
+ * The board renamed from TSLPRB to TGPRB, moved to tgprb.in, and rebuilt the
+ * site as a React SPA. `https://www.tslprb.in/` now redirects to
+ * `https://www.tgprb.in/`, and a plain fetch of that returns 2KB of shell with
+ * `<div id="root"></div>` in it — no <tr> anywhere. The old parser therefore
+ * matched nothing, returned [], and the ingest wrote nothing, every night, for
+ * weeks, without ever failing. That silence is the actual bug; see collectAll.
  *
- * No deadline is set — the page carries vacancies, not dates. Every row is
- * therefore written as an estimate, which is the honest state.
+ * It does NOT need a headless browser. The vacancy table is not fetched at
+ * runtime — it is COMPILED INTO the page bundle as literal objects, carrying
+ * exactly the four fields the HTML table used to:
+ *
+ *     {code:`21`,post:`… Police Constable (Civil) …`,pay:`24280–72850`,vacancies:`3,697`}
+ *
+ * So: read the homepage, find the hashed bundle it loads, read the bundle,
+ * pull the rows out. The hash changes every time the board redeploys, which is
+ * why it is discovered from the homepage rather than pinned here.
+ *
+ * All four fields are still shape-checked rather than positionally trusted, so
+ * a change at their end yields zero rows instead of garbage rows. Verified
+ * live on 23 Aug 2026: 18 posts, 7,437 vacancies — the same totals the old
+ * HTML parser produced, which is the check that this reads the same table.
  */
-export async function scrapeTslprb(): Promise<RawItem[]> {
-  const url = "https://www.tslprb.in/";
-  const html = await getHtml(url);
-  if (!html) return [];
+export async function scrapeTgprb(): Promise<RawItem[]> {
+  const url = "https://www.tgprb.in/";
+  const shell = await getHtml(url);
+  if (!shell) return [];
+
+  /* The bundle is a hashed Vite asset — /assets/index-<hash>.js. Take the
+     module script, because the legacy SmartAdmin theme scripts on this page
+     are also /js/*.js and carry none of the data. */
+  const asset = shell.match(/src="(\/assets\/index-[A-Za-z0-9_-]+\.js)"/);
+  if (!asset) {
+    console.warn("[sources] tgprb: no /assets/index-*.js in the shell — the site was rebuilt again");
+    return [];
+  }
+
+  const bundle = await getHtml(new URL(asset[1], url).toString());
+  if (!bundle) return [];
 
   const items: RawItem[] = [];
-  for (const r of tableRows(html)) {
-    if (r.length < 4) continue;
-    const [code, post, pay, vac] = r;
-    if (!/^\d+$/.test(code)) continue;                    // post code
+  const row = /\{code:`(\d+)`,post:`([^`]+)`,pay:`([^`]+)`,vacancies:`([^`]+)`\}/g;
+  for (let m = row.exec(bundle); m; m = row.exec(bundle)) {
+    const [, code, post, pay, vac] = m;
     if (post.length < 9) continue;                        // real post name
     if (!/\d{4,}\s*[–-]\s*\d{4,}/.test(pay)) continue;    // pay band
     if (!/^[\d,]+$/.test(vac)) continue;                  // vacancy count
@@ -102,8 +128,8 @@ export async function scrapeTslprb(): Promise<RawItem[]> {
     const isOfficer = /^4[0-9]{4}|^3[3-9][0-9]{3}/.test(pay.replace(/[^\d–-]/g, ""));
 
     items.push({
-      sourceKey: `tslprb:post-${code}`,
-      organization: "TSLPRB",
+      sourceKey: `tgprb:post-${code}`,
+      organization: "TGPRB (Telangana Police Recruitment Board)",
       postName: `${post} — ${vac} posts`,
       profile: isOfficer ? "Graduate" : "Intermediate",
       location: "Telangana",
@@ -113,6 +139,9 @@ export async function scrapeTslprb(): Promise<RawItem[]> {
       applyUrl: url,
       sourceUrl: url,
     });
+  }
+  if (!items.length) {
+    console.warn("[sources] tgprb: bundle fetched but no vacancy rows matched — their data shape changed");
   }
   return items;
 }
@@ -157,10 +186,53 @@ export async function telegramChannel(
   });
 }
 
-/** Everything that runs on plain fetch. Browser-only sources live in CI. */
-export async function collectAll(): Promise<RawItem[]> {
-  const results = await Promise.allSettled([scrapeTslprb()]);
-  return results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
+/** What one source did on this run. `ok: false` means it is BROKEN, which is
+    a different thing from a working source that found nothing today. */
+export interface SourceHealth {
+  name: string;
+  ok: boolean;
+  count: number;
+  error?: string;
+}
+
+/**
+ * Everything that runs on plain fetch. Browser-only sources live in CI.
+ *
+ * Returns health per source as well as the items, because the failure this
+ * whole module just lived through was SILENT: tslprb.in moved, the parser
+ * matched nothing, `scrapeTslprb()` returned [], `Promise.allSettled` turned a
+ * rejection into [] as well, and the ingest wrote nothing every night for
+ * weeks while reporting `ok: true`. "Found nothing" and "is broken" looked
+ * identical from the outside, so nobody could tell the tracker had stopped
+ * tracking.
+ *
+ * A source that yields zero rows is now reported as NOT ok. Every source here
+ * scrapes a live recruitment board that always has vacancies on it, so zero
+ * rows means the parser lost, never that the board emptied.
+ */
+export async function collectAll(): Promise<{ items: RawItem[]; sources: SourceHealth[] }> {
+  const sources: { name: string; run: () => Promise<RawItem[]> }[] = [
+    { name: "tgprb", run: scrapeTgprb },
+  ];
+
+  const settled = await Promise.allSettled(sources.map((s) => s.run()));
+  const items: RawItem[] = [];
+  const health: SourceHealth[] = settled.map((r, i) => {
+    const name = sources[i].name;
+    if (r.status === "rejected") {
+      return { name, ok: false, count: 0, error: String(r.reason?.message ?? r.reason) };
+    }
+    items.push(...r.value);
+    return {
+      name, ok: r.value.length > 0, count: r.value.length,
+      ...(r.value.length ? {} : { error: "returned no rows — parser or site changed" }),
+    };
+  });
+
+  health.filter((h) => !h.ok).forEach((h) =>
+    console.error(`[sources] ${h.name} IS BROKEN: ${h.error}`));
+
+  return { items, sources: health };
 }
 
 /** Small stable hash, enough to dedupe post bodies. */
