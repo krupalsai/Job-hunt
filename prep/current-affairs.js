@@ -29,17 +29,57 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: null,
+  updated: "2026-08-23",
 
   items: [
     /* {
          date: "2026-08-15",              // when it happened, not when written
+         topic: "Defence",                // the badge — one word, the GA section it sits in
          headline: "…",
-         why: "why it matters for this paper",
+         why: "what to actually remember, and why this paper would ask it",
          source: "PIB",
          url: "https://…",
          exams: ["ssc-cgl"],              // omit for all
-       } */
+       }
+
+       EVERY entry below was returned by a search with the date attached, per
+       rule 3 in MENTOR.md. Where a report gave only "August 2026" and no day,
+       the item was DROPPED rather than given a plausible-looking date — an
+       undated fact is not usable in a hall, and a guessed date is worse than
+       no entry because it looks checked. */
+
+    {
+      date: "2026-08-23",
+      topic: "Space",
+      headline: "National Space Day — three years since Chandrayaan-3 landed",
+      why: "Chandrayaan-3 soft-landed near the Moon's SOUTH POLE on 23 Aug 2023, making India the first country to land there and the fourth to soft-land at all. The day is observed annually on 23 August. Remember the pole, the two firsts, and the date.",
+      source: "AffairsCloud",
+      url: "https://affairscloud.com/current-affairs-22-august-2026/",
+    },
+    {
+      date: "2026-08-21",
+      topic: "Defence",
+      headline: "Cochin Shipyard delivers 'Mangrol', the third anti-submarine warfare shallow water craft, to the Indian Navy",
+      why: "A defence-PSU indigenisation story, which is exactly the shape HAL's General Awareness section likes. Remember: built by Cochin Shipyard Limited (Kochi), THIRD of eight ASW-SWCs, over 80% indigenous content, named after a coastal town in Gujarat.",
+      source: "Onmanorama",
+      url: "https://www.onmanorama.com/news/kerala/2026/08/21/cochin-shipyard-hands-over-mangrol-to-navy-new-warship-built-to-tackle-submarines-in-shallow-waters.html",
+    },
+    {
+      date: "2026-08-20",
+      topic: "Appointments",
+      headline: "Former ISRO chairman S. Somanath and Anand Mahindra appointed part-time directors on the RBI Central Board",
+      why: "Appointments are the cheapest marks in General Awareness — a name, a body, a term. Both are four-year terms effective 20 Aug 2026. Somanath was ISRO's 10th Chairman (Jan 2022 to Jan 2025), which is a second fact the same line buys you.",
+      source: "AffairsCloud",
+      url: "https://affairscloud.com/current-affairs-22-august-2026/",
+    },
+    {
+      date: "2026-08-19",
+      topic: "Defence",
+      headline: "Japan's defence minister Shinjiro Koizumi visits India; maritime security arrangement signed",
+      why: "Bilateral visits are asked as a triple: who, which country, what was signed. Koizumi's 19–20 August visit was his first to India and produced a Memorandum of Arrangement on Maritime Security Cooperation with Rajnath Singh.",
+      source: "AffairsCloud",
+      url: "https://affairscloud.com/current-affairs-22-august-2026/",
+    },
   ],
 
   /* Verified working when added. A dead link in a study app is worse than no

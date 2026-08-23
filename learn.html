@@ -154,7 +154,18 @@
   .ca-items{ display:flex; flex-direction:column; gap:12px; margin-bottom:14px; }
   .ca-item{ padding:11px 12px; border-radius:10px; background:var(--surface-2);
             border:1px solid var(--surface-2-border); }
+  /* Badge, date, then the headline — the order a news card is scanned in. The
+     badge says which GA section the item belongs to, so a run of them reads as
+     coverage rather than as a pile of facts. */
+  .ca-top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .ca-topic{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.6px;
+             color:var(--accent-soft); background:var(--tint, #16a34a1a);
+             border:1px solid #22c55e44; border-radius:20px; padding:2px 8px; }
   .ca-date{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--dim); }
+  /* The takeaway is labelled, because "why it matters" is the part that turns a
+     headline into a mark and it is the part a reader skips. */
+  .ca-tip{ display:block; font-size:10px; font-weight:800; text-transform:uppercase;
+           letter-spacing:.6px; color:var(--warn); margin-bottom:2px; }
   .ca-head{ font-size:13.5px; font-weight:700; margin-top:3px; line-height:1.4; }
   .ca-why{ font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.5; }
   .ca-src{ display:inline-block; margin-top:6px; font-size:12px; font-weight:700;
@@ -1064,9 +1075,12 @@ function renderCurrentAffairs(){
   body.innerHTML = `
     ${items.length ? `<div class="ca-items">${items.map(i => `
       <div class="ca-item">
-        <div class="ca-date">${escHtml(i.date)}${i.source ? ` · ${escHtml(i.source)}` : ''}</div>
+        <div class="ca-top">
+          ${i.topic ? `<span class="ca-topic">${escHtml(i.topic)}</span>` : ''}
+          <span class="ca-date">${escHtml(i.date)}${i.source ? ` · ${escHtml(i.source)}` : ''}</span>
+        </div>
         <div class="ca-head">${escHtml(i.headline)}</div>
-        ${i.why ? `<div class="ca-why">${escHtml(i.why)}</div>` : ''}
+        ${i.why ? `<div class="ca-why"><span class="ca-tip">What to remember</span>${escHtml(i.why)}</div>` : ''}
         ${i.url ? `<a class="ca-src" href="${escHtml(i.url)}" target="_blank" rel="noopener">source →</a>` : ''}
       </div>`).join('')}</div>` : ''}
     <p class="muted">${age} News is the one thing this app will not bundle and call current —
