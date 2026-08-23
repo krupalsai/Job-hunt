@@ -152,6 +152,18 @@ function check(name, cond, detail){
     /ok: r\.value\.length > 0/.test(sources), 'collectAll no longer flags empty sources');
   check('and the ingest response is not ok while a source is down',
     /ok: broken\.length === 0/.test(ingest));
+  /* The profile CHECK on `jobs` was still the two-person one, so every insert
+     the ingest attempted was rejected — logged, swallowed, and reported ok.
+     The migration widening it has to stay in the repo, or rebuilding the
+     database from migrations reintroduces a silent write failure. */
+  const mig = fs.readdirSync(path.join(ROOT, 'supabase/migrations'))
+    .map(f => fs.readFileSync(path.join(ROOT, 'supabase/migrations', f), 'utf8')).join('\n');
+  check('the jobs profile constraint allows the qualifications the app writes',
+    ['B.Tech CSE', 'Graduate', 'Intermediate'].every(v => mig.includes(`'${v}'`)),
+    'no migration widens jobs_profile_check');
+  check('and still allows the legacy values the seeded rows carry',
+    /person1/.test(mig) && /person2/.test(mig));
+
   check('the police board is scraped at the domain it actually lives on now',
     /tgprb\.in/.test(sources) && !/const url = "https:\/\/www\.tslprb\.in/.test(sources));
   check('and the exam matcher knows the board\'s new name',
