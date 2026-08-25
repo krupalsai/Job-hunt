@@ -1,0 +1,109 @@
+/* ============================================================================
+   TYPOGRAPHY — a game font, without making the exam harder to read.
+
+   THE RULE THIS FILE EXISTS TO ENFORCE:
+
+       CHROME gets the game font. READING SURFACES do not.
+
+   A display face across question text and lesson prose looks the part and
+   costs you marks — at 15px, over a 150-minute paper, a display face is slower
+   to read than a text face, and slower reading on a paper decided by minutes
+   is a worse trade than any amount of atmosphere is worth.
+
+   So there are three roles, not one:
+
+     --font-display  Orbitron. Scores, big numbers, screen titles, badges. The
+                     wide squared-off HUD look, used where there are a handful
+                     of glyphs and they are meant to be looked AT.
+     --font-ui       Rajdhani. Buttons, labels, nav, chips, headings. Squared
+                     and technical but drawn as a UI face, so it carries the
+                     look across most of the surface without hurting.
+     --font-read     The system stack. Question text, explanations, lesson
+                     prose — everything read a paragraph at a time.
+                     Deliberately unchanged.
+
+   SELF-HOSTED ON PURPOSE. These could come from fonts.googleapis.com in two
+   lines, and they would fail on a train. The prep half of this app is built to
+   work with no signal, and the service worker precaches these alongside the
+   scripts. 58KB of woff2 buys an app that looks the same offline as online.
+   Latin subsets only — the app is English, and shipping subsets nothing
+   renders would multiply that for no glyphs.
+
+   Orbitron and Rajdhani are both under the SIL Open Font License 1.1, which
+   permits redistribution like this.
+   ========================================================================== */
+
+/* Orbitron ships as a variable font, so one file covers 700 through 900. */
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url('/fonts/orbitron-var-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/rajdhani-500-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/rajdhani-600-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/rajdhani-700-latin.woff2') format('woff2');
+}
+
+:root {
+  /* Every stack ends in the system font, so a failed download degrades to a
+     readable app rather than a broken-looking one. */
+  --font-display: 'Orbitron', 'Rajdhani', -apple-system, system-ui, sans-serif;
+  --font-ui:      'Rajdhani', -apple-system, system-ui, sans-serif;
+  --font-read:    -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Chrome ──────────────────────────────────────────────────────────────
+   The page sets body to --font-ui; nav.js and every button already say
+   `font-family: inherit`, so the whole shell follows from that one line. */
+
+/* Numbers meant to be read as a SCORE rather than as prose. Tabular so a
+   counting number does not jitter, and wider tracking because Orbitron is
+   already wide — tight tracking makes it look cramped rather than technical. */
+#score-big, .ms-marks, .ds-head strong, .fun-best, .stat-num,
+.pick-when, .nav-when, .font-display {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .01em;
+}
+
+/* Screen titles and card headings: the game look where the glyph count is
+   small and the words are labels rather than sentences. */
+header h1, .card h2, .mode-name, .ds-head, .ca-topic, .ls-group, .ls-subject,
+.plan-daynum, .bar-note strong, th {
+  font-family: var(--font-ui);
+  letter-spacing: .01em;
+}
+
+/* ── Reading surfaces — deliberately NOT the game font ───────────────────
+   Everything below is read a paragraph at a time, under time pressure, and is
+   where marks are actually won. If a future change makes the app look more
+   like a game by touching this block, it has made the app worse. */
+.qtext,
+.explain, .explain .why, .explain .trick,
+.ls-main, .ls-p, .ls-why, .ls-body,
+.ca-head, .ca-why,
+.td-why, .td-sub,
+.plan-title,
+#result-insight, #review-list,
+ul, ol, p, td {
+  font-family: var(--font-read);
+}

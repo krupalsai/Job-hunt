@@ -16,7 +16,7 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v8';
+const CACHE = 'jobhunt-v9';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -26,6 +26,22 @@ const CACHE = 'jobhunt-v8';
 const PREP_ASSETS = [
   '/learn.html',
   '/nav.js',
+  /* The prep page's runtime, split out of what was one inline <script>.
+     Inline code was cached for free as part of learn.html; these are
+     separate requests and have to be listed, or the page loads offline
+     and every script in it 404s — a working shell around a dead app,
+     which is worse than failing outright. */
+  '/app/screens.js',
+  '/app/exam-info.js',
+  '/app/bank.js',
+  '/app/pace.js',
+  '/app/selection.js',
+  '/app/quiz.js',
+  '/app/daily-test.js',
+  '/app/mock.js',
+  '/app/verdict.js',
+  '/app/skills.js',
+  '/app/progress.js',
   '/prep/exams.js',
   '/prep/skills.js',
   '/prep/hal-cs.js',
@@ -37,6 +53,14 @@ const PREP_ASSETS = [
   '/prep/ts-si-lessons.js',
   '/prep/sync.js',
   '/prep/today.js',
+  /* Typography. Self-hosted precisely so it survives offline — a font fetched
+     from another origin at runtime is one this cache cannot hold, and the app
+     would silently drop to the system face exactly when there is no signal. */
+  '/fonts/fonts.css',
+  '/fonts/orbitron-var-latin.woff2',
+  '/fonts/rajdhani-500-latin.woff2',
+  '/fonts/rajdhani-600-latin.woff2',
+  '/fonts/rajdhani-700-latin.woff2',
   '/manifest.json',
   '/icon-192.svg',
 ];
@@ -72,6 +96,8 @@ self.addEventListener('fetch', event => {
   const isPrep = url.pathname === '/learn.html'
               || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
+              || url.pathname.startsWith('/app/')
+              || url.pathname.startsWith('/fonts/')
               || url.pathname === '/manifest.json'
               || url.pathname === '/icon-192.svg';
 

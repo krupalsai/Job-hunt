@@ -8,7 +8,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const PORT = 8931;
-const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css'};
+const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.woff2':'font/woff2'};
 // Stub for the progress API. The real one runs on Vercel with the service-role
 // key; here we only need to prove the page CALLS it with a well-formed body,
 // and that a failure never blocks the UI.

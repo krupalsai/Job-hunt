@@ -1,0 +1,13 @@
+Orbitron and Rajdhani are redistributed here under the SIL Open Font License,
+Version 1.1, which permits bundling and redistribution with or without
+modification, provided the fonts are not sold by themselves and this notice is
+retained.
+
+  Orbitron  — Copyright (c) The Orbitron Project Authors
+              https://fonts.google.com/specimen/Orbitron
+  Rajdhani  — Copyright (c) The Rajdhani Project Authors
+              https://fonts.google.com/specimen/Rajdhani
+
+Full licence text: https://openfontlicense.org/
+
+Only the latin subsets are bundled. The originals are unmodified.

@@ -78,6 +78,51 @@ needs horizontal scrolling or puts a tap target out of reach.
 
 ---
 
+# How the prep page is put together
+
+`learn.html` used to carry a single 110KB inline `<script>` — every screen, the
+quiz, the mock, the skills engine and the progress analysis in one file. It is
+now the markup plus eleven modules in `app/`, loaded in order:
+
+    screens · exam-info · bank · pace · selection · quiz
+    daily-test · mock · verdict · skills · progress
+
+**That order is load-bearing, not stylistic.** These were one script, and
+top-level `const`/`let` are shared across classic scripts but sit in the
+temporal dead zone until the script declaring them has run. The split preserved
+the original order exactly for that reason; reordering the tags is a runtime
+error. `npm run test:integration` asserts the order and the count.
+
+Two things break silently when a page is split like this, so both are pinned by
+tests derived from the HTML rather than hard-coded:
+
+- **The service worker must precache every new file.** Inline code was cached
+  for free as part of `learn.html`; separate files are separate requests. Miss
+  one and the app opens offline as a working shell around a dead page, which is
+  worse than failing outright.
+- **Same for stylesheets and fonts** — see below.
+
+# Typography (`fonts/`)
+
+The rule: **chrome gets the game font, reading surfaces do not.**
+
+- `--font-display` — **Orbitron**, for scores, big numbers and badges.
+- `--font-ui` — **Rajdhani**, for headings, buttons, labels and the nav.
+- `--font-read` — the system stack, for question text, explanations and lesson
+  prose. Deliberately unchanged.
+
+A display face across question text looks right and costs marks: at 15px over a
+150-minute paper it is measurably slower to read, and this app is for a paper
+decided by minutes. `npm run test:nav` asserts both halves — that the two faces
+really load, and that `.qtext` is *not* rendered in either of them.
+
+The files are **self-hosted, not loaded from Google Fonts**, because the prep
+half of the app is built to work with no signal and a service worker cannot
+precache a font fetched from another origin at runtime. 58KB of woff2, latin
+subsets only. Both faces are SIL Open Font License 1.1.
+
+---
+
 # Preparation (`/learn.html`)
 
 Three exams: HAL **Management Trainee (Computer Science)**, **SSC CGL** and

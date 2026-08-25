@@ -17,7 +17,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const PORT = 8933;
 const PHONE = { width: 390, height: 844 };
-const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'};
+const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.woff2':'font/woff2'};
 
 const server = http.createServer((req,res)=>{
   // The browser always asks for this and the repo has no .ico; answering it
@@ -513,6 +513,37 @@ async function reachable(page, selector, where, minH){
     (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'progress');
 
   /* ── The drawer ─────────────────────────────────────────────────────── */
+  /* The game font has to actually arrive, not merely be referenced. A wrong
+     @font-face path, a missing file or a bad MIME type all fail silently into
+     the fallback stack — the app still works and just quietly stops looking
+     like itself, which is the kind of regression nobody files a bug for. */
+  console.log('\n── the typography actually loads ────────────────────────');
+  const typo = await page.evaluate(async () => {
+    await document.fonts.ready;
+    const fam = sel => { const e = document.querySelector(sel);
+      return e ? getComputedStyle(e).fontFamily.split(',')[0].replace(/['"]/g, '') : null; };
+    return {
+      loaded: [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family),
+      body: fam('body'),
+      heading: fam('header h1'),
+    };
+  });
+  check('both self-hosted faces load, rather than falling back silently',
+    typo.loaded.includes('Rajdhani') && typo.loaded.includes('Orbitron'),
+    JSON.stringify(typo));
+  check('and the chrome is actually rendered in the UI face',
+    typo.body === 'Rajdhani' && typo.heading === 'Rajdhani', JSON.stringify(typo));
+  /* The other half of the rule: reading surfaces must NOT take the game font.
+     This is the check that stops a future "make it look more like a game" from
+     quietly slowing down every question on a 150-minute paper. */
+  const reading = await page.evaluate(() => {
+    const e = document.querySelector('.qtext') || document.querySelector('.ls-p');
+    return e ? getComputedStyle(e).fontFamily : null;
+  });
+  check('but question text is left in a text face, not the display one',
+    reading === null || (!/Orbitron/.test(reading) && !/Rajdhani/.test(reading)),
+    String(reading));
+
   console.log('\n── the drawer ───────────────────────────────────────────');
   check('the drawer starts closed', !(await page.locator('#nav-drawer').evaluate(e => e.classList.contains('is-open'))));
   check('a hamburger is in the header', await page.locator('#nav-hamburger').isVisible());

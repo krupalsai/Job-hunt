@@ -14,7 +14,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const PORT = 8932;
-const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'};
+const MIME = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.woff2':'font/woff2'};
 const requested = [];
 const server = http.createServer((req,res)=>{
   requested.push(req.url);
@@ -168,6 +168,40 @@ function check(name, cond, detail){
     /tgprb\.in/.test(sources) && !/const url = "https:\/\/www\.tslprb\.in/.test(sources));
   check('and the exam matcher knows the board\'s new name',
     /tgprb/i.test(fs.readFileSync(path.join(ROOT, 'prep/exams.js'), 'utf8')));
+
+  /* Every script learn.html loads must be in the service worker's precache.
+     Splitting the inline script into /app/*.js broke this the moment it was
+     done: inline code was cached for free as part of learn.html, separate
+     files are separate requests. Offline that gives a working shell around a
+     dead app — worse than failing outright, because the page still opens.
+     Derived from the HTML rather than hard-coded, so adding a twelfth module
+     and forgetting the cache fails here instead of on a train. */
+  const learnHtml = fs.readFileSync(path.join(ROOT, 'learn.html'), 'utf8');
+  const scriptSrcs = [...learnHtml.matchAll(/<script src="([^"]+)"/g)].map(m => m[1]);
+  const uncached = scriptSrcs.filter(src => !sw.includes(`'${src}'`));
+  check('every script the prep page loads is precached for offline',
+    uncached.length === 0, `missing from sw.js: ${uncached.join(', ')}`);
+  check('and the service worker serves the split-out app modules from cache',
+    /startsWith\('\/app\/'\)/.test(sw));
+  /* Same trap, different asset type: a self-hosted font is only worth
+     self-hosting if it is actually cached. Otherwise the app quietly drops to
+     the system face offline, which is the one situation it was self-hosted
+     for. */
+  const cssHrefs = [...learnHtml.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m => m[1]);
+  const uncachedCss = cssHrefs.filter(h => !sw.includes(`'${h}'`));
+  check('every stylesheet the prep page loads is precached too',
+    uncachedCss.length === 0, `missing from sw.js: ${uncachedCss.join(', ')}`);
+  const fontFiles = fs.readdirSync(path.join(ROOT, 'fonts')).filter(f => f.endsWith('.woff2'));
+  check('and every font file it ships is precached, or offline loses the look',
+    fontFiles.length > 0 && fontFiles.every(f => sw.includes(`'/fonts/${f}'`)),
+    fontFiles.join(', '));
+  /* Order is load-bearing: these were one script, and top-level const/let are
+     shared across classic scripts but dead until their own script has run. */
+  const appOrder = scriptSrcs.filter(s2 => s2.startsWith('/app/'));
+  check('the app modules load in the order they were split in',
+    appOrder[0] === '/app/screens.js' &&
+    appOrder[appOrder.length - 1] === '/app/progress.js' &&
+    appOrder.length === 11, appOrder.join(' '));
 
   const progress = fs.readFileSync(path.join(ROOT, 'api/progress.ts'), 'utf8');
   check('the mirror still accepts every action the app sends',
