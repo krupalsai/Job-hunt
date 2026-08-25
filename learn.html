@@ -445,6 +445,18 @@
   .ls-badge.none{ background:var(--surface-2); color:var(--dim); }
 
   /* Test — the five modes */
+  /* The daily strip. Warm while today is outstanding, green once it is done —
+     the only status on this screen that answers "have I done my bit today". */
+  .daily-strip{ display:flex; gap:10px; align-items:center; padding:11px 13px; margin:12px 0 10px;
+                border-radius:11px; background:var(--surface-2);
+                border:1px solid var(--warn); border-left-width:4px; }
+  .daily-strip.is-done{ border-color:var(--good); }
+  .ds-head{ font-size:13.5px; font-weight:700; }
+  .ds-sub{ font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
+  /* Today's test is the headline action for the last fortnight, not one row
+     among six. */
+  .mode-row.is-lead{ border-color:var(--accent); background:var(--tint, #16a34a12); }
+  .mode-row.is-lead .mode-name{ color:var(--accent-soft); }
   .mode-row{
     display:flex; align-items:center; gap:12px; width:100%; text-align:left;
     background:var(--surface-2); border:1px solid var(--panel-border); border-radius:12px;
@@ -679,6 +691,9 @@
     <div class="card" id="test-modes">
       <h2>Test</h2>
       <p class="muted" style="margin-top:-4px;" id="test-modes-note"></p>
+      <!-- The daily rehearsal, above the modes: with the exam close, whether
+           today's sitting is done matters more than which mode to browse. -->
+      <div id="daily-strip"></div>
       <div id="mode-list"></div>
     </div>
 
@@ -890,7 +905,24 @@ window.gotoSection = function(id){
   }
   if(id === 'plan' && window.renderPlan) window.renderPlan();
   if(id === 'current-affairs') renderCurrentAffairs();
-  if(id === 'test') renderTestModes();
+  if(id === 'test'){
+    /* Tapping Test is a request for the Test SCREEN, not for whatever RESULT
+       was last left on it. A finished sitting is stale the moment you leave
+       it, so landing back on the mark you already saw made the tab look
+       broken — the single most likely tap of the day, on the screen you come
+       back to every day. Only a FINISHED result is cleared, not a live one:
+       #quiz-live, #quiz-setup and #quiz-result all live inside #test, and
+       peeking at a lesson mid-question routes away to the lessons screen and
+       straight back on the section-level hide/show alone — a live quiz has to
+       come back exactly as it was, or looking something up mid-quiz would
+       cost the attempt. mockState is the same case with its own clock. */
+    const resultShowing = !document.getElementById('quiz-result').classList.contains('hidden');
+    if(!mockState && resultShowing){
+      document.getElementById('quiz-result').classList.add('hidden');
+      document.getElementById('test-modes').classList.remove('hidden');
+    }
+    renderTestModes();
+  }
   if(id === 'syllabus') renderExamInfo();
   window.scrollTo(0, 0);
 };
@@ -1837,7 +1869,125 @@ function mistakePool(){
   return answerablePool().filter(q => ((state.seen[q.id] || {}).wrong || 0) > 0);
 }
 
+/* ==========================================================================
+   TODAY'S TEST — one sitting a day, in the paper's own proportions.
+
+   With under a fortnight left, new material stops paying and retrieval starts.
+   The thing that decides a score now is having answered the paper's SHAPE
+   often enough that none of it is a surprise — and the shape is not "some
+   questions", it is 20 General Awareness, 40 English & Reasoning and 100
+   Computer Science.
+
+   So this draws each section at the same ratio the paper uses, scaled to a
+   sitting you can actually hold every day: a fifth of the paper is 4 + 8 + 20,
+   thirty-two questions, a little under half an hour at the exam's own pace.
+   Doing that twelve times is twelve rehearsals of the real distribution — you
+   cannot end up having practised only the part you enjoy, because the section
+   quotas do not let you.
+
+   Selection inside each section goes through pickQuestions, so across days it
+   is unseen-first and wrong-ones-sooner, exactly like practice. Two sittings
+   on consecutive days are not the same thirty-two questions.
+
+   It records what you scored, per section, per day. That record is the only
+   honest answer to "am I ready" — a single mock is one sample, and a week of
+   dailies is a trend.
+   ========================================================================== */
+const DAILY_KEY = 'jobhunt_daily_test';
+/* A fifth of the paper. Small enough to sit daily without eating the study
+   time it is supposed to test, big enough that each section still gets a
+   meaningful count rather than a token question. */
+const DAILY_SCALE = 5;
+
+const dailyLog  = () => { try{ return JSON.parse(localStorage.getItem(DAILY_KEY)) || {}; }catch(e){ return {}; } };
+const dailySave = o => { try{ localStorage.setItem(DAILY_KEY, JSON.stringify(o)); }catch(e){} };
+const dailyToday = () => new Date().toISOString().slice(0, 10);
+
+/** Days until the exam, counted from the earliest day of the window — the
+    same rule the run to the exam uses, for the same reason. */
+function daysToExam(exam){
+  if(!exam || !exam.examDateStart) return null;
+  const d = new Date(exam.examDateStart + 'T00:00:00');
+  if(isNaN(d.getTime())) return null;
+  const t = new Date(); t.setHours(0,0,0,0);
+  return Math.max(0, Math.round((d - t) / 86400000));
+}
+
+/** Consecutive days ending today (or yesterday, so the streak is not broken
+    by the fact that today's has not been sat YET). */
+function dailyStreak(){
+  const log = dailyLog();
+  let n = 0;
+  const d = new Date(); d.setHours(0,0,0,0);
+  if(!log[dailyToday()]) d.setDate(d.getDate() - 1);   // today still to come
+  for(;;){
+    const key = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    if(!log[key]) break;
+    n++; d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+
+/** Which section of the paper a subject belongs to. */
+function sectionOfTopic(exam, topic){
+  const sec = (exam.sections || []).find(x => (x.subjects || []).indexOf(topic) !== -1);
+  return sec ? sec.name : 'Other';
+}
+
+/** The day's set: every section at the paper's ratio, honest about shortfalls. */
+function buildDailySet(exam){
+  const weak = weakTopicSet();
+  const items = [], shortfalls = [], plan = [];
+  (exam.sections || []).forEach(sec=>{
+    const pool = ALL.filter(q => (sec.subjects || []).indexOf(q.topic) !== -1);
+    const want = Math.max(1, Math.round((sec.questions || sec.marks || 0) / DAILY_SCALE));
+    const take = Math.min(want, pool.length);
+    if(take < want) shortfalls.push({ name: sec.name, have: take, want });
+    plan.push({ name: sec.name, n: take });
+    pickQuestions(pool, take, { weak }).forEach(q => items.push(q));
+  });
+  return { items, shortfalls, plan };
+}
+
+function startDailyTest(){
+  const exam = currentExamObj();
+  if(!exam) return;
+  const set = buildDailySet(exam);
+  if(!set.items.length){ alert('No questions available for this exam yet.'); return; }
+  /* Flagged so the result screen knows to record the day and report by
+     section rather than by topic — thirty-two questions across eleven
+     subjects is a per-topic table nobody can read. */
+  window.__dailyTest = { plan: set.plan, shortfalls: set.shortfalls };
+  beginQuiz(set.items, { size: set.items.length, noGen: true });
+}
+
+/** Called from showResult when the sitting was a daily test. */
+function recordDailyTest(){
+  const meta = window.__dailyTest;
+  window.__dailyTest = null;
+  if(!meta) return null;
+  const exam = currentExamObj();
+  const bySection = {};
+  answers.forEach(a=>{
+    const name = sectionOfTopic(exam, a.topic);
+    const s = bySection[name] || (bySection[name] = { n: 0, ok: 0 });
+    s.n++; if(a.chosen === a.correct) s.ok++;
+  });
+  const log = dailyLog();
+  /* First sitting of the day is the one that counts. A retake is welcome, and
+     it is practice — letting it overwrite would turn the record into "best of
+     N attempts", which is not what a rehearsal measures. */
+  const key = dailyToday();
+  if(!log[key]){
+    log[key] = { score: score, total: currentQuiz.length, sections: bySection, at: Date.now() };
+    dailySave(log);
+  }
+  return { bySection, shortfalls: meta.shortfalls, first: !log[key].retaken };
+}
+
 const TEST_MODES = [
+  { id:'daily', name:"Today's test",
+    what:'The paper in miniature — every section at the ratio the real one uses. One sitting a day.' },
   { id:'practice', name:'Practice',
     what:'A mixed set from this exam. Unseen questions first, wrong ones until you get them right.',
     size:10 },
@@ -1870,6 +2020,7 @@ function renderTestModes(){
       (endless ? `, plus unlimited fresh ones on ${endless} basics` : '') +
       `. Scored ${markingShort(exam)}.`;
   }
+  renderDailyStrip(exam);
   const weakN = weakTopicSet().size;
   const missN = mistakePool().length;
   box.innerHTML = TEST_MODES.map(m=>{
@@ -1877,10 +2028,17 @@ function renderTestModes(){
     if(m.id === 'weak')     avail = weakN ? `${weakN} weak subject${weakN===1?'':'s'}` : 'nothing weak yet';
     if(m.id === 'mistakes') avail = missN ? `${missN} to fix` : 'none outstanding';
     if(m.id === 'mock' && exam) avail = `${exam.questions || POOL.length} Q · ${exam.minutes} min`;
-    if(m.id === 'practice') avail = `${POOL.length} in the pool`;
+    if(m.id === 'daily'){
+    const done = dailyLog()[dailyToday()];
+    const set = exam ? buildDailySet(exam) : null;
+    avail = done ? `done today · ${done.score}/${done.total}`
+                 : (set ? `${set.items.length} questions` : '');
+  }
+  if(m.id === 'practice') avail = `${POOL.length} in the pool`;
     if(m.id === 'drill')    avail = '5 questions';
     if(m.id === 'fun')      avail = funStreak.best ? `best streak ${funStreak.best}` : 'try it';
-    return `<button type="button" class="mode-row" data-mode="${m.id}">
+    const lead = m.id === 'daily' ? ' is-lead' : '';
+    return `<button type="button" class="mode-row${lead}" data-mode="${m.id}">
       <span class="mode-main">
         <span class="mode-name">${escHtml(m.name)}</span>
         <span class="mode-what">${escHtml(m.what)}</span>
@@ -1888,6 +2046,28 @@ function renderTestModes(){
       <span class="mode-meta">${escHtml(avail)}</span>
     </button>`;
   }).join('');
+}
+
+/** Today's sitting, the streak behind it, and the days in front of it. This
+    is the one number on the Test screen that changes because of something you
+    did, so it goes above the list rather than inside it. */
+function renderDailyStrip(exam){
+  const box = document.getElementById('daily-strip');
+  if(!box) return;
+  const log = dailyLog(), key = dailyToday(), done = log[key];
+  const streak = dailyStreak();
+  const left = daysToExam(exam);
+  const sat = Object.keys(log).length;
+  box.className = 'daily-strip' + (done ? ' is-done' : '');
+  box.innerHTML = `
+    <div class="ds-main">
+      <div class="ds-head">${done
+        ? `Today's test done — <strong>${done.score}/${done.total}</strong>`
+        : `Today's test not sat yet`}</div>
+      <div class="ds-sub">${
+        left === null ? '' : `<strong>${left}</strong> day${left === 1 ? '' : 's'} to the exam · `
+      }${sat} sitting${sat === 1 ? '' : 's'} recorded${streak > 1 ? ` · ${streak}-day streak` : ''}</div>
+    </div>`;
 }
 
 /** The marking scheme in a few words — every mode is scored by it. */
@@ -1909,6 +2089,7 @@ function startMode(id){
   const mode = TEST_MODES.find(m=>m.id === id);
   if(!mode) return;
   quizSize = mode.size || 10;
+  if(id === 'daily'){ startDailyTest(); return; }
   if(id === 'mock'){ openMockIntro(); return; }
   if(id === 'weak'){ document.getElementById('drill-weak').click(); return; }
   if(id === 'mistakes'){
@@ -2558,6 +2739,10 @@ function showResult(){
     return;
   }
 
+  /* A daily sitting is recorded before anything is rendered, so the streak on
+     the Test screen is already right when you go back to it. */
+  const daily = (typeof recordDailyTest === 'function') ? recordDailyTest() : null;
+
   const pct = Math.round((score/currentQuiz.length)*100);
   document.getElementById('score-big').textContent = `${score} / ${currentQuiz.length}`;
   document.getElementById('score-sub').textContent =
@@ -2572,6 +2757,35 @@ function showResult(){
   // the only thing that matters there is whether the next topic unlocked.
   // A skill drill reports on the one basic it was about. Anything else — a
   // per-topic breakdown of five questions from the same topic — would be noise.
+  /* A daily test reports by SECTION, not by topic: thirty-two questions across
+     eleven subjects makes a per-topic table of ones and twos that says nothing.
+     Per section it answers the only question that matters — which third of the
+     paper is costing you marks. */
+  if(daily){
+    const exam = currentExamObj();
+    const left = daysToExam(exam);
+    const rows = Object.keys(daily.bySection).map(name=>{
+      const s2 = daily.bySection[name];
+      const p = Math.round(s2.ok / s2.n * 100);
+      const tone = p >= 75 ? 'var(--good)' : p >= 50 ? 'var(--warn)' : 'var(--bad)';
+      return `<tr><td>${escHtml(name)}</td><td style="text-align:right">${s2.ok}/${s2.n}</td>
+        <td style="text-align:right;color:${tone};font-weight:700">${p}%</td></tr>`;
+    }).join('');
+    const worst = Object.keys(daily.bySection)
+      .sort((a,b)=> (daily.bySection[a].ok/daily.bySection[a].n) - (daily.bySection[b].ok/daily.bySection[b].n))[0];
+    document.getElementById('result-insight').innerHTML = `
+      <table style="margin-bottom:10px"><thead><tr><th>Section</th><th style="text-align:right">Score</th>
+        <th style="text-align:right">%</th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="focus-box"><strong>${escHtml(worst)}</strong> is the section costing you most today.
+        ${left === null ? '' : `${left} day${left === 1 ? '' : 's'} to go — `}sit tomorrow's and watch
+        whether that line moves. One sitting is a sample; the streak is the trend.</div>
+      ${daily.shortfalls.length ? `<p class="muted">Short by design: ${
+        daily.shortfalls.map(f=>`${escHtml(f.name)} had ${f.have} of the ${f.want} this ratio asks for`).join('; ')
+      }. The bank does not hold enough there yet, and padding it with repeats inside one sitting would make the score mean less, not more.</p>` : ''}`;
+    document.getElementById('review-list').innerHTML = reviewHtml();
+    return;
+  }
+
   if(window.__skillDrill){
     const key = window.__skillDrill;
     window.__skillDrill = null;

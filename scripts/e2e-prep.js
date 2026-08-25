@@ -105,8 +105,26 @@ function check(name, cond, detail){
   await page.click('nav#nav-bottom [data-tab="test"]');
   const modes = await page.locator('#mode-list .mode-name').allTextContents();
   check('Test offers the named modes, including fun mode',
-    modes.join('|') === 'Practice|Weak areas|Previous mistakes|Mock exam|Quick drill|Fun mode 🎮',
+    modes.join('|') === "Today's test|Practice|Weak areas|Previous mistakes|Mock exam|Quick drill|Fun mode 🎮",
     modes.join('|'));
+  /* With the exam close, the daily rehearsal is the headline action, so it
+     leads the list and the strip above says whether today's is done. */
+  check('and the daily test leads the list, with its status above it',
+    modes[0] === "Today's test" && (await page.locator('#daily-strip .ds-head').count()) === 1);
+
+  /* Today's test draws each section at the ratio the paper uses, so twelve
+     sittings are twelve rehearsals of the real distribution rather than twelve
+     helpings of whichever subject the picker liked. */
+  const dailyPlan = await page.evaluate(() => {
+    const s = buildDailySet(currentExamObj());
+    return { plan: s.plan, n: s.items.length };
+  });
+  check('the daily test is the paper in miniature, section by section',
+    JSON.stringify(dailyPlan.plan.map(p => [p.name, p.n])) ===
+      JSON.stringify([['General Awareness', 4], ['English & Reasoning', 8], ['CS Technical', 20]]),
+    JSON.stringify(dailyPlan));
+  check('and its sections keep the paper\'s 20:40:100 ratio',
+    dailyPlan.n === 32 && dailyPlan.plan[2].n === dailyPlan.plan[1].n * 2.5);
   await page.click('[data-mode="practice"]');
   const bankText = await page.locator('#bank-count').textContent();
   check('the pool is this exam\'s subjects, not the whole bank',
@@ -811,6 +829,46 @@ function check(name, cond, detail){
     localStorage.removeItem('jobhunt_plan_scope');
     localStorage.setItem('jobhunt_daily_minutes', '180');
   });
+
+  console.log('\n── tapping Test after a finished sitting vs. mid-quiz ───');
+  // A fresh load, same as the mock section below does — this block does not
+  // depend on, and should not inherit, whatever exam-planning scope the
+  // section above left the page in.
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs`, { waitUntil: 'networkidle' });
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  await page.waitForSelector('#test-modes:not(.hidden)');
+  /* Finishing a sitting used to leave #quiz-result showing forever: tapping
+     Test again did nothing, because #quiz-live/#quiz-result/#quiz-setup all
+     live inside #test, and #test was already the visible section — nothing
+     reset what was inside it. That is the most likely tap of the day on the
+     screen the daily test lives on. */
+  await page.evaluate(() => window.startMode('drill'));
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  for (let i = 0; i < 5; i++) {
+    await page.locator('#q-options .opt').first().click();
+    if (await page.locator('#quiz-result').isVisible()) break;
+    await page.click('#next-btn');
+  }
+  await page.waitForSelector('#quiz-result:not(.hidden)');
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  check('tapping Test after a finished sitting comes back to the mode list',
+    await page.locator('#test-modes').isVisible() &&
+    !(await page.locator('#quiz-result').isVisible()));
+
+  /* The opposite case, and the reason the fix has to be narrow: peeking at a
+     lesson from inside a LIVE question routes away to the lessons screen
+     (openLessonByKey -> gotoSection('lessons')) and back. That must not cost
+     the quiz in progress — #test was never actually left, so returning to it
+     has to restore the exact question rather than resetting to the mode list. */
+  await page.evaluate(() => window.startMode('drill'));
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  const qBefore = await page.evaluate(() => currentQuiz[currentIndex].id);
+  await page.evaluate(() => window.gotoSection('lessons'));
+  await page.waitForSelector('#lessons:not(.hidden)');
+  await page.click('nav#nav-bottom [data-tab="test"]');
+  check('but a live quiz survives a detour to another screen and back',
+    await page.locator('#quiz-live').isVisible() &&
+    (await page.evaluate(() => currentQuiz[currentIndex].id)) === qBefore);
 
   console.log('\n── full mock: the real paper, in one sitting ────────────');
   /* Practice is deliberately forgiving — unlimited time, the answer revealed
