@@ -1174,12 +1174,12 @@ add("Theory of Computation", [
    why:"CNF allows exactly two shapes: one terminal, or exactly two non-terminals. That makes every parse tree binary, which is what the CYK parsing algorithm relies on. Greibach Normal Form is the other one — A → aα, a terminal followed by non-terminals.",
    trick:"Chomsky: A → BC or A → a. Greibach: A → aα. C for 'couple of non-terminals', G for 'gets a terminal first'."},
 
-  {q:"A grammar is ambiguous if:",
-   opts:["It has more than one production for some non-terminal","Some string has two distinct parse trees","It is left recursive","It generates the empty string"], correct:1,
-   source_type:"generated_practice", difficulty:"basic",
-   subtopic:"toc-cfg", concept:"Ambiguity is about parse trees, not productions",
-   why:"Ambiguity means one string can be derived with two different structures, which matters because structure determines meaning — the classic case is an expression grammar where a+b*c can parse two ways. Having several productions for a non-terminal is completely normal and is not ambiguity.",
-   trick:"Two distinct parse TREES for one string. Two derivations of the same tree do not count."},
+  {q:"Which language can a context-free grammar generate that a regular expression cannot?",
+   opts:["Strings of even length","Strings containing 'ab'","Balanced parentheses","Strings over {a,b} ending in b"], correct:2,
+   source_type:"generated_practice", difficulty:"moderate",
+   subtopic:"toc-cfg", concept:"What a grammar can count that an automaton cannot",
+   why:"Balanced parentheses requires matching an unbounded number of opening brackets against closing ones, which needs a stack — a finite automaton has only finitely many states and no counter. The other three are all describable by a regular expression and so need no grammar at all.",
+   trick:"Unbounded matching or nesting means context-free. Independent conditions on a string stay regular."},
 
   {q:"Context-free languages are closed under union but NOT under:",
    opts:["Concatenation","Kleene star","Intersection","Substitution"], correct:2,

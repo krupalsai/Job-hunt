@@ -53,7 +53,12 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
     if (q.opts && new Set(q.opts).size !== q.opts.length) problems.push(`${at}: duplicate options`);
     if (q.why && q.opts && q.why === q.opts[q.correct]) problems.push(`${at}: explanation just restates the answer`);
     if (q.q) {
-      const key = q.q.trim().toLowerCase();
+      /* Punctuation and spacing are stripped before comparing. The check used
+         to be trimmed lowercase only, which let "A grammar is ambiguous if?"
+         and "A grammar is ambiguous if:" both ship — the same question written
+         twice by two authors, which is precisely the case a duplicate check
+         exists for. */
+      const key = q.q.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
       if (seenText.has(key)) problems.push(`${at}: duplicate of ${seenText.get(key)}`);
       else seenText.set(key, at);
     }
@@ -89,8 +94,12 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
     } else if (!/^[a-z][a-z0-9-]{2,40}$/.test(q.subtopic)) {
       problems.push(`${at}: subtopic "${q.subtopic}" is not a lowercase dashed key`);
     }
-    if (q.concept !== undefined && (typeof q.concept !== 'string' || q.concept.length < 4)) {
-      problems.push(`${at}: concept must be a short phrase naming what is tested`);
+    /* The concept is what the question actually tests, in a phrase. It is what
+       a review screen shows beside a wrong answer, and writing it forces the
+       author to be able to say what the question is FOR — a question whose
+       concept cannot be stated in a phrase is usually testing trivia. */
+    if (!q.concept || typeof q.concept !== 'string' || q.concept.length < 4) {
+      problems.push(`${at}: no concept — say in a phrase what this question tests`);
     }
     if (sourceOf(q) === 'pyq') {
       if (!q.exam)   problems.push(`${at}: claims to be a PYQ but names no exam`);
