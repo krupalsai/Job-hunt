@@ -6,13 +6,16 @@
 const fs = require('fs');
 const path = require('path');
 
-// The bank is written across two files: hal-cs.js holds the subjects the HAL
-// paper examines (several of which SSC CGL shares), and ts-si.js adds the ones
-// only the Telangana SI paper asks for. They are evaluated together, exactly as
-// the browser loads them, so a duplicate question across the two is caught.
+// The bank is written across three files: hal-cs.js holds the subjects the HAL
+// paper examines (several of which SSC CGL shares), hal-cs-extra.js adds the
+// topics and the four subjects it never reached, and ts-si.js adds the ones
+// only the Telangana SI paper asks for. They are evaluated together, in the
+// same order the browser loads them, so a duplicate question across any two of
+// them is caught.
 const src = fs.readFileSync(path.join(__dirname, '..', 'prep', 'hal-cs.js'), 'utf8');
+const extraSrc = fs.readFileSync(path.join(__dirname, '..', 'prep', 'hal-cs-extra.js'), 'utf8');
 const tsSrc = fs.readFileSync(path.join(__dirname, '..', 'prep', 'ts-si.js'), 'utf8');
-const QUESTION_BANK = new Function(src + ';' + tsSrc + '; return QUESTION_BANK;')();
+const QUESTION_BANK = new Function(src + ';' + extraSrc + ';' + tsSrc + '; return QUESTION_BANK;')();
 const skillSrc = fs.readFileSync(path.join(__dirname, '..', 'prep', 'skills.js'), 'utf8');
 const SKILLS = new Function(skillSrc + '; return SKILLS;')();
 
