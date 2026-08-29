@@ -24,7 +24,13 @@ const seenText = new Map();
     `kind` is the older spelling and is still accepted. */
 const SOURCE_TYPES = ['pyq', 'verified_practice', 'generated_practice'];
 const KINDS = ['pyq', 'verified', 'generated'];
-const DIFFICULTIES = ['easy', 'medium', 'hard'];
+/* One vocabulary for the whole bank, named the way the exam is talked about
+   rather than the way a database is: Basic is a definition, Moderate needs a
+   step of reasoning, HAL-level is pitched at what this paper actually asks,
+   and Challenging is above it. The older easy/medium/hard scale was migrated
+   rather than kept alongside — two scales in one bank means a difficulty
+   filter that quietly drops half the questions. */
+const DIFFICULTIES = ['basic', 'moderate', 'hal-level', 'challenging'];
 const sourceOf = q => q.source_type
   || (q.kind === 'pyq' ? 'pyq'
     : q.kind === 'verified' ? 'verified_practice' : 'generated_practice');
@@ -63,11 +69,25 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
     if (q.source_type !== undefined && q.kind !== undefined) {
       problems.push(`${at}: carries both source_type and the older kind — keep one`);
     }
-    if (q.difficulty !== undefined && DIFFICULTIES.indexOf(q.difficulty) === -1) {
+    /* Difficulty, topic and concept are REQUIRED, not optional.
+       An untagged question cannot be served by topic practice, cannot be
+       counted towards a topic's status, and cannot be filtered by difficulty —
+       it exists in the bank and is invisible to every screen that matters. The
+       `subtopic` must additionally be a real topic key from prep/syllabus.js;
+       that check is what keeps the bank and the syllabus from drifting apart,
+       and it runs below, once the syllabus has been loaded. */
+    if (!q.difficulty) {
+      problems.push(`${at}: no difficulty`);
+    } else if (DIFFICULTIES.indexOf(q.difficulty) === -1) {
       problems.push(`${at}: difficulty "${q.difficulty}" is not one of ${DIFFICULTIES.join(', ')}`);
     }
-    if (q.subtopic !== undefined && !/^[a-z][a-z0-9-]{2,40}$/.test(q.subtopic)) {
+    if (!q.subtopic) {
+      problems.push(`${at}: no subtopic — it cannot be practised by topic`);
+    } else if (!/^[a-z][a-z0-9-]{2,40}$/.test(q.subtopic)) {
       problems.push(`${at}: subtopic "${q.subtopic}" is not a lowercase dashed key`);
+    }
+    if (q.concept !== undefined && (typeof q.concept !== 'string' || q.concept.length < 4)) {
+      problems.push(`${at}: concept must be a short phrase naming what is tested`);
     }
     if (sourceOf(q) === 'pyq') {
       if (!q.exam)   problems.push(`${at}: claims to be a PYQ but names no exam`);
@@ -165,6 +185,51 @@ for (const [subject, entry] of Object.entries(SYLLABUS)) {
   });
 }
 console.log(`\nSyllabus: ${sylTopics} topics across ${Object.keys(SYLLABUS).length} subjects`);
+
+/* The join between the bank and the syllabus.
+   A question's `subtopic` is the key of the topic it is practised under. If it
+   names a key that does not exist, that question can never be drawn by topic
+   practice and never counts towards any topic's status — it is in the bank and
+   unreachable, which is the most expensive kind of dead content because it
+   looks like coverage. */
+const topicKeys = new Map();
+for (const [subject, entry] of Object.entries(SYLLABUS)) {
+  (entry.topics || []).forEach(t => {
+    if (!t.key) { problems.push(`syllabus ${subject}: topic "${t.t}" has no key`); return; }
+    if (topicKeys.has(t.key)) problems.push(`syllabus: duplicate topic key "${t.key}"`);
+    else topicKeys.set(t.key, subject);
+    if (!t.chapter) problems.push(`syllabus ${subject} (${t.key}): no chapter`);
+    else if ((entry.chapters || []).indexOf(t.chapter) === -1)
+      problems.push(`syllabus ${subject} (${t.key}): chapter "${t.chapter}" is not in the subject's chapter list`);
+  });
+  if (!entry.tier || entry.tier < 1 || entry.tier > 4)
+    problems.push(`syllabus ${subject}: tier must be 1-4`);
+}
+for (const [subject, qs] of Object.entries(QUESTION_BANK)) {
+  qs.forEach((q, i) => {
+    if (!q.subtopic) return;                 // already reported above
+    const owner = topicKeys.get(q.subtopic);
+    if (!owner) {
+      problems.push(`${subject}[${i}]: subtopic "${q.subtopic}" is not a topic in prep/syllabus.js`);
+    } else if (owner !== subject) {
+      problems.push(`${subject}[${i}]: subtopic "${q.subtopic}" belongs to ${owner}, not ${subject}`);
+    }
+  });
+}
+
+/* Per-topic question counts, which is the coverage report in its rawest form.
+   A topic with no questions cannot be practised or completed, so it is named
+   here rather than left to be discovered on the night before the paper. */
+const perTopic = new Map([...topicKeys.keys()].map(k => [k, 0]));
+Object.values(QUESTION_BANK).flat().forEach(q => {
+  if (perTopic.has(q.subtopic)) perTopic.set(q.subtopic, perTopic.get(q.subtopic) + 1);
+});
+const emptyTopics = [...perTopic].filter(([, n]) => n === 0);
+console.log(`Topics with questions: ${perTopic.size - emptyTopics.length} of ${perTopic.size}`);
+if (emptyTopics.length) {
+  console.log(`Topics with NO questions (${emptyTopics.length}):`);
+  emptyTopics.forEach(([k]) => console.log(`   ${k}  (${topicKeys.get(k)})`));
+}
 
 console.log('\nBasics (skills) and the questions that drill them');
 console.log('─'.repeat(46));

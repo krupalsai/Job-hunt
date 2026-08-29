@@ -312,15 +312,22 @@ function check(name, cond, detail){
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
   /* A subject opens its whole SYLLABUS, not just the lessons that happen to
-     have been written. Data Structures has 7 lessons and 8 examinable topics,
-     so the eighth is listed too, honestly marked — a gap you can see is one
-     you can go and read elsewhere, and a gap you cannot see is a topic you
-     walk into cold. */
+     have been written. A gap you can see is one you can go and read elsewhere,
+     and a gap you cannot see is a topic you walk into cold.
+
+     The count is DERIVED from prep/syllabus.js rather than written here as a
+     number. Hard-coding "8" made this test assert the size of the syllabus as
+     it happened to be on the day it was written, so growing the syllabus broke
+     a test about rendering. What is actually being checked is that the screen
+     shows every examinable topic, and that there are more of them than there
+     are lessons. */
   await openSubjectChip('Data Structures');
   const topicRows = await page.locator('#learn-path .ls-row').count();
   const written = await page.evaluate(() => CURRICULUM.filter(l => l.subject === 'Data Structures').length);
+  const examinable = await page.evaluate(() => syllabusFor('Data Structures', 'hal-cs').topics.length);
   check('the subject opens its full syllabus, not only what has been written',
-    topicRows === 8 && topicRows > written, `${topicRows} topics vs ${written} lessons`);
+    topicRows === examinable && topicRows > written,
+    `${topicRows} rows vs ${examinable} examinable topics and ${written} lessons`);
   check('and every topic says honestly what is behind it',
     (await page.locator('#learn-path .ls-badge').count()) === topicRows);
   check('nothing is locked — any topic can be opened when you need it',
@@ -413,7 +420,8 @@ function check(name, cond, detail){
     await page.locator('#today-card').isVisible());
   await openSubjectChip('Data Structures');
   check('and the subject is one tap away, with its full syllabus intact',
-    (await page.locator('#learn-path .ls-row').count()) === 8);
+    (await page.locator('#learn-path .ls-row').count()) ===
+      await page.evaluate(() => syllabusFor('Data Structures', 'hal-cs').topics.length));
   /* Mastering a lesson used to unlock the next. Nothing is locked now — the
      order is a recommendation, not a gate, because gating hid most of a
      subject from someone who already knew which part they needed tonight.
@@ -536,7 +544,8 @@ function check(name, cond, detail){
   check('a subject with no grammar/vocabulary split shows no chapters block',
     (await page.locator('#learn-path .ls-group').count()) === 0);
   check('and its syllabus renders the same way as any other subject',
-    (await page.locator('#learn-path .ls-row').count()) === 8);
+    (await page.locator('#learn-path .ls-row').count()) ===
+      await page.evaluate(() => syllabusFor('Data Structures', 'hal-cs').topics.length));
 
   // Opening a chapter goes straight into the same micro-drill Progress and
   // the quiz alert already use — rule taught first, then the questions.

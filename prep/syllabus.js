@@ -689,7 +689,8 @@ const SYLLABUS = {
     "ts-si": "TSLPRB's published Arithmetic scope for the preliminary test — not re-checked against the current notification.",
     default: "Reported arithmetic scope for this paper — not checked against the notification.",
   },
-  chapters: ["Arithmetic", "Commercial arithmetic", "Number system", "Mensuration and geometry", "Algebra and data"],
+  chapters: ["Arithmetic", "Commercial arithmetic", "Number system", "Mensuration and geometry",
+             "Algebra and data", "Counting, calendars and clocks"],
   topics: [
     {key: "qa-percentage", chapter: "Arithmetic",
      t: "Percentages", skills: ["percentage-of-a-number", "percentage-change-multiplies"]},
@@ -717,6 +718,10 @@ const SYLLABUS = {
      t: "Algebra: linear and quadratic equations, identities"},
     {key: "qa-di", chapter: "Algebra and data",
      t: "Data interpretation: tables, bar and pie charts"},
+    {key: "qa-calendar-clock", chapter: "Counting, calendars and clocks",
+     t: "Calendars and clocks"},
+    {key: "qa-permutation-probability", chapter: "Counting, calendars and clocks",
+     t: "Permutations, combinations and probability"},
   ],
 },
 
