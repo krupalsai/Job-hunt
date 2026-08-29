@@ -145,7 +145,7 @@ const rd = f => fs.readFileSync(path.join(__dirname, '..', 'prep', f), 'utf8');
 const SYLLABUS = new Function(rd('syllabus.js') + '; return SYLLABUS;')();
 // The curriculum is loaded here for the first time: the syllabus points at
 // lesson keys, and a reference can only be checked against the real list.
-const CURRICULUM = new Function(rd('lessons.js') + ';' + rd('ts-si-lessons.js') + '; return CURRICULUM;')();
+const CURRICULUM = new Function(rd('lessons.js') + ';' + rd('lessons-cs.js') + ';' + rd('ts-si-lessons.js') + '; return CURRICULUM;')();
 const lessonKeys = new Set(CURRICULUM.map(l => l.key));
 let sylTopics = 0;
 for (const [subject, entry] of Object.entries(SYLLABUS)) {
