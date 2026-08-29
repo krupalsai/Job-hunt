@@ -1998,12 +1998,12 @@ add("English", [
    why:"'Occurrence' doubles both the c and the r and ends in -ence. The r doubles because 'occur' stresses the last syllable, so adding a vowel suffix doubles the final consonant — the same rule that gives 'referred', 'preferred' and 'beginning'.",
    trick:"When a two-syllable verb is stressed on the second syllable, double the final consonant before -ed, -ing or -ence."},
 
-  {q:"Which pair is used correctly? 'The new rule will ___ the old one, and it will ___ your performance.'",
-   opts:["effect / affect","affect / effect","effect / effect","affect / affect"], correct:0,
-   source_type:"generated_practice", difficulty:"hal-level",
+  {q:"Which pair is used correctly? 'The medicine did not ___ him, so the doctor changed the dose to see its ___.'",
+   opts:["effect / affect","affect / effect","effect / effect","affect / affect"], correct:1,
+   source_type:"generated_practice", difficulty:"moderate",
    subtopic:"en-spelling", concept:"affect versus effect",
-   why:"'Effect' as a VERB means to bring about, which fits replacing the old rule; 'affect' as a verb means to influence, which fits performance. The usual rule — affect is the verb, effect the noun — holds most of the time, and this sentence is built on the exception.",
-   trick:"Affect is usually the verb, effect usually the noun. 'Effect a change' is the exception worth remembering."},
+   why:"The first blank needs a VERB meaning to influence, which is 'affect'. The second needs a NOUN meaning the result, which is 'effect'. Both slots are unambiguous here, and getting either the wrong way round is one of the most common errors in error-spotting questions.",
+   trick:"Affect is the Action (verb); Effect is the End result (noun). The rare verb 'to effect a change' means to bring it about, and is the only exception you need."},
 
   {q:"Which sentence uses 'its' and 'it's' correctly?",
    opts:["Its raining and the dog lost it's collar","It's raining and the dog lost its collar","Its raining and the dog lost its collar","It's raining and the dog lost it's collar"], correct:1,
