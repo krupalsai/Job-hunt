@@ -1210,20 +1210,26 @@ function renderExamInfo(){
     }).join('')
   ).join('');
 
-  // Subjects the paper may examine that this app has nothing for yet. Stated
-  // plainly rather than left as a blank space on a syllabus screen: a gap you
-  // know about is something you can go and read elsewhere, and a gap you do not
-  // know about is a section you walk into cold.
+  /* Subjects that rest on reported scope alone. This card used to say "nothing
+     has been written for these"; the subjects are covered now, and the card
+     says the thing that is still true — HAL published no syllabus, so these
+     four are in the app on reporting rather than on the notification.
+
+     It stays on screen rather than being deleted with the gap it described. A
+     candidate deciding how to spend the last days is entitled to know which
+     subjects are the least certain, because that is exactly the information
+     that decides what gets cut. */
   const pv = document.getElementById('ei-pending');
   if(pv){
-    if(exam.pendingVerification && exam.pendingVerification.subjects.length){
+    const uv = exam.unverifiedScope;
+    if(uv && uv.subjects.length){
       pv.classList.remove('hidden');
-      pv.innerHTML = `<h2>Not covered yet — pending syllabus verification</h2>
-        <p class="muted" style="margin-top:-4px;">${escHtml(exam.pendingVerification.note)}</p>
-        <ul>${exam.pendingVerification.subjects.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>
-        <p class="muted" style="margin-bottom:0;">Nothing has been written for these on purpose. Material aimed at a
-          syllabus that turns out to be wrong costs more than material that does not exist, because it also costs
-          the time spent studying it.</p>`;
+      pv.innerHTML = `<h2>Covered, but pending syllabus verification</h2>
+        <p class="muted" style="margin-top:-4px;">${escHtml(uv.note)}</p>
+        <ul>${uv.subjects.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ul>
+        <p class="muted" style="margin-bottom:0;">These are taught and drilled like every other subject. They are
+          named here because they were added last and on the thinnest basis — so if the days run out, these are
+          the ones to cut first.</p>`;
     } else {
       pv.classList.add('hidden');
     }

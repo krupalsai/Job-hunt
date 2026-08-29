@@ -1038,13 +1038,22 @@
     const marks = (exam.sections || []).reduce((n, x) => n + (x.marks || 0), 0);
     const pass = Math.round(marks * 0.5);
     const t = f.trickle;
+    /* The heaviest section, named from the exam rather than assumed, so this
+       sentence stays true if the paper's shape ever changes. */
+    const heaviest = (exam.sections || []).slice()
+      .sort((a, b) => (b.marks || 0) - (a.marks || 0))[0];
+    const softMarks = (exam.sections || [])
+      .reduce((n, x) => n + (/English|Reasoning/.test(x.name) ? x.marks : 0), 0);
     return `<div class="plan-why">
-      <strong>${esc(first)} first, not General Awareness.</strong>
+      <strong>${esc(first)} first, not ${esc((exam.sections || [])[0].name)}.</strong>
       ${pass ? `You need ${pass} of ${marks} to stay in the selection, and this is the
-      cheapest order to buy them in: ` : ""}English and Reasoning are ${
-        (exam.sections || []).reduce((n, x) => n + (/English|Reasoning/.test(x.name) ? x.marks : 0), 0)
-      } marks that need no Computer Science at all, then the CS subjects whose
-      answers can be worked out rather than remembered.
+      cheapest order to buy them in: ` : ""}${heaviest ? `${esc(heaviest.name)} is
+      ${heaviest.marks} of those ${marks} marks, so it leads — and inside it the
+      subjects whose answers can be WORKED OUT rather than remembered come
+      first. ` : ""}${softMarks ? `English and Reasoning are ${softMarks} marks and
+      are kept warm daily rather than given whole days of their own: they decay
+      without contact, and an hour moved out of the ${heaviest ? heaviest.marks : 100}-mark
+      section to polish them is an hour spent on the cheaper half of the paper.` : ""}
       ${t ? `${esc(t.subject)} is not in the run: it is recall, so it gets
         <strong>${t.minutes} minutes every day</strong> on top, not a day of its own.` : ""}
       ${unplaced && unplaced.length

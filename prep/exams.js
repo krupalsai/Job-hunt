@@ -55,14 +55,26 @@ const EXAMS = [
     examDateEnd: "2026-09-06",
 
     // Those same sources describe the 100-mark discipline section as following
-    // GATE Computer Science scope, which would mean four subjects this bank has
-    // nothing for at all. They are NAMED here rather than silently generated:
-    // writing a hundred questions against an unverified syllabus three weeks
-    // before the paper is a good way to spend the last three weeks on the wrong
-    // subjects. See HAL-SYLLABUS-AUDIT.md for the full classification.
-    pendingVerification: {
-      note: "Reported to follow GATE CS scope, but not checked against the notification (Advt. HAL/CHRC-TM/RECT-02/2026) — the official PDF could not be retrieved. Nothing has been written for these. See HAL-SYLLABUS-AUDIT.md.",
-      subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete / Engineering Mathematics"],
+    // GATE Computer Science scope. Four of those subjects had no material at
+    // all, and this card used to say so and stop there.
+    //
+    // THE DECISION CHANGED, AND THE REASON IS WORTH KEEPING. The block was
+    // never that the subjects looked unlikely — it was that writing against an
+    // unverified syllabus could waste the last weeks before the paper. The
+    // candidate has since authorised covering them, which is theirs to decide:
+    // they carry the cost either way. So the four subjects are now taught and
+    // drilled like any other.
+    //
+    // What has NOT changed is the fact underneath. HAL's advertisement
+    // describes Part III only as "the concerned discipline" and publishes no
+    // syllabus of any kind, so this card stays on screen and keeps saying so.
+    // The honest statement is no longer "nothing has been written" — it is
+    // "these were written on a reported scope that HAL has never confirmed",
+    // and the candidate should know which subjects sit on that footing.
+    // See HAL-SYLLABUS-AUDIT.md for the full classification.
+    unverifiedScope: {
+      note: "HAL's advertisement (Advt. HAL/CHRC-TM/RECT-02/2026) contains no syllabus — Part III is described only as \"the concerned discipline\". Every technical subject in this app is written on reported GATE CS scope. These four were added last, on the candidate's authorisation, and rest on that reporting alone.",
+      subjects: ["Digital Logic", "Algorithms", "Compiler Design", "Discrete Mathematics"],
     },
     pattern: "160 MCQs · 150 minutes",
     // Every correct answer is worth one mark, an unanswered question scores
@@ -84,28 +96,36 @@ const EXAMS = [
     sections: [
       { name: "General Awareness",    marks: 20,  questions: 20,  budget: 10, subjects: ["General Awareness"] },
       { name: "English & Reasoning",  marks: 40,  questions: 40,  budget: 38, subjects: ["Reasoning", "English"] },
+      // Twelve subjects, in tier order — the tier 1 subjects that carry most of
+      // the 100 marks first, so anything that reads this list in order reads it
+      // in the order the marks are worth having.
       { name: "CS Technical",         marks: 100, questions: 100, budget: 97, subjects: [
-          "Data Structures", "Operating Systems", "DBMS", "Computer Networks",
-          "COA", "Theory of Computation", "Programming & OOP", "Software Engineering"] },
+          "Data Structures", "Algorithms", "DBMS", "Operating Systems",
+          "Computer Networks", "Programming & OOP",
+          "COA", "Digital Logic", "Theory of Computation",
+          "Compiler Design", "Software Engineering", "Discrete Mathematics"] },
     ],
     /* ── What to study first, when there is not time for all of it ─────────
        A JUDGEMENT, not a fact from the notification, written down here so it
        can be argued with rather than hidden inside the plan generator.
 
        The paper is 20 General Awareness + 40 English & Reasoning + 100 CS, and
-       clause 7.6 requires 50% — 80 of 160 — just to stay in the selection. A
-       candidate starting from scratch cannot cover 100 marks of Computer
-       Science in the weeks before the paper, and spreading thin across all
-       eight CS subjects is how people end up knowing a little of everything
-       and clearing nothing. So the run buys those 80 marks in the cheapest
-       order there is:
+       clause 7.6 requires 50% — 80 of 160 — just to stay in the selection.
+       Twelve CS subjects cannot all be covered in the days that remain, and
+       spreading thin across them is how people end up knowing a little of
+       everything and clearing nothing. So the run buys those 80 marks in the
+       cheapest order there is:
 
-         · English & Reasoning FIRST. Forty marks, no CS background needed, and
-           grammar is a bounded, finishable list — the fastest marks on the
-           paper for someone starting cold.
-         · Then five CS subjects whose answers can be COMPUTED rather than
-           recalled: scheduling and cache formulas, normal forms, subnetting,
-           Big-O. Mechanical beats encyclopaedic when the clock is short.
+         · TIER 1 CS FIRST. Six subjects carrying most of the hundred marks,
+           and the ones whose answers can be COMPUTED rather than recalled:
+           scheduling and cache formulas, normal forms, subnetting, Big-O.
+           Mechanical beats encyclopaedic when the clock is short.
+         · Then tier 2 — COA, Digital Logic, Theory of Computation — which are
+           equally computable and slightly cheaper per mark.
+         · English & Reasoning are DAILY MAINTENANCE, not a study block. Forty
+           marks against a hundred means they are worth keeping warm at a fixed
+           cost per day rather than leading with — a change from the earlier
+           order, which put them first for a candidate starting from zero.
          · General Awareness is not a study block at all. It is recall, it does
            not reward hours, and it gets a fixed daily trickle instead — which
            is also what the exam-hall tactic above says about it.
@@ -117,9 +137,14 @@ const EXAMS = [
        right default for a candidate who is not starting from zero. */
     focus: {
       basis: "For a candidate starting from scratch, aiming first at the 50% (80/160) needed to stay in the selection. A judgement, not from the notification.",
-      order: ["English", "Reasoning", "Operating Systems", "DBMS",
-              "Computer Networks", "Data Structures", "COA"],
-      last: ["Programming & OOP", "Theory of Computation", "Software Engineering"],
+      // Tier 1 technical first, then the computable tier 2 subjects. English and
+      // Reasoning have moved OUT of the front of this order and into a daily
+      // maintenance block — see prep/sprint.js. Forty marks of them next to a
+      // hundred of CS means they are worth keeping warm, not worth leading with.
+      order: ["DBMS", "Operating Systems", "Data Structures", "Computer Networks",
+              "Programming & OOP", "Algorithms", "COA", "Digital Logic",
+              "Theory of Computation"],
+      last: ["Compiler Design", "Software Engineering", "Discrete Mathematics"],
       // Recall, not study. Fifteen minutes daily beats two hours once, and it
       // never takes a whole day of the run.
       trickle: { subject: "General Awareness", minutes: 15 },

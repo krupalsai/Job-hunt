@@ -220,10 +220,13 @@ function check(name, cond, detail){
   const answered = parseInt(await page.locator('#stat-answered').textContent(), 10);
   check('answers were recorded across the session', answered >= 9, `recorded ${answered}`);
   check('accuracy is computed', /%/.test(await page.locator('#stat-accuracy').textContent()));
-  // Eleven, not fourteen: Progress answers "how ready am I for THIS exam",
-  // so it counts the subjects this paper examines and no others.
+  /* Progress answers "how ready am I for THIS exam", so it counts the subjects
+     this paper examines and no others. Derived from prep/exams.js rather than
+     written as a number: the count is a property of the exam, and hard-coding
+     it made this test fail whenever the exam gained a subject. */
   check('per-subject bars cover this exam\'s subjects only',
-    (await page.locator('#topic-bars .bar-row').count()) === 11);
+    (await page.locator('#topic-bars .bar-row').count()) ===
+      await page.evaluate(() => subjectsForExam(EXAMS.find(e => e.key === 'hal-cs')).length));
   check('and Progress ends in an instruction, not a number',
     /Do this next/i.test(await page.locator('#next-task').innerText()));
   const focus = await page.locator('#focus-list').textContent();
@@ -302,12 +305,14 @@ function check(name, cond, detail){
   // steps back out on its own — a destination is not a resume point.
   await openPath();
   const subjectRows = await page.locator('#learn-path [data-subject]').count();
-  // Eleven: every subject HAL examines, whether or not it has lessons yet, and
-  // nothing that belongs to another exam's paper. The page is exam-scoped now —
-  // an address with no ?exam= resolves to the exam that was chosen rather than
-  // listing every subject the app owns.
+  /* Every subject HAL examines, whether or not it has lessons yet, and nothing
+     that belongs to another exam's paper. The page is exam-scoped — an address
+     with no ?exam= resolves to the exam that was chosen rather than listing
+     every subject the app owns. The expected count comes from the exam. */
+  const examSubjectCount = await page.evaluate(
+    () => subjectsForExam(EXAMS.find(e => e.key === 'hal-cs')).length);
   check('every subject the exam examines is listed, not only the ones with lessons',
-    subjectRows === 11, `got ${subjectRows}`);
+    subjectRows === examSubjectCount, `got ${subjectRows}, exam has ${examSubjectCount}`);
   const listing = await page.locator('#learn-path').textContent();
   check('each subject shows its lesson and question counts', /lessons? · .* mastered · \d+ questions/.test(listing));
 
@@ -987,14 +992,22 @@ function check(name, cond, detail){
   check('the last days are mocks and repair, not new material',
     /Full mock/.test(await page.locator('#plan-days .plan-day').last().textContent()));
   const firstDay = await page.locator('#plan-days .plan-day').first().textContent();
-  // A named lesson, not "Day 1: revision". The plan is exam-scoped, so day one
-  // is the first lesson of the order the exam's `focus` asks for — English,
-  // because 40 marks of English & Reasoning need no Computer Science at all
-  // and are the cheapest marks on the paper for someone starting cold.
+  /* A named lesson, not "Day 1: revision", and the subject the exam's own
+     `focus.order` puts first — not the paper's first section.
+
+     Both were written against "English" and a specific lesson title. The focus
+     order is a judgement that is meant to be revisable, so the test now reads
+     it from prep/exams.js and checks the SHAPE: day one opens on the focus
+     subject and names a real lesson of it. */
+  const focusFirst = await page.evaluate(
+    () => EXAMS.find(e => e.key === 'hal-cs').focus.order[0]);
+  const firstLessonTitles = await page.evaluate(
+    sub => CURRICULUM.filter(l => l.subject === sub).map(l => l.title), focusFirst);
+  const flat = firstDay.replace(/\s+/g, ' ').trim();
   check('a day names the actual lessons, not a vague focus',
-    /Error spotting/.test(firstDay), firstDay.replace(/\s+/g,' ').slice(0,110));
+    firstLessonTitles.some(t => flat.indexOf(t) !== -1), flat.slice(0, 110));
   check('and the run opens on the focus subject, not on the paper\'s first section',
-    /Day 1 · English/.test(firstDay.replace(/\s+/g, ' ')), firstDay.replace(/\s+/g,' ').slice(0,60));
+    flat.indexOf('Day 1 · ' + focusFirst) === 0, flat.slice(0, 60));
 
   /* General Awareness is 20 marks and is deliberately NOT a day of the run:
      it is recall, it does not reward a whole day, and the strategy gives it a
@@ -1007,7 +1020,8 @@ function check(name, cond, detail){
 
   const why = await page.locator('#plan-progress .plan-why').innerText();
   check('the run argues its own order instead of leaving it a mystery',
-    /English first/i.test(why) && /80 of 160/.test(why), why.replace(/\s+/g, ' ').slice(0, 160));
+    why.indexOf(focusFirst + ' first') === 0 && /80 of 160/.test(why),
+    why.replace(/\s+/g, ' ').slice(0, 160));
   check('and says plainly what does not fit in the days left',
     /do not fit|does not fit/.test(why), why.replace(/\s+/g, ' ').slice(0, 200));
   check('every day has an action button',
@@ -1024,8 +1038,9 @@ function check(name, cond, detail){
 
   await page.locator('#plan-days [data-go]').first().click();
   await page.waitForSelector('#learn-reader:not(.hidden)');
+  const opened = await page.locator('#learn-reader .ls-main').textContent();
   check('the day button opens that exact lesson',
-    /Error spotting/.test(await page.locator('#learn-reader .ls-main').textContent()));
+    firstLessonTitles.some(t => opened.indexOf(t) !== -1), opened.replace(/\s+/g, ' ').slice(0, 80));
 
   // Day 25+ used to say "Full mock — 160 questions, 150 minutes" and then
   // hand you ten questions from one subject when tapped — a promise the app
@@ -1475,19 +1490,33 @@ function check(name, cond, detail){
   check('it names dated facts, which is what this section is made of',
     /1948/.test(tmLesson) || /1956/.test(tmLesson), tmLesson.replace(/\s+/g,' ').slice(0, 120));
 
-  // Nothing written for TS SI may touch the exams it is not for.
-  const untouched = await page.evaluate(() => ({
-    halPending: (EXAMS.find(e => e.key === 'hal-cs').pendingVerification || {}).subjects || [],
-    halInvented: Object.keys(QUESTION_BANK).filter(k =>
-      /Digital Logic|Compiler Design|Discrete|^Algorithms$/.test(k)),
-    halTech: (QUESTION_BANK['Data Structures'] || []).length,
-    cglQuant: (QUESTION_BANK['Quantitative Aptitude'] || []).length,
-    cglReasoning: (QUESTION_BANK['Reasoning'] || []).length,
-  }));
-  check('the four uncertain HAL subjects still have nothing written for them',
-    untouched.halPending.length === 4 && untouched.halInvented.length === 0,
-    JSON.stringify(untouched.halInvented));
-  check('HAL technical content is untouched', untouched.halTech === 24, String(untouched.halTech));
+  /* Nothing written for TS SI may touch the exams it is not for.
+
+     These two checks used to assert that the four uncertain HAL subjects had
+     NOTHING written for them, and that Data Structures held exactly 24
+     questions. Both encoded a policy that has since been reversed on the
+     candidate's authorisation: the four subjects are now taught and drilled.
+     What is worth guarding is the direction — HAL's technical bank only grows,
+     and every one of the twelve CS subjects the exam names has real material —
+     so the checks assert that instead of a frozen number. */
+  const untouched = await page.evaluate(() => {
+    const hal = EXAMS.find(e => e.key === 'hal-cs');
+    const tech = hal.sections.find(s => s.name === 'CS Technical').subjects;
+    return {
+      halUnverified: (hal.unverifiedScope || {}).subjects || [],
+      techEmpty: tech.filter(s => !(QUESTION_BANK[s] || []).length),
+      techSubjects: tech.length,
+      halTech: (QUESTION_BANK['Data Structures'] || []).length,
+      cglQuant: (QUESTION_BANK['Quantitative Aptitude'] || []).length,
+      cglReasoning: (QUESTION_BANK['Reasoning'] || []).length,
+    };
+  });
+  check('every CS subject the exam examines has questions behind it',
+    untouched.techSubjects >= 12 && untouched.techEmpty.length === 0,
+    `${untouched.techSubjects} subjects, empty: ${JSON.stringify(untouched.techEmpty)}`);
+  check('and the four least certain subjects are still named as such',
+    untouched.halUnverified.length === 4, JSON.stringify(untouched.halUnverified));
+  check('HAL technical content only ever grew', untouched.halTech >= 24, String(untouched.halTech));
   /* These were 22 and 23 and were asserted as "untouched by the TS SI work".
      They are 30 and 27 now because the shared subjects were deliberately topped
      up to cover SSC CGL's 25-per-section paper. The guarantee worth keeping is
@@ -1504,26 +1533,31 @@ function check(name, cond, detail){
   check('an exam with a single stage shows no stages card',
     await page.locator('#ei-stages').isHidden());
 
-  // The four CS subjects the paper may examine and this bank has nothing for.
-  // Naming them is the point: a gap you know about is something you can go and
-  // read elsewhere; a gap you do not know about is a section you walk into cold.
+  // The four CS subjects that rest on reported scope alone. Naming them is the
+  // point: they are covered now, and a candidate deciding what to cut in the
+  // last days is entitled to know which material stands on the thinnest basis.
   const pending = (await page.locator('#ei-pending').textContent()).replace(/\s+/g, ' ');
-  check('HAL names the subjects it has no material for yet',
+  check('HAL names the subjects whose scope is unverified',
     /Digital Logic/.test(pending) && /Compiler Design/.test(pending) &&
     /Algorithms/.test(pending) && /Mathematics/.test(pending), pending.slice(0, 160));
   check('and says plainly that the syllabus is unverified',
-    /pending syllabus verification/i.test(pending) && /notification/i.test(pending),
-    pending.slice(0, 160));
+    /pending syllabus verification/i.test(pending) &&
+    /contains no syllabus/i.test(pending) && /Advt\./.test(pending),
+    pending.slice(0, 200));
   check('the exam is named as Management Trainee, not MT/DT',
     await page.evaluate(() => {
       const e = EXAMS.find(x => x.key === 'hal-cs');
       return /Management Trainee/.test(e.name) && !/DT/.test(e.name);
     }));
-  // Nothing was generated for them: a subject with no verified syllabus must
-  // not quietly acquire questions.
-  check('and no questions were invented for those subjects',
-    await page.evaluate(() => !Object.keys(QUESTION_BANK).some(k =>
-      /Digital Logic|Compiler Design|Discrete/.test(k))));
+  /* They are covered now, and nothing about them may claim to be a
+     previous-year question. That is the guarantee that actually matters: a
+     candidate reads PYQs to judge what the paper asks, so calling written
+     material a PYQ is the one lie this app must never tell — and it would be
+     most tempting exactly here, on subjects nobody can confirm. */
+  check('and nothing written for them is passed off as a previous-year question',
+    await page.evaluate(() => ['Digital Logic', 'Compiler Design', 'Discrete Mathematics', 'Algorithms']
+      .every(k => (QUESTION_BANK[k] || []).length > 0 &&
+                  (QUESTION_BANK[k] || []).every(q => q.source_type !== 'pyq' && q.kind !== 'pyq'))));
   // TS SI has no unverified gap list, so it must not show the card at all.
   await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#syllabus`, { waitUntil: 'networkidle' });
   check('an exam with no unverified subjects shows no such card',
