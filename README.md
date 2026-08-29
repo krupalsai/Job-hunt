@@ -97,6 +97,67 @@ and Time Strategy tabs.
 A subject is not a panel on Study either: tapping one goes to **All lessons**
 with that subject open, so the subject you are in is the whole screen.
 
+## The four screens
+
+| | Answers |
+|---|---|
+| **Study** | what do I study now |
+| **Practice** | what have I actually finished, and what is cheapest next |
+| **Test** | give me questions — practice sets, mistakes, mocks, timed |
+| **Progress** | how ready am I, and what is costing me marks |
+
+Practice and Test are separate on purpose. Practice was a mode inside Test,
+which put "what have I actually finished" two taps behind "give me ten
+questions" — so it stopped being asked.
+
+## Practice — `prep/practice.js`, `prep/mastery.js`
+
+The syllabus as a tree: **subject → chapter → topic**, for all 206 topics HAL
+examines, each with a status and — when unfinished — what it still needs.
+
+| Status | Condition |
+|---|---|
+| Not started | nothing read, nothing answered |
+| Learning | opened, or a few answers — not yet evidence |
+| Practised | ≥ 6 questions at ≥ 60% |
+| **Completed** | concept read **and** ≥ 8 answered **and** ≥ 75% |
+| Weak | ≥ 4 answered and below 50% — overrides everything else |
+
+**Opening a lesson never completes a topic.** That was the old behaviour and it
+is the most expensive lie a study app can tell: it hides the gap *and* takes
+the topic out of the rotation, so the gap is never found again. A row that is
+not finished says why — "read the concept", "4 more questions", "accuracy 62%,
+needs 75%" — because a topic that says why it is not done is one you can
+finish.
+
+Accuracy separately decides how often a topic returns: 90%+ rarely, 70–89%
+normally, 50–69% soon, and below 50% **the lesson comes back before any more
+questions do**. More questions on something not understood only tells you again
+that you are wrong.
+
+Five ways in, all drawing on the same weighting: topic practice, chapter test,
+subject test, mixed CSE (20, in tier proportion), and the full 100-question
+technical mock.
+
+## Sprint — `prep/sprint.js`
+
+The run (`prep/sync.js`) is a curriculum: it teaches the syllabus in dependency
+order and says the same thing on day three whether you are at 90% or 40%. Right
+with a month to go.
+
+The sprint is the other shape. It plans **the days actually left**, read from
+the exam date rather than fixed at any number, and rebuilds every day from
+current accuracy: high-tier topics not yet completed, then anything below 50%
+(lesson first), then the 50–69% band, then previous mistakes, then mixed
+practice, then full mocks in the last days. It **does not schedule what you
+already answer correctly** — with days to go, confirming what is known is time
+taken from what is not.
+
+The four reasoning types marked `daily: true` in `prep/syllabus.js` — analogy,
+coding-decoding, blood relations, direction and distance — appear **twice in
+every day** at eight minutes each. Pure pattern recognition, fast to decay,
+cheap to keep.
+
 ## What to study first, when there is not time for all of it
 
 An exam may carry a `focus` block (`prep/exams.js`) saying what to buy first.
@@ -152,7 +213,7 @@ question whose answer you never see is one you will skip again in the hall.
 ### Questions do not repeat
 
 Selection is ordered **never seen → previously wrong → longest since last seen**.
-With 235 questions drawn 10 at a time, roughly 23 consecutive quizzes pass before
+With 604 questions drawn 10 at a time, roughly 60 consecutive quizzes pass before
 anything comes back. A right answer pays down a question's debt so it stops
 resurfacing; a wrong one brings it back sooner. A 10-minute timer rotates the
 pool and says so on screen.
@@ -207,58 +268,96 @@ wrong and write material aimed at it. That mirror is fire-and-forget: the UI
 never waits on it and a failed request is queued, so losing signal costs
 nothing.
 
-## Bank — `prep/hal-cs.js` + `prep/ts-si.js`
+## Syllabus — `prep/syllabus.js`
 
-235 questions across three exams. `prep/hal-cs.js` holds the subjects HAL
-examines (several shared with SSC CGL); `prep/ts-si.js` adds the ones only the
-Telangana SI paper asks for.
+Three levels, not one: **subject → chapter → topic**, 235 topics across 18
+subjects. Every topic carries a stable `key` (what a question's `subtopic`
+points at, and what per-topic progress is stored against), a `chapter`, and its
+subject carries a `tier` saying how much of the run it is worth — 1 is where
+the marks are, 4 is the first thing cut when days run out.
 
-| Subject | Qs | Subject | Qs |
-|---|---|---|---|
-| Data Structures | 24 | General Studies | 15 |
-| Reasoning | 23 | Programming & OOP | 15 |
-| Quantitative Aptitude | 22 | Telangana Movement & State Formation | 12 |
-| Operating Systems | 20 | Theory of Computation | 10 |
-| DBMS | 20 | General Awareness | 10 |
-| Computer Networks | 20 | Software Engineering | 8 |
-| COA | 19 | English | 17 |
+The tiers are a judgement about a weighting HAL has never published, written in
+one place so they can be argued with rather than buried in the planner.
 
-Every question carries `kind`: `pyq`, `verified` or `generated`. It defaults to
-`generated` when absent, so nothing can become a PYQ by omission, and the build
-refuses a `pyq` that cannot name its exam, year and source. **Nothing in the
-bank is currently a PYQ.**
+Every subject also carries a `basis` string saying where its topic list came
+from, and `verified: false`. HAL's advertisement contains no syllabus at all —
+Part III is "the concerned discipline" and nothing more — and the screen says so
+rather than implying an official source. See `HAL-SYLLABUS-AUDIT.md`.
 
-90 of them are tagged with the basics they test (`prep/skills.js`, 28 basics).
-Tagging is deliberately incomplete: a wrong tag sends someone to drill a basic
-they do not have a problem with, which is worse than no tag at all.
+## Bank — `prep/hal-cs.js` + `prep/hal-cs-extra.js` + `prep/ts-si.js`
+
+**604 questions** across three exams, **511 of them in HAL's pool**.
+`prep/hal-cs.js` is the original bank, `prep/hal-cs-extra.js` the second volume
+that closed the 101 topics with no questions, and `prep/ts-si.js` adds the
+subjects only the Telangana SI paper asks for.
+
+Run `npm run coverage` for the current table — per subject, and `--topics` for
+per topic. It is the only place those numbers should ever be read from; a
+hand-counted table is wrong the first time anyone adds a question.
+
+Every question carries:
+
+- `subtopic` — a real topic key from `prep/syllabus.js`. **The build fails if
+  it is not, or if it belongs to another subject.** A question that cannot be
+  joined to a topic is invisible to topic practice and to every status
+  calculation — the most expensive kind of dead content, because it looks like
+  coverage.
+- `difficulty` — `basic`, `moderate`, `hal-level` or `challenging`.
+- `concept` — what it tests, in a phrase. Required: a question whose concept
+  cannot be stated in a phrase is usually testing trivia.
+- `source_type` — `pyq`, `verified_practice` or `generated_practice`, and the
+  build refuses a `pyq` that cannot name its exam, year and source. **All 604
+  are `generated_practice`. Nothing in the bank is a PYQ.**
+
+Some are also tagged with the basics they test (`prep/skills.js`, 33 basics).
+That tagging is deliberately incomplete: a wrong tag sends someone to drill a
+basic they do not have a problem with, which is worse than no tag at all.
+
+**Source policy.** Everything is written for this app. Public syllabi and
+public question indexes were used to decide *which topics to cover and at what
+depth* — a fact about the exam, not anybody's property. No question text,
+option set or explanation is reproduced from any source.
 
 **Current affairs are deliberately excluded.** A hard-coded news bank goes stale
-and would teach last year's headlines as fact. Fifteen minutes of daily reading
-covers those 20 marks better than any static list.
+and would teach last year's headlines as fact. Those two topics carry
+`noBank: true` so the coverage report does not report a deliberate absence as
+work outstanding, and the Current affairs screen carries dated, sourced items
+with how long ago each one happened.
 
 To add another exam, drop a bank file next to `hal-cs.js` in the same shape
-(`{topic: [{q, opts, correct, why, trick}]}`) — the quiz engine reads whatever
-`QUESTION_BANK` it is handed.
+(`{subject: [{q, opts, correct, why, trick, subtopic, difficulty, concept}]}`) —
+the quiz engine reads whatever `QUESTION_BANK` it is handed.
 
 ## Offline
 
 `sw.js` caches the prep shell and the question bank, so revision works with no
-signal. **Job data is never cached** — a deadline served from cache is exactly
+signal. `scripts/e2e-integration.js` checks the precache list against
+`learn.html` both ways round, so a new prep file cannot ship uncached — the app
+would otherwise open offline with a tab that renders nothing, which reads as
+broken rather than as offline. **Job data is never cached** — a deadline served from cache is exactly
 the failure this tracker exists to prevent, so Supabase requests always go to the
 network. `scripts/e2e-integration.js` asserts that split.
 
 ## Tests
 
-    npm test                  # all four, in order
-    npm run test:bank         # bank shape, duplicates, missing explanations,
-                              # and that the selection engine stops repeating
-    npm run test:prep         # drives Chromium through real quizzes (75 checks)
-    npm run test:integration  # the two halves as one app (19 checks)
-    npm run test:nav          # the navigation at 390x844 (93 checks)
+    npm test                  # all five, in order
+    npm run test:bank         # bank shape, the syllabus join, the status model,
+                              # duplicates, and that selection stops repeating
+    npm run test:generated    # the question generators against independent solvers
+    npm run test:prep         # drives Chromium through real quizzes (330 checks)
+    npm run test:integration  # the two halves as one app (30 checks)
+    npm run test:nav          # the navigation at 390x844 (237 checks)
+
+    npm run coverage          # syllabus / bank / curriculum coverage
+    npm run coverage -- --topics   # …broken down per topic
 
 `test:bank` fails on a question missing an explanation or a memory hook, on a
-duplicate, on an id collision, and on a selection engine that repeats within a
-session.
+duplicate (punctuation-insensitive), on an id collision, on a `subtopic` that
+is not a real topic key or belongs to another subject, on a missing difficulty
+or concept, and on a selection engine that repeats within a session. It also
+checks the status model in `prep/mastery.js` case by case — that reading a
+lesson never completes a topic, that a measured weakness outranks an untouched
+one, and that a topic above 90% drops out of the rotation.
 
 `test:nav` runs at a phone viewport and treats layout as a correctness
 property: it fails if the page can scroll sideways (naming the element that

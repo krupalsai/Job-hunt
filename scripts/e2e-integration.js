@@ -114,6 +114,22 @@ function check(name, cond, detail){
   // The navigation is shared and lives outside /prep/. Without it in the cache
   // the prep page would open offline with no bottom bar and no way out.
   check('the shared navigation is precached too', /'\/nav\.js'/.test(sw));
+
+  /* EVERY script the page loads must be in the precache list, checked both
+     ways round rather than by naming files here. A new prep file is added to
+     learn.html and forgotten in sw.js, and the app then opens offline with a
+     tab that renders nothing — which reads as broken rather than as offline,
+     and is worse than not having the tab. Naming the files in this test would
+     have the same failure mode as sw.js itself: it would go stale silently. */
+  const listed = [...(sw.match(/const PREP_ASSETS = \[([\s\S]*?)\];/) || ['', ''])[1]
+    .matchAll(/['"]([^'"]+)['"]/g)].map(m => m[1]);
+  const pageScripts = [...fs.readFileSync(path.join(ROOT, 'learn.html'), 'utf8')
+    .matchAll(/<script src="(\/[^"]+)"/g)].map(m => m[1]);
+  const uncached = pageScripts.filter(f => listed.indexOf(f) === -1);
+  check('every script the prep page loads is precached',
+    uncached.length === 0, uncached.join(', '));
+  const ghosts = listed.filter(f => !fs.existsSync(path.join(ROOT, f)));
+  check('and every precached asset actually exists', ghosts.length === 0, ghosts.join(', '));
   check('cross-origin requests are excluded (Supabase job data)',
     /url\.origin !== self\.location\.origin/.test(sw));
   // Network-first means the LAST handler tries fetch before it ever consults the

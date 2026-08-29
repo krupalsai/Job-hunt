@@ -7,7 +7,7 @@
  * The two halves of this app want opposite caching, and getting that backwards
  * would be worse than having no service worker at all:
  *
- *   PREP  — 170 questions and their explanations never change between deploys.
+ *   PREP  — 604 questions and their explanations never change between deploys.
  *           Cache them hard so revision works on a bus with no signal.
  *
  *   JOBS  — a deadline served from cache is exactly the failure this tracker
@@ -16,7 +16,7 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v8';
+const CACHE = 'jobhunt-v9';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -29,12 +29,20 @@ const PREP_ASSETS = [
   '/prep/exams.js',
   '/prep/skills.js',
   '/prep/hal-cs.js',
+  '/prep/hal-cs-extra.js',
   '/prep/ts-si.js',
   '/prep/syllabus.js',
   '/prep/lessons.js',
+  '/prep/lessons-cs.js',
   '/prep/generate.js',
   '/prep/current-affairs.js',
   '/prep/ts-si-lessons.js',
+  // The status model, the Practice screen and the sprint. Missing from this
+  // list, the app opens offline with a Practice tab that renders nothing —
+  // which is worse than not having the tab, because it reads as broken.
+  '/prep/mastery.js',
+  '/prep/practice.js',
+  '/prep/sprint.js',
   '/prep/sync.js',
   '/prep/today.js',
   '/manifest.json',
