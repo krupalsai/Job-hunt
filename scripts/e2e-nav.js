@@ -215,18 +215,21 @@ async function reachable(page, selector, where, minH){
     /HAL CS/.test(await page.locator('#nav-exam').textContent()));
 
   /* ── The bottom bar ─────────────────────────────────────────────────── */
-  console.log('\n── one vocabulary, three destinations, Jobs in the menu ──');
+  console.log('\n── one vocabulary, four destinations, Jobs in the menu ──');
   await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector(BAR);
 
   const jobsLabels = await page.locator(BAR + ' .nav-lbl').allTextContents();
   // Jobs is a different page, not a prep section — it lives in the ☰ menu, so
-  // it never competes with Study/Test/Progress for a bar slot.
-  check('the bar is exactly three destinations', jobsLabels.length === 3, jobsLabels.join(' | '));
-  check('and they are Study, Test, Progress',
-    jobsLabels.join('|') === 'Study|Test|Progress', jobsLabels.join('|'));
+  // it never competes with the daily screens for a bar slot.
+  check('the bar is exactly four destinations', jobsLabels.length === 4, jobsLabels.join(' | '));
+  check('and they are Study, Practice, Test, Progress',
+    jobsLabels.join('|') === 'Study|Practice|Test|Progress', jobsLabels.join('|'));
+  /* One name per destination. "Practice" is now a bar destination, so it is no
+     longer a forbidden word — what must not reappear is a SECOND name for a
+     place that already has one. */
   check('no competing names for the same destination anywhere in the chrome',
-    !/Learn|Lessons|Practice|Plan|Exam info/.test(
+    !/Learn|Lessons|Plan|Exam info/.test(
       jobsLabels.join(' ') + ' ' + (await page.locator('#nav-drawer').innerText())),
     jobsLabels.join(' | '));
   check('nothing in the bar is highlighted on the job screen — Jobs is not one of its four',
@@ -268,8 +271,9 @@ async function reachable(page, selector, where, minH){
   check('the horizontally-scrolling tab strip no longer exists',
     (await page.locator('#tabs').count()) === 0);
   const secs = await page.locator('main .tab-section').evaluateAll(els => els.map(e => e.id));
-  check('there are seven in-page screens: three in the bar, four in the menu',
-    secs.sort().join(',') === 'current-affairs,lessons,plan,progress,study,syllabus,test',
+  check('there are nine in-page screens: four in the bar, five in the menu',
+    secs.sort().join(',') ===
+      'current-affairs,lessons,plan,practice,progress,sprint,study,syllabus,test',
     secs.join(', '));
   check('exactly one section is visible at a time',
     (await page.locator('main .tab-section:not(.hidden)').count()) === 1);
@@ -532,9 +536,9 @@ async function reachable(page, selector, where, minH){
      name, and every row is titled exactly as the screen it opens. */
   const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
     .map(t => t.trim().split('\n')[0].trim());
-  const expected = ['Change exam', 'Jobs', 'All lessons', 'The run to the exam',
-                    'Current affairs', 'Syllabus', 'Reset prep progress'];
-  check('the menu holds Change exam, the five destinations and Settings — and nothing else',
+  const expected = ['Change exam', 'Jobs', 'All lessons', 'Sprint to the exam',
+                    'The run to the exam', 'Current affairs', 'Syllabus', 'Reset prep progress'];
+  check('the menu holds Change exam, the six destinations and Settings — and nothing else',
     rows.length === expected.length && expected.every((e, i) => rows[i].indexOf(e) === 0),
     rows.join(' | '));
   for (const [id, title] of [['lessons','All lessons'], ['plan','The run to the exam'],

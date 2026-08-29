@@ -86,10 +86,10 @@ function check(name, cond, detail){
   // not a tile and a drawer row calling the same screen something else.
   // Jobs is a different page, not a section of the prep page — it lives in
   // the ☰ menu, not the bottom bar, which is Study/Test/Progress only.
-  check('the bottom bar offers three destinations, all visible at once',
-    (await page.locator('nav#nav-bottom .nav-item').count()) === 3);
-  check('and they are Study, Test, Progress',
-    (await page.locator('nav#nav-bottom .nav-lbl').allTextContents()).join('|') === 'Study|Test|Progress');
+  check('the bottom bar offers four destinations, all visible at once',
+    (await page.locator('nav#nav-bottom .nav-item').count()) === 4);
+  check('and they are Study, Practice, Test, Progress',
+    (await page.locator('nav#nav-bottom .nav-lbl').allTextContents()).join('|') === 'Study|Practice|Test|Progress');
   check('the scrolling tab strip is gone', (await page.locator('#tabs').count()) === 0);
   check('"My Weak Areas" is now Progress, one tap away',
     await page.locator('nav#nav-bottom [data-tab="progress"]').isVisible());
@@ -1664,6 +1664,171 @@ function check(name, cond, detail){
   /* ── The same drill twice ───────────────────────────────────────────────
      "I know own old question answer were there, I remember then ans." Three
      syllogism questions existed, so by the third drill it was a memory test. */
+  /* ── Practice: the syllabus as a tree ───────────────────────────────── */
+  console.log('\n── practice: every topic, and an honest status ──────────');
+  /* Expand a subject only if it is closed. The highest-tier subject with work
+     left in it opens by default, so a blind toggle would CLOSE it. */
+  const expand = async subject => {
+    const block = page.locator(`#practice-tree [data-subjblock="${subject}"]`);
+    if (!(await block.evaluate(el => el.classList.contains('is-open')))) {
+      await page.locator(`#practice-tree [data-toggle="${subject}"]`).click();
+    }
+  };
+  await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#practice`, { waitUntil: 'networkidle' });
+  check('Practice is a screen of its own, not a mode inside Test',
+    await page.locator('#practice').isVisible() && await page.locator('#test').isHidden());
+
+  const prTopics = await page.locator('#practice .pr-topic').count();
+  const sylTotal = await page.evaluate(() => EXAM_SUBJECTS.reduce((n, s) => {
+    const y = syllabusFor(s, 'hal-cs');
+    return n + (y ? y.topics.length : 0);
+  }, 0));
+  check('every topic the exam examines has a row', prTopics === sylTotal,
+    `${prTopics} rows vs ${sylTotal} topics`);
+  check('and they are grouped subject → chapter → topic',
+    (await page.locator('#practice .pr-subject').count()) >= 12 &&
+    (await page.locator('#practice .pr-chapter').count()) > 30);
+
+  /* The rule this whole model exists for: opening a lesson is not finishing a
+     topic. On a fresh phone with nothing answered, NOTHING may read as done.
+
+     The suite has been answering questions for several hundred lines by now,
+     so the store is cleared first — this check is about what a NEW install
+     shows, and asserting it against a used one would test nothing. */
+  await page.evaluate(() => {
+    state.subtopics = {};
+    localStorage.removeItem('jobhunt_lessons');
+    window.renderPractice();
+  });
+  const freshStats = await page.locator('#practice-stats').innerText();
+  check('a fresh phone shows 0% completed, not a screen of ticks',
+    /0%\s*Completed/i.test(freshStats.replace(/\n/g, ' ')), freshStats.replace(/\n/g, ' '));
+  const statuses = await page.locator('#practice .pr-topic').evaluateAll(
+    els => [...new Set(els.map(e => e.className.replace(/.*st-([a-z-]+).*/, '$1')))]);
+  check('and every topic starts as Not started',
+    statuses.length === 1 && statuses[0] === 'not-started', statuses.join(','));
+
+  check('each subject shows its tier, so the run can be argued with',
+    /Tier 1/.test(await page.locator('#practice .pr-subject-head').first().innerText()));
+  check('the four daily reasoning types are marked as daily',
+    (await page.locator('#practice .pr-daily').count()) === 4,
+    String(await page.locator('#practice .pr-daily').count()));
+
+  /* "Do this next" is the only ordered-by-weakness list on the screen. The
+     tree keeps teaching order, because a syllabus sorted by weakness stops
+     being a syllabus. */
+  check('a "do this next" list is offered, ordered by marks per minute',
+    /Do this next/.test(await page.locator('#practice-weak').innerText()) &&
+    (await page.locator('#practice-weak .pr-next').count()) > 0);
+  check('the three whole-paper modes are all reachable from one screen',
+    (await page.locator('#practice [data-prmode]').count()) === 3);
+
+  /* Answering questions has to MOVE a topic. Simulate a full pass on one topic
+     and check the row stops saying "not started". */
+  await page.evaluate(() => {
+    state.subtopics['ds-complexity'] = { asked: 10, correct: 9, lastSeen: Date.now() };
+    const l = JSON.parse(localStorage.getItem('jobhunt_lessons') || '{}');
+    l['ds-bigo'] = { read: true, mastered: true };
+    localStorage.setItem('jobhunt_lessons', JSON.stringify(l));
+    window.renderPractice();
+  });
+  const moved = await page.locator('#practice-tree [data-topic="ds-complexity"]').innerText();
+  check('a topic read and answered at 90% reads as Completed',
+    /Completed/.test(moved), moved.replace(/\n/g, ' '));
+  check('and its accuracy is shown now there is evidence for one',
+    /90%/.test(moved), moved.replace(/\n/g, ' '));
+
+  await page.evaluate(() => {
+    state.subtopics['db-normal'] = { asked: 12, correct: 4, lastSeen: Date.now() };
+    window.renderPractice();
+  });
+  const weakRow = await page.locator('#practice-tree [data-topic="db-normal"]').innerText();
+  check('a topic answered twelve times at 33% reads as Weak, not Practised',
+    /Weak/.test(weakRow), weakRow.replace(/\n/g, ' '));
+  check('and it says to go back to the concept rather than drill more',
+    /read the concept again/i.test(weakRow), weakRow.replace(/\n/g, ' '));
+  check('a weak topic is surfaced in "do this next"',
+    /Normalisation/.test(await page.locator('#practice-weak').innerText()),
+    (await page.locator('#practice-weak').innerText()).replace(/\n/g, ' ').slice(0, 200));
+
+  /* Tapping a topic that is below 50% opens the LESSON. More questions on a
+     topic you have not understood only tells you again that you are wrong.
+     The subject has to be expanded first — a collapsed subject's rows are not
+     on screen, which is the point of collapsing them. */
+  await expand('DBMS');
+  await page.locator('#practice-tree [data-topic="db-normal"]').click();
+  await page.waitForSelector('#learn-reader:not(.hidden)');
+  check('tapping a below-50% topic opens its lesson, not more questions',
+    await page.locator('#learn-reader').isVisible());
+
+  /* A topic in good shape goes straight to questions instead.
+     gotoSection rather than page.goto: the address already IS this page, so a
+     goto differing only in the hash is a same-document navigation and never
+     reaches networkidle. */
+  await page.evaluate(() => window.gotoSection('practice'));
+  await page.waitForSelector('#practice:not(.hidden)');
+  await page.evaluate(() => {
+    state.subtopics['ds-complexity'] = { asked: 10, correct: 8, lastSeen: Date.now() };
+    window.renderPractice();
+  });
+  await expand('Data Structures');
+  await page.locator('#practice-tree [data-topic="ds-complexity"]').click();
+  await page.waitForSelector('#quiz-live:not(.hidden)');
+  check('tapping a healthy topic goes straight to its questions',
+    await page.locator('#quiz-live').isVisible());
+  const drawn = await page.evaluate(() => currentQuiz.map(q => q.subtopic));
+  check('and every question drawn is from that exact topic',
+    drawn.length > 0 && drawn.every(t => t === 'ds-complexity'),
+    [...new Set(drawn)].join(','));
+
+  /* ── Sprint ─────────────────────────────────────────────────────────── */
+  console.log('\n── sprint: the days actually left ──────────────────────');
+  await page.evaluate(() => window.gotoSection('sprint'));
+  await page.waitForSelector('#sprint:not(.hidden)');
+  const spDays = await page.locator('.sp-day').count();
+  const realDays = await page.evaluate(() => sprintDaysLeft(currentExamObj()));
+  check('the sprint is the days actually left, not a fixed fourteen',
+    spDays === Math.min(realDays, 21) && spDays > 0, `${spDays} days shown, ${realDays} left`);
+  const spHead = (await page.locator('#sprint-head').innerText()).replace(/\s+/g, ' ');
+  check('and it says how many and what it counted back from',
+    /day[s]? left/.test(spHead) && /exam window/.test(spHead), spHead.slice(0, 140));
+
+  const day1 = (await page.locator('.sp-day').first().innerText()).replace(/\s+/g, ' ');
+  check('the daily four appear twice in every day',
+    (day1.match(/Analogy, Coding-decoding, Blood relations, Direction and distance/g) || []).length === 2,
+    day1.slice(0, 120));
+  check('every block says how long it takes and why it is there',
+    (await page.locator('.sp-day').first().locator('.sp-block-mins').count()) >= 4 &&
+    (await page.locator('.sp-day').first().locator('.sp-block-why').count()) >= 4);
+
+  /* A day of one subject is worse retrieval practice than a day of three, for
+     the same minutes — and priority alone produces the former when nothing has
+     been answered and every tier 1 topic ties. */
+  const daySubjects = await page.locator('.sp-day').first().locator('.sp-block-why').allTextContents();
+  const drillSubjects = daySubjects.filter(t => /tier \d/.test(t)).map(t => t.split(' ·')[0]);
+  check('a day spreads its topics across subjects rather than stacking one',
+    new Set(drillSubjects).size === drillSubjects.length, drillSubjects.join(' | '));
+
+  check('the last days are mocks, not new material',
+    /mock/i.test(await page.locator('.sp-day').last().innerText()));
+
+  /* The single most valuable thing this mode does: it does not spend the last
+     days confirming what is already known. */
+  await page.evaluate(() => {
+    const t = window.practiceTopics();
+    t.slice(0, 30).forEach(x => {
+      state.subtopics[x.key] = { asked: 20, correct: 20, lastSeen: Date.now() };
+    });
+    window.renderSprint();
+  });
+  const afterMastery = (await page.locator('#sprint-days').innerText());
+  const masteredNames = await page.evaluate(() =>
+    window.practiceTopics().filter(t => t.st.band.key === 'known').map(t => t.name));
+  check('topics answered at 100% barely appear in the plan',
+    masteredNames.length > 0 &&
+    masteredNames.filter(n => afterMastery.indexOf('drill: ' + n) !== -1).length <= 1,
+    `${masteredNames.length} mastered, ${masteredNames.filter(n => afterMastery.indexOf('drill: ' + n) !== -1).length} still scheduled`);
+
   console.log('\n── drilling the same basic twice ────────────────────────');
   const drillSet = async () => {
     await page.evaluate(() => window.openSkillDrill('syllogism-some-proves-nothing'));

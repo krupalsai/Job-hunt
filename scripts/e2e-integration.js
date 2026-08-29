@@ -58,11 +58,11 @@ function check(name, cond, detail){
   check('manifest.json is served', requested.includes('/manifest.json'));
 
   console.log('\n── the job list reaches the prep ────────────────────────');
-  // Three destinations on the bottom bar; Jobs is a different page, reached
+  // Four destinations on the bottom bar; Jobs is a different page, reached
   // from the ☰ menu rather than competing for a bar slot.
   const labels = await page.locator('nav#nav-bottom .nav-lbl').allTextContents();
-  check('the bottom bar is the three prep destinations',
-    labels.join('|') === 'Study|Test|Progress', labels.join('|'));
+  check('the bottom bar is the four prep destinations',
+    labels.join('|') === 'Study|Practice|Test|Progress', labels.join('|'));
   const link = page.locator('nav#nav-bottom [data-tab="study"]');
   check('the prep is one tap away from the job list', await link.count() === 1);
   const href = await link.getAttribute('href');

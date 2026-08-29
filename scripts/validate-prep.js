@@ -304,6 +304,63 @@ if (coverage < Math.min(ALL.length, 150)) {
 const quizzesBeforeRepeat = Math.floor(ALL.length / 10);
 console.log(`Fresh questions last ~${quizzesBeforeRepeat} quizzes before anything repeats`);
 
+/* ---- The status model ------------------------------------------------
+   prep/mastery.js decides when a topic counts as finished, which is the one
+   rule this whole app turns on: mark a topic completed too easily and it
+   leaves the practice rotation with the gap still in it. The rules are pure
+   arithmetic, so they are checked here rather than in a browser. */
+const Mastery = require(path.join(__dirname, '..', 'prep', 'mastery.js'));
+const MASTERY_CASES = [
+  // [record, lesson read, has a lesson, expected status, why this case exists]
+  [null,                 false, true,  'not-started', 'nothing read, nothing answered'],
+  [null,                 false, false, 'not-started', 'a topic with no lesson written is still not started'],
+  [{asked: 0, correct: 0},  true,  true,  'learning',  'reading alone is never completion'],
+  [{asked: 20, correct: 19}, false, true, 'practised', 'high accuracy without reading stops at practised'],
+  [{asked: 20, correct: 19}, false, false, 'completed', 'unless there is no lesson to read'],
+  [{asked: 3, correct: 0},  true,  true,  'learning',  'too few answers to call anything weak'],
+  [{asked: 10, correct: 3},  true,  true,  'weak',     'enough answers, below half'],
+  [{asked: 10, correct: 3},  true,  true,  'weak',     'and reading does not rescue it'],
+  [{asked: 8, correct: 6},   true,  true,  'completed', 'read + 8 answered + 75% is the bar'],
+  [{asked: 8, correct: 5},   true,  true,  'practised', 'one mark below the bar is not completed'],
+  [{asked: 7, correct: 7},   true,  true,  'practised', 'perfect, but one answer short of completion'],
+];
+console.log('\nStatus model');
+console.log('─'.repeat(46));
+MASTERY_CASES.forEach(([rec, read, hasLesson, want, why]) => {
+  const got = Mastery.statusOf(rec, read, hasLesson).status;
+  const ok = got === want;
+  console.log(`  ${ok ? '✓' : '✗'} ${why.padEnd(52)} ${got}`);
+  if (!ok) problems.push(`mastery: ${why} → expected ${want}, got ${got}`);
+});
+// The band boundaries decide how often a topic comes back, so they are checked
+// at the edges rather than in the middle where any implementation passes.
+const BAND_CASES = [[0, 0, 'unseen'], [10, 0.49, 'relearn'], [10, 0.5, 'soon'],
+                    [10, 0.69, 'soon'], [10, 0.7, 'normal'], [10, 0.89, 'normal'],
+                    [10, 0.9, 'known'], [10, 1, 'known']];
+BAND_CASES.forEach(([asked, acc, want]) => {
+  const got = Mastery.bandFor(asked, acc).key;
+  if (got !== want) problems.push(`mastery: band at ${asked} asked / ${acc} → expected ${want}, got ${got}`);
+});
+// A 95% topic must be worth far less practice than a 55% one, or the plan
+// spends the last days confirming what is already known.
+const known = Mastery.priority({tier: 1}, Mastery.statusOf({asked: 20, correct: 19}, true, true), Date.now());
+const soon  = Mastery.priority({tier: 1}, Mastery.statusOf({asked: 20, correct: 12}, true, true), Date.now());
+if (!(soon > known * 5)) {
+  problems.push(`mastery: a 60% topic (${soon.toFixed(2)}) must far outrank a 95% one (${known.toFixed(2)})`);
+}
+// A KNOWN weakness must outrank an untouched topic of the same tier: it is
+// cheaper to fix something you have already measured than to discover a gap.
+const untouched = Mastery.priority({tier: 1}, Mastery.statusOf(null, false, true), Date.now());
+const measuredWeak = Mastery.priority({tier: 1}, Mastery.statusOf({asked: 12, correct: 4, lastSeen: Date.now()}, true, true), Date.now());
+if (!(measuredWeak > untouched)) {
+  problems.push(`mastery: a measured weakness (${measuredWeak.toFixed(2)}) must outrank an untouched topic (${untouched.toFixed(2)})`);
+}
+// A daily topic is floored high whatever its accuracy says — that is the whole
+// point of the flag, and an accuracy-only ranking would drop it.
+const dailyKnown = Mastery.priority({tier: 2, daily: true},
+  Mastery.statusOf({asked: 40, correct: 39}, true, true), Date.now());
+if (!(dailyKnown >= 6)) problems.push(`mastery: a daily topic must stay in rotation at any accuracy (got ${dailyKnown})`);
+
 console.log('\n' + '─'.repeat(46));
 if (problems.length === 0) {
   console.log('✅ All checks passed');

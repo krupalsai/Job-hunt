@@ -160,15 +160,27 @@
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
+    // Practice: a target — the screen is about aiming at what is weak.
+    target: svg('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/>'),
+    // Sprint: the days are short and the plan is about urgency.
+    bolt: svg('<path d="M13 3L5.5 13.5H11L10 21l7.5-10.5H12L13 3z"/>'),
   };
 
-  /* ── The three destinations in the bar ───────────────────────────────────
-     All three are sections of the prep page. Everything else — Jobs, the
+  /* ── The four destinations in the bar ────────────────────────────────────
+     All four are sections of the prep page. Everything else — Jobs, the
      lessons, the run, current affairs, the syllabus — is in the menu: they are
      opened when you want them, not every day, and a permanent slot for one of
-     them costs a slot Study or Test needs every day. */
+     them costs a slot the daily screens need.
+
+     PRACTICE EARNED THE FOURTH SLOT. It was a mode inside Test, which meant
+     the question "what have I actually finished" was two taps behind the
+     question "give me ten questions" — and so it stopped being asked. It is
+     the screen that holds the syllabus tree and every topic's status, it is
+     opened every day, and on a paper with 233 topics it is the map. Four
+     items still fit a phone; five would not. */
   const DESTS = [
     { id: "study",    label: "Study",    icon: ICON.study, section: "study" },
+    { id: "practice", label: "Practice", icon: ICON.target, section: "practice" },
     { id: "test",     label: "Test",     icon: ICON.test,  section: "test" },
     { id: "progress", label: "Progress", icon: ICON.stats, section: "progress" },
   ];
@@ -183,6 +195,8 @@
       sub: "Openings tracked for this exam" },
     { id: "lessons", label: "All lessons", icon: ICON.book,
       sub: "Every subject, and every topic inside it" },
+    { id: "sprint", label: "Sprint to the exam", icon: ICON.bolt,
+      sub: "The days actually left, rebuilt from what you are weak at" },
     { id: "plan", label: "The run to the exam", icon: ICON.cal,
       sub: "One day at a time, counted back from the exam" },
     { id: "current-affairs", label: "Current affairs", icon: ICON.news,

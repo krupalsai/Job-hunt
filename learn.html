@@ -148,6 +148,85 @@
   /* pre-line because a syllogism is three lines — statements, conclusions,
      question — and running them into one paragraph is how you misread it. */
   .qtext{ font-size:15px; margin:10px 0 14px; line-height:1.5; white-space:pre-line; }
+  /* ── Practice: the syllabus as a tree ────────────────────────────────────
+     Five statuses, five colours, and the colour is never the only signal — the
+     row also says the status in words. A status you can only see is a status
+     that fails for anyone who cannot distinguish the colours. */
+  .pr-stats{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 4px; }
+  .pr-stat{ flex:1 1 60px; min-width:60px; text-align:center; padding:8px 4px;
+    background:var(--surface-2); border:1px solid var(--panel-border); border-radius:10px; }
+  .pr-stat b{ display:block; font-size:18px; color:var(--text); }
+  .pr-stat span{ display:block; font-size:11px; color:var(--muted); margin-top:2px; }
+  .pr-stat-weak b{ color:var(--bad); }
+
+  .pr-subject{ border:1px solid var(--panel-border); border-radius:12px; margin-bottom:10px;
+    overflow:hidden; background:var(--surface-2); }
+  .pr-subject-head{ display:flex; align-items:center; gap:10px; width:100%; padding:12px 14px;
+    background:transparent; border:0; text-align:left; cursor:pointer; color:var(--text); }
+  .pr-subject-main{ flex:1 1 auto; min-width:0; }
+  .pr-subject-name{ display:block; font-weight:600; font-size:15px; }
+  .pr-subject-sub{ display:block; font-size:12px; color:var(--muted); margin-top:2px; }
+  .pr-weakcount{ color:var(--bad); }
+  .pr-subject-bar{ flex:0 0 52px; height:6px; border-radius:3px; background:var(--panel-border); overflow:hidden; }
+  .pr-subject-bar span{ display:block; height:100%; background:var(--accent); }
+  .pr-subject-body{ display:none; padding:0 10px 10px; }
+  .pr-subject.is-open .pr-subject-body{ display:block; }
+
+  .pr-chapter{ margin-top:8px; }
+  .pr-chapter-head{ display:flex; justify-content:space-between; align-items:baseline;
+    padding:6px 4px; border-bottom:1px solid var(--panel-border); margin-bottom:4px; }
+  .pr-chapter-name{ font-size:12px; font-weight:600; text-transform:uppercase;
+    letter-spacing:.4px; color:var(--muted); }
+  .pr-chapter-meta{ font-size:11px; color:var(--dim); }
+
+  .pr-topic{ display:flex; align-items:center; gap:8px; width:100%; padding:9px 10px;
+    background:var(--bg); border:1px solid var(--panel-border); border-left-width:3px;
+    border-radius:8px; margin-bottom:4px; text-align:left; cursor:pointer; color:var(--text); }
+  .pr-topic:active{ filter:brightness(.92); }
+  .pr-topic-main{ flex:1 1 auto; min-width:0; }
+  .pr-topic-name{ display:block; font-size:13.5px; }
+  .pr-topic-sub{ display:block; font-size:11px; color:var(--muted); margin-top:2px; }
+  .pr-topic-meta{ flex:0 0 auto; text-align:right; }
+  .pr-acc{ display:block; font-size:13px; font-weight:600; }
+  .pr-count{ display:block; font-size:10.5px; color:var(--dim); }
+  .pr-daily{ font-size:9.5px; text-transform:uppercase; letter-spacing:.4px;
+    padding:1px 5px; border-radius:6px; background:var(--accent); color:var(--bg); }
+
+  .st-not-started{ border-left-color:var(--panel-border); }
+  .st-learning   { border-left-color:var(--warn); }
+  .st-practised  { border-left-color:var(--link); }
+  .st-completed  { border-left-color:var(--good); }
+  .st-weak       { border-left-color:var(--bad); background:color-mix(in srgb, var(--bad) 6%, transparent); }
+
+  .pr-chapter-test, .pr-subject-test{ width:100%; margin-top:6px; padding:8px;
+    font-size:12px; border-radius:8px; border:1px dashed var(--panel-border);
+    background:transparent; color:var(--muted); cursor:pointer; }
+  .pr-subject-test{ margin-top:10px; border-style:solid; color:var(--accent); }
+
+  .pr-next{ display:flex; align-items:center; gap:10px; width:100%; padding:11px 12px;
+    margin-top:6px; border:1px solid var(--panel-border); border-radius:10px;
+    background:var(--surface-2); text-align:left; cursor:pointer; color:var(--text); }
+  .pr-next-main{ flex:1 1 auto; min-width:0; }
+  .pr-next-name{ display:block; font-size:14px; font-weight:600; }
+  .pr-next-why{ display:block; font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .pr-next-go{ flex:0 0 auto; font-size:12px; font-weight:600; color:var(--accent); }
+
+  /* ── Sprint: the days that are actually left ───────────────────────────── */
+  .sp-head b{ font-size:30px; display:block; line-height:1.1; }
+  .sp-day{ border:1px solid var(--panel-border); border-radius:12px; padding:12px 14px;
+    margin-bottom:10px; background:var(--surface-2); }
+  .sp-day.is-today{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .sp-day-top{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .sp-daynum{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--accent); }
+  .sp-date{ font-size:11px; color:var(--dim); }
+  .sp-block{ display:flex; gap:8px; margin-top:8px; font-size:13px; }
+  .sp-block-mins{ flex:0 0 46px; color:var(--muted); font-size:11.5px; padding-top:2px; }
+  .sp-block-what{ flex:1 1 auto; min-width:0; }
+  .sp-block-why{ display:block; font-size:11px; color:var(--dim); margin-top:1px; }
+  .sp-go{ width:100%; margin-top:10px; padding:9px; border-radius:9px; border:0;
+    background:var(--accent); color:var(--bg); font-weight:600; cursor:pointer; }
+
   /* Current affairs: dated entries read as a feed, not as lesson prose. */
   /* A stored syllogism is three lines in the missed list too. */
   .miss-item .mq{ white-space: pre-line; }
@@ -661,6 +740,30 @@
     </div>
   </section>
 
+  <!-- PRACTICE — the syllabus as a tree, with a status on every topic.
+
+       Test is a set of questions. Practice is the map: subject, chapter,
+       topic, and for each topic what it would take to finish it. They are
+       separate screens because they answer different questions — "give me ten
+       questions" and "what have I actually finished" — and folding the second
+       into the first is how the second stopped being asked. -->
+  <section id="practice" class="tab-section hidden">
+    <div class="card">
+      <h2>Practice</h2>
+      <p class="muted" style="margin-top:-4px;" id="practice-note"></p>
+      <div class="pr-stats" id="practice-stats"></div>
+      <div id="practice-modes"></div>
+    </div>
+    <div class="card" id="practice-weak"></div>
+    <div class="card" id="practice-tree"></div>
+  </section>
+
+  <!-- SPRINT — the days that are actually left, ordered by what they buy. -->
+  <section id="sprint" class="tab-section hidden">
+    <div class="card" id="sprint-head"></div>
+    <div id="sprint-days"></div>
+  </section>
+
   <!-- TEST -->
   <section id="test" class="tab-section hidden">
     <!-- Five modes, named for what they do. Everything here draws on the
@@ -831,16 +934,21 @@
    Three of these are menu destinations rather than bottom-bar tabs — they were
    folds at the bottom of Study, and a fold is still a decision to make on the
    screen whose whole job is to remove one. */
-const SECTION_IDS = ['study','test','progress','lessons','plan','current-affairs','syllabus'];
+const SECTION_IDS = ['study','practice','test','progress','sprint','lessons','plan','current-affairs','syllabus'];
 const SECTION_ALIAS = {
   learn: 'lessons', path: 'lessons',
   schedule: 'plan',
   news: 'current-affairs', ca: 'current-affairs', 'current_affairs': 'current-affairs',
-  quiz: 'test', practice: 'test',
+  // #practice used to mean the quiz screen. It is now a screen of its own, so
+  // only #quiz keeps the old meaning — a bookmark saying "practice" wanted the
+  // practice screen, and now there is one to give it.
+  quiz: 'test',
+  topics: 'practice',
   examinfo: 'syllabus', exam: 'syllabus',
 };
 const SECTION_TITLE = {
-  study:'Study', test:'Test', progress:'Progress', lessons:'All lessons',
+  study:'Study', practice:'Practice', test:'Test', progress:'Progress',
+  sprint:'Sprint to the exam', lessons:'All lessons',
   plan:'The run to the exam', 'current-affairs':'Current affairs', syllabus:'Syllabus',
 };
 
@@ -881,6 +989,8 @@ window.gotoSection = function(id){
   }
   if(id === 'plan' && window.renderPlan) window.renderPlan();
   if(id === 'current-affairs') renderCurrentAffairs();
+  if(id === 'practice' && window.renderPractice) window.renderPractice();
+  if(id === 'sprint' && window.renderSprint) window.renderSprint();
   if(id === 'test') renderTestModes();
   if(id === 'syllabus') renderExamInfo();
   window.scrollTo(0, 0);
@@ -1358,13 +1468,19 @@ const STORE_KEY = 'jobhunt_prep_hal_cs_v1';
 const ROTATE_MS = 10 * 60 * 1000;   // "new questions every 10 minutes"
 
 function blankState(){
-  return { seen:{}, topics:{}, skills:{}, answered:0, correct:0, rotationAt: Date.now() + ROTATE_MS, rotations:0 };
+  return { seen:{}, topics:{}, subtopics:{}, skills:{}, answered:0, correct:0,
+           rotationAt: Date.now() + ROTATE_MS, rotations:0 };
 }
 let state;
 try{ state = JSON.parse(localStorage.getItem(STORE_KEY)) || blankState(); }
 catch(e){ state = blankState(); }
 state.seen = state.seen || {};
 state.topics = state.topics || {};
+// Keyed by syllabus topic key, one level below state.topics. Absent in every
+// save written before per-topic status existed, and it fills in from the next
+// answer rather than being rebuilt or reset — nobody loses progress for having
+// used the app earlier.
+state.subtopics = state.subtopics || {};
 // Added after people had already been using the app: an existing save has no
 // skills object, and it fills in from the next answer rather than being lost.
 state.skills = state.skills || {};
@@ -1485,6 +1601,27 @@ function recordAnswer(item, wasCorrect, skipped, ms){
     state.topics[item.topic] = t;
     state.answered++;
     if(wasCorrect) state.correct++;
+
+    /* The same record one level down, per SYLLABUS TOPIC.
+
+       state.topics is keyed by subject, which is the level a weak-area verdict
+       used to be given at — and "Computer Networks 61%" is not something you
+       can act on at 7am. state.subtopics is keyed by the topic key from
+       prep/syllabus.js, so the app can say "subnetting 40%, and here is the
+       lesson" instead. It is also what prep/mastery.js reads to decide whether
+       a topic is Completed, which is the whole reason opening a lesson no
+       longer counts as finishing one.
+
+       Added after people had already been using the app: an existing save has
+       no subtopics object and fills in from the next answer rather than
+       being reset. */
+    if(item.subtopic){
+      const sub = state.subtopics[item.subtopic] || {asked:0, correct:0};
+      sub.asked++;
+      if(wasCorrect) sub.correct++;
+      sub.lastSeen = Date.now();
+      state.subtopics[item.subtopic] = sub;
+    }
   }
 
   // The same record, one level down. Misses are kept per QUESTION rather than
@@ -2876,6 +3013,9 @@ renderProgress();
 </script>
 
 <!-- Loaded last: it uses ALL, state and beginQuiz from the script above. -->
+<script src="/prep/mastery.js"></script>
+<script src="/prep/practice.js"></script>
+<script src="/prep/sprint.js"></script>
 <script src="/prep/sync.js"></script>
 
 <!-- Reads what sync.js and the quiz have recorded and turns it into today's
