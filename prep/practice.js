@@ -340,7 +340,16 @@
       const pool = POOL.filter(q => q.topic === sh.subject);
       out = out.concat(pickWeighted(pool, want));
     });
-    return out;
+    /* Twelve rounded shares do not add up to the total — they came to 97 of a
+       100-question mock, and a mock that is quietly three questions short is
+       not the paper it claims to be. Top up from whatever is left, still
+       weighted towards the weakest topics. */
+    if (out.length < total) {
+      const taken = new Set(out.map(q => q.id));
+      const rest = POOL.filter(q => subjects.indexOf(q.topic) !== -1 && !taken.has(q.id));
+      out = out.concat(pickWeighted(rest, total - out.length));
+    }
+    return out.slice(0, total);
   }
 
   /** Draw from a pool, favouring the topics prep/mastery.js says are weakest.
@@ -359,11 +368,26 @@
     return scored.slice(0, Math.min(want, pool.length)).map(x => x.q);
   }
 
+  /* The n most valuable topics, at most one per subject on the first pass.
+
+     Priority alone gives ten questions from ONE subject whenever the top
+     topics tie — which they all do on a phone where nothing has been answered
+     yet. A ten-question set from one subject is worse retrieval practice than
+     one across five, and it is not what "weak topics first" promises. */
+  function spreadRanked(topics, n) {
+    const ranked = topics.filter(t => !t.noBank).sort((a, b) => b.priority - a.priority);
+    const out = [], seen = [];
+    ranked.forEach(t => {
+      if (out.length < n && seen.indexOf(t.subject) === -1) { out.push(t); seen.push(t.subject); }
+    });
+    ranked.forEach(t => { if (out.length < n && out.indexOf(t) === -1) out.push(t); });
+    return out;
+  }
+
   function runMode(id) {
     if (id === "weak-first") {
-      const ranked = allTopicStatus().filter(t => !t.noBank)
-        .sort((a, b) => b.priority - a.priority).slice(0, 8).map(t => t.key);
-      quiz(pickWeighted(POOL.filter(q => ranked.indexOf(q.subtopic) !== -1), 10), 10);
+      const keys = spreadRanked(allTopicStatus(), 8).map(t => t.key);
+      quiz(pickWeighted(POOL.filter(q => keys.indexOf(q.subtopic) !== -1), 10), 10);
       return;
     }
     if (id === "mixed-cse") {

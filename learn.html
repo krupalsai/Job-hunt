@@ -198,7 +198,7 @@
   .st-completed  { border-left-color:var(--good); }
   .st-weak       { border-left-color:var(--bad); background:color-mix(in srgb, var(--bad) 6%, transparent); }
 
-  .pr-chapter-test, .pr-subject-test{ width:100%; margin-top:6px; padding:8px;
+  .pr-chapter-test, .pr-subject-test{ width:100%; margin-top:6px; min-height:44px; padding:10px;
     font-size:12px; border-radius:8px; border:1px dashed var(--panel-border);
     background:transparent; color:var(--muted); cursor:pointer; }
   .pr-subject-test{ margin-top:10px; border-style:solid; color:var(--accent); }
@@ -224,8 +224,9 @@
   .sp-block-mins{ flex:0 0 46px; color:var(--muted); font-size:11.5px; padding-top:2px; }
   .sp-block-what{ flex:1 1 auto; min-width:0; }
   .sp-block-why{ display:block; font-size:11px; color:var(--dim); margin-top:1px; }
-  .sp-go{ width:100%; margin-top:10px; padding:9px; border-radius:9px; border:0;
-    background:var(--accent); color:var(--bg); font-weight:600; cursor:pointer; }
+  /* 44px minimum: this is a phone, and a 33px button is a button you miss. */
+  .sp-go{ width:100%; margin-top:10px; min-height:44px; padding:11px; border-radius:9px;
+    border:0; background:var(--accent); color:var(--bg); font-weight:600; cursor:pointer; }
 
   /* Current affairs: dated entries read as a feed, not as lesson prose. */
   /* A stored syllogism is three lines in the missed list too. */

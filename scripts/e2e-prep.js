@@ -1755,6 +1755,28 @@ function check(name, cond, detail){
   check('the three whole-paper modes are all reachable from one screen',
     (await page.locator('#practice [data-prmode]').count()) === 3);
 
+  /* Every mode has to deliver the size it promises and spread across subjects.
+     Priority alone drew all ten "weak topics first" questions from ONE subject
+     whenever the top topics tied — which they all do on a fresh phone — and
+     twelve rounded per-subject shares came to 97 of a 100-question mock. A
+     mock quietly three short is not the paper it claims to be. */
+  for (const [mode, want, minSubjects] of
+       [['weak-first', 10, 3], ['mixed-cse', 20, 8], ['tech-mock', 100, 10]]) {
+    await page.evaluate(() => window.gotoSection('practice'));
+    await page.waitForSelector('#practice:not(.hidden)');
+    await page.locator(`#practice [data-prmode="${mode}"]`).click();
+    await page.waitForSelector('#quiz-live:not(.hidden)');
+    const built = await page.evaluate(() => ({
+      n: currentQuiz.length,
+      subjects: [...new Set(currentQuiz.map(q => q.topic))].length,
+    }));
+    check(`${mode} asks exactly ${want} questions`, built.n === want, String(built.n));
+    check(`and draws them across at least ${minSubjects} subjects`,
+      built.subjects >= minSubjects, String(built.subjects));
+  }
+  await page.evaluate(() => window.gotoSection('practice'));
+  await page.waitForSelector('#practice:not(.hidden)');
+
   /* Answering questions has to MOVE a topic. Simulate a full pass on one topic
      and check the row stops saying "not started". */
   await page.evaluate(() => {
