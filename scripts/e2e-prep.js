@@ -1664,6 +1664,38 @@ function check(name, cond, detail){
   /* ── The same drill twice ───────────────────────────────────────────────
      "I know own old question answer were there, I remember then ans." Three
      syllogism questions existed, so by the third drill it was a memory test. */
+  /* ── Current affairs: the date is the point ─────────────────────────── */
+  console.log('\n── current affairs: dated, and readable ────────────────');
+  await page.evaluate(() => window.gotoSection('current-affairs'));
+  await page.waitForSelector('#current-affairs:not(.hidden)');
+  await page.evaluate(() => {
+    CURRENT_AFFAIRS.updated = '2026-08-25';
+    CURRENT_AFFAIRS.items = [
+      { date: '2026-08-23', headline: 'A dated item', why: 'why it matters', source: 'PIB',
+        url: 'https://pib.gov.in' },
+      { date: new Date().toISOString().slice(0, 10), headline: 'Something today', source: 'PIB',
+        url: 'https://pib.gov.in' },
+    ];
+    renderCurrentAffairs();
+  });
+  const ca = (await page.locator('#ca-body').innerText()).replace(/\s+/g, ' ');
+  /* A general-awareness fact is only usable if you know WHEN it happened —
+     three days ago is today's news, four months ago is revision. The ISO
+     string made you work that out yourself every time. */
+  check('each item shows the date it happened, written for a person',
+    /23 Aug 2026/i.test(ca), ca.slice(0, 160));
+  check('and how long ago that was, so its age is not a calculation',
+    /6 days ago/i.test(ca) && /today/i.test(ca), ca.slice(0, 160));
+  check('the screen says the date is the event, not the day it was written in',
+    /when it HAPPENED/i.test(ca), ca.slice(0, 200));
+  // Items are shown newest first, so the dated one is not necessarily the first
+  // row — assert that SOME row carries the ISO value rather than guessing which.
+  check('the machine-readable date is still there for anyone who wants it',
+    (await page.locator('#ca-body .ca-when').evaluateAll(
+      els => els.map(e => e.getAttribute('title')))).indexOf('2026-08-23') !== -1);
+  check('and the app still says how old the whole file is',
+    /Last written into the app on 2026-08-25/.test(ca));
+
   /* ── Practice: the syllabus as a tree ───────────────────────────────── */
   console.log('\n── practice: every topic, and an honest status ──────────');
   /* Expand a subject only if it is closed. The highest-tier subject with work

@@ -234,6 +234,11 @@
   .ca-item{ padding:11px 12px; border-radius:10px; background:var(--surface-2);
             border:1px solid var(--surface-2-border); }
   .ca-date{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--dim); }
+  /* The date is the thing being read here, so it carries the weight and the
+     age beside it stays quiet. */
+  .ca-when{ color:var(--muted); font-weight:700; }
+  .ca-age{ color:var(--dim); }
+  .ca-datenote{ font-size:11.5px; margin:2px 0 10px; }
   .ca-head{ font-size:13.5px; font-weight:700; margin-top:3px; line-height:1.4; }
   .ca-why{ font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.5; }
   .ca-src{ display:inline-block; margin-top:6px; font-size:12px; font-weight:700;
@@ -1160,6 +1165,35 @@ function renderSubjectChips(){
    scheduled run has written with a date and a source, says how old that is,
    and otherwise sends you to the live feeds — which is the honest version of
    "live information" for something that has to work with no signal. */
+/* The date an item HAPPENED, said the way a person reads a date, with its age
+   beside it.
+
+   "2026-08-23" is a machine's date. In a general-awareness section what
+   actually matters is WHEN a thing happened and how long ago that was — a
+   fact from three days ago is today's news and one from four months ago is
+   revision, and the ISO string makes you compute that yourself every time.
+   The ISO value stays in the title attribute, so nothing is lost.
+
+   The date on an item is the date of the EVENT, not of the run that wrote it —
+   that rule is set in MENTOR.md and this is the screen that depends on it. */
+const CA_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function caDateHtml(iso){
+  const d = new Date(String(iso) + 'T00:00:00Z');
+  if(isNaN(d.getTime())) return escHtml(iso || 'undated');
+  const pretty = d.getUTCDate() + ' ' + CA_MONTHS[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+  const now = new Date();
+  const days = Math.round(
+    (Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - d.getTime()) / 86400000);
+  const age = days < 0 ? 'upcoming'
+    : days === 0 ? 'today'
+    : days === 1 ? 'yesterday'
+    : days < 31 ? days + ' days ago'
+    : days < 365 ? Math.round(days / 30) + ' months ago'
+    : 'over a year ago';
+  return `<span class="ca-when" title="${escHtml(iso)}">${escHtml(pretty)}</span>` +
+         `<span class="ca-age"> · ${escHtml(age)}</span>`;
+}
+
 function renderCurrentAffairs(){
   const body = document.getElementById('ca-body');
   if(!body || typeof CURRENT_AFFAIRS === 'undefined') return;
@@ -1174,9 +1208,11 @@ function renderCurrentAffairs(){
     : 'Nothing has been written into the app yet.';
 
   body.innerHTML = `
+    ${items.length ? `<p class="muted ca-datenote">The date on each item is when it HAPPENED, not when it was
+      written into the app.</p>` : ''}
     ${items.length ? `<div class="ca-items">${items.map(i => `
       <div class="ca-item">
-        <div class="ca-date">${escHtml(i.date)}${i.source ? ` · ${escHtml(i.source)}` : ''}</div>
+        <div class="ca-date">${caDateHtml(i.date)}${i.source ? ` · ${escHtml(i.source)}` : ''}</div>
         <div class="ca-head">${escHtml(i.headline)}</div>
         ${i.why ? `<div class="ca-why">${escHtml(i.why)}</div>` : ''}
         ${i.url ? `<a class="ca-src" href="${escHtml(i.url)}" target="_blank" rel="noopener">source →</a>` : ''}
