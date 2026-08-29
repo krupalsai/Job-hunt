@@ -215,6 +215,27 @@ QUESTION_BANK["General Studies"] = [
    source_type:"generated_practice", difficulty:"moderate", subtopic:"gs-economy",
    why:"GST came into force on 1 July 2017, replacing a range of indirect taxes levied separately by the Centre and the states. The constitutional amendment enabling it was passed in 2016, which is the trap date here.",
    trick:"Amendment 2016, rollout 1 July 2017. The exam offers whichever one you did not learn."},
+
+  {q:"India's reusable launch vehicle technology demonstrator programme is run by which organisation?",
+   opts:["DRDO","ISRO","HAL","BARC"], correct:1,
+   source_type:"generated_practice", difficulty:"basic",
+   subtopic:"gs-tech", concept:"Which agency does what",
+   why:"ISRO runs India's civilian space programme, including launch vehicle development. DRDO develops defence technology, HAL manufactures aircraft, and BARC works on atomic research — the four are constantly set against each other in this section.",
+   trick:"ISRO space, DRDO defence research, HAL aircraft manufacture, BARC atomic. Four agencies, four distinct remits."},
+
+  {q:"In computing, what does 'cloud computing' primarily provide?",
+   opts:["Faster processors","On-demand access to shared computing resources over a network","Weather prediction","Wireless charging"], correct:1,
+   source_type:"generated_practice", difficulty:"basic",
+   subtopic:"gs-tech", concept:"Basic technology vocabulary",
+   why:"Cloud computing delivers storage, computing power and applications as an on-demand service over a network, so users rent capacity instead of owning hardware. The word 'cloud' refers to the network being drawn as one in diagrams, not to anything meteorological.",
+   trick:"Cloud = someone else's computer, rented by the hour. The three service models are IaaS, PaaS and SaaS."},
+
+  {q:"Which technology underlies cryptocurrencies such as Bitcoin?",
+   opts:["Blockchain","Cloud storage","Machine learning","Quantum computing"], correct:0,
+   source_type:"generated_practice", difficulty:"basic",
+   subtopic:"gs-tech", concept:"Blockchain basics",
+   why:"A blockchain is a distributed ledger in which each block carries a cryptographic hash of the previous one, so altering an old record would require redoing every block after it. That chaining is what makes the record tamper-evident, and it is separate from any particular currency.",
+   trick:"Blockchain is the ledger; a cryptocurrency is one application of it. India's digital rupee (CBDC) is issued by the RBI and is a different thing again."},
 ];
 
 /* ───────────── TELANGANA MOVEMENT & STATE FORMATION ───────────── */

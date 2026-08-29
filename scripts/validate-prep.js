@@ -227,8 +227,14 @@ const perTopic = new Map([...topicKeys.keys()].map(k => [k, 0]));
 Object.values(QUESTION_BANK).flat().forEach(q => {
   if (perTopic.has(q.subtopic)) perTopic.set(q.subtopic, perTopic.get(q.subtopic) + 1);
 });
-const emptyTopics = [...perTopic].filter(([, n]) => n === 0);
-console.log(`Topics with questions: ${perTopic.size - emptyTopics.length} of ${perTopic.size}`);
+const intentional = new Set();
+Object.values(SYLLABUS).forEach(e => (e.topics || []).forEach(t => { if (t.noBank) intentional.add(t.key); }));
+// A topic flagged `noBank` is empty on purpose — current affairs is the only
+// case. Reporting it as a gap every run trains you to ignore the gap list.
+const emptyTopics = [...perTopic].filter(([k, n]) => n === 0 && !intentional.has(k));
+const withQuestions = [...perTopic].filter(([, n]) => n > 0).length;
+console.log(`Topics with questions: ${withQuestions} of ${perTopic.size}` +
+  (intentional.size ? ` (${intentional.size} deliberately have none — current affairs)` : ''));
 if (emptyTopics.length) {
   console.log(`Topics with NO questions (${emptyTopics.length}):`);
   emptyTopics.forEach(([k]) => console.log(`   ${k}  (${topicKeys.get(k)})`));

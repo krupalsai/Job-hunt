@@ -60,6 +60,10 @@
      daily   this topic is drilled every day regardless of how good you are at
              it. Reserved for the reasoning types that are pure pattern
              recognition, where the skill decays without contact.
+     noBank  this topic will never have questions in the bank, on purpose.
+             Current affairs is the only case: a hard-coded news list teaches
+             last year's headlines as fact. The coverage report reads this so
+             that a deliberate absence is not reported as work outstanding.
      note    a short line for when the topic needs one: where it is actually
              taught, or what the paper does with it.
    ========================================================================== */
@@ -675,7 +679,7 @@ const SYLLABUS = {
      t: "General science: physics, chemistry, biology"},
     {key: "ga-static", chapter: "Science and static GK",
      t: "Static GK: capitals, currencies, important days, awards, sports"},
-    {key: "ga-current", chapter: "Current affairs",
+    {key: "ga-current", chapter: "Current affairs", noBank: true,
      t: "Current affairs — last 6 to 12 months",
      note: "Deliberately not hard-coded into the bank: a fixed current-affairs list teaches last year's headlines as fact. The Current affairs screen carries dated, sourced items and the live feeds instead."},
   ],
@@ -750,7 +754,7 @@ const SYLLABUS = {
      t: "General science and everyday applications", lessons: ["ts-gs-science"]},
     {key: "gs-tech", chapter: "Science and technology",
      t: "Science and technology; space and defence"},
-    {key: "gs-current", chapter: "Current affairs",
+    {key: "gs-current", chapter: "Current affairs", noBank: true,
      t: "Current affairs — regional, national, international",
      note: "Not hard-coded, for the same reason as HAL's: a fixed list of headlines goes stale before the paper."},
   ],
