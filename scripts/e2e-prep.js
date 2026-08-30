@@ -1684,8 +1684,16 @@ function check(name, cond, detail){
      string made you work that out yourself every time. */
   check('each item shows the date it happened, written for a person',
     /23 Aug 2026/i.test(ca), ca.slice(0, 160));
+  /* The expected age is COMPUTED, not written here. Hard-coding "6 days ago"
+     made this test pass only on the day it was written — it failed the first
+     time the clock rolled past midnight, which is a test asserting the date
+     rather than the behaviour. */
+  const expectedAge = Math.round(
+    (Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())
+     - Date.UTC(2026, 7, 23)) / 86400000) + ' days ago';
   check('and how long ago that was, so its age is not a calculation',
-    /6 days ago/i.test(ca) && /today/i.test(ca), ca.slice(0, 160));
+    ca.toLowerCase().indexOf(expectedAge) !== -1 && /today/i.test(ca),
+    `expected "${expectedAge}" in: ${ca.slice(0, 160)}`);
   check('the screen says the date is the event, not the day it was written in',
     /when it HAPPENED/i.test(ca), ca.slice(0, 200));
   // Items are shown newest first, so the dated one is not necessarily the first
@@ -1801,6 +1809,15 @@ function check(name, cond, detail){
     /Weak/.test(weakRow), weakRow.replace(/\n/g, ' '));
   check('and it says to go back to the concept rather than drill more',
     /read the concept again/i.test(weakRow), weakRow.replace(/\n/g, ' '));
+  /* Every topic must have enough DISTINCT questions for its bar to be
+     reachable without answering the same one repeatedly. The bar scales down
+     for thin topics, and the floor is three — so three questions per topic is
+     the minimum that makes Completed an honest state everywhere. */
+  const thin = await page.evaluate(() => window.practiceTopics()
+    .filter(t => !t.noBank && t.questions < 3).map(t => `${t.key}(${t.questions})`));
+  check('every topic has at least three distinct questions behind it',
+    thin.length === 0, thin.join(', '));
+
   check('a weak topic is surfaced in "do this next"',
     /Normalisation/.test(await page.locator('#practice-weak').innerText()),
     (await page.locator('#practice-weak').innerText()).replace(/\n/g, ' ').slice(0, 200));

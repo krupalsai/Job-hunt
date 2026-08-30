@@ -156,8 +156,8 @@ working tree. Both columns are computed, not recalled.
 | Topics (HAL) | 86, unkeyed | **206** |
 | Topics in the whole syllabus | 145 | **235** |
 | Topics with questions behind them | not measurable — no topic ids | **233 of 235** |
-| Questions in the HAL pool | 228 | **511** |
-| Questions in the whole bank | 309 | **604** |
+| Questions in the HAL pool | 228 | **740** |
+| Questions in the whole bank | 309 | **833** |
 | Lessons (HAL subjects) | 42 | **95** |
 | Lessons in the whole curriculum | 49 | **102** |
 | Questions carrying topic + difficulty + concept | 51 | **604** |
@@ -169,9 +169,9 @@ it" had no answer at all. Making it answerable was the point of §2.1.
 The two topics with no questions are the two current-affairs topics. They are
 flagged `noBank: true` and will never have any — see §5.
 
-The coverage table in §3 totals **504** rather than 511 because it sums by
-*topic within HAL's view of the syllabus*; the seven-question difference is
-Reasoning material belonging to other papers (non-verbal, matrix coding, data
+The coverage table in §3 totals slightly less than the HAL pool because it
+sums by *topic within HAL's view of the syllabus*; the difference is Reasoning
+material belonging to other papers (non-verbal, matrix coding, data
 sufficiency) that sits in the shared subject and is not shown for HAL.
 
 ---
@@ -180,25 +180,31 @@ sufficiency) that sits in the shared subject and is not shown for HAL.
 
 | Tier | Subject | Chapters | Topics | Questions | Lessons |
 |---:|---|---:|---:|---:|---:|
-| 1 | Computer Networks | 6 | 20 | 41 | 9 |
-| 1 | Data Structures | 8 | 16 | 36 | 11 |
-| 1 | DBMS | 6 | 17 | 35 | 8 |
-| 1 | Operating Systems | 7 | 17 | 35 | 10 |
-| 1 | Programming & OOP | 6 | 16 | 29 | 6 |
+| 1 | Computer Networks | 6 | 20 | 70 | 9 |
+| 1 | Data Structures | 8 | 16 | 56 | 11 |
+| 1 | DBMS | 6 | 17 | 56 | 8 |
+| 1 | Operating Systems | 7 | 17 | 53 | 10 |
+| 1 | Programming & OOP | 6 | 16 | 53 | 6 |
 | 1 | Algorithms | 4 | 7 | 28 | 7 |
-| 2 | Reasoning | 4 | 14 | 63 | 8 |
-| 2 | English | 5 | 18 | 56 | 4 |
-| 2 | COA | 5 | 16 | 32 | 6 |
-| 2 | Digital Logic | 5 | 12 | 30 | 5 |
-| 2 | Theory of Computation | 5 | 13 | 22 | 5 |
-| 3 | General Awareness | 5 | 8 | 25 | 2 |
-| 3 | Compiler Design | 5 | 11 | 24 | 4 |
-| 3 | Software Engineering | 4 | 10 | 21 | 4 |
-| 4 | Discrete Mathematics | 7 | 11 | 27 | 6 |
-| | **Total** | **82** | **206** | **504** | **95** |
+| 2 | English | 5 | 18 | 70 | 4 |
+| 2 | Reasoning | 4 | 14 | 66 | 8 |
+| 2 | COA | 5 | 16 | 56 | 6 |
+| 2 | Digital Logic | 5 | 12 | 44 | 5 |
+| 2 | Theory of Computation | 5 | 13 | 40 | 5 |
+| 3 | Compiler Design | 5 | 11 | 38 | 4 |
+| 3 | Software Engineering | 4 | 10 | 33 | 4 |
+| 3 | General Awareness | 5 | 8 | 31 | 2 |
+| 4 | Discrete Mathematics | 7 | 11 | 39 | 6 |
+| | **Total** | **82** | **206** | **733** | **95** |
 
-Difficulty spread across the whole bank: 231 basic · 262 moderate · 95
-HAL-level · 16 challenging.
+Difficulty spread across the whole bank: run `npm run coverage` for the
+current split across basic / moderate / HAL-level / challenging.
+
+**Every topic has at least three distinct questions.** That floor is not
+cosmetic: `prep/mastery.js` scales a topic's completion bar down to the
+questions that exist for it, and below three no accuracy figure means anything.
+A topic with one question could only be "completed" by answering that question
+three times, which is evidence of nothing.
 
 **Read it as follows.** Tier 1 is where the 100 technical marks concentrate and
 where a day of study buys the most. Tier 4 is the first thing to cut. The tiers
@@ -221,7 +227,7 @@ Set in `prep/mastery.js`, checked by `npm test`.
 | Not started | nothing read, nothing answered |
 | Learning | opened, or a few answers — not yet evidence |
 | Practised | ≥ 6 questions answered at ≥ 60% |
-| **Completed** | concept read **and** ≥ 8 answered **and** ≥ 75% |
+| **Completed** | concept read **and** ≥ 8 answered **and** ≥ 75% (the 8 scales down for a topic with fewer questions, floor 3) |
 | Weak | ≥ 4 answered and below 50% — overrides everything else |
 
 **Opening a lesson never completes a topic.** That was the previous behaviour
@@ -251,7 +257,7 @@ explanations are theirs, and none of them is here.
 
 `source_type` is on every question and `scripts/validate-prep.js` enforces it:
 
-- `generated_practice` — written for this app. **All 604 questions.**
+- `generated_practice` — written for this app. **Every question in the bank.**
 - `verified_practice` — from a named published source, checked. None yet.
 - `pyq` — a real previous-year question. **None.** A question claiming this
   must name its exam, year and source, or the build fails.

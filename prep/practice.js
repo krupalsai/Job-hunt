@@ -74,13 +74,14 @@
       if (!syl) return;
       syl.chapters.forEach(ch => ch.topics.forEach(t => {
         const rec = (state.subtopics || {})[t.key];
-        const st = M().statusOf(rec, lessonsRead(t), !!(t.lessons && t.lessons.length));
+        const available = questionsFor(t.key).length;
+        const st = M().statusOf(rec, lessonsRead(t), !!(t.lessons && t.lessons.length), available);
         st.lastSeen = rec && rec.lastSeen;
         out.push({
           key: t.key, name: t.t, chapter: ch.name, subject: subject,
           tier: syl.tier, daily: !!t.daily, noBank: !!t.noBank,
           lessons: t.lessons || [], note: t.note || "",
-          questions: questionsFor(t.key).length,
+          questions: available,
           st: st,
           priority: M().priority({tier: syl.tier, daily: !!t.daily}, st, Date.now()),
         });

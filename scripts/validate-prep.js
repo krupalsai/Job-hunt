@@ -61,6 +61,13 @@ for (const [topic, qs] of Object.entries(QUESTION_BANK)) {
       const key = q.q.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
       if (seenText.has(key)) problems.push(`${at}: duplicate of ${seenText.get(key)}`);
       else seenText.set(key, at);
+      /* A stem so generic that two questions can share it is a problem even
+         before it collides: the review screen and the mistakes list show the
+         question text, and "Which sentence is correct?" tells you nothing
+         about which one you got wrong. Name what is being tested in the stem. */
+      if (/^(which sentence is correct|which is correct|choose the correct one|which of the following is correct)\b/.test(key)) {
+        problems.push(`${at}: stem is too generic to identify the question — say what is being tested`);
+      }
     }
     /* Where a question came from.
        A candidate uses previous-year questions to judge what the paper
@@ -357,6 +364,32 @@ const soon  = Mastery.priority({tier: 1}, Mastery.statusOf({asked: 20, correct: 
 if (!(soon > known * 5)) {
   problems.push(`mastery: a 60% topic (${soon.toFixed(2)}) must far outrank a 95% one (${known.toFixed(2)})`);
 }
+/* The completion bar scales to the questions that EXIST for a topic. Without
+   this, a topic with two questions written for it could only be completed by
+   answering those two four times each — so Completed became a state most
+   topics could never honestly reach, and a status nothing can reach is a
+   status nobody reads. The floor of three is the point below which no accuracy
+   figure means anything. */
+const BAR_CASES = [
+  [undefined, Mastery.MIN_COMPLETED, 'no count given: the full bar, as before'],
+  [40, Mastery.MIN_COMPLETED, 'plenty of questions: the full bar'],
+  [8, 8, 'exactly the bar: unchanged'],
+  [5, 5, 'five questions: five answers'],
+  [2, Mastery.MIN_EVIDENCE_FLOOR, 'two questions: the floor, not two'],
+  [1, Mastery.MIN_EVIDENCE_FLOOR, 'one question: still the floor'],
+];
+BAR_CASES.forEach(([available, want, why]) => {
+  const got = Mastery.barFor(Mastery.MIN_COMPLETED, available);
+  if (got !== want) problems.push(`mastery: bar for ${available} available — expected ${want}, got ${got} (${why})`);
+});
+// A thin topic must be completable, and a fat one must not be completable early.
+if (Mastery.statusOf({asked: 3, correct: 3}, true, true, 2).status !== 'completed') {
+  problems.push('mastery: a topic with two questions answered three times at 100% must be completable');
+}
+if (Mastery.statusOf({asked: 3, correct: 3}, true, true, 40).status === 'completed') {
+  problems.push('mastery: three answers must NOT complete a topic that has forty questions');
+}
+
 // A KNOWN weakness must outrank an untouched topic of the same tier: it is
 // cheaper to fix something you have already measured than to discover a gap.
 const untouched = Mastery.priority({tier: 1}, Mastery.statusOf(null, false, true), Date.now());

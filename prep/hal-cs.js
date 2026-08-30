@@ -1189,7 +1189,7 @@ const QUESTION_BANK = {
    why:"'Neither' is singular — it means not one of them — so the verb must be 'was'. The plural 'answers' sits next to the verb purely to pull you the wrong way.",
    trick:"Each, every, either, neither, none: singular, always. The noun in between is a distraction."},
 
-  {q:"Which sentence is correct?",
+  {q:"Which sentence handles 'one of' correctly?",
    opts:["One of my brother is an engineer.","One of my brothers is an engineer.","One of my brothers are an engineer.","One of my brother are an engineer."], correct:1, source_type:"generated_practice", difficulty:"moderate",
    subtopic:"en-improvement", concept:"Choosing the grammatical sentence",
    skills:["one-of-plural-noun"],

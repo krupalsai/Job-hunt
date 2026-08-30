@@ -92,11 +92,34 @@
     return BANDS[BANDS.length - 1];
   }
 
+  /** How many answers count as evidence FOR THIS TOPIC.
+
+      The thresholds above are the ideal. They are not reachable for a topic
+      with two questions written for it: demanding eight answers there means
+      demanding that the same two be re-answered four times each, which is not
+      evidence of anything and makes Completed a state most topics can never
+      enter. A status nothing can reach is a status nobody reads.
+
+      So the bar is the smaller of the ideal and what actually exists, with a
+      floor of three — below three answers no accuracy figure means anything,
+      however thin the topic is. `available` absent means "assume plenty",
+      which keeps every existing caller behaving exactly as before.
+
+      The right long-term fix is more questions on the thin topics, and the
+      coverage report names them. This is what keeps the status honest until
+      then, rather than quietly reporting nothing as finishable. */
+  const MIN_EVIDENCE_FLOOR = 3;
+  function barFor(ideal, available) {
+    if (!available) return ideal;
+    return Math.max(MIN_EVIDENCE_FLOOR, Math.min(ideal, available));
+  }
+
   /** The status of one topic.
 
       `rec`        {asked, correct} for this topic — however the caller stores it
       `read`       has any lesson teaching this topic actually been read
       `hasLesson`  is there a lesson to read at all (default true)
+      `available`  how many questions exist for this topic (optional)
 
       READ AND READABLE ARE DIFFERENT QUESTIONS, and conflating them was a real
       bug: a topic with no lesson written was reported as `read`, so 190 topics
@@ -108,24 +131,28 @@
       `evidence` is false when too few questions have been answered to judge
       accuracy at all, and the UI uses it to avoid showing "40%" next to two
       answered questions as though it meant something. */
-  function statusOf(rec, read, hasLesson) {
+  function statusOf(rec, read, hasLesson, available) {
     const asked = (rec && rec.asked) || 0;
     const correct = (rec && rec.correct) || 0;
     const accuracy = asked ? correct / asked : 0;
-    const evidence = asked >= MIN_FOR_VERDICT;
+    const needVerdict  = barFor(MIN_FOR_VERDICT, available);
+    const needPractised = barFor(MIN_PRACTISED, available);
+    const needCompleted = barFor(MIN_COMPLETED, available);
+    const evidence = asked >= needVerdict;
     const band = bandFor(asked, accuracy);
     const lessonDone = read || hasLesson === false;
 
     let status;
     if (!asked && !read) status = "not-started";
     else if (evidence && accuracy < ACC_WEAK) status = "weak";
-    else if (lessonDone && asked >= MIN_COMPLETED && accuracy >= ACC_COMPLETED) status = "completed";
-    else if (asked >= MIN_PRACTISED && accuracy >= ACC_PRACTISED) status = "practised";
+    else if (lessonDone && asked >= needCompleted && accuracy >= ACC_COMPLETED) status = "completed";
+    else if (asked >= needPractised && accuracy >= ACC_PRACTISED) status = "practised";
     else status = "learning";
 
     return {
       status, asked, correct, accuracy, evidence, band,
       read: !!read, hasLesson: hasLesson !== false,
+      needCompleted, available: available || 0,
       label: STATUSES[status].label,
       short: STATUSES[status].short,
       note: STATUSES[status].note,
@@ -140,8 +167,10 @@
     if (st.status === "weak") return "accuracy is below half — read the concept again";
     if (!st.read && st.hasLesson) return "read the concept";
     if (!st.asked) return "no questions answered yet";
-    if (st.asked < MIN_COMPLETED) return (MIN_COMPLETED - st.asked) + " more question" +
-      (MIN_COMPLETED - st.asked === 1 ? "" : "s");
+    if (st.asked < st.needCompleted) {
+      const n = st.needCompleted - st.asked;
+      return n + " more question" + (n === 1 ? "" : "s");
+    }
     if (st.accuracy < ACC_COMPLETED) return "accuracy " + Math.round(st.accuracy * 100) +
       "%, needs " + Math.round(ACC_COMPLETED * 100) + "%";
     return "";
@@ -179,7 +208,8 @@
   }
 
   const API = {
-    STATUSES, BANDS, MIN_FOR_VERDICT, MIN_PRACTISED, MIN_COMPLETED,
+    STATUSES, BANDS, MIN_FOR_VERDICT, MIN_PRACTISED, MIN_COMPLETED, MIN_EVIDENCE_FLOOR,
+    barFor,
     ACC_PRACTISED, ACC_COMPLETED, ACC_WEAK, TIER_WEIGHT,
     statusOf, bandFor, needs, priority,
   };
