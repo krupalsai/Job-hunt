@@ -63,6 +63,12 @@ export default async function handler(req: any, res: any) {
 
   let inserted = 0, updated = 0, skipped = 0;
 
+  /* Batched, not row-by-row. This loop used to do a SELECT and then an
+     INSERT/UPDATE per item — fine for the single source that returned 18 rows,
+     and 150+ sequential round trips once a discovery feed was added, inside a
+     function capped at 60 seconds. One read of the existing keys, one bulk
+     insert and one bulk upsert replaces it. */
+  const rows: any[] = [];
   for (const item of found) {
     if (isManual(item.sourceKey)) { skipped++; continue; }
 
@@ -84,16 +90,30 @@ export default async function handler(req: any, res: any) {
       last_checked_at:  new Date().toISOString(),
     };
 
-    const { data: existing } = await db
-      .from("jobs").select("id").eq("source_key", item.sourceKey).maybeSingle();
+    rows.push(row);
+  }
 
-    if (existing) {
-      const { error } = await db.from("jobs").update(row).eq("id", existing.id);
-      if (error) console.error("[ingest] update failed:", error.message); else updated++;
-    } else {
-      const { error } = await db.from("jobs").insert({ ...row, status: "NEW" });
-      if (error) console.error("[ingest] insert failed:", error.message); else inserted++;
-    }
+  const { data: existingRows } = await db
+    .from("jobs").select("source_key")
+    .in("source_key", rows.map((r) => r.source_key));
+  const known = new Set((existingRows ?? []).map((r: any) => r.source_key));
+
+  const fresh = rows.filter((r) => !known.has(r.source_key));
+  const seen  = rows.filter((r) =>  known.has(r.source_key));
+
+  if (fresh.length) {
+    // status only on INSERT — an upsert carrying it would reset a row the user
+    // has already marked applied back to NEW every single night.
+    const { error } = await db.from("jobs")
+      .insert(fresh.map((r) => ({ ...r, status: "NEW" })));
+    if (error) console.error("[ingest] insert failed:", error.message);
+    else inserted += fresh.length;
+  }
+  if (seen.length) {
+    const { error } = await db.from("jobs")
+      .upsert(seen, { onConflict: "source_key" });
+    if (error) console.error("[ingest] update failed:", error.message);
+    else updated += seen.length;
   }
 
   // Anything with a real deadline inside 7 days is the only thing that earns

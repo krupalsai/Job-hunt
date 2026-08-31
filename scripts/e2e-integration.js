@@ -203,6 +203,36 @@ function check(name, cond, detail){
     appOrder[appOrder.length - 1] === '/app/progress.js' &&
     appOrder.length === 11, appOrder.join(' '));
 
+  /* The tracker ran a green cron for eight days and discovered nothing, because
+     collectAll() held exactly one source and that source is a static vacancy
+     table. "Working" and "useful" were different things and only one was
+     being checked. */
+  check('discovery is not left to a single source again',
+    (sources.match(/run: scrape\w+/g) || []).length >= 2,
+    (sources.match(/run: scrape\w+/g) || []).join(', '));
+
+  /* The reason for adding a second-hand source at all: every official board
+     this app can reach publishes vacancies with NO closing date, and a
+     deadline tracker that knows no deadlines has failed at its only job. */
+  check('the discovery source carries real closing dates',
+    /deadline,\n\s*deadlineText/.test(sources) || /deadline,/.test(sources));
+  check('and a reported date says whose it is, and links the original',
+    /reported by FreeJobAlert, confirm on the official notification/.test(sources));
+
+  /* The rule that survived the change: a date may be REPORTED second-hand,
+     never INVENTED. Nothing may synthesise a deadline from a post date, a
+     guess or "expected". */
+  check('no source fabricates a deadline it was not given',
+    !/expected|approx|guess/i.test(sources.split('export async function')[1] || ''),
+    'a scraper is inferring a date');
+
+  /* Capping is not cosmetic: api/ingest writes inside a 60s function, and the
+     feed lists ~1400 openings. */
+  check('the discovery feed is capped and spread across closing dates',
+    /MAX_DISCOVERED/.test(sources) && /PER_DAY/.test(sources) && /MIN_LEAD_MS/.test(sources));
+  check('and ingestion writes in batches rather than a round trip per row',
+    /\.upsert\(/.test(ingest) && !/for \(const item of found\)[\s\S]{0,400}maybeSingle\(\)/.test(ingest));
+
   const progress = fs.readFileSync(path.join(ROOT, 'api/progress.ts'), 'utf8');
   check('the mirror still accepts every action the app sends',
     ['attempts', 'lesson', 'applied', 'profile'].every(a => progress.includes(`case "${a}"`)));
