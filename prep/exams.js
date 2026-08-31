@@ -115,6 +115,32 @@ const EXAMS = [
 
        Remove this block and the run falls back to section order, which is the
        right default for a candidate who is not starting from zero. */
+    /* ── The marks bar, quoted from the notification ────────────────────────
+       Clause 3.2 of Advt. HAL/CHRC-TM/RECT-02/2026, verbatim:
+
+         "candidates should have secured the following minimum percentage of
+          Marks, in the aggregate, of all the Semesters / Years or
+          corresponding CGPA Ratings / Gradations"
+
+              Management Trainee (all disciplines)
+              UR / OBC-NCL / EWS ....... 70%
+              SC / ST / PwBD ........... 60%
+
+       And the note that decides HOW it is computed, which is why this app
+       stores a percentage rather than converting one itself:
+
+         "The total maximum marks and total marks obtained for all the
+          Semesters / Years will be summed up to arrive at the aggregate
+          percentage of Marks and no rounding off will be done."
+
+       No rounding. A candidate at 59.9% does not clear a 60% bar, and an app
+       that rounded to 60 would be telling them otherwise. */
+    minMarks: {
+      basis: "Advt. HAL/CHRC-TM/RECT-02/2026, clause 3.2 — quoted, not inferred",
+      noRounding: true,
+      byCategory: { "UR": 70, "OBC-NCL": 70, "EWS": 70, "SC": 60, "ST": 60, "PwBD": 60 },
+    },
+
     focus: {
       basis: "For a candidate starting from scratch, aiming first at the 50% (80/160) needed to stay in the selection. A judgement, not from the notification.",
       order: ["English", "Reasoning", "Operating Systems", "DBMS",
@@ -250,6 +276,34 @@ const EXAMS = [
 /** The exam a job belongs to, or null. Null is an honest answer. */
 function examForJob(job) {
   return EXAMS.find(e => { try { return e.match(job); } catch (x) { return false; } }) || null;
+}
+
+/**
+ * Does this candidate clear the exam's marks bar?
+ *
+ * Returns null — NOT false — whenever the answer is unknown: no threshold
+ * published for the exam, no category chosen, or no marks entered. The three
+ * are different from each other and all three are different from "no", and an
+ * app that collapses them into a red cross tells people they are ineligible
+ * for posts they can apply to.
+ *
+ * `no rounding` is honoured because the notification says so in as many words.
+ */
+function marksVerdict(exam, pct, category) {
+  const rule = exam && exam.minMarks;
+  if (!rule) return { known: false, why: "no marks requirement published for this exam" };
+  if (pct == null) return { known: false, why: "add your aggregate marks in the menu" };
+  if (!category) return { known: false, why: "pick your category in the menu — the bar differs by 10%" };
+  const need = rule.byCategory[category];
+  if (need == null) return { known: false, why: "no threshold listed for " + category };
+  return {
+    known: true,
+    need: need,
+    pct: pct,
+    clears: pct >= need,          // no rounding — see minMarks.noRounding
+    margin: Math.round((pct - need) * 100) / 100,
+    basis: rule.basis,
+  };
 }
 
 /** Every subject an exam examines, de-duplicated and in section order. */

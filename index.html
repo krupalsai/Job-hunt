@@ -174,6 +174,14 @@
   .other-row.is-urgent .cd-num   { color: var(--bad); }
   .other-row.is-soon   .other-cd { border-color: var(--warn); }
   .other-row.is-soon   .cd-num   { color: var(--warn); }
+  .marks-filter { display: flex; align-items: center; gap: 9px; padding: 11px 13px;
+                  margin: 12px 0; border-radius: 11px; background: var(--surface-2);
+                  border: 1px solid var(--panel-border); font-size: 12.5px; cursor: pointer; }
+  .marks-filter input { width: 18px; height: 18px; accent-color: var(--accent); }
+  .marks-filter.hidden { display: none; }
+  .marks-note { font-size: 11px; color: var(--dim); margin-top: 4px; line-height: 1.5; }
+  .marks-basis { display: block; font-size: 10.5px; color: var(--dim); margin-top: 3px; line-height: 1.45; }
+  .muted-inline { color: var(--muted); }
   .other-vac  { color: var(--accent-soft); font-weight: 700; }
   .other-elig { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
   .other-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
@@ -243,6 +251,12 @@
     <button class="view-all" id="refreshBtn" onclick="load()">↻ Refresh</button>
   </div>
 </div>
+
+<!-- Filtering by marks is opt-in and narrow on purpose: see marksFilterHides(). -->
+<label class="marks-filter hidden" id="marksFilter">
+  <input type="checkbox" id="marksFilterOn">
+  <span id="marksFilterLabel">Hide openings my marks fall short of</span>
+</label>
 
 <details class="sec other-fold hidden" id="otherFold">
   <summary id="otherCount">Government openings</summary>
@@ -414,7 +428,9 @@ function render() {
      and the wording matched is the explicit one, not a guess. */
   const live = allJobs.filter(j => !isClosed(j));
   const closed = allJobs.filter(isClosed);
-  const mine = exam ? live.filter(j => { const e = examForJob(j); return e && e.key === exam.key; }) : [];
+  const mine = exam
+    ? live.filter(j => { const e = examForJob(j); return e && e.key === exam.key; })
+    : [];
   list.innerHTML = mine.length
     ? mine.map(cardHtml).join('')
     : '<div class="empty">No opening is being tracked for ' +
@@ -429,7 +445,23 @@ function render() {
      app, so no amount of switching would ever reveal them. A tracker that
      silently drops what it tracked is a worse failure than a mixed list, so
      the rest are here, folded away, each saying which exam it belongs to. */
-  const others = live.filter(j => mine.indexOf(j) === -1);
+  const others = live.filter(j => mine.indexOf(j) === -1 && !marksFilterHides(j));
+
+  /* The toggle only appears once it could actually do something — with no
+     marks entered it would be a checkbox that changes nothing. */
+  const nav = window.JobhuntNav;
+  const canFilter = !!(nav && nav.marksPct != null && nav.category);
+  const filterBox = document.getElementById('marksFilter');
+  if (filterBox) {
+    filterBox.classList.toggle('hidden', !canFilter);
+    const cb = document.getElementById('marksFilterOn');
+    if (cb) cb.checked = marksFilterOn();
+    const lbl = document.getElementById('marksFilterLabel');
+    if (lbl) lbl.innerHTML = 'Hide openings my marks fall short of' +
+      '<span class="marks-note">Only hides ones with a published threshold. Most of this ' +
+      'feed states a qualification and no minimum percentage, so it will hide little — ' +
+      'that is deliberate.</span>';
+  }
   const govt    = others.filter(j => sectorOf(j) === 'government');
   const private_ = others.filter(j => sectorOf(j) === 'private');
 
@@ -520,6 +552,36 @@ function sectorOf(j) {
   return 'government';
 }
 
+const MARKS_FILTER_KEY = 'jobhunt_marks_filter';
+
+/**
+ * Should this opening be hidden because the candidate's marks fall short?
+ *
+ * Only ever true when the app KNOWS the answer — that is, the opening maps to
+ * an exam that publishes a threshold, and the candidate has entered both marks
+ * and category. Every scraped opening in this list arrives with a
+ * qualification line and NO minimum percentage, because the feed does not
+ * carry one, so this hides almost nothing and that is correct.
+ *
+ * The alternative — treating "no stated requirement" as a failure — would hide
+ * most of the list on a guess, and the openings it hid would be the ones the
+ * candidate could actually apply to. A filter that quietly removes real
+ * chances is worse than no filter.
+ */
+function marksFilterHides(j) {
+  if (!marksFilterOn()) return false;
+  if (typeof marksVerdict !== 'function' || typeof examForJob !== 'function') return false;
+  const e = examForJob(j);
+  if (!e || !e.minMarks) return false;                    // nothing published
+  const nav = window.JobhuntNav;
+  const v = marksVerdict(e, nav ? nav.marksPct : null, nav ? nav.category : null);
+  return v.known && !v.clears;
+}
+
+function marksFilterOn() {
+  try { return localStorage.getItem(MARKS_FILTER_KEY) === '1'; } catch (e) { return false; }
+}
+
 /** Days until a real closing date. Null when there is no confirmed date —
     never a guess, which is the rule the whole tracker is built on. */
 function daysLeft(j) {
@@ -604,6 +666,39 @@ function otherHtml(j) {
   </div>`;
 }
 
+/**
+ * The marks bar for this exam, read against what the candidate entered.
+ *
+ * Shows one of three things and never confuses them: a verdict when the
+ * threshold is published AND the candidate has filled in marks and category;
+ * a prompt when something is missing; nothing at all when the exam publishes
+ * no requirement. A red cross for "we don't know" would be the worst outcome
+ * here — it would talk someone out of a post they can apply for.
+ */
+function marksRowHtml(exam) {
+  if (!exam || typeof marksVerdict !== 'function') return '';
+  const nav = window.JobhuntNav;
+  const v = marksVerdict(exam, nav ? nav.marksPct : null, nav ? nav.category : null);
+  if (!v.known) {
+    if (!exam.minMarks) return '';       // nothing published — say nothing
+    return `<div class="jrow">
+      <span class="jlab">Marks bar</span>
+      <span class="jval muted-inline">${escapeHtml(v.why)}</span>
+    </div>`;
+  }
+  const tone = v.clears ? 'ok-tag' : 'no-tag';
+  const verdict = v.clears
+    ? `you clear it by ${v.margin}%`
+    : `${Math.abs(v.margin)}% short`;
+  return `<div class="jrow">
+    <span class="jlab">Marks bar</span>
+    <span class="jval">${v.need}% for ${escapeHtml(nav.category)} · you have ${v.pct}%
+      <span class="${tone}">${escapeHtml(verdict)}</span>
+      <span class="marks-basis">${escapeHtml(v.basis)}${
+        exam.minMarks.noRounding ? ' · no rounding' : ''}</span></span>
+  </div>`;
+}
+
 function cardHtml(j) {
   const exam = currentExam();
   const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
@@ -642,6 +737,7 @@ function cardHtml(j) {
         <span class="jlab">Paper</span>
         <span class="jval">${escapeHtml(exam.pattern)}</span>
       </div>` : ''}
+      ${marksRowHtml(exam)}
       ${j.eligibility ? `
       <div class="jrow">
         <span class="jlab">Eligibility</span>
@@ -681,6 +777,13 @@ function escapeHtml(s) {
 document.getElementById('qualPrompt').addEventListener('click', () => {
   if (window.JobhuntNav) window.JobhuntNav.openDrawer();
 });
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'marksFilterOn') {
+    try { localStorage.setItem('jobhunt_marks_filter', e.target.checked ? '1' : '0'); } catch (err) {}
+    render();
+  }
+});
+document.addEventListener('jobhunt:profile', () => { loadLocal(); render(); });
 document.addEventListener('jobhunt:qualification', (e) => {
   qualification = (e.detail && e.detail.qualification) || null;
   saveLocal();

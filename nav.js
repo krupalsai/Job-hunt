@@ -35,6 +35,12 @@
   const IS_LEARN  = PAGE === "learn";
   const EXAM_KEY  = "jobhunt_current_exam";
   const QUAL_KEY  = "jobhunt_qualification";
+  /* Aggregate percentage, and the reservation category the thresholds are read
+     against. Both stay on the phone: they are not prep progress, so a reset
+     must not wipe them, and there is no reason for a marks sheet to leave the
+     device to make this app work. */
+  const MARKS_KEY = "jobhunt_marks_pct";
+  const CAT_KEY   = "jobhunt_category";
   const DEVICE_KEY = "jobhunt_device_id";
   const DEFAULT_EXAM = "hal-cs";
 
@@ -324,6 +330,16 @@ nav#nav-bottom .nav-item.is-on::before{
 .nav-sep{ height:1px; background:var(--nav-line); margin:10px 16px 0; }
 .nav-field{ padding:6px 16px 4px; }
 .nav-field label{ display:block; font-size:11.5px; color:var(--nav-muted); margin-bottom:6px; }
+.nav-field input[type="number"]{
+  width:100%; background:var(--nav-panel); color:var(--nav-text); font-family:inherit;
+  font-size:14px; padding:9px 10px; border:1px solid var(--nav-line); border-radius:10px;
+}
+.nav-hint{ font-size:11px; color:var(--nav-muted); line-height:1.55; margin-top:6px; }
+.nav-hint strong{ color:var(--nav-text); }
+.nav-conv{ margin-top:8px; }
+.nav-conv summary{ font-size:11.5px; color:var(--nav-accent-soft); cursor:pointer;
+                   font-weight:700; list-style:none; }
+.nav-conv summary::-webkit-details-marker{ display:none; }
 .nav-field select{
   width:100%; background:var(--nav-panel); color:var(--nav-text); font-family:inherit;
   border:1px solid var(--nav-line); border-radius:9px; padding:9px 10px; font-size:13px;
@@ -429,8 +445,19 @@ nav#nav-bottom .nav-item.is-on::before{
   const QUALS = ["B.Tech CSE", "Graduate", "Intermediate"];
   const QUAL_LABEL = { "B.Tech CSE": "B.Tech CSE", "Graduate": "Graduate (any degree)", "Intermediate": "Intermediate / 12th" };
 
+  /* The categories notifications actually write their thresholds against. HAL
+     sets 70% for the first three and 60% for the last three, so this is not
+     cosmetic — it moves the bar by ten points. */
+  const CATS = ["UR", "OBC-NCL", "EWS", "SC", "ST", "PwBD"];
+  const CAT_LABEL = {
+    "UR": "UR / General", "OBC-NCL": "OBC (NCL)", "EWS": "EWS",
+    "SC": "SC", "ST": "ST", "PwBD": "PwBD",
+  };
+
   function drawerHtml() {
     const qual = ls.get(QUAL_KEY) || "";
+    const cat = ls.get(CAT_KEY) || "";
+    const marks = ls.get(MARKS_KEY) || "";
     const ex = currentExam();
     return '' +
       '<div class="nav-acct">' +
@@ -461,6 +488,38 @@ nav#nav-bottom .nav-item.is-on::before{
           QUALS.map(q => '<option value="' + esc(q) + '"' + (q === qual ? " selected" : "") + ">" +
             esc(QUAL_LABEL[q]) + "</option>").join("") +
         "</select>" +
+      "</div>" +
+
+      '<div class="nav-field">' +
+        '<label for="catSel">My category</label>' +
+        '<select id="catSel">' +
+          '<option value="">— pick your category —</option>' +
+          CATS.map(c => '<option value="' + esc(c) + '"' + (c === cat ? " selected" : "") + ">" +
+            esc(CAT_LABEL[c]) + "</option>").join("") +
+        "</select>" +
+      "</div>" +
+
+      /* PERCENTAGE, not CGPA, and that is the whole design.
+         Notifications state their bar as a percentage; universities convert
+         from CGPA by formulas that disagree — JNTUH has both (CGPA − 0.75)×10
+         and (CGPA − 0.5)×10 in circulation, which is 2.5 points, enough to
+         move a candidate across a 60% line. The app must not pick one and
+         then quietly tell someone they qualify. So the stored number is the
+         one the university will certify, and the converter below only SHOWS
+         what each formula gives. */
+      '<div class="nav-field">' +
+        '<label for="marksInp">My aggregate marks (%)</label>' +
+        '<input id="marksInp" type="number" inputmode="decimal" min="0" max="100" step="0.01" ' +
+          'placeholder="as your college certifies it" value="' + esc(marks) + '">' +
+        '<div class="nav-hint" id="marksHint"></div>' +
+        '<details class="nav-conv"><summary>Work it out from CGPA</summary>' +
+          '<div class="nav-field" style="padding:8px 0 0;">' +
+            '<input id="cgpaInp" type="number" inputmode="decimal" min="0" max="10" step="0.01" ' +
+              'placeholder="e.g. 6.54">' +
+            '<div class="nav-hint" id="cgpaOut">Both formulas are shown because universities ' +
+              'disagree. Use the one on your conversion certificate — not the friendlier one.</div>' +
+          "</div>" +
+        "</details>" +
       "</div>" +
       '<button type="button" class="nav-row nav-danger" id="nav-reset">' + ICON.trash +
         '<span class="nav-row-main"><span>Reset prep progress</span>' +
@@ -696,6 +755,49 @@ nav#nav-bottom .nav-item.is-on::before{
     });
   }
 
+  const catSel = drawer.querySelector("#catSel");
+  if (catSel) {
+    catSel.addEventListener("change", () => {
+      const v = catSel.value || "";
+      if (v) ls.set(CAT_KEY, v); else ls.del(CAT_KEY);
+      document.dispatchEvent(new CustomEvent("jobhunt:profile"));
+    });
+  }
+
+  const marksInp = drawer.querySelector("#marksInp");
+  if (marksInp) {
+    marksInp.addEventListener("change", () => {
+      const n = parseFloat(marksInp.value);
+      if (isFinite(n) && n > 0 && n <= 100) ls.set(MARKS_KEY, String(n));
+      else { ls.del(MARKS_KEY); marksInp.value = ""; }
+      document.dispatchEvent(new CustomEvent("jobhunt:profile"));
+    });
+  }
+
+  /* The converter SHOWS, it does not decide. Both formulas, both results, and
+     which side of a 60% and a 70% bar each lands on — then the candidate types
+     the one their certificate states. Picking for them is how an app tells
+     someone they qualify for a post they will be rejected from at document
+     verification, months after they stopped applying elsewhere. */
+  const cgpaInp = drawer.querySelector("#cgpaInp");
+  const cgpaOut = drawer.querySelector("#cgpaOut");
+  if (cgpaInp && cgpaOut) {
+    cgpaInp.addEventListener("input", () => {
+      const c = parseFloat(cgpaInp.value);
+      if (!isFinite(c) || c <= 0 || c > 10) {
+        cgpaOut.textContent = "Both formulas are shown because universities disagree. " +
+          "Use the one on your conversion certificate — not the friendlier one.";
+        return;
+      }
+      const a = ((c - 0.75) * 10), b = ((c - 0.5) * 10);
+      const band = p => p >= 70 ? "clears 70% and 60%" : p >= 60 ? "clears 60%, under 70%" : "under 60%";
+      cgpaOut.innerHTML =
+        '<strong>(CGPA − 0.75) × 10 = ' + a.toFixed(2) + '%</strong> — ' + esc(band(a)) + "<br>" +
+        '<strong>(CGPA − 0.5) × 10 = ' + b.toFixed(2) + '%</strong> — ' + esc(band(b)) + "<br>" +
+        "Type whichever your college certifies into the box above. The app will not choose.";
+    });
+  }
+
   const resetBtn = drawer.querySelector("#nav-reset");
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
@@ -752,6 +854,11 @@ nav#nav-bottom .nav-item.is-on::before{
     get exam() { return currentExam(); },
     /** False until an exam has actually been picked. */
     get chosen() { return validKey(ls.get(EXAM_KEY)); },
+    /** Aggregate percentage as the candidate's college certifies it, or null.
+        Never derived from a CGPA by this app — see the converter note. */
+    get marksPct() { const n = parseFloat(ls.get(MARKS_KEY)); return isFinite(n) ? n : null; },
+    /** Reservation category, which is what decides WHICH threshold applies. */
+    get category() { return ls.get(CAT_KEY) || null; },
     examWhen: examWhen,
     learnHref: learnHref,
     openDrawer: () => setDrawer(true),

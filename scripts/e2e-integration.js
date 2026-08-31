@@ -233,6 +233,32 @@ function check(name, cond, detail){
   check('and ingestion writes in batches rather than a round trip per row',
     /\.upsert\(/.test(ingest) && !/for \(const item of found\)[\s\S]{0,400}maybeSingle\(\)/.test(ingest));
 
+  /* Marks filtering has one way to go badly wrong: treating "no published
+     threshold" as a failure. That would hide most of the feed on a guess, and
+     the openings it hid would be exactly the ones the candidate could apply
+     for. Three separate guards, because this costs applications. */
+  const exams = fs.readFileSync(path.join(ROOT, 'prep/exams.js'), 'utf8');
+  const index = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  check('the marks bar is quoted from the notification, not inferred',
+    /clause 3\.2/.test(exams) && /quoted, not inferred/.test(exams));
+  check('and both category thresholds are carried, since they differ by 10%',
+    /"SC": 60/.test(exams) && /"UR": 70/.test(exams));
+  check('an unknown threshold is reported as unknown, never as a failure',
+    /known: false/.test(exams) && /return \{ known: false/.test(exams));
+  check('the filter hides only openings with a PUBLISHED threshold',
+    /if \(!e \|\| !e\.minMarks\) return false/.test(index),
+    'marksFilterHides may be hiding unknowns');
+  check('and it never rounds a candidate up over the bar',
+    /noRounding: true/.test(exams) && !/Math\.round\(pct\)/.test(exams));
+  /* The app must not convert a CGPA itself: JNTUH has two formulas in
+     circulation that differ by 2.5 points, enough to move someone across a
+     60% line. It may SHOW both; it may not choose. */
+  const nav = fs.readFileSync(path.join(ROOT, 'nav.js'), 'utf8');
+  check('the CGPA converter shows both formulas and picks neither',
+    /0\.75/.test(nav) && /0\.5/.test(nav) && /The app will not choose/.test(nav));
+  check('and marks stay on the device, not mirrored to the server',
+    !/marks_pct/.test(fs.readFileSync(path.join(ROOT, 'api/progress.ts'), 'utf8')));
+
   const progress = fs.readFileSync(path.join(ROOT, 'api/progress.ts'), 'utf8');
   check('the mirror still accepts every action the app sends',
     ['attempts', 'lesson', 'applied', 'profile'].every(a => progress.includes(`case "${a}"`)));
