@@ -794,9 +794,19 @@ async function reachable(page, selector, where, minH){
     (await page.locator('#examJobs .card').count()) === 1 &&
     /Hindustan Aeronautics/i.test(await page.locator('#examJobs').innerText()),
     await page.locator('#examJobs').innerText());
+  /* Split into Government and Private, so the guarantee is about the TOTAL:
+     an opening may move between the two lists, but none may vanish. Asserting
+     one label's count would pass while the other list silently ate a row. */
+  const foldCounts = await page.evaluate(() => {
+    const n = (id) => {
+      const el = document.getElementById(id);
+      const m = /\((\d+)\)/.exec(el ? el.textContent : '');
+      return m ? +m[1] : 0;
+    };
+    return { govt: n('otherCount'), priv: n('privateCount') };
+  });
   check('and every other tracked opening is still reachable, not dropped',
-    /Other openings \(3\)/.test(await page.locator('#otherCount').textContent()),
-    await page.locator('#otherCount').textContent());
+    foldCounts.govt + foldCounts.priv === 3, JSON.stringify(foldCounts));
   await page.locator('#otherFold summary').click();
   const otherText = await page.locator('#otherJobs').innerText();
   check('including one that belongs to another exam, which says which',
@@ -822,7 +832,9 @@ async function reachable(page, selector, where, minH){
   check('while a merely estimated date is not treated as proof it shut',
     /Constable/i.test(otherText) && !/Constable/i.test(closedText),
     otherText.replace(/\s+/g, ' ').slice(0, 200));
-  await reachable(page, '.other-fold summary', 'other-openings toggle', 40);
+  // Visible folds only: an empty section is hidden, and a hidden element has no
+  // tappable size to assert on.
+  await reachable(page, '.other-fold:not(.hidden) summary', 'other-openings toggle', 40);
   await page.unroute('**/rest/v1/jobs**');
 
   console.log('\n── and it says so when the openings cannot be reached ────');
