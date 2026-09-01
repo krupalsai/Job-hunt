@@ -187,6 +187,8 @@
   const MENU_DESTS = [
     { id: "jobs", label: "Jobs", icon: ICON.jobs, href: "/",
       sub: "Openings tracked for this exam" },
+    { id: "crash", label: "4-day crash course", icon: ICON.book, href: "/crash.html",
+      sub: "Taught, practised and tested — the run to the paper" },
     { id: "lessons", label: "All lessons", icon: ICON.book,
       sub: "Every subject, and every topic inside it" },
     { id: "plan", label: "The run to the exam", icon: ICON.cal,

@@ -16,7 +16,7 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v9';
+const CACHE = 'jobhunt-v10';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -25,6 +25,14 @@ const CACHE = 'jobhunt-v9';
 // them the prep page would open offline with no bottom bar and no way out of it.
 const PREP_ASSETS = [
   '/learn.html',
+  /* The four-day crash course. A separate page with its own runtime and its
+     own content file — and the one part of this app most likely to be opened
+     with no signal, since it is what gets used in the days immediately before
+     the paper. All three of its files are listed or the page opens as a shell
+     with no content and no logic. */
+  '/crash.html',
+  '/prep/crash-content.js',
+  '/app/crash.js',
   '/nav.js',
   /* The prep page's runtime, split out of what was one inline <script>.
      Inline code was cached for free as part of learn.html; these are
@@ -94,6 +102,7 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
   const isPrep = url.pathname === '/learn.html'
+              || url.pathname === '/crash.html'
               || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
               || url.pathname.startsWith('/app/')

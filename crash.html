@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Crash course · Job Tracker</title>
+<meta name="description" content="Four-day HAL Management Trainee (CSE) crash course: lessons, notes, practice, timed tests, mistake analysis and retests, all offline." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1120'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%2322c55e' font-family='sans-serif' font-weight='bold'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="preload" href="/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/orbitron-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+<style>
+  /* Same tokens as index.html and learn.html so the three pages read as one
+     app. Light is the base; dark redefines the same names under the system
+     preference rather than introducing a second palette. */
+  :root{
+    color-scheme: light dark;
+    --bg:#ffffff; --panel:#f8faf9; --panel-border:#e2e8ec;
+    --surface-2:#eef3f0; --surface-2-border:#dbe6e0;
+    --tint:#eef8f1; --tint-2:#f3f7f5;
+    --accent:#16a34a; --accent-soft:#15803d;
+    --text:#0f172a; --muted:#5b6b7a; --dim:#8794a1;
+    --good:#16a34a; --bad:#dc2626; --warn:#b45309;
+    --on-accent:#ffffff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b1120; --panel:#131c31; --panel-border:#1e293b;
+      --surface-2:#0f172a; --surface-2-border:#243049;
+      --tint:#14351f; --tint-2:#111c2c;
+      --accent:#22c55e; --accent-soft:#4ade80;
+      --text:#e6edf5; --muted:#93a4b8; --dim:#6b7f95;
+      --good:#22c55e; --bad:#f87171; --warn:#fbbf24;
+      --on-accent:#04140a;
+    }
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--font-ui, system-ui, sans-serif);
+    -webkit-text-size-adjust:100%;
+    padding:0 14px calc(84px + env(safe-area-inset-bottom));
+    max-width:720px; margin-inline:auto;
+  }
+  /* Reading surfaces keep the text face. The display face is for numbers and
+     titles only — see fonts/fonts.css for why. */
+  p, td, th, li, .qtext, .explain p, .lesson p, .recall-q, .mk-q, .mk-opt{
+    font-family:var(--font-read, system-ui, sans-serif);
+  }
+
+  /* ── Header ─────────────────────────────────────────────────────────── */
+  .chead{ padding:22px 0 10px; }
+  .chead-sm{ padding:8px 0 10px; }
+  .chead-day{ font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:700; }
+  .chead-title{ font-family:var(--font-display, inherit); font-size:23px; line-height:1.2; margin:6px 0 8px; font-weight:800; }
+  .chead-count{ color:var(--muted); font-size:14.5px; line-height:1.5; }
+  .chead-count b{ color:var(--text); }
+  .dim{ color:var(--dim); font-weight:500; }
+
+  /* ── Day chips ──────────────────────────────────────────────────────── */
+  .daychips{ display:flex; gap:8px; margin:4px 0 16px; }
+  .daychip{
+    flex:1; border:1px solid var(--panel-border); background:var(--panel);
+    color:var(--muted); border-radius:12px; padding:9px 4px; cursor:pointer;
+    display:flex; flex-direction:column; gap:2px; font:inherit;
+  }
+  .daychip b{ font-family:var(--font-display, inherit); font-size:13px; color:var(--text); }
+  .daychip span{ font-size:12px; }
+  .daychip.is-on{ border-color:var(--accent); background:var(--tint); }
+  .daychip.is-on b{ color:var(--accent-soft); }
+  .daychip.is-today::after{ content:"today"; font-size:10px; color:var(--accent); letter-spacing:.05em; }
+
+  /* ── Cards ──────────────────────────────────────────────────────────── */
+  .card{
+    background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:14px; padding:15px; margin:0 0 12px;
+  }
+  .card-kicker{ font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:5px; }
+  .card-title{ font-family:var(--font-display, inherit); font-size:16px; margin:0 0 7px; font-weight:800; }
+  .card-sub{ color:var(--muted); font-size:14px; line-height:1.55; }
+  .card-sub b{ color:var(--text); }
+  .card-now{ border-color:var(--accent); background:var(--tint); }
+  .card-done{ border-color:var(--good); }
+  .sec-h{ font-family:var(--font-display, inherit); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:20px 0 9px; font-weight:700; }
+  .bignum{ font-family:var(--font-display, inherit); font-size:44px; font-weight:900; line-height:1; margin:2px 0 8px; }
+  .bignum.good{ color:var(--good); } .bignum.bad{ color:var(--bad); }
+  .row-h{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:7px; font-size:14.5px; }
+  .row-h span{ color:var(--muted); font-family:var(--font-display, inherit); font-size:13px; }
+
+  /* ── Progress bar ───────────────────────────────────────────────────── */
+  .cbar{ height:7px; background:var(--surface-2); border:1px solid var(--surface-2-border); border-radius:99px; overflow:hidden; margin:8px 0; }
+  .cbar i{ display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .25s ease; }
+
+  /* ── Buttons ────────────────────────────────────────────────────────── */
+  .btn{
+    display:block; width:100%; margin-top:11px; padding:13px 14px;
+    background:var(--accent); color:var(--on-accent); border:1px solid var(--accent);
+    border-radius:11px; font:inherit; font-weight:700; font-size:15px; cursor:pointer;
+    font-family:var(--font-ui, inherit); letter-spacing:.01em;
+  }
+  .btn-big{ padding:16px; font-size:16.5px; }
+  .btn-ghost{ background:transparent; color:var(--text); border-color:var(--panel-border); }
+  .btn-danger{ color:var(--bad); border-color:var(--bad); }
+  .btn:disabled{ opacity:.5; cursor:default; }
+  .actions{ margin:14px 0 4px; }
+  .actions-row{ display:flex; gap:9px; }
+  .actions-row .btn{ margin-top:9px; }
+  .back{
+    background:none; border:0; color:var(--muted); font:inherit; font-size:14px;
+    padding:12px 0 6px; cursor:pointer; font-family:var(--font-ui, inherit);
+  }
+
+  /* ── Chapter rows ───────────────────────────────────────────────────── */
+  .chlist{ display:flex; flex-direction:column; gap:9px; }
+  .chrow{
+    display:flex; gap:12px; align-items:flex-start; justify-content:space-between;
+    background:var(--panel); border:1px solid var(--panel-border);
+    border-left:3px solid var(--panel-border);
+    border-radius:12px; padding:12px 13px; cursor:pointer; margin-bottom:9px;
+  }
+  .chrow.st-done{ border-left-color:var(--good); }
+  .chrow.st-tested{ border-left-color:var(--warn); }
+  .chrow.st-practising, .chrow.st-learning{ border-left-color:var(--accent); }
+  .chrow-name{ font-weight:700; font-size:15px; line-height:1.3; }
+  .chrow-meta{ display:flex; gap:7px; align-items:center; margin-top:5px; font-size:12.5px; }
+  .chrow-side{ text-align:right; flex-shrink:0; display:flex; flex-direction:column; gap:3px; align-items:flex-end; }
+  .chrow-st{ font-size:12px; color:var(--muted); }
+  .chrow-st.bad{ color:var(--bad); }
+  .chrow-best{ font-family:var(--font-display, inherit); font-size:14px; font-weight:800; color:var(--accent-soft); }
+  .pill{ font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; padding:2px 7px; border-radius:99px; border:1px solid var(--surface-2-border); background:var(--surface-2); color:var(--muted); font-weight:700; }
+  .pill-critical{ color:var(--bad); border-color:var(--bad); }
+  .pill-high{ color:var(--warn); border-color:var(--warn); }
+  .chrow-gates{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .gate{ font-size:11px; padding:2px 7px; border-radius:99px; background:var(--surface-2); border:1px solid var(--surface-2-border); color:var(--dim); font-weight:600; }
+  .gate.on{ background:var(--tint); border-color:var(--accent); color:var(--accent-soft); }
+
+  /* ── Sub-tabs ───────────────────────────────────────────────────────── */
+  .subtabs{ display:flex; gap:5px; overflow-x:auto; margin:6px 0 15px; padding-bottom:3px; }
+  .subtab{
+    flex:0 0 auto; border:1px solid var(--panel-border); background:var(--panel);
+    color:var(--muted); border-radius:99px; padding:8px 14px; font:inherit; font-size:13.5px;
+    font-weight:700; cursor:pointer; font-family:var(--font-ui, inherit);
+  }
+  .subtab.is-on{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); }
+  .pane-intro{ margin-bottom:13px; }
+
+  /* ── Lesson ─────────────────────────────────────────────────────────── */
+  .lesson h3{ font-family:var(--font-display, inherit); font-size:15.5px; margin:22px 0 8px; color:var(--accent-soft); font-weight:800; }
+  .lesson h3:first-child{ margin-top:4px; }
+  .lesson p{ font-size:15.5px; line-height:1.65; margin:0 0 12px; }
+  .box{ border-radius:11px; padding:12px 13px; margin:0 0 13px; border:1px solid; }
+  .box b{ display:block; font-size:11px; letter-spacing:.09em; text-transform:uppercase; margin-bottom:5px; font-family:var(--font-ui, inherit); }
+  .box p{ margin:0; font-size:15px; }
+  .box-ex{ background:var(--tint-2); border-color:var(--surface-2-border); }
+  .box-ex b{ color:var(--muted); }
+  .box-k{ background:var(--tint); border-color:var(--accent); }
+  .box-k b{ color:var(--accent-soft); }
+  .box-w{ background:transparent; border-color:var(--warn); }
+  .box-w b{ color:var(--warn); }
+  .tw{ overflow-x:auto; margin:0 0 14px; -webkit-overflow-scrolling:touch; }
+  .lesson table{ border-collapse:collapse; width:100%; min-width:340px; font-size:14px; }
+  .lesson th, .lesson td{ border:1px solid var(--panel-border); padding:8px 10px; text-align:left; vertical-align:top; line-height:1.45; }
+  .lesson th{ background:var(--surface-2); font-family:var(--font-ui, inherit); font-weight:700; font-size:13px; }
+  .card-notes{ background:var(--tint); border-color:var(--accent); }
+  .notes{ margin:10px 0 0; padding-left:20px; }
+  .notes li{ font-size:14.5px; line-height:1.6; margin-bottom:8px; }
+
+  /* ── Recall ─────────────────────────────────────────────────────────── */
+  .recall.is-got{ border-color:var(--good); }
+  .recall-q{ margin:0 0 4px; font-size:15.5px; line-height:1.55; font-weight:600; }
+  .recall-a{ background:var(--surface-2); border:1px solid var(--surface-2-border); border-radius:10px; padding:11px 12px; margin-top:9px; }
+  .recall-a p{ margin:0; font-size:15px; line-height:1.6; }
+  .gatelist{ list-style:none; margin:8px 0 0; padding:0; }
+  .gatelist li{ display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid var(--panel-border); font-size:14.5px; }
+  .gatelist li:last-child{ border-bottom:0; }
+  .gatelist li.on b{ color:var(--good); }
+  .gatelist li.off b{ color:var(--muted); }
+  .gatelist span{ color:var(--muted); font-size:13.5px; text-align:right; }
+  .losses{ list-style:none; margin:8px 0 0; padding:0; }
+  .losses li{ padding:6px 0; font-size:14.5px; border-bottom:1px solid var(--panel-border); }
+  .losses li:last-child{ border-bottom:0; }
+  .losses b{ font-family:var(--font-display, inherit); color:var(--bad); margin-right:6px; }
+
+  /* ── Quiz ───────────────────────────────────────────────────────────── */
+  .qbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:6px; }
+  .qprog{ font-family:var(--font-display, inherit); font-size:13px; color:var(--muted); font-weight:700; }
+  .qtimer{ font-family:var(--font-display, inherit); font-size:16px; font-weight:800; color:var(--accent-soft); }
+  .qcard{ margin-top:12px; }
+  .qmeta{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-weight:700; margin-bottom:8px; }
+  .qtext{ font-size:17px; line-height:1.55; margin:0 0 15px; font-weight:600; }
+  .qopts{ display:flex; flex-direction:column; gap:9px; }
+  .qopt{
+    display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:12px;
+    padding:13px 13px; font:inherit; font-size:15.5px; line-height:1.45; color:var(--text);
+    cursor:pointer; font-family:var(--font-read, system-ui, sans-serif);
+  }
+  .qletter{ font-family:var(--font-display, inherit); font-size:12px; font-weight:800; color:var(--muted); flex-shrink:0; padding-top:2px; }
+  .qopt.picked{ border-color:var(--accent); background:var(--tint); }
+  .qopt.right{ border-color:var(--good); background:var(--tint); }
+  .qopt.wrong{ border-color:var(--bad); }
+  .qopt.locked{ cursor:default; opacity:1; }
+  .qnav{ display:flex; gap:9px; margin-top:16px; }
+  .qnav .btn{ margin-top:0; }
+  .explain{ margin-top:14px; border-radius:11px; padding:12px 13px; border:1px solid var(--panel-border); background:var(--surface-2); }
+  .explain b{ display:block; font-size:12px; letter-spacing:.07em; text-transform:uppercase; margin-bottom:5px; font-family:var(--font-ui, inherit); color:var(--muted); }
+  .explain p{ margin:0; font-size:15px; line-height:1.6; }
+  .explain.ok{ border-color:var(--good); } .explain.ok b{ color:var(--good); }
+  .explain.no{ border-color:var(--bad); }  .explain.no b{ color:var(--bad); }
+
+  /* ── Mistake cards ──────────────────────────────────────────────────── */
+  .mk-q{ margin:0 0 11px; font-size:15.5px; line-height:1.55; font-weight:600; }
+  .mk-opts{ display:flex; flex-direction:column; gap:6px; margin-bottom:11px; }
+  .mk-opt{ border:1px solid var(--panel-border); border-radius:9px; padding:9px 11px; font-size:14.5px; line-height:1.45; color:var(--muted); }
+  .mk-opt.right{ border-color:var(--good); color:var(--text); background:var(--tint); }
+  .mk-opt.yours{ border-color:var(--bad); }
+  .tagm{ font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--good); font-weight:800; font-family:var(--font-ui, inherit); }
+  .tagm.bad{ color:var(--bad); }
+
+  /* ── Bottom bar ─────────────────────────────────────────────────────── */
+  .cbar-tabs{
+    position:fixed; left:0; right:0; bottom:0; z-index:40;
+    display:flex; background:var(--bg); border-top:1px solid var(--panel-border);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .cbar-tabs button{
+    flex:1; background:none; border:0; padding:11px 4px 12px; color:var(--muted);
+    font:inherit; font-size:12px; font-weight:700; cursor:pointer; position:relative;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    font-family:var(--font-ui, inherit); letter-spacing:.03em;
+  }
+  .cbar-tabs button.is-on{ color:var(--accent); }
+  .cbar-tabs svg{ width:21px; height:21px; }
+  .badge{
+    position:absolute; top:6px; right:calc(50% - 22px); min-width:17px; height:17px;
+    border-radius:99px; background:var(--bad); color:#fff; font-size:10.5px; font-weight:800;
+    display:flex; align-items:center; justify-content:center; padding:0 4px;
+    font-family:var(--font-display, inherit);
+  }
+  .exitbar{ display:flex; justify-content:flex-end; padding-top:10px; }
+  .exitbar a{ color:var(--muted); font-size:13px; text-decoration:none; border:1px solid var(--panel-border); border-radius:99px; padding:6px 13px; }
+</style>
+</head>
+<body data-page="crash">
+
+<div class="exitbar"><a href="/learn.html">Back to the full app &#8594;</a></div>
+
+<main id="crash-root"></main>
+
+<nav class="cbar-tabs">
+  <button id="tab-today" data-crashtab="today" class="is-on">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+    Today
+  </button>
+  <button id="tab-mistakes" data-crashtab="mistakes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+    Mistakes
+    <span class="badge" id="tab-mistakes-count" style="display:none"></span>
+  </button>
+  <button id="tab-progress" data-crashtab="progress">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+    Progress
+  </button>
+</nav>
+
+<!-- The four days of content. Loaded before the runtime, which reads it at
+     module scope: CRASH must exist before app/crash.js runs. -->
+<script src="/prep/crash-content.js"></script>
+<script src="/app/crash.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>

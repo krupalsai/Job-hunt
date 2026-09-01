@@ -558,14 +558,16 @@ async function reachable(page, selector, where, minH){
   check('the menu names the exam at the top',
     /HAL CS/.test(drawerText), drawerText.slice(0, 60));
   /* Changing exam, then everything Study no longer carries — Jobs (a different
-     page), the lesson catalogue, the run, current affairs and the syllabus —
-     then reset. Nothing here repeats a bottom-bar destination under a second
-     name, and every row is titled exactly as the screen it opens. */
+     page), the crash course (also its own page), the lesson catalogue, the run,
+     current affairs and the syllabus — then reset. Nothing here repeats a
+     bottom-bar destination under a second name, and every row is titled exactly
+     as the screen it opens. */
   const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
     .map(t => t.trim().split('\n')[0].trim());
-  const expected = ['Change exam', 'Jobs', 'All lessons', 'The run to the exam',
-                    'Current affairs', 'Syllabus', 'Reset prep progress'];
-  check('the menu holds Change exam, the five destinations and Settings — and nothing else',
+  const expected = ['Change exam', 'Jobs', '4-day crash course', 'All lessons',
+                    'The run to the exam', 'Current affairs', 'Syllabus',
+                    'Reset prep progress'];
+  check('the menu holds Change exam, the six destinations and Settings — and nothing else',
     rows.length === expected.length && expected.every((e, i) => rows[i].indexOf(e) === 0),
     rows.join(' | '));
   for (const [id, title] of [['lessons','All lessons'], ['plan','The run to the exam'],
