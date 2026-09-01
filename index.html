@@ -314,18 +314,85 @@ if (!deviceId) {
 const PROFILE_ALIASES = { 'person1': 'B.Tech CSE', 'person2': 'Intermediate' };
 const normProfile = p => PROFILE_ALIASES[p] || p || '';
 
-/* A B.Tech holder is eligible for anything asking for less. Eligibility is
-   inclusive downwards — the opposite would hide jobs you can actually apply
-   for, which is the more damaging mistake for someone job hunting. */
-const ELIGIBLE_FOR = {
-  'B.Tech CSE':   ['B.Tech CSE', 'Graduate', 'Intermediate'],
-  'Graduate':     ['Graduate', 'Intermediate'],
-  'Intermediate': ['Intermediate'],
+/* ── "you qualify" ───────────────────────────────────────────────────────
+   READ THE QUALIFICATION LINE, NOT THE ROUTING BUCKET.
+
+   This used to answer from job.profile, which is the coarse bucket the
+   scraper assigns to decide whose feed a row belongs in — "B.Tech CSE",
+   "Graduate", "Intermediate". profileFor() puts anything containing the word
+   "graduate" or "b.sc" into "Graduate", so a Medical Officer post reading
+   "Any Post Graduate, MBBS" became "Graduate", and a B.Tech holder was told
+   "you qualify" directly underneath the words MBBS. Same for an AIIMS post
+   wanting B.Sc/BSW/MSW.
+
+   So the claim is now made against j.eligibility — the same string printed on
+   the row — and it is three-valued on purpose:
+
+       true   a listed qualification is one the candidate actually holds
+       false  qualifications were listed and every one is read and unheld
+       null   something in the line could not be read — SAY NOTHING
+
+   The null case is the important one. An unrecognised token means "I do not
+   know", and the honest response to not knowing is silence, not a badge. */
+
+/** Printed tokens a candidate at this level genuinely satisfies. */
+const HOLDS = {
+  'B.Tech CSE': [
+    /^b\s*tech/, /^b\s*e$/, /^be$/, /^bebtech$/, /^btechbe$/,
+    /^bachelor.*(engineering|technology)$/,
+    /^anygraduate$/, /^anydegree$/, /^graduate$/, /^graduation$/,
+    /^anybachelor/, /^bachelorsdegree$/, /^bachelordegree$/, /^degree$/,
+    /^engineeringgraduate$/, /^anyengineering/,
+  ],
+  'Graduate': [
+    /^anygraduate$/, /^anydegree$/, /^graduate$/, /^graduation$/,
+    /^anybachelor/, /^bachelorsdegree$/, /^bachelordegree$/, /^degree$/,
+  ],
+  'Intermediate': [
+    /^12th$/, /^intermediate$/, /^10\+2$/, /^hsc$/, /^plustwo$/,
+  ],
 };
+
+/* Tokens that are read and understood, but are NOT held by a bachelor's
+   candidate. Listing them explicitly is what lets a "no" be a confident no
+   rather than an unread line — a post-graduate or professional degree is not
+   something a B.Tech holder has, and a diploma or 10th-pass post is aimed at
+   someone else even though the candidate technically exceeds it. */
+const KNOWN_UNHELD = [
+  /^anypostgraduate$/, /^postgraduate$/, /^pg$/, /^masters?degree$/, /^mastersdegree$/,
+  /^m\s*tech/, /^m\s*e$/, /^memtech$/, /^mtechme$/, /^m\s*sc$/, /^m\s*com$/, /^ma$/,
+  /^mca$/, /^mba/, /^pgdm$/, /^mbapgdm$/, /^msw$/, /^mph$/, /^mha$/, /^mlis$/,
+  /^mphil/, /^phd$/, /^mphilphd$/, /^doctorate$/, /^netjrf$/,
+  /^mbbs$/, /^bds$/, /^bams$/, /^bhms$/, /^md$/, /^ms$/, /^gnm$/, /^anm$/, /^bsc.*nursing$/,
+  /^b\s*sc$/, /^b\s*com$/, /^ba$/, /^bba$/, /^bbm$/, /^bca$/, /^llb$/, /^llm$/,
+  /^bsw$/, /^b\s*ed$/, /^b\s*pharm$/, /^m\s*pharm$/, /^b\s*arch$/, /^bpt$/, /^bvsc$/,
+  /^diploma/, /^iti$/, /^10th$/, /^8th$/, /^12th$/, /^intermediate$/, /^matriculation$/,
+  /^ca$/, /^icwa$/, /^cs$/, /^cma$/,
+];
+
+/** "B.Tech/B.E" → ["btech","be"].  Slash-joined names are alternatives. */
+function qualTokens(text) {
+  return String(text || '')
+    .split(/[,;]|\band\b|\bor\b/i)
+    .flatMap(part => part.split('/'))
+    .map(t => t.toLowerCase().replace(/[^a-z0-9+]/g, ''))
+    .filter(Boolean);
+}
+
 function eligibility(job) {
   if (!qualification) return null;                       // nothing to say yet
-  const allowed = ELIGIBLE_FOR[qualification] || [];
-  return allowed.indexOf(normProfile(job.profile)) !== -1;
+  const tokens = qualTokens(job.eligibility);
+  if (!tokens.length) return null;                       // nothing printed to judge
+
+  const holds = HOLDS[qualification] || [];
+  let allRead = true;
+  for (const t of tokens) {
+    if (holds.some(re => re.test(t))) return true;       // one match is enough
+    if (!KNOWN_UNHELD.some(re => re.test(t))) allRead = false;
+  }
+  // Every token was recognised and none was held → a confident no.
+  // Otherwise something was unreadable, and silence beats a guess.
+  return allRead ? false : null;
 }
 
 /** The exam this whole screen is about. */
@@ -641,7 +708,9 @@ function otherHtml(j) {
         vac ? ` · <span class="other-vac">${escapeHtml(vac)} posts</span>` : ''}</div>
       <div class="other-post">${escapeHtml(titleOf(j))}</div>
       ${j.eligibility ? `<div class="other-elig">${escapeHtml(j.eligibility)}${
-        elig === true ? ' <span class="ok-tag">you qualify</span>' : ''}</div>` : ''}
+        elig === true ? ' <span class="ok-tag">you qualify</span>'
+        : elig === false ? ' <span class="no-tag">not your qualification</span>'
+        : ''}</div>` : ''}
       <div class="other-meta">${
         left === null
           ? escapeHtml(j.deadline_text || 'closing date TBA')
@@ -744,7 +813,7 @@ function cardHtml(j) {
         <span class="jval">${escapeHtml(j.eligibility)}${
           elig === null ? '' : elig
             ? ' <span class="ok-tag">you qualify</span>'
-            : ' <span class="no-tag">below your stated qualification</span>'}</span>
+            : ' <span class="no-tag">asks for a qualification you have not entered</span>'}</span>
       </div>` : ''}
       ${j.location ? `<div class="jrow"><span class="jlab">Location</span><span class="jval">${escapeHtml(j.location)}</span></div>` : ''}
       ${j.pay_scale ? `<div class="jrow"><span class="jlab">Pay</span><span class="jval">₹${escapeHtml(j.pay_scale)}</span></div>` : ''}

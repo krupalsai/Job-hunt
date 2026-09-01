@@ -226,12 +226,88 @@ function check(name, cond, detail){
     !/expected|approx|guess/i.test(sources.split('export async function')[1] || ''),
     'a scraper is inferring a date');
 
-  /* Capping is not cosmetic: api/ingest writes inside a 60s function, and the
-     feed lists ~1400 openings. */
+  /* Capping is not cosmetic: the feed lists ~1400 openings nationwide. */
   check('the discovery feed is capped and spread across closing dates',
     /MAX_DISCOVERED/.test(sources) && /PER_DAY/.test(sources) && /MIN_LEAD_MS/.test(sources));
   check('and ingestion writes in batches rather than a round trip per row',
     /\.upsert\(/.test(ingest) && !/for \(const item of found\)[\s\S]{0,400}maybeSingle\(\)/.test(ingest));
+
+  /* THE CAP MUST NOT BECOME THE HORIZON.
+
+     At MAX_DISCOVERED=60 with PER_DAY=5 the list filled at exactly 5 rows a
+     day for 13 days and stopped dead: the whole database ended on 14 September
+     while BEL was advertising a BE/B.Tech Comp.Sc. post closing on the 23rd.
+     Nothing errored and nothing was reported — the openings just fell off the
+     end of a cap kept for a constraint that no longer exists.
+
+     MAX_DISCOVERED / PER_DAY is the number of days the feed reaches in the
+     WORST case, where every day is saturated. That worst case is what failed:
+     12 days. The ratio is asserted rather than either number on its own,
+     because it is the ratio that decides how far the calendar can extend. */
+  const maxDisc = Number((/const MAX_DISCOVERED = (\d+)/.exec(sources) || [])[1]);
+  const perDay  = Number((/const PER_DAY = (\d+)/.exec(sources) || [])[1]);
+  check('the cap allows at least a month of closing dates through even at worst',
+    maxDisc / perDay >= 30,
+    `MAX_DISCOVERED=${maxDisc} / PER_DAY=${perDay} = ${(maxDisc/perDay).toFixed(1)} days of reach`);
+  check('and one busy closing date is not truncated to a handful',
+    perDay >= 20, `PER_DAY=${perDay}`);
+
+  /* ── "you qualify" must be read off the qualification LINE ──────────────
+
+     THE BUG THIS BLOCK EXISTS TO CATCH SHIPPED: eligibility() answered from
+     job.profile, the coarse bucket the scraper assigns to route a row into a
+     feed. profileFor() files anything containing "graduate" or "b.sc" under
+     "Graduate", so a UCIL Medical Officer post reading "Any Post Graduate,
+     MBBS" was bucketed Graduate — and a B.Tech CSE candidate was shown the
+     words "you qualify" directly beneath the letters MBBS. An AIIMS post
+     wanting B.Sc/BSW/M.Sc/MPH/MSW did the same.
+
+     A false "you qualify" costs a real application: fee, documents, and a day.
+     So the claim is exercised here against the exact strings that were on
+     screen when it was reported, plus the case that must stay SILENT — an
+     unreadable qualification line is "I do not know", never a badge. */
+  const idxSrc = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  check('eligibility is judged from the printed qualification, not the routing bucket',
+    /const tokens = qualTokens\(job\.eligibility\)/.test(idxSrc) &&
+    !/allowed\.indexOf\(normProfile\(job\.profile\)\)/.test(idxSrc),
+    'eligibility() is still answering from job.profile');
+
+  /* Run the real function, lifted out of the page. If the lift fails the
+     behavioural checks below must FAIL, not quietly pass on an undefined —
+     which is exactly what happened the first time this block was written
+     against the old implementation. */
+  const from = idxSrc.indexOf('const HOLDS = {');
+  const to   = idxSrc.indexOf('/** The exam this whole screen is about. */');
+  let eligBTech = null, liftErr = 'HOLDS block not found in index.html';
+  if (from >= 0 && to > from) {
+    try {
+      eligBTech = new Function('qualification',
+        idxSrc.slice(from, to) + '; return eligibility;')('B.Tech CSE');
+      liftErr = typeof eligBTech === 'function' ? null : 'eligibility is not a function';
+    } catch (e) { liftErr = String(e).slice(0, 120); }
+  }
+  check('the eligibility matcher can be read out of the page and run',
+    liftErr === null, liftErr);
+  if (typeof eligBTech !== 'function') eligBTech = () => '<matcher could not be loaded>';
+  const CASES = [
+    ['B.Tech/B.E, M.E/M.Tech, Any Post Graduate, M.Phil/Ph.D', true,  'DMSRDE — B.Tech is listed'],
+    ['MBA/PGDM, Diploma, Any Graduate, PGDM',                  true,  'HLL — Any Graduate is listed'],
+    ['Any Post Graduate, MBBS',                                false, 'UCIL Medical Officer'],
+    ['B.Sc, BSW, M.Sc, MPH, MSW',                              false, 'AIIMS Project Technical Support'],
+    ['BE/B.Tech in Electronics, Mechanical, Comp. Sc.',        true,  'BEL Deputy Engineer'],
+    ['Any Post Graduate',                                      false, 'a bachelor is not a post-graduate'],
+    ['Diploma',                                                false, 'a diploma post is aimed elsewhere'],
+    ['Passed departmental board examination',                  null,  'unreadable — must stay silent'],
+    ['',                                                       null,  'nothing printed — must stay silent'],
+  ];
+  const wrong = CASES.filter(([text, want]) => eligBTech({ eligibility: text }) !== want);
+  check('a B.Tech candidate is never told they qualify for MBBS, B.Sc or post-graduate posts',
+    wrong.length === 0,
+    wrong.map(([t,w,why]) => `${why}: got ${eligBTech({eligibility:t})}, want ${w}`).join(' | '));
+  check('and an unreadable qualification line produces no claim either way',
+    eligBTech({ eligibility: 'Passed departmental board examination' }) === null);
+  check('and the profile bucket alone can no longer produce a "you qualify"',
+    eligBTech({ profile: 'Graduate', eligibility: 'MBBS' }) === false);
 
   /* Marks filtering has one way to go badly wrong: treating "no published
      threshold" as a failure. That would hide most of the feed on a guess, and

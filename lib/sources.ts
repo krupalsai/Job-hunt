@@ -301,18 +301,14 @@ export async function scrapeFreeJobAlert(): Promise<RawItem[]> {
   const seen = new Set<string>();
   const unique = items.filter((i) => !seen.has(i.sourceKey) && seen.add(i.sourceKey));
 
-  /* Capped, soonest-closing first. Two reasons, and the second is not
-     cosmetic: a tracker showing hundreds of rows is one nobody scans, AND
-     api/ingest upserts sequentially inside a 60s function — several hundred
-     round trips would time out and write nothing at all. What survives is the
-     most urgent end of the list, which is the end that matters. */
+  /* Capped, soonest-closing first. The cap used to be 60 because api/ingest
+     upserted row by row inside a 60s function; it is two bulk statements now,
+     so that reason is gone and the ceiling it forced was doing real damage —
+     see MAX_DISCOVERED. */
   unique.sort((a, b) => (a.deadline!.getTime() - b.deadline!.getTime()));
 
-  /* Take the soonest first, but no more than PER_DAY sharing a closing date.
-     Straight soonest-first filled all sixty slots inside a 48-hour window —
-     technically the most urgent, useless in practice, because it hid every
-     opening you still had three weeks to prepare for. Capping per date turns
-     the same sixty rows into a fortnight you can plan against. */
+  /* Take the soonest first, but no more than PER_DAY sharing a closing date,
+     so one busy Monday cannot crowd out the rest of the month. */
   const perDay = new Map<string, number>();
   const capped: RawItem[] = [];
   for (const item of unique) {
@@ -327,12 +323,30 @@ export async function scrapeFreeJobAlert(): Promise<RawItem[]> {
   return capped;
 }
 
-/** How many discovered openings to carry. See the note in scrapeFreeJobAlert. */
-const MAX_DISCOVERED = 60;
+/* How many discovered openings to carry.
+
+   THIS NUMBER WAS HIDING JOBS. At 60, with PER_DAY at 5, the list filled at
+   exactly 5 rows a day for exactly 13 days and stopped: the database's latest
+   closing date was 14 September while BEL was advertising a BE/B.Tech Comp.Sc.
+   post closing on the 23rd. Nothing was broken and nothing was reported — the
+   openings simply fell off the end of a cap set for a constraint (a 60-second
+   function doing one round trip per row) that no longer exists, because
+   api/ingest now writes in two bulk statements.
+
+   It is a RUNAWAY GUARD now, not a budget. The page yields ~530 unique rows
+   that survive the date and qualification filters, so at 900 this never binds
+   in normal operation — PER_DAY alone shapes the spread, and the ceiling only
+   exists so a parser fault cannot dump the whole 1400-row page into the table.
+
+   MAX_DISCOVERED / PER_DAY is the number of days the feed can reach in the
+   WORST case, where every single day is saturated. At 900/25 that floor is 36
+   days; measured against the live page it currently reaches about 60. The
+   integration suite asserts the floor, because the floor is what failed. */
+const MAX_DISCOVERED = 900;
 /** Minimum time left on an opening for it to be worth showing at all. */
 const MIN_LEAD_MS = 2 * 86400_000;
 /** Most openings to keep that share one closing date, so the list spreads. */
-const PER_DAY = 5;
+const PER_DAY = 25;
 
 /** "06-09-2026" / "06/09/2026" → Date. Day-first, because the source is Indian. */
 function parseIndianDate(s: string): Date | undefined {
