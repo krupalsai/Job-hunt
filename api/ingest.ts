@@ -14,7 +14,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
-import { collectAll, type RawItem } from "../lib/sources";
+import { collectAll, resolveOfficialLinks, type RawItem } from "../lib/sources";
 
 export const config = { maxDuration: 60 };
 
@@ -94,9 +94,39 @@ export default async function handler(req: any, res: any) {
   }
 
   const { data: existingRows } = await db
-    .from("jobs").select("source_key")
+    .from("jobs").select("source_key,notification_url")
     .in("source_key", rows.map((r) => r.source_key));
   const known = new Set((existingRows ?? []).map((r: any) => r.source_key));
+  /* Rows the DB has ALREADY resolved an official notification for. Re-fetching
+     their article pages every night would spend the whole per-run budget on
+     work that is done, and starve the new rows that still point at an
+     aggregator page. */
+  const resolvedAlready = new Set(
+    (existingRows ?? []).filter((r: any) => r.notification_url).map((r: any) => r.source_key));
+
+  /* Turn the aggregator article into the actual notification, for as many rows
+     as fit in the run. Unresolved rows keep source_url and are rendered
+     honestly as a FreeJobAlert details link, then picked up on a later run. */
+  const needLinks = found.filter((i) => !resolvedAlready.has(i.sourceKey));
+  const linkStats = await resolveOfficialLinks(needLinks);
+  // resolveOfficialLinks mutates the items, so re-read them onto the rows.
+  const byKey = new Map(found.map((i) => [i.sourceKey, i]));
+  for (const r of rows) {
+    const it = byKey.get(r.source_key);
+    if (!it) continue;
+    if (it.notificationUrl) r.notification_url = it.notificationUrl;
+    if (it.applyUrl) r.apply_url = it.applyUrl;
+  }
+  /* Never overwrite a resolved notification with null on a later run: the
+     upsert below writes every column, and a fetch that failed tonight must not
+     erase a link that worked yesterday. */
+  const keepExisting = new Map(
+    (existingRows ?? []).map((r: any) => [r.source_key, r.notification_url]));
+  for (const r of rows) {
+    if (!r.notification_url && keepExisting.get(r.source_key)) {
+      r.notification_url = keepExisting.get(r.source_key);
+    }
+  }
 
   const fresh = rows.filter((r) => !known.has(r.source_key));
   const seen  = rows.filter((r) =>  known.has(r.source_key));
@@ -133,5 +163,6 @@ export default async function handler(req: any, res: any) {
     sources, broken: broken.map((b) => b.name),
     per_source: perSource,
     found: found.length, inserted, updated, skipped_manual: skipped,
+    official_links: linkStats,
   });
 }

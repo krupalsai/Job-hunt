@@ -252,6 +252,67 @@ function check(name, cond, detail){
   check('and one busy closing date is not truncated to a handful',
     perDay >= 20, `PER_DAY=${perDay}`);
 
+  /* ── "Open notification" must open a notification ───────────────────────
+
+     THE BUG THIS BLOCK EXISTS TO CATCH SHIPPED: the FreeJobAlert listing row
+     carries exactly ONE link — its own article — and the scraper ran it
+     through a filter excluding `freejobalert.com/?$`, which only matches their
+     HOMEPAGE. The survivor was named `official` and written to BOTH
+     notification_url and apply_url. Every discovered opening therefore had a
+     button reading "Open notification" that opened an ad-heavy aggregator
+     page, and the app called that page the official notification.
+
+     Three separate guards, because each failed independently. */
+  check('the scraper no longer calls the aggregator article an official notification',
+    !/const official = links\.find/.test(sources) &&
+    sources.includes('freejobalert') && sources.includes('articles'),
+    'sources.ts may still be storing the article as notificationUrl');
+  check('and it resolves the real notification from the article page',
+    /export async function resolveOfficialLinks/.test(sources) &&
+    /officialLinksFrom/.test(sources));
+  check('and ingestion runs that resolution',
+    /resolveOfficialLinks/.test(ingest));
+  /* Re-fetching an article whose notification is already known would spend the
+     whole per-run budget on solved rows and starve the unsolved ones. */
+  check('and it does not re-resolve rows that already have a notification',
+    /resolvedAlready/.test(ingest) && /notification_url/.test(ingest));
+  /* The nightly upsert writes every column. A fetch that fails tonight must
+     not blank a link that worked yesterday. */
+  check('and a failed fetch never erases a notification link that already worked',
+    /keepExisting/.test(ingest));
+
+  /* The extractor's own rules, exercised on the shapes that actually occur. */
+  const linkRules = [
+    ['an href entity is decoded', /&amp;/.test(sources) && /deent/.test(sources)],
+    ['a presigned, expiring link is rejected', /EXPIRING/.test(sources) && /x-amz-/i.test(sources)],
+    ['only the Important Links block is trusted', /important links/i.test(sources)],
+    ['table-shaped link blocks are handled', /fromTables/.test(sources)],
+    ['label-shaped link blocks are handled', /fromLabels/.test(sources)],
+    ['social and partner links are excluded', /LINK_JUNK/.test(sources) && /telegram/i.test(sources)],
+  ];
+  linkRules.forEach(([name, ok]) => check('link resolver: ' + name, !!ok));
+
+  /* The UI must not label an aggregator page a notification even if one is
+     still stored — the rendering is the last line of defence. */
+  const idxLinks = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  /* Scoped to each renderer's own body. Checking the whole file let the row's
+     guard "pass" on text that only existed in the CARD — the two are separate
+     code paths and each has to be checked where it lives. */
+  const bodyOf = (sig) => {
+    const a = idxLinks.indexOf(sig);
+    return a < 0 ? '' : idxLinks.slice(a, idxLinks.indexOf('\nfunction ', a + 1));
+  };
+  const rowBody = bodyOf('function otherHtml(j) {');
+  const cardBody = bodyOf('function cardHtml(j) {');
+  check('the list row never labels a FreeJobAlert article "Open notification"',
+    rowBody.length > 200 && /isArticle/.test(rowBody) && /Details on FreeJobAlert/.test(rowBody),
+    'otherHtml may still call the article a notification');
+  check('and the job card applies the same rule',
+    cardBody.length > 200 && /cardNotif/.test(cardBody) && /isArt\(/.test(cardBody),
+    'cardHtml may still call the article a notification');
+  check('and applying is its own link, not hidden under "Open notification"',
+    /Apply →/.test(idxLinks) && !/const link = j\.apply_url \|\| j\.notification_url/.test(idxLinks));
+
   /* ── "you qualify" must be read off the qualification LINE ──────────────
 
      THE BUG THIS BLOCK EXISTS TO CATCH SHIPPED: eligibility() answered from

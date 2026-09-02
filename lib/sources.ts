@@ -270,10 +270,18 @@ export async function scrapeFreeJobAlert(): Promise<RawItem[]> {
     const profile = profileFor(qualification);
     if (!profile) continue;                                             // not this candidate's
 
-    // The official notification, carried through so a reported date is always
-    // one tap from the document that actually decides it.
-    const links = [...row.matchAll(/href="(https?:\/\/[^"]+)"/gi)].map((x) => x[1]);
-    const official = links.find((l) => !/freejobalert\.com\/?$/i.test(l)) || url;
+    /* The listing row carries exactly ONE link — "Get Details", pointing at
+       FreeJobAlert's own article. There is no official link here to find.
+
+       This used to run that single link through a filter excluding
+       `freejobalert.com/?$` — which only matches their HOMEPAGE — call the
+       survivor `official`, and store it as BOTH notificationUrl and applyUrl.
+       So every row in the table pointed at an ad-heavy aggregator page while
+       the button on it read "Open notification". resolveOfficialLinks() below
+       gets the real document; until it runs, these stay undefined rather than
+       being filled with something that is not a notification. */
+    const article = [...row.matchAll(/href="(https?:\/\/[^"]+)"/gi)]
+      .map((x) => x[1]).find((l) => /freejobalert\.com\/articles\//i.test(l)) || url;
 
     items.push({
       sourceKey: `fja:${hash(board + "|" + post + "|" + advt)}`,
@@ -283,9 +291,7 @@ export async function scrapeFreeJobAlert(): Promise<RawItem[]> {
       eligibility: qualification || undefined,
       deadline,
       deadlineText: `Last date ${lastDate} — reported by FreeJobAlert, confirm on the official notification`,
-      notificationUrl: official,
-      applyUrl: official,
-      sourceUrl: url,
+      sourceUrl: article,
     });
   }
 
@@ -388,6 +394,149 @@ function profileFor(q: string): RawItem["profile"] | undefined {
  * scrapes a live recruitment board that always has vacancies on it, so zero
  * rows means the parser lost, never that the board emptied.
  */
+/* ============================================================================
+   THE OFFICIAL NOTIFICATION
+
+   A discovered row arrives with only FreeJobAlert's article URL. Opening that
+   is not opening the notification: it is an aggregator page carrying ads and
+   partner links, and it was what the app's "Open notification" button did for
+   every single discovered opening.
+
+   The article ends with an authoritative block:
+
+       Important Links
+       Apply Online:               Click here
+       Official Notification PDF : Click here
+       Official Website:           Click here
+       Join Telegram Channel:      Click Here    <- noise
+
+   ONLY THAT BLOCK IS TRUSTED. The article BODY also carries links and at least
+   one is mislabelled at source — on the ISRO page a body link reading
+   "...Recruitment 2026 Notification PDF" points at the digialm APPLY form. A
+   whole-page scan finds that first and hands the candidate an application
+   portal where the app promised a notification.
+
+   The block comes in three shapes, all of which occur in the live feed:
+     A  label-before-anchor   "Official Notification PDF : [Click here]"
+     B  a table with headers  | Job Code | Official Notification | Apply Online |
+     C  absent — the phrase appears only in prose ("see the Important Links
+        section"), so the marker is chosen by which occurrence is actually
+        followed by links, not simply by being the last one.
+   ========================================================================== */
+const LINK_JUNK = /freejobalert|t\.me\/|telegram|whatsapp|arattai|facebook|twitter|instagram|youtube|linkedin|pinterest|sarkariresult|cluestoday|marketshost|rojgarlive|stylishscape|news\.google/i;
+
+/** An href in HTML carries entities: "?a=1&amp;b=2" is a 400 if stored raw. */
+const deent = (u: string) => String(u).replace(/&amp;/g, "&").replace(/&#0?38;/g, "&").trim();
+
+/* Some sites hand out PRESIGNED links. IIT Patna's notification arrived as a
+   minio URL carrying X-Amz-Expires=3600 — valid for an hour, dead by the time
+   anyone taps it. A link guaranteed to rot is worse than the article page. */
+const EXPIRING = /[?&](x-amz-(signature|expires|credential)|expires|token|signature)=/i;
+const usableLink = (u: string) => !!u && !EXPIRING.test(u);
+
+const txt = (s: string) => String(s).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ")
+  .replace(/&amp;/g, "&").replace(/&#0?39;|&quot;/g, "'").replace(/\s+/g, " ").trim();
+
+const IS_NOTIF = (t: string) => /notification(\s*pdf)?\s*:?\s*$|advertisement(\s*pdf)?\s*:?\s*$|^notification|^official notification|^advertisement/.test(t);
+const IS_APPLY = (t: string) => /apply\s*online\s*:?\s*$|apply\s*link\s*:?\s*$|online\s*application\s*:?\s*$|^apply\s*online|^apply\b/.test(t);
+const IS_SITE  = (t: string) => /official\s*website\s*:?\s*$|^official website/.test(t);
+
+interface Found { notification?: string; apply?: string; website?: string }
+
+/** Shape B: a table whose header row names the columns. */
+function fromTables(block: string, out: Found): void {
+  for (const t of block.matchAll(/<table[\s\S]*?<\/table>/gi)) {
+    const rows = [...t[0].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+    if (rows.length < 2) continue;
+    const head = [...rows[0][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)]
+      .map((c) => txt(c[1]).toLowerCase());
+    if (!head.some((h) => IS_NOTIF(h) || IS_APPLY(h))) continue;
+    for (const r of rows.slice(1)) {
+      const cells = [...r[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)];
+      cells.forEach((c, i) => {
+        const raw = /href="(https?:\/\/[^"]+)"/i.exec(c[1]);
+        if (!raw) return;
+        const url = deent(raw[1]);
+        if (LINK_JUNK.test(url) || !usableLink(url)) return;
+        const label = head[i] || "";
+        if (!out.notification && IS_NOTIF(label)) out.notification = url;
+        else if (!out.apply && IS_APPLY(label)) out.apply = url;
+        else if (!out.website && IS_SITE(label)) out.website = url;
+      });
+    }
+  }
+}
+
+/** Shape A: the label is the text immediately BEFORE the anchor. */
+function fromLabels(block: string, out: Found): void {
+  for (const m of block.matchAll(/<a[^>]*href="(https?:\/\/[^"]+)"[^>]*>/gi)) {
+    const url = deent(m[1]);
+    if (LINK_JUNK.test(url) || !usableLink(url)) continue;
+    const before = txt(block.slice(Math.max(0, (m.index ?? 0) - 120), m.index)).toLowerCase();
+    if (/join\b[^.]{0,24}$/.test(before)) continue;
+    if (!out.notification && IS_NOTIF(before)) out.notification = url;
+    else if (!out.apply && IS_APPLY(before)) out.apply = url;
+    else if (!out.website && IS_SITE(before)) out.website = url;
+  }
+}
+
+/** Parse one already-fetched article page. Exported so tests can run it dry. */
+export function officialLinksFrom(html: string): Found & { via?: string } {
+  const out: Found & { via?: string } = {};
+  const low = html.toLowerCase();
+
+  const marks: number[] = [];
+  for (let i = low.indexOf("important links"); i >= 0; i = low.indexOf("important links", i + 1)) marks.push(i);
+  for (const i of marks.reverse()) {
+    const block = html.slice(i, i + 8000);
+    const trial: Found = {};
+    fromTables(block, trial);
+    fromLabels(block, trial);
+    if (trial.notification || trial.apply) { Object.assign(out, trial); out.via = "block"; break; }
+  }
+
+  if (!out.notification) {
+    for (const m of html.matchAll(/href="(https?:\/\/[^"]+\.pdf)"/gi)) {
+      const u = deent(m[1]);
+      if (!LINK_JUNK.test(u) && usableLink(u)) { out.notification = u; out.via = out.via || "pdf-fallback"; break; }
+    }
+  }
+  return out;
+}
+
+/**
+ * Fill in notificationUrl / applyUrl by reading each item's article page.
+ *
+ * BOUNDED ON PURPOSE. This is one HTTP request per item, and api/ingest runs
+ * inside a 60-second function, so it is capped and run in small parallel
+ * batches. Items past the cap simply keep sourceUrl and get resolved on a
+ * later run — the app renders an unresolved row honestly rather than calling
+ * an aggregator page a notification.
+ */
+export async function resolveOfficialLinks(
+  items: RawItem[], limit = RESOLVE_PER_RUN,
+): Promise<{ resolved: number; attempted: number }> {
+  const todo = items.filter((i) => !i.notificationUrl && /freejobalert\.com\/articles\//i.test(i.sourceUrl))
+    .slice(0, limit);
+  let resolved = 0;
+  for (let i = 0; i < todo.length; i += RESOLVE_CONCURRENCY) {
+    await Promise.all(todo.slice(i, i + RESOLVE_CONCURRENCY).map(async (item) => {
+      const html = await getHtml(item.sourceUrl);
+      if (!html) return;
+      const o = officialLinksFrom(html);
+      if (o.notification) { item.notificationUrl = o.notification; resolved++; }
+      if (o.apply) item.applyUrl = o.apply;
+    }));
+  }
+  console.log(`[sources] official links: ${resolved}/${todo.length} resolved`);
+  return { resolved, attempted: todo.length };
+}
+
+/** Article pages fetched per ingest run. One request each, inside a 60s function. */
+const RESOLVE_PER_RUN = 90;
+/** How many of those run at once. */
+const RESOLVE_CONCURRENCY = 6;
+
 export async function collectAll(): Promise<{ items: RawItem[]; sources: SourceHealth[] }> {
   const sources: { name: string; run: () => Promise<RawItem[]> }[] = [
     { name: "tgprb", run: scrapeTgprb },

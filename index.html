@@ -193,6 +193,10 @@
     border: 1px solid var(--panel-border); background: var(--surface-2); color: var(--text);
   }
   .other-apply { border-color: var(--accent); color: var(--accent-soft); }
+  /* A link to the aggregator is not the notification, so it does not get the
+     accent that means "this is the official document". */
+  .other-apply.is-secondhand { border-color: var(--panel-border); color: var(--muted); }
+  .other-applylink { border-color: var(--accent); background: var(--tint); }
   .other-row { display: flex; align-items: flex-start; gap: 10px; padding: 13px 0;
                border-top: 1px solid var(--panel-border); }
   .other-main { flex: 1; min-width: 0; }
@@ -699,7 +703,19 @@ function otherHtml(j) {
     ? `<span class="cd-none">date TBA</span>`
     : `<span class="cd-num">${left}</span><span class="cd-unit">day${left === 1 ? '' : 's'}</span>`;
 
-  const link = j.apply_url || j.notification_url;
+  /* WHAT "OPEN NOTIFICATION" ACTUALLY OPENS.
+     This was `j.apply_url || j.notification_url`, and both columns held the
+     same FreeJobAlert article for every discovered row — so a button reading
+     "Open notification" opened an aggregator page carrying ads, and when an
+     apply link did exist it opened the application FORM under the same
+     label. The notification is now its own link, applying is its own link,
+     and where neither has been resolved the row says it is going to
+     FreeJobAlert instead of calling that a notification. */
+  const isArticle = u => /freejobalert\.com\/articles\//i.test(u || '');
+  const notif = !isArticle(j.notification_url) ? j.notification_url : null;
+  const applyTo = (j.apply_url && j.apply_url !== notif && !isArticle(j.apply_url))
+    ? j.apply_url : null;
+  const details = j.source_url || (isArticle(j.notification_url) ? j.notification_url : null);
 
   return `<div class="other-row${urgency}">
     <div class="other-cd">${countdown}</div>
@@ -719,7 +735,12 @@ function otherHtml(j) {
       }${j.is_estimated ? ' <span class="est">estimate</span>' : ''}${
         applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}</div>
       <div class="other-actions">
-        ${link ? `<a class="other-apply" href="${escapeHtml(link)}" target="_blank" rel="noopener">Open notification →</a>` : ''}
+        ${notif
+          ? `<a class="other-apply" href="${escapeHtml(notif)}" target="_blank" rel="noopener">Open notification →</a>`
+          : details
+            ? `<a class="other-apply is-secondhand" href="${escapeHtml(details)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>`
+            : ''}
+        ${applyTo ? `<a class="other-apply other-applylink" href="${escapeHtml(applyTo)}" target="_blank" rel="noopener">Apply →</a>` : ''}
         ${applied[j.id]
           ? `<button class="other-mark" data-unapply="${escapeHtml(j.id)}">Undo</button>`
           : `<button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button>`}
@@ -772,6 +793,12 @@ function cardHtml(j) {
   const exam = currentExam();
   const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
   const elig = eligibility(j);
+  /* Same rule as the list row: an aggregator article is never labelled
+     "Notification". See the note above `isArticle` in otherHtml. */
+  const isArt = u => /freejobalert\.com\/articles\//i.test(u || '');
+  const cardNotif = !isArt(j.notification_url) ? j.notification_url : null;
+  const cardApply = (j.apply_url && j.apply_url !== cardNotif && !isArt(j.apply_url)) ? j.apply_url : null;
+  const cardDetails = j.source_url || (isArt(j.notification_url) ? j.notification_url : null);
   return `
     <div class="card">
       <div class="card-top">
@@ -819,8 +846,9 @@ function cardHtml(j) {
       ${j.pay_scale ? `<div class="jrow"><span class="jlab">Pay</span><span class="jval">₹${escapeHtml(j.pay_scale)}</span></div>` : ''}
 
       <div class="links">
-        ${j.notification_url ? `<a href="${escapeHtml(j.notification_url)}" target="_blank" rel="noopener">📄 Notification</a>` : ''}
-        ${j.apply_url ? `<a href="${escapeHtml(j.apply_url)}" target="_blank" rel="noopener">🔗 Portal</a>` : ''}
+        ${cardNotif ? `<a href="${escapeHtml(cardNotif)}" target="_blank" rel="noopener">📄 Notification</a>` : ''}
+        ${cardApply ? `<a href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">🔗 Apply</a>` : ''}
+        ${cardDetails ? `<a href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">🔎 Details on FreeJobAlert</a>` : ''}
       </div>
       <a class="study-now" href="${examHref('study')}">Study now →</a>
     </div>
