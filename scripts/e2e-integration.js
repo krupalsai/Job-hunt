@@ -285,6 +285,10 @@ function check(name, cond, detail){
   const linkRules = [
     ['an href entity is decoded', /&amp;/.test(sources) && /deent/.test(sources)],
     ['a presigned, expiring link is rejected', /EXPIRING/.test(sources) && /x-amz-/i.test(sources)],
+    /* Seven articles in one run carried an href of "https://Candidates should
+       ensure that they meet the prescribed age limit..." — prose pasted into
+       the attribute. Stored, that is a button that goes nowhere. */
+    ['prose pasted into an href is rejected', /looksLikeUrl/.test(sources) && /hostname/.test(sources)],
     ['only the Important Links block is trusted', /important links/i.test(sources)],
     ['table-shaped link blocks are handled', /fromTables/.test(sources)],
     ['label-shaped link blocks are handled', /fromLabels/.test(sources)],

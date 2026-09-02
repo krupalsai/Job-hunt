@@ -432,7 +432,21 @@ const deent = (u: string) => String(u).replace(/&amp;/g, "&").replace(/&#0?38;/g
    minio URL carrying X-Amz-Expires=3600 — valid for an hour, dead by the time
    anyone taps it. A link guaranteed to rot is worse than the article page. */
 const EXPIRING = /[?&](x-amz-(signature|expires|credential)|expires|token|signature)=/i;
-const usableLink = (u: string) => !!u && !EXPIRING.test(u);
+
+/* FreeJobAlert's own markup is sometimes broken: seven articles in one run
+   carried an href of `https://Candidates should ensure that they meet the
+   prescribed age limit...`, i.e. prose pasted into the attribute. Storing that
+   gives the candidate a button that goes nowhere, so anything that is not a
+   real absolute URL with a real hostname is rejected outright. Punycode hosts
+   are legitimate — several notifications live on Hindi .भारत domains. */
+function looksLikeUrl(u: string): boolean {
+  if (!u || /\s/.test(u) || u.length > 500) return false;
+  try {
+    return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(new URL(u).hostname);
+  } catch { return false; }
+}
+
+const usableLink = (u: string) => !!u && !EXPIRING.test(u) && looksLikeUrl(u);
 
 const txt = (s: string) => String(s).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ")
   .replace(/&amp;/g, "&").replace(/&#0?39;|&quot;/g, "'").replace(/\s+/g, " ").trim();
