@@ -16,7 +16,15 @@
  *           shown as current.
  */
 
-const CACHE = 'jobhunt-v10';
+/* v11 retires the four-day HAL crash course.
+
+   THE BUMP IS LOAD-BEARING. A phone that installed v10 holds /crash.html, its
+   runtime and its 256KB content file in the cache, and the fetch handler
+   served them cache-first. Deleting the files from the repo does nothing to a
+   device that already has them — without a new cache name the activate
+   handler never evicts the old one, and the course would keep opening offline
+   from storage long after the exam it was built for. */
+const CACHE = 'jobhunt-v11';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -25,14 +33,6 @@ const CACHE = 'jobhunt-v10';
 // them the prep page would open offline with no bottom bar and no way out of it.
 const PREP_ASSETS = [
   '/learn.html',
-  /* The four-day crash course. A separate page with its own runtime and its
-     own content file — and the one part of this app most likely to be opened
-     with no signal, since it is what gets used in the days immediately before
-     the paper. All three of its files are listed or the page opens as a shell
-     with no content and no logic. */
-  '/crash.html',
-  '/prep/crash-content.js',
-  '/app/crash.js',
   '/nav.js',
   /* The prep page's runtime, split out of what was one inline <script>.
      Inline code was cached for free as part of learn.html; these are
@@ -102,7 +102,6 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
   const isPrep = url.pathname === '/learn.html'
-              || url.pathname === '/crash.html'
               || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
               || url.pathname.startsWith('/app/')

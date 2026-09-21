@@ -252,6 +252,35 @@ function check(name, cond, detail){
   check('and one busy closing date is not truncated to a handful',
     perDay >= 20, `PER_DAY=${perDay}`);
 
+  /* ── THE PRECACHE LIST MUST MATCH WHAT SHIPS ───────────────────────────
+
+     A path listed in PREP_ASSETS that no longer exists installs a service
+     worker whose addAll silently skips it (failures are tolerated per asset,
+     on purpose), leaving the cache quietly incomplete. This is the general
+     form of the bug that removing a feature creates: the files go, the
+     precache list does not.
+
+     The matching half — a device still holding the OLD cache — is why
+     CACHE has to change whenever this list does. Without a new name the
+     activate handler never evicts the previous cache, and a page deleted
+     from the repo keeps opening offline from storage. The four-day HAL crash
+     course was retired that way: three files removed, cache bumped v10 ->
+     v11 in the same commit. */
+  const swSrc = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+  const assetBlock = swSrc.slice(swSrc.indexOf('const PREP_ASSETS'),
+                                 swSrc.indexOf('];', swSrc.indexOf('const PREP_ASSETS')));
+  const precached = [...assetBlock.matchAll(/'(\/[^']+)'/g)].map(m => m[1]);
+  const absent = precached.filter(a => !fs.existsSync(path.join(ROOT, a)));
+  check('every precached path is a file that actually ships',
+    precached.length > 10 && absent.length === 0,
+    absent.length ? 'missing: ' + absent.join(', ') : 'PREP_ASSETS could not be read');
+  /* Retired pages must not be reachable from the menu either. */
+  const navSrc = fs.readFileSync(path.join(ROOT, 'nav.js'), 'utf8');
+  const menuHrefs = [...navSrc.matchAll(/href:\s*"(\/[^"]+)"/g)].map(m => m[1]);
+  const deadLinks = menuHrefs.filter(h => h !== '/' && !fs.existsSync(path.join(ROOT, h)));
+  check('and every page the menu links to still exists',
+    deadLinks.length === 0, 'dead menu links: ' + deadLinks.join(', '));
+
   /* ── THE APP MUST NOT ASK FOR THE WHOLE TABLE ──────────────────────────
 
      index.html fetched `select=*` with no filter and no limit. PostgREST
