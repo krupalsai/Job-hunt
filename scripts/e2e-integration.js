@@ -252,6 +252,58 @@ function check(name, cond, detail){
   check('and one busy closing date is not truncated to a handful',
     perDay >= 20, `PER_DAY=${perDay}`);
 
+  /* ── THE APP MUST NOT ASK FOR THE WHOLE TABLE ──────────────────────────
+
+     index.html fetched `select=*` with no filter and no limit. PostgREST
+     caps a response at 1000 rows whatever you ask for, so once the table
+     passed 1000 the overflow was silently dropped — and because the order
+     puts the soonest deadlines first, what fell off the end was the openings
+     with the MOST time left. Measured against the live table: 595 openings
+     were live, the app could see 444. 151 were invisible, with no error.
+
+     Worse, 556 of the 1000 rows it did spend the budget on were already
+     CLOSED — more than half the payload on openings nobody can apply for.
+
+     Two properties, both of which failed: filter on the server, and page
+     until the server stops rather than trusting one request. */
+  const idxFetch = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  check('the job fetch filters on the server instead of asking for the whole table',
+    !/jobs\?select=\*&order=/.test(idxFetch) && /deadline\.gte/.test(idxFetch),
+    'index.html may still be requesting every row');
+  check('and it pages, so the 1000-row cap can never silently truncate again',
+    /fetchAllPages/.test(idxFetch) && /rows\.length < PAGE/.test(idxFetch));
+  check('and a closed opening is fetched only when it was applied for',
+    /appliedIds/.test(idxFetch) && /id=in\./.test(idxFetch));
+  /* A runaway guard, so a server that always returns a full page cannot spin. */
+  check('and the paging loop cannot run forever',
+    /from > \d+ \* PAGE/.test(idxFetch));
+
+  /* ── WHAT YOU CANNOT APPLY FOR DOES NOT SIT IN THE MAIN LIST ───────────
+     134 of 442 government openings were ones eligibility() had already ruled
+     out. Labelling them told the truth and still left the reader doing the
+     filtering. Only a DEFINITE false moves — `null` (an unreadable
+     qualification line) stays in the main list, because "I do not know" is
+     not grounds for hiding a job from someone. */
+  check('openings the candidate definitely cannot apply for leave the main list',
+    /const canApply = j => eligibility\(j\) !== false/.test(idxFetch) &&
+    /notMineFold/.test(idxFetch),
+    'the government list may still carry un-appliable openings');
+  check('and an unreadable qualification line still counts as appliable',
+    /!== false/.test(idxFetch) && !/=== true/.test(
+      (/const canApply[^;]*/.exec(idxFetch) || [''])[0]));
+
+  /* ── A FINISHED EXAM MUST NOT STAY THE APP'S CONTEXT ───────────────────
+     The selected exam is the root context of every screen. When its date went
+     by, nothing noticed: the header read "date passed" in grey, "Study now"
+     still led to prep for a finished paper, and the whole list stayed scoped
+     to it. The app says so now — and offers the control — without choosing
+     the next exam, which is not its decision. */
+  check('a passed exam date is surfaced, not left as a grey label',
+    /examOver/.test(idxFetch) && /days < 0/.test(idxFetch));
+  check('and the prompt opens the exam picker rather than picking one',
+    /examOver'\)\.addEventListener[\s\S]{0,120}openChangeExam/.test(idxFetch),
+    'the exam-over prompt may be choosing an exam by itself');
+
   /* ── "Open notification" must open a notification ───────────────────────
 
      THE BUG THIS BLOCK EXISTS TO CATCH SHIPPED: the FreeJobAlert listing row

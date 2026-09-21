@@ -138,6 +138,15 @@
                  font-size: 12.5px; text-align: left; width: calc(100% - 24px);
                  font-family: inherit; cursor: pointer; display: none; }
   .qual-prompt.show { display: block; }
+  /* Shown only once the selected exam's date is behind us. Warn-coloured
+     rather than accent: it is not something to do next, it is something that
+     has gone stale and needs a decision. */
+  .exam-over { margin: 12px 12px 0; padding: 12px 14px; border-radius: 10px;
+               background: transparent; border: 1px solid var(--warn); color: var(--muted);
+               font-size: 12.5px; line-height: 1.5; text-align: left;
+               width: calc(100% - 24px); font-family: inherit; cursor: pointer; display: none; }
+  .exam-over.show { display: block; }
+  .exam-over b { color: var(--warn); }
   .qual-prompt b { color: var(--accent-soft); }
   /* Job card rows — label on the left, answer on the right, so "have I
      applied / which exam / when is it" are read without hunting. */
@@ -244,6 +253,12 @@
   </div>
 </header>
 
+<button class="exam-over" id="examOver">
+  <b>That exam is behind you</b><br>
+  <span id="examOverWhen"></span> Everything on this screen is still scoped to it.
+  Tap to pick what you are preparing for next.
+</button>
+
 <!-- Only the openings for the exam being prepared for. A job list that mixed
      all three would put the student back in the position of working out which
      rows were theirs — which is the job the app is supposed to do. -->
@@ -274,6 +289,11 @@
 <details class="sec other-fold hidden" id="privateFold">
   <summary id="privateCount">Private openings</summary>
   <div id="privateJobs"></div>
+</details>
+
+<details class="sec other-fold hidden" id="notMineFold">
+  <summary id="notMineCount">Needs a qualification you have not entered</summary>
+  <div id="notMineJobs"></div>
 </details>
 
 <details class="sec other-fold hidden" id="closedFold">
@@ -435,16 +455,66 @@ function setApplied(jobId, yes) {
   render();
 }
 
-async function load() {
-  loadFailed = false;
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/jobs?select=*&order=is_estimated.asc,deadline.asc.nullslast`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    });
+/* PostgREST hands back at most this many rows per request, whatever you ask
+   for. The table passed it on 20 September. */
+const PAGE = 1000;
+
+const SB_HEADERS = () => ({ apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` });
+
+/** One filtered query, paged until the server stops handing rows back. */
+async function fetchAllPages(query) {
+  const out = [];
+  for (let from = 0; ; from += PAGE) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/jobs?${query}&offset=${from}&limit=${PAGE}`,
+      { headers: SB_HEADERS() });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const rows = await res.json();
     if (!Array.isArray(rows)) throw new Error('unexpected response');
-    allJobs = rows;
+    out.push(...rows);
+    if (rows.length < PAGE) return out;          // last page
+    if (from > 20 * PAGE) return out;            // runaway guard
+  }
+}
+
+/* WHAT THE APP ASKS THE SERVER FOR.
+
+   This was `select=*` with no filter and no limit — every row in the table,
+   closed or not. Two things went wrong at once, and neither reported itself.
+
+   PostgREST caps a response at 1000 rows however many you ask for. The table
+   passed 1000, and because the order puts the soonest deadlines first, the
+   rows that fell off the end were the ones with the MOST time left: 127 live
+   openings that never reached the phone at all. The list simply stopped a
+   fortnight early. That is the same failure as the ingest cap, one layer down,
+   and it is why this pages instead of trusting one request.
+
+   Of the 1000 that did arrive, 556 were already CLOSED — more than half the
+   payload spent on openings nobody can apply for, rendered into a fold
+   nobody opens.
+
+   So it asks for what is still open, pages until the server runs out, and
+   fetches a closed opening only when it is one this candidate marked applied
+   for. A closed job you never applied for is not information. */
+async function load() {
+  loadFailed = false;
+  try {
+    const nowIso = new Date().toISOString();
+    const liveQuery =
+      `select=*&or=(deadline.gte.${nowIso},deadline.is.null)` +
+      `&order=is_estimated.asc,deadline.asc.nullslast`;
+
+    const appliedIds = Object.keys(applied);
+    const jobs = [await fetchAllPages(liveQuery)];
+    if (appliedIds.length) {
+      // Closed ones still worth showing: the ones already applied for.
+      const ids = appliedIds.map(encodeURIComponent).join(',');
+      jobs.push(await fetchAllPages(`select=*&id=in.(${ids})`));
+    }
+
+    // De-duplicate: an applied job that is still open comes back in both.
+    const seen = new Set();
+    allJobs = jobs.flat().filter(j => !seen.has(j.id) && seen.add(j.id));
   } catch (e) {
     // Say so, and offer the way out. Leaving "Loading…" on screen forever
     // reads as a broken app rather than as a phone with no signal — and the
@@ -477,6 +547,23 @@ function render() {
   const exam = currentExam();
   const list = document.getElementById('examJobs');
   document.getElementById('qualPrompt').classList.toggle('show', !qualification);
+
+  /* The selected exam is the root context of every screen in this app. When
+     its date goes by, nothing noticed: the header quietly read "date passed",
+     "Study now →" still led to prep for a finished paper, and the whole list
+     stayed scoped to it. Saying so, and offering the one control that fixes
+     it, is the least this can do — it does NOT pick the next exam, because
+     that is not the app's decision to make. */
+  const overBtn = document.getElementById('examOver');
+  if (overBtn) {
+    const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
+    const isOver = !!(when && when.days !== null && when.days < 0);
+    overBtn.classList.toggle('show', isOver);
+    if (isOver) {
+      document.getElementById('examOverWhen').textContent =
+        `${exam.short} sat on ${when.short === 'date passed' ? 'a date now past' : when.short}.`;
+    }
+  }
 
   if (loadFailed) {
     list.innerHTML = '<div class="empty">Could not reach the openings.<br>' +
@@ -533,8 +620,22 @@ function render() {
       'feed states a qualification and no minimum percentage, so it will hide little — ' +
       'that is deliberate.</span>';
   }
-  const govt    = others.filter(j => sectorOf(j) === 'government');
-  const private_ = others.filter(j => sectorOf(j) === 'private');
+  /* ── WHAT YOU CAN APPLY FOR COMES FIRST ────────────────────────────────
+     134 of the 442 openings on this list were ones eligibility() had already
+     worked out the candidate cannot apply for — MBBS, nursing, LLB,
+     post-graduate-only posts — and they sat interleaved with the rest in
+     closing-date order. Labelling them "not your qualification" told the
+     truth but still made the reader do the filtering, which is the job this
+     app exists to do.
+
+     They are not deleted: eligibility() answers `null` whenever it cannot
+     read the qualification line, and only a definite `false` is moved. A
+     confident no goes to the bottom, behind its own fold, where it stays
+     available and stops competing with work you can actually get. */
+  const canApply = j => eligibility(j) !== false;
+  const govt     = others.filter(j => sectorOf(j) === 'government' && canApply(j));
+  const private_ = others.filter(j => sectorOf(j) === 'private'    && canApply(j));
+  const notMine  = others.filter(j => !canApply(j));
 
   document.getElementById('otherFold').classList.toggle('hidden', govt.length === 0);
   document.getElementById('otherCount').textContent = `Government openings (${govt.length})`;
@@ -544,9 +645,19 @@ function render() {
   document.getElementById('privateCount').textContent = `Private openings (${private_.length})`;
   document.getElementById('privateJobs').innerHTML = private_.map(otherHtml).join('');
 
-  /* Closed, kept rather than dropped: one you applied for is still the exam
-     you are sitting, and one you missed is worth seeing once so the next
-     cycle is not a surprise. */
+  const nmFold = document.getElementById('notMineFold');
+  if (nmFold) {
+    nmFold.classList.toggle('hidden', notMine.length === 0);
+    document.getElementById('notMineCount').textContent =
+      `Needs a qualification you have not entered (${notMine.length})`;
+    document.getElementById('notMineJobs').innerHTML = notMine.map(otherHtml).join('');
+  }
+
+  /* Closed openings are no longer fetched wholesale — see load(). The only
+     ones that arrive now are those marked applied, and those genuinely
+     matter: an application you sent is a thing you are waiting on. The 556
+     closed jobs nobody applied for that used to live here were the single
+     biggest block of noise on the screen. */
   document.getElementById('closedFold').classList.toggle('hidden', closed.length === 0);
   document.getElementById('closedCount').textContent = `Closed (${closed.length})`;
   document.getElementById('closedJobs').innerHTML = closed.map(j => {
@@ -873,6 +984,9 @@ function escapeHtml(s) {
    only has to re-render. */
 document.getElementById('qualPrompt').addEventListener('click', () => {
   if (window.JobhuntNav) window.JobhuntNav.openDrawer();
+});
+document.getElementById('examOver').addEventListener('click', () => {
+  if (window.JobhuntNav) window.JobhuntNav.openChangeExam();
 });
 document.addEventListener('change', e => {
   if (e.target && e.target.id === 'marksFilterOn') {

@@ -126,7 +126,14 @@ async function reachable(page, selector, where, minH){
     if (offlineOnPurpose && /Failed to load resource/i.test(m.text())) return;
     errors.push(m.text());
   });
-  const EXTERNAL = /supabase|youtube|ytimg|googlevideo|favicon/i;
+  /* Third-party origins this suite never intends to reach, plus TRANSPORT
+     failures. A `net::ERR_*` is the network layer refusing to carry the
+     request — a sandbox whose proxy presents a CA Chromium does not trust
+     produces ERR_CERT_AUTHORITY_INVALID for every outbound call — and that is
+     not a JavaScript error, which is what this check is named for and what it
+     is here to catch. Scoped to `net::ERR_` so a genuine thrown error, a
+     failed assertion or a bad property access still fails the run. */
+  const EXTERNAL = /supabase|youtube|ytimg|googlevideo|favicon|net::ERR_/i;
   const realErrors = () => errors.filter(e => !EXTERNAL.test(e));
 
   const BAR = 'nav#nav-bottom .nav-item';
