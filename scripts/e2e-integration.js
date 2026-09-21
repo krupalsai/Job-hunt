@@ -260,12 +260,12 @@ function check(name, cond, detail){
      recognise its own jobs and inserted a second copy of each. 90 of 595 live
      openings were doubles on the screen.
 
-     The collapse key is the ARTICLE URL, never the title. BITS Pilani lists
-     two "Junior Research Fellow – 1 Posts" closing the same day — different
-     supervisors, different eligibility, different notification PDFs — and
-     Kerala High Court lists two distinct "Registrar – 1 Posts". A title-based
-     dedupe deletes a real vacancy, which is the worse failure of the two, so
-     both halves are asserted here. */
+     A ROW IS ONLY A DUPLICATE WHEN THE ARTICLE, THE ORGANISATION AND THE
+     TITLE ALL MATCH. Each part is load-bearing, and dropping either one
+     hides real jobs: scrapeTgprb gives all 18 of the board's vacancies the
+     same sourceUrl (its homepage), and BITS Pilani lists two different
+     "Junior Research Fellow – 1 Posts" closing the same day. The behaviour
+     itself is driven in scripts/e2e-dedupe.js; these are the shape checks. */
   const idxDedupe = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   check('the app collapses two rows describing the same posting',
     /seenPosting/.test(idxDedupe) && /j\.source_url/.test(idxDedupe),
@@ -275,9 +275,13 @@ function check(name, cond, detail){
     !/seenPosting\.has\(j\.post_name/.test(idxDedupe),
     'a title-based dedupe would hide genuinely different vacancies');
   check('and a row with no article URL is left alone rather than collapsed',
-    /if \(j\.source_url && seenPosting\.has/.test(idxDedupe));
-  check('ingestion dedupes on the article as well as the hashed key',
-    /seenUrl/.test(sources) && /i\.sourceUrl/.test(sources));
+    /posting && seenPosting\.has\(posting\)/.test(idxDedupe) &&
+    /j\.source_url\s*\n?\s*\?/.test(idxDedupe));
+  check('the collapse key carries organisation and title, not the article alone',
+    /j\.source_url, j\.organization, j\.post_name/.test(idxDedupe),
+    'an article-only key hides the 18 TGPRB vacancies that share one URL');
+  check('ingestion collapses on the same triple',
+    /i\.sourceUrl, i\.organization, i\.postName/.test(sources));
 
   /* The key is generated in exactly one place. Writing rows with a key from
      anywhere else is what caused this, and the upsert has no way to notice. */

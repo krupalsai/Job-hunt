@@ -6,13 +6,20 @@
  * recognise its own jobs and inserted a second copy of each. 90 of 595 live
  * openings were doubles on the screen.
  *
- * THE COLLAPSE KEY IS THE ARTICLE URL, NEVER THE TITLE. BITS Pilani lists two
- * "Junior Research Fellow – 1 Posts" closing the same day — different
- * supervisors, different eligibility, different notification PDFs — and Kerala
- * High Court lists two distinct "Registrar – 1 Posts". A title-based dedupe
- * deletes a real vacancy someone could have applied for, which is the worse
- * failure of the two. Both halves are asserted here, against the exact row
- * shapes that were in the live table.
+ * A ROW IS ONLY A DUPLICATE WHEN THE ARTICLE, THE ORGANISATION AND THE TITLE
+ * ALL MATCH, and each of the three is load-bearing:
+ *
+ *   - The article alone is not an identity. scrapeTgprb gives all 18 of the
+ *     board's vacancies the same sourceUrl, its homepage — Sub Inspector,
+ *     Constable, Fire Fighter, Warder. An article-only dedupe shipped for a
+ *     few minutes and would have hidden 17 real jobs.
+ *   - The title alone is not an identity. BITS Pilani lists two "Junior
+ *     Research Fellow – 1 Posts" closing the same day with different
+ *     supervisors and different notification PDFs, and Kerala High Court
+ *     lists two distinct "Registrar – 1 Posts".
+ *
+ * Showing an opening twice costs a second of confusion. Hiding one costs the
+ * job. Every case below is a row shape taken from the live table.
  *
  * Run: node scripts/e2e-dedupe.js
  */
@@ -70,6 +77,21 @@ const ROWS = [
     source_url: 'https://www.freejobalert.com/articles/bits-jrf-3066261',
     notification_url: 'https://bits.ac.in/tiju.pdf' },
 
+  /* All 18 TGPRB vacancies share one sourceUrl: the board's homepage. They
+     are completely different jobs. ALL must survive. */
+  { ...base, id: 'tg-1', source_key: 'tgprb:post-11', organization: 'TGPRB',
+    post_name: 'SCT Sub Inspector of Police (Civil) — 148 posts', eligibility: 'Any Graduate',
+    profile: 'Graduate', deadline: null, is_estimated: true,
+    source_url: 'https://www.tgprb.in/' },
+  { ...base, id: 'tg-2', source_key: 'tgprb:post-21', organization: 'TGPRB',
+    post_name: 'SCT Police Constable (Civil) — 3,697 posts', eligibility: 'Any Graduate',
+    profile: 'Graduate', deadline: null, is_estimated: true,
+    source_url: 'https://www.tgprb.in/' },
+  { ...base, id: 'tg-3', source_key: 'tgprb:post-26', organization: 'TGPRB',
+    post_name: 'Fire Fighter — 751 posts', eligibility: 'Any Graduate',
+    profile: 'Graduate', deadline: null, is_estimated: true,
+    source_url: 'https://www.tgprb.in/' },
+
   /* Hand-seeded rows carry no article URL. Nothing is known about whether they
      are the same posting, and "I do not know" is not grounds for hiding one. */
   { ...base, id: 'nourl-1', source_key: 'sccl-1', organization: 'SCCL',
@@ -114,6 +136,9 @@ const ROWS = [
     `kept ${JSON.stringify(ids.filter(i => i.startsWith('dup-')))}`);
 
   console.log('\n── but never fewer ──────────────────────────────────────');
+  check('vacancies sharing ONE source URL all survive',
+    ids.filter(i => i.startsWith('tg-')).length === 3,
+    `kept ${JSON.stringify(ids.filter(i => i.startsWith('tg-')))} — an article-only dedupe hides 17 real TGPRB jobs`);
   check('two different vacancies sharing a title BOTH survive',
     ids.filter(i => i.startsWith('bits-')).length === 2,
     `kept ${JSON.stringify(ids.filter(i => i.startsWith('bits-')))} — a title-based dedupe hides a real job`);

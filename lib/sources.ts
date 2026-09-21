@@ -305,25 +305,27 @@ export async function scrapeFreeJobAlert(): Promise<RawItem[]> {
      keeps the reported count honest — "927 found" when 463 are distinct is a
      lie in the cron's own health output.
 
-     THE IDENTITY OF A POSTING IS ITS ARTICLE, NOT ITS TITLE. sourceKey hashes
-     board|post|advt, and the advt cell is sometimes blank or reused, so two
-     rows for the same article can still differ. Deduping on the article URL
-     as well catches that.
+     A ROW IS ONLY A DUPLICATE WHEN THE ARTICLE, THE ORGANISATION AND THE
+     TITLE ALL MATCH. sourceKey hashes board|post|advt, and the advt cell is
+     sometimes blank or reused, so two rows for the same posting can still
+     differ; the triple catches that.
 
-     What it must NOT do is collapse on organisation and title. BITS Pilani
-     currently lists two "Junior Research Fellow – 1 Posts" closing the same
-     day — different supervisors, different eligibility, different
-     notifications — and Kerala High Court lists two distinct "Registrar – 1
-     Posts". Those are separate vacancies that happen to share a generic name,
-     and a title-based dedupe deletes a real job someone could have applied
-     for. The article URL keeps them apart. */
+     Each part is load-bearing. The article alone is not an identity —
+     scrapeTgprb gives all 18 of its vacancies the same sourceUrl, the board's
+     homepage, so collapsing on it would delete 17 real jobs. The title alone
+     is not an identity either — BITS Pilani lists two "Junior Research Fellow
+     – 1 Posts" closing the same day with different supervisors, and Kerala
+     High Court lists two distinct "Registrar – 1 Posts". */
   const seenKey = new Set<string>();
-  const seenUrl = new Set<string>();
+  const seenPosting = new Set<string>();
   const unique = items.filter((i) => {
     if (seenKey.has(i.sourceKey)) return false;
-    if (i.sourceUrl && seenUrl.has(i.sourceUrl)) return false;
+    const posting = i.sourceUrl
+      ? [i.sourceUrl, i.organization, i.postName].join("\u0000")
+      : null;
+    if (posting && seenPosting.has(posting)) return false;
     seenKey.add(i.sourceKey);
-    if (i.sourceUrl) seenUrl.add(i.sourceUrl);
+    if (posting) seenPosting.add(posting);
     return true;
   });
 

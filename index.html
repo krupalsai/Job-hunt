@@ -524,20 +524,33 @@ async function load() {
        second copy of each. 90 of 595 openings were doubles on screen. The
        rows are gone, but the app should not depend on the table being clean.
 
-       THE IDENTITY OF A POSTING IS ITS ARTICLE, NOT ITS TITLE. BITS Pilani
-       lists two "Junior Research Fellow – 1 Posts" closing the same day —
-       different supervisors, different eligibility, different notifications —
-       and Kerala High Court lists two distinct "Registrar – 1 Posts".
-       Collapsing on organisation and title would hide a real vacancy, which
-       is a worse failure than showing a duplicate. Rows with no source_url
-       are never collapsed, for the same reason. */
+       A ROW IS ONLY A DUPLICATE WHEN THE ARTICLE, THE ORGANISATION AND THE
+       TITLE ALL MATCH. Each of the three is load-bearing:
+
+       - The article alone is NOT an identity. TGPRB's scraper gives all 18 of
+         its vacancies the same sourceUrl, the board's homepage — Sub
+         Inspector, Constable, Fire Fighter, Warder, Deputy Jailor. Collapsing
+         on the article would have hidden 17 real jobs.
+       - The title alone is NOT an identity either. BITS Pilani lists two
+         "Junior Research Fellow – 1 Posts" closing the same day with
+         different supervisors and different notifications, and Kerala High
+         Court lists two distinct "Registrar – 1 Posts".
+
+       Requiring all three collapses exactly the contamination above — the
+       same posting written twice under two keys — and nothing else. It leaves
+       a handful of near-duplicates visible, where the source revised a
+       vacancy count and the title changed with it. Showing an opening twice
+       costs a second of confusion; hiding one costs the job. */
     const seenId = new Set();
     const seenPosting = new Set();
     allJobs = jobs.flat().filter(j => {
       if (seenId.has(j.id)) return false;
-      if (j.source_url && seenPosting.has(j.source_url)) return false;
+      const posting = j.source_url
+        ? [j.source_url, j.organization, j.post_name].join('\u0000')
+        : null;
+      if (posting && seenPosting.has(posting)) return false;
       seenId.add(j.id);
-      if (j.source_url) seenPosting.add(j.source_url);
+      if (posting) seenPosting.add(posting);
       return true;
     });
   } catch (e) {
