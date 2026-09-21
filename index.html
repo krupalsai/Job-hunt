@@ -512,9 +512,34 @@ async function load() {
       jobs.push(await fetchAllPages(`select=*&id=in.(${ids})`));
     }
 
-    // De-duplicate: an applied job that is still open comes back in both.
-    const seen = new Set();
-    allJobs = jobs.flat().filter(j => !seen.has(j.id) && seen.add(j.id));
+    /* De-duplicate. Two reasons, and the second is not hypothetical.
+
+       An applied job that is still open comes back in both queries, so it has
+       to be collapsed on id.
+
+       And the same POSTING can arrive as two rows with different ids. That
+       happened for real: 87 rows were written into this table by hand with a
+       source_key computed by a different hash than lib/sources.ts uses, so
+       the nightly upsert could not recognise its own jobs and inserted a
+       second copy of each. 90 of 595 openings were doubles on screen. The
+       rows are gone, but the app should not depend on the table being clean.
+
+       THE IDENTITY OF A POSTING IS ITS ARTICLE, NOT ITS TITLE. BITS Pilani
+       lists two "Junior Research Fellow – 1 Posts" closing the same day —
+       different supervisors, different eligibility, different notifications —
+       and Kerala High Court lists two distinct "Registrar – 1 Posts".
+       Collapsing on organisation and title would hide a real vacancy, which
+       is a worse failure than showing a duplicate. Rows with no source_url
+       are never collapsed, for the same reason. */
+    const seenId = new Set();
+    const seenPosting = new Set();
+    allJobs = jobs.flat().filter(j => {
+      if (seenId.has(j.id)) return false;
+      if (j.source_url && seenPosting.has(j.source_url)) return false;
+      seenId.add(j.id);
+      if (j.source_url) seenPosting.add(j.source_url);
+      return true;
+    });
   } catch (e) {
     // Say so, and offer the way out. Leaving "Loading…" on screen forever
     // reads as a broken app rather than as a phone with no signal — and the

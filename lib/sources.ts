@@ -301,11 +301,31 @@ export async function scrapeFreeJobAlert(): Promise<RawItem[]> {
   }
 
   /* The page repeats each opening across a desktop and a mobile table, so the
-     same post arrives twice. Deduping on sourceKey here rather than relying on
-     the upsert keeps the reported count honest — "927 found" when 463 are
-     distinct is a lie in the cron's own health output. */
-  const seen = new Set<string>();
-  const unique = items.filter((i) => !seen.has(i.sourceKey) && seen.add(i.sourceKey));
+     same post arrives twice. Deduping here rather than relying on the upsert
+     keeps the reported count honest — "927 found" when 463 are distinct is a
+     lie in the cron's own health output.
+
+     THE IDENTITY OF A POSTING IS ITS ARTICLE, NOT ITS TITLE. sourceKey hashes
+     board|post|advt, and the advt cell is sometimes blank or reused, so two
+     rows for the same article can still differ. Deduping on the article URL
+     as well catches that.
+
+     What it must NOT do is collapse on organisation and title. BITS Pilani
+     currently lists two "Junior Research Fellow – 1 Posts" closing the same
+     day — different supervisors, different eligibility, different
+     notifications — and Kerala High Court lists two distinct "Registrar – 1
+     Posts". Those are separate vacancies that happen to share a generic name,
+     and a title-based dedupe deletes a real job someone could have applied
+     for. The article URL keeps them apart. */
+  const seenKey = new Set<string>();
+  const seenUrl = new Set<string>();
+  const unique = items.filter((i) => {
+    if (seenKey.has(i.sourceKey)) return false;
+    if (i.sourceUrl && seenUrl.has(i.sourceUrl)) return false;
+    seenKey.add(i.sourceKey);
+    if (i.sourceUrl) seenUrl.add(i.sourceUrl);
+    return true;
+  });
 
   /* Capped, soonest-closing first. The cap used to be 60 because api/ingest
      upserted row by row inside a 60s function; it is two bulk statements now,

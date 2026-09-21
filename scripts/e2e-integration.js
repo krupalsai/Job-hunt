@@ -252,6 +252,40 @@ function check(name, cond, detail){
   check('and one busy closing date is not truncated to a handful',
     perDay >= 20, `PER_DAY=${perDay}`);
 
+  /* ── ONE POSTING, ONE ROW — AND NEVER FEWER ────────────────────────────
+
+     WHAT HAPPENED: 87 rows were written into the jobs table by hand with a
+     source_key computed by SHA-1, while lib/sources.ts derives the key from
+     its own djb2 hash rendered base36. The nightly upsert therefore could not
+     recognise its own jobs and inserted a second copy of each. 90 of 595 live
+     openings were doubles on the screen.
+
+     The collapse key is the ARTICLE URL, never the title. BITS Pilani lists
+     two "Junior Research Fellow – 1 Posts" closing the same day — different
+     supervisors, different eligibility, different notification PDFs — and
+     Kerala High Court lists two distinct "Registrar – 1 Posts". A title-based
+     dedupe deletes a real vacancy, which is the worse failure of the two, so
+     both halves are asserted here. */
+  const idxDedupe = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  check('the app collapses two rows describing the same posting',
+    /seenPosting/.test(idxDedupe) && /j\.source_url/.test(idxDedupe),
+    'index.html may render one posting twice');
+  check('and it never collapses on organisation or title',
+    !/seenPosting\.has\(j\.organization/.test(idxDedupe) &&
+    !/seenPosting\.has\(j\.post_name/.test(idxDedupe),
+    'a title-based dedupe would hide genuinely different vacancies');
+  check('and a row with no article URL is left alone rather than collapsed',
+    /if \(j\.source_url && seenPosting\.has/.test(idxDedupe));
+  check('ingestion dedupes on the article as well as the hashed key',
+    /seenUrl/.test(sources) && /i\.sourceUrl/.test(sources));
+
+  /* The key is generated in exactly one place. Writing rows with a key from
+     anywhere else is what caused this, and the upsert has no way to notice. */
+  check('there is a single exported key derivation for job rows',
+    /export function hash/.test(sources) &&
+    (sources.match(/sourceKey: `fja:\$\{hash\(/g) || []).length >= 1,
+    'sourceKey may be built somewhere other than hash()');
+
   /* ── THE PRECACHE LIST MUST MATCH WHAT SHIPS ───────────────────────────
 
      A path listed in PREP_ASSETS that no longer exists installs a service
