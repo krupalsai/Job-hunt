@@ -176,6 +176,25 @@
   .sl-status { text-align: right; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
   .sl-status.is-applied { color: var(--accent-soft); font-weight: 700; }
   .sl-row { cursor: pointer; }
+
+  /* ── Areas ──────────────────────────────────────────────────────────
+     "In which area will I get a job" is a question the feed can answer and
+     never did: it listed 574 openings and left the reader to work out that
+     36 of them were research fellowships and 45 were PSU officer grade. */
+  .areas { padding-top: 18px; }
+  .areas.hidden { display: none; }
+  .areas-h { font-size: 17px; margin: 0 0 3px; font-weight: 700; }
+  .areas-sub { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
+  .area-fold { border-top: 1px solid var(--panel-border); }
+  .area-fold:last-child { border-bottom: 1px solid var(--panel-border); }
+  .area-fold > summary { list-style: none; cursor: pointer; padding: 12px 0;
+                         display: flex; align-items: baseline; gap: 10px; }
+  .area-fold > summary::-webkit-details-marker { display: none; }
+  .area-n { font-family: var(--font-display, inherit); font-weight: 800;
+            font-size: 15px; color: var(--accent-soft); min-width: 30px; }
+  .area-name { font-weight: 600; font-size: 14px; flex: 1; }
+  .area-when { font-size: 11.5px; color: var(--dim); white-space: nowrap; }
+  .area-body { padding: 0 0 8px 40px; }
   .exam-over b { color: var(--warn); }
   .qual-prompt b { color: var(--accent-soft); }
   /* Job card rows — label on the left, answer on the right, so "have I
@@ -314,6 +333,12 @@
   <input type="checkbox" id="marksFilterOn">
   <span id="marksFilterLabel">Hide openings my marks fall short of</span>
 </label>
+
+<section class="sec areas hidden" id="areasSec">
+  <h2 class="areas-h">Where your qualification fits</h2>
+  <div class="areas-sub" id="areasSub"></div>
+  <div id="areasList"></div>
+</section>
 
 <details class="sec other-fold hidden" id="otherFold">
   <summary id="otherCount">Government openings</summary>
@@ -631,6 +656,7 @@ function render() {
      it, is the least this can do — it does NOT pick the next exam, because
      that is not the app's decision to make. */
   renderShortlist();
+  renderAreas();
 
   const overBtn = document.getElementById('examOver');
   if (overBtn) {
@@ -806,6 +832,99 @@ const PRIVATE_NAMES = [
  * private role appearing in the government list, not a government notification
  * going missing, which is the one that would actually cost an application.
  */
+/* ── WHICH AREAS THIS QUALIFICATION OPENS ─────────────────────────────────
+   The feed could always answer "in which area will I get a job" and never
+   did: it printed 574 openings in date order and left the reader to notice
+   that 36 were research fellowships, 45 were PSU officer grade and 28 were
+   core engineering posts. Counting them is the app's job.
+
+   ORDERED MOST-SPECIFIC-FIRST, first match wins. A Junior Research Fellow is
+   research, not "assistant", even though the word assistant appears further
+   down the list — so the ordering here is load-bearing, not cosmetic.
+
+   These are buckets for reading a feed, not a taxonomy of the Indian public
+   sector. Anything that matches nothing lands in "Other" and is still shown,
+   because a bucket nobody wrote a rule for is not a reason to hide a job. */
+const AREA_RULES = [
+  ['Research & fellowships',
+   /junior research fellow|\bjrf\b|senior research fellow|\bsrf\b|research associate|research assistant|project associate|project fellow|project scientist|post[- ]?doctoral/i],
+  ['Teaching & faculty',
+   /professor|lecturer|\btgt\b|\bpgt\b|teacher|teaching|instructor|tutor|principal|faculty|coach|\bpt\b trainer/i],
+  ['Healthcare & medical',
+   /medical officer|staff nurse|\bnurse\b|nursing|pharmacist|lab technician|\bdmlt\b|radiographer|physiotherap|dental|ayush|paramedic|health worker/i],
+  ['Civil services & PSC',
+   /civil services|\bpsc\b|state services|group [abc]\b|deputy collector|tehsildar|\bbdo\b|revenue officer/i],
+  ['PSU officer & management grade',
+   /management trainee|executive trainee|\bdgm\b|general manager|deputy manager|assistant manager|senior manager|\bmanager\b|officer trainee|graduate engineer trainee|probationary officer|assistant vice president|\bavp\b|chief\b|director|\bexecutive\b|administrative officer/i],
+  ['Engineering posts (core)',
+   /\bengineer\b|engineering assistant|draughtsman|supervisor|foreman/i],
+  ['IT, software & data',
+   /software|programmer|developer|data (entry|scientist|analyst)|\bdeo\b|system|network|cyber|informatics|technical assistant|scientific.*assistant/i],
+  ['Apprentice & internship',
+   /apprentice|internship|\bintern\b/i],
+  ['Banking & finance',
+   /\bbank\b|financial|finance|accounts|auditor|audit officer|treasury/i],
+  ['Consultant & contract',
+   /consultant|young professional|advisor|specialist/i],
+  ['Administrative & clerical',
+   /assistant\b|clerk|steno|typist|\budc\b|\bldc\b|registrar|secretary|coordinator/i],
+  /* Posts a B.Tech qualifies for only through "Any Graduate". Named rather
+     than left in Other, because seeing that they ARE support-grade is the
+     point — the candidate can then decide, instead of scrolling past them. */
+  ['Support & facility staff',
+   /chowkidar|warden|driver|cook|sweeper|peon|guard|attendant|helper|support person|\bmts\b|multi[- ]tasking/i],
+  ['Sports & other quota',
+   /sports quota|sportsperson|meritorious sports/i],
+];
+
+function areaOf(j) {
+  const text = (j.post_name || '') + ' ' + (j.organization || '');
+  for (let i = 0; i < AREA_RULES.length; i++) {
+    if (AREA_RULES[i][1].test(text)) return AREA_RULES[i][0];
+  }
+  return 'Other';
+}
+
+function renderAreas() {
+  const box = document.getElementById('areasSec');
+  if (!box) return;
+
+  /* Only openings this candidate can actually apply for. The question is
+     "where do I fit", so a job that rules them out is not an answer to it. */
+  const mine = allJobs.filter(j => !isClosed(j) && eligibility(j) === true);
+  box.classList.toggle('hidden', mine.length === 0);
+  if (!mine.length) return;
+
+  const groups = {};
+  mine.forEach(j => { (groups[areaOf(j)] = groups[areaOf(j)] || []).push(j); });
+  const ordered = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length);
+
+  document.getElementById('areasSub').textContent =
+    mine.length + ' open posts you qualify for, across ' + ordered.length +
+    ' areas. Biggest first.';
+
+  document.getElementById('areasList').innerHTML = ordered.map(name => {
+    const list = groups[name].slice().sort((a, b) => {
+      const x = daysLeft(a), y = daysLeft(b);
+      if (x === null) return y === null ? 0 : 1;
+      if (y === null) return -1;
+      return x - y;
+    });
+    const soonest = list.find(j => daysLeft(j) !== null);
+    const when = soonest
+      ? 'next closes ' + new Date(soonest.deadline).toLocaleDateString('en-IN',
+          { day: 'numeric', month: 'short' })
+      : 'no dated closing';
+    return '<details class="area-fold"><summary>' +
+        '<span class="area-n">' + list.length + '</span>' +
+        '<span class="area-name">' + escapeHtml(name) + '</span>' +
+        '<span class="area-when">' + escapeHtml(when) + '</span>' +
+      '</summary><div class="area-body">' +
+        list.map(otherHtml).join('') +
+      '</div></details>';
+  }).join('');
+}
+
 /* ── TODAY'S SHORTLIST ─────────────────────────────────────────────────────
    WHAT THIS REPLACES. The screen opened on 508 openings in closing-date order
    and left every judgement to the reader: which of these is mine, which is

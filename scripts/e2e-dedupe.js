@@ -184,6 +184,38 @@ const ROWS = [
   check('and it stays short enough to act on',
     sl.length > 0 && sl.length <= 8, `${sl.length} rows`);
 
+  /* ── WHICH AREAS THE QUALIFICATION OPENS ───────────────────────────────
+     "In which area will I get a job" is a question the feed could always
+     answer and never did. The rules are ordered most-specific-first and the
+     ORDER IS LOAD-BEARING: a Junior Research Fellow must land in research,
+     not in administrative, even though "assistant" appears in a later rule.
+
+     The first version left 64 of 337 openings in Other — the largest bucket
+     of the lot, which means the rules were not doing their job. Healthcare,
+     support staff, faculty and civil services had no rules at all. */
+  console.log('\n── areas ────────────────────────────────────────────────');
+  const areas = await page.evaluate(() => {
+    const cases = [
+      ['Junior Research Fellow – 2 Posts', 'DRDO'],
+      ['Assistant Manager', 'GACL'],
+      ['Staff Nurse and More', 'NHM'],
+      ['Chowkidar', 'OAV'],
+      ['PGT, TGT and More', 'KV'],
+      ['Scientific/Technical Assistant', 'NIC'],
+    ];
+    return cases.map(([post, org]) => areaOf({ post_name: post, organization: org }));
+  });
+  check('a research fellowship is research, not "assistant"',
+    areas[0] === 'Research & fellowships', areas[0]);
+  check('a manager grade is PSU officer', areas[1] === 'PSU officer & management grade', areas[1]);
+  check('a nursing post is healthcare, not administrative',
+    areas[2] === 'Healthcare & medical', areas[2]);
+  check('a chowkidar post is named as support staff rather than hidden in Other',
+    areas[3] === 'Support & facility staff', areas[3]);
+  check('a teaching post is teaching', areas[4] === 'Teaching & faculty', areas[4]);
+  check('a technical assistant is IT, not generic admin',
+    areas[5] === 'IT, software & data', areas[5]);
+
   console.log('\n── and the page still works ─────────────────────────────');
   check('every surviving row is rendered', (await page.locator('.other-row, .card').count()) >= 3);
   check('no JavaScript errors', errors.length === 0, errors.slice(0, 2).join(' | '));
