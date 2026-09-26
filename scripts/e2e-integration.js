@@ -252,6 +252,47 @@ function check(name, cond, detail){
   check('and one busy closing date is not truncated to a handful',
     perDay >= 20, `PER_DAY=${perDay}`);
 
+  /* ── THE SHORTLIST ANSWERS "WHAT DO I DO TODAY" ────────────────────────
+
+     The screen opened on 508 openings in closing-date order and left every
+     judgement to the reader. The shortlist is the answer instead, and getting
+     it right took three wrong versions, each recorded here as a check:
+
+       1. Ranking on the calendar alone put eight Vocational Instructor and
+          Support Person posts closing tomorrow above SSC CGL, which was three
+          days away and the exam actually being sat.
+       2. Requiring eligibility() !== false let through everything the matcher
+          merely could not rule out.
+       3. Requiring the qualification line to NAME the candidate's degree still
+          failed, because PM SHRI Kendriya Vidyalaya's Vocational Instructor
+          post reads "B.Tech/B.E, M.E/M.Tech" in full. The difference between
+          that and GACL's Executive Trainee is the ROLE, not the degree. */
+  const idxSl = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  check('the exams outrank the openings, whatever the calendar says',
+    /rows\.concat\(openings\)/.test(idxSl),
+    'a paper being sat this week must not sit below a form closing tomorrow');
+  check('a shortlisted opening is a confident match, not merely un-ruled-out',
+    /eligibility\(j\) !== true/.test(idxSl));
+  check('and it is filtered on the ROLE, because the degree cannot separate them',
+    /SL_TRACK/.test(idxSl) && /SL_ASIDE/.test(idxSl) && /onMyTrack/.test(idxSl),
+    'PM SHRI Vocational Instructor asks for B.Tech/B.E too');
+  check('an exam whose date has passed drops off the shortlist',
+    /days === null \|\| days < 0/.test(idxSl));
+  check('an applied opening keeps its place rather than being filtered out',
+    /applied\[j\.id\]/.test(idxSl) && /Application sent/.test(idxSl));
+
+  /* Without a date the countdown, the run to the exam and today's blocks all
+     sit idle. SSC CGL had none while it was the live priority. */
+  const examsSrc = fs.readFileSync(path.join(ROOT, 'prep/exams.js'), 'utf8');
+  const EX = new Function(examsSrc + '; return EXAMS;')();
+  const dated = EX.filter(e => e.key && e.examDateStart);
+  check('every exam the app offers carries a date it can count back from',
+    dated.length === EX.filter(e => e.key).length,
+    'undated: ' + EX.filter(e => e.key && !e.examDateStart).map(e => e.short).join(', '));
+  check('and every one of those dates says where it came from',
+    dated.every(e => e.dateBasis || e.key === 'hal-cs'),
+    'an invented exam date is the most damaging thing this file could hold');
+
   /* ── ONE POSTING, ONE ROW — AND NEVER FEWER ────────────────────────────
 
      WHAT HAPPENED: 87 rows were written into the jobs table by hand with a

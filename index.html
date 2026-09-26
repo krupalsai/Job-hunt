@@ -146,6 +146,36 @@
                font-size: 12.5px; line-height: 1.5; text-align: left;
                width: calc(100% - 24px); font-family: inherit; cursor: pointer; display: none; }
   .exam-over.show { display: block; }
+
+  /* ── Today's shortlist ──────────────────────────────────────────────
+     The screen used to open on 508 undifferentiated openings and leave the
+     ranking to the reader. This is the answer to "what do I do today", in
+     the order it should be done, and it is the first thing on the page. */
+  .shortlist { padding-top: 14px; }
+  .shortlist.hidden { display: none; }
+  .shortlist-h { font-size: 19px; margin: 0 0 3px; font-weight: 700; }
+  .shortlist-sub { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
+  .sl-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .sl-table th { text-align: left; font-size: 11px; text-transform: uppercase;
+                 letter-spacing: .4px; color: var(--dim); font-weight: 700;
+                 padding: 0 0 6px; border-bottom: 1px solid var(--panel-border); }
+  .sl-table th.sl-p { width: 72px; }
+  .sl-table th.sl-s { text-align: right; width: 92px; }
+  .sl-table td { padding: 11px 0; border-bottom: 1px solid var(--panel-border);
+                 vertical-align: top; line-height: 1.35; }
+  .sl-table tr:last-child td { border-bottom: 0; }
+  .sl-rank { display: flex; align-items: center; gap: 8px; font-weight: 700;
+             font-family: var(--font-display, inherit); }
+  .sl-dot { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto; }
+  .sl-dot.red   { background: #ef4444; }
+  .sl-dot.amber { background: #f59e0b; }
+  .sl-dot.green { background: #22c55e; }
+  .sl-dot.grey  { background: #94a3b8; }
+  .sl-name { font-weight: 600; }
+  .sl-why { color: var(--dim); font-size: 11.5px; margin-top: 2px; }
+  .sl-status { text-align: right; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+  .sl-status.is-applied { color: var(--accent-soft); font-weight: 700; }
+  .sl-row { cursor: pointer; }
   .exam-over b { color: var(--warn); }
   .qual-prompt b { color: var(--accent-soft); }
   /* Job card rows — label on the left, answer on the right, so "have I
@@ -252,6 +282,14 @@
     </div>
   </div>
 </header>
+
+<section class="sec shortlist hidden" id="shortlist">
+  <h2 class="shortlist-h">Today's shortlist</h2>
+  <div class="shortlist-sub" id="shortlistSub"></div>
+  <table class="sl-table"><thead><tr>
+    <th class="sl-p">Priority</th><th>Recruitment</th><th class="sl-s">Status</th>
+  </tr></thead><tbody id="shortlistBody"></tbody></table>
+</section>
 
 <button class="exam-over" id="examOver">
   <b>That exam is behind you</b><br>
@@ -592,6 +630,8 @@ function render() {
      stayed scoped to it. Saying so, and offering the one control that fixes
      it, is the least this can do — it does NOT pick the next exam, because
      that is not the app's decision to make. */
+  renderShortlist();
+
   const overBtn = document.getElementById('examOver');
   if (overBtn) {
     const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
@@ -766,6 +806,175 @@ const PRIVATE_NAMES = [
  * private role appearing in the government list, not a government notification
  * going missing, which is the one that would actually cost an application.
  */
+/* ── TODAY'S SHORTLIST ─────────────────────────────────────────────────────
+   WHAT THIS REPLACES. The screen opened on 508 openings in closing-date order
+   and left every judgement to the reader: which of these is mine, which is
+   urgent, which have I already applied for, and which exam am I actually
+   sitting this week. That is the work the app exists to do, and it was not
+   doing it.
+
+   Everything here is derived, never typed in:
+
+     - EXAMS supplies the exams being prepared for and their dates. An exam
+       whose date has passed drops out; it is history, not a priority.
+     - allJobs supplies the openings, already filtered to ones still open and
+       ones this candidate can actually apply for.
+     - `applied` supplies the status, so something already sent stops shouting.
+
+   RANK IS RELEVANCE FIRST, THEN DAYS — and the first version of this got that
+   wrong in a way worth recording. Ranking on the calendar alone produced eight
+   rows of Vocational Instructor, Support Person and Medical Officer posts that
+   happened to close tomorrow, and left SSC CGL — three days away, the exam
+   actually being sat — off the list entirely. A shortlist that buries the
+   thing you are revising for under forms you were never going to send is the
+   same failure as the 508-row list, in less space.
+
+   So:
+
+     1. THE EXAMS COME FIRST, always, in date order. Missing a paper cannot be
+        undone; missing a form usually can, next cycle. They are also few, so
+        they cost almost none of the eight rows.
+     2. THEN OPENINGS, in date order, and only ones eligibility() answers a
+        confident YES to. The main list shows anything not ruled out, because
+        hiding a job is worse than showing a doubtful one — but a shortlist is
+        a claim that these are the ones worth acting on, and "I could not read
+        the qualification line" is not that claim. Those stay downstairs. */
+const SL_MAX = 8;
+
+/** Red under a week, amber under three, green beyond, grey with no date. */
+function slBand(days) {
+  if (days === null) return 'grey';
+  if (days <= 7)  return 'red';
+  if (days <= 21) return 'amber';
+  return 'green';
+}
+function slDays(iso) {
+  if (!iso) return null;
+  const t = Date.parse(iso.length <= 10 ? iso + 'T00:00:00' : iso);
+  if (!isFinite(t)) return null;
+  return Math.ceil((t - Date.now()) / 864e5);
+}
+
+/* WHY THE FILTER IS ON THE ROLE AND NOT THE DEGREE.
+
+   Three versions of this filter tried to rank on the qualification line and
+   all three produced the same nonsense: Vocational Instructor, Contractual
+   Teacher and Support Person at the top of a shortlist for a computer-science
+   engineer. The reason is in the data. PM SHRI Kendriya Vidyalaya's Vocational
+   Instructor post reads, in full, "B.Tech/B.E, M.E/M.Tech" — it genuinely does
+   ask for an engineering degree. No amount of reading that line distinguishes
+   it from GACL's Executive Trainee, because the difference is not the degree.
+   It is the JOB.
+
+   So the shortlist ranks on the role. TRACK holds the grades this candidate is
+   chasing — trainee, engineer, officer, executive, scientist, manager — and
+   ASIDE holds the ones they are not, which have to be named because a teaching
+   post at a school asks for the same B.Tech. Neither list hides anything: the
+   full list downstairs is untouched, and this only decides the order of eight
+   rows.
+
+   Both are plain word lists precisely so they can be argued with. */
+const SL_TRACK = /\b(engineer|engineering|executive|management\s*trainee|\bmt\b|trainee|officer|assistant\s*manager|deputy\s*manager|manager|scientist|analyst|programmer|developer|specialist|probationary|apprentice|technical\s*assistant)\b/i;
+const SL_ASIDE = /\b(teacher|teaching|instructor|tutor|professor|lecturer|principal|warden|nurse|nursing|medical|doctor|pharmacist|lab\s*attendant|attendant|driver|cook|sweeper|peon|guard|helper|support\s*person|counsellor|librarian|steno|typist|clerk\s*cum)\b/i;
+
+/** Is this the kind of post this candidate is actually chasing? */
+function onMyTrack(j) {
+  const text = (titleOf(j) || '') + ' ' + (j.post_name || '');
+  if (SL_ASIDE.test(text)) return false;
+  return SL_TRACK.test(text);
+}
+
+function shortlistRows() {
+  const rows = [];
+
+  /* The exams. These are the reason the app exists, so they are here whether
+     or not an opening for them happens to be in the feed. */
+  (typeof EXAMS !== 'undefined' ? EXAMS : []).forEach(e => {
+    if (!e.key || !e.examDateStart) return;
+    const days = slDays(e.examDateStart);
+    if (days === null || days < 0) return;            // sat already
+    rows.push({
+      // `short` is usually a prefix of `name` ("SSC CGL" / "SSC CGL Tier 1"),
+      // and printing both reads as a stutter.
+      days, name: (e.name && e.name.indexOf(e.short) === 0) ? e.name
+                : (e.short + ' — ' + (e.name || '')),
+      why: e.dateTentative ? 'Exam date is tentative' : 'Exam',
+      status: days === 0 ? 'Today' : days + (days === 1 ? ' day' : ' days'),
+      applied: false, exam: e.key,
+    });
+  });
+
+  /* The openings. Applied ones are kept regardless — an application you sent
+     is a thing you are waiting on. Everything else has to be a CONFIDENT
+     match: `=== true`, not "not ruled out". */
+  const openings = [];
+  allJobs.forEach(j => {
+    if (isClosed(j) && !applied[j.id]) return;
+    if (!applied[j.id] && eligibility(j) !== true) return;
+    /* And it has to be a post on this candidate's track. See SL_TRACK. */
+    if (!applied[j.id] && !onMyTrack(j)) return;
+    const days = daysLeft(j);
+    if (days !== null && days < 0 && !applied[j.id]) return;
+    openings.push({
+      days, name: j.organization + ' — ' + titleOf(j),
+      why: applied[j.id] ? 'Application sent'
+         : days === null ? 'Closing date not published'
+         : 'Closes ' + new Date(j.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+      status: applied[j.id] ? 'Applied'
+            : days === null ? '—'
+            : days + (days === 1 ? ' day' : ' days'),
+      applied: !!applied[j.id], job: j,
+    });
+  });
+
+  /* Soonest first within each group. A row with no date cannot be ranked
+     against one that has one, so it sorts last rather than being guessed at. */
+  const bySoonest = (a, b) => {
+    if (a.days === null) return b.days === null ? 0 : 1;
+    if (b.days === null) return -1;
+    return a.days - b.days;
+  };
+  rows.sort(bySoonest);
+  openings.sort(bySoonest);
+
+  // Exams keep their places; openings fill whatever is left.
+  return rows.concat(openings).slice(0, SL_MAX);
+}
+
+function renderShortlist() {
+  const box = document.getElementById('shortlist');
+  if (!box) return;
+  const rows = shortlistRows();
+  box.classList.toggle('hidden', rows.length === 0);
+  if (!rows.length) return;
+
+  const soon = rows.filter(r => r.days !== null && r.days <= 7 && !r.applied).length;
+  document.getElementById('shortlistSub').textContent =
+    (soon ? soon + (soon === 1 ? ' thing needs' : ' things need') + ' attention this week. '
+          : 'Nothing is due in the next seven days. ') +
+    'Exams first, then engineer and officer-grade openings you qualify for.';
+
+  document.getElementById('shortlistBody').innerHTML = rows.map((r, i) =>
+    '<tr class="sl-row"' + (r.job ? ' data-sl-job="' + escapeHtml(r.job.id) + '"' : '') +
+      (r.exam ? ' data-sl-exam="' + escapeHtml(r.exam) + '"' : '') + '>' +
+      '<td><span class="sl-rank"><span class="sl-dot ' +
+        (r.applied ? 'green' : slBand(r.days)) + '"></span>' + (i + 1) + '</span></td>' +
+      '<td><div class="sl-name">' + escapeHtml(r.name) + '</div>' +
+        '<div class="sl-why">' + escapeHtml(r.why) + '</div></td>' +
+      '<td class="sl-status' + (r.applied ? ' is-applied' : '') + '">' +
+        escapeHtml(r.status) + '</td>' +
+    '</tr>').join('');
+}
+
+/* A shortlist row is a shortcut to the thing it names. */
+document.addEventListener('click', e => {
+  const row = e.target.closest && e.target.closest('[data-sl-exam]');
+  if (row && window.JobhuntNav) {
+    window.JobhuntNav.go ? window.JobhuntNav.go('study')
+      : (location.href = window.JobhuntNav.learnHref('study'));
+  }
+});
+
 function sectorOf(j) {
   const name = ((j.organization || '') + ' ' + (j.post_name || '')).toLowerCase();
   if (PRIVATE_NAMES.some(p => name.includes(p))) return 'private';

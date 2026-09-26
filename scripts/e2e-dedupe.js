@@ -92,6 +92,16 @@ const ROWS = [
     profile: 'Graduate', deadline: null, is_estimated: true,
     source_url: 'https://www.tgprb.in/' },
 
+  /* The exact post that defeated the degree-based filter: a school teaching
+     job whose qualification line asks for an engineering degree. */
+  { ...base, id: 'kv-1', source_key: 'fja:kv1', organization: 'PM SHRI Kendriya Vidyalaya',
+    post_name: 'Vocational Instructor', eligibility: 'B.Tech/B.E, M.E/M.Tech',
+    source_url: 'https://www.freejobalert.com/articles/kv-vi-1' },
+  /* An opening genuinely on this candidate's track. */
+  { ...base, id: 'gacl-1', source_key: 'fja:gacl1', organization: 'GACL',
+    post_name: 'Officer, Executive Trainee', eligibility: 'B.Tech/B.E, MBA/PGDM',
+    source_url: 'https://www.freejobalert.com/articles/gacl-et-1' },
+
   /* Hand-seeded rows carry no article URL. Nothing is known about whether they
      are the same posting, and "I do not know" is not grounds for hiding one. */
   { ...base, id: 'nourl-1', source_key: 'sccl-1', organization: 'SCCL',
@@ -145,6 +155,34 @@ const ROWS = [
   check('rows with no article URL are never collapsed into each other',
     ids.filter(i => i.startsWith('nourl-')).length === 2,
     `kept ${JSON.stringify(ids.filter(i => i.startsWith('nourl-')))}`);
+
+  /* ── THE SHORTLIST, DRIVEN ─────────────────────────────────────────────
+     The static checks in e2e-integration.js assert the SHAPE of this code and
+     survived both mutations that broke it, which is exactly what a shape check
+     is worth. These drive the real thing.
+
+     Three wrong versions, each of which produced a list the candidate called
+     nonsense:
+       1. calendar-only ranking buried SSC CGL under eight posts closing sooner
+       2. eligibility !== false let through everything merely un-ruled-out
+       3. naming the degree still failed: PM SHRI's Vocational Instructor post
+          reads "B.Tech/B.E, M.E/M.Tech" in full. The role is the difference. */
+  console.log('\n── today\'s shortlist ────────────────────────────────────');
+  const sl = await page.evaluate(() => shortlistRows().map(r => ({
+    name: r.name, days: r.days, exam: !!r.exam })));
+
+  const firstOpening = sl.findIndex(r => !r.exam);
+  const lastExam = sl.map(r => r.exam).lastIndexOf(true);
+  check('every exam ranks above every opening',
+    lastExam === -1 || firstOpening === -1 || lastExam < firstOpening,
+    JSON.stringify(sl.map(r => (r.exam ? 'EXAM ' : 'job  ') + r.name.slice(0, 34))));
+  check('an exam three days out is not buried by forms closing tomorrow',
+    sl.some(r => r.exam), 'no exam reached the shortlist at all');
+  check('no post aimed at someone else reaches it',
+    !sl.some(r => /instructor|teacher|nurse|attendant|support person|driver|warden/i.test(r.name)),
+    JSON.stringify(sl.filter(r => /instructor|teacher|nurse|attendant|support person|driver|warden/i.test(r.name)).map(r => r.name)));
+  check('and it stays short enough to act on',
+    sl.length > 0 && sl.length <= 8, `${sl.length} rows`);
 
   console.log('\n── and the page still works ─────────────────────────────');
   check('every surviving row is rendered', (await page.locator('.other-row, .card').count()) >= 3);

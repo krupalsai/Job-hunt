@@ -776,17 +776,43 @@ function check(name, cond, detail){
     JSON.stringify(dates));
   check('and no individual assigned date is invented for the candidate',
     dates.halAssigned === null, String(dates.halAssigned));
-  check('TS SI has no date configured, and none is guessed',
-    dates.tsAssigned === null && dates.tsStart === null, JSON.stringify(dates));
+  /* TS SI used to be the app's example of an undated exam, and these checks
+     hard-coded it. TGPRB has since published 29 November 2026 and labels it
+     TENTATIVE, so the example moved but the principles did not:
+
+       - an INDIVIDUAL assigned date is never invented. That is the one
+         printed on an admit card and the app cannot know it.
+       - a published date that the board itself calls tentative is carried
+         with that word attached, not quietly presented as settled.
+       - every date says where it came from. */
+  check('no individual assigned date is invented for TS SI either',
+    dates.tsAssigned === null, String(dates.tsAssigned));
+  const tsMeta = await page.evaluate(() => {
+    const t = EXAMS.find(e => e.key === 'ts-si');
+    return { start: t.examDateStart || null, tentative: !!t.dateTentative, basis: t.dateBasis || null };
+  });
+  check("and a board's tentative date is labelled tentative, not settled",
+    tsMeta.start === null || (tsMeta.tentative === true && /tentative/i.test(tsMeta.basis || '')),
+    JSON.stringify(tsMeta));
+  check('and every configured exam date states its source',
+    await page.evaluate(() => EXAMS.filter(e => e.key && e.examDateStart)
+      .every(e => e.dateBasis || e.key === 'hal-cs')));
 
   await page.evaluate(() => { localStorage.setItem('jobhunt_current_exam', 'hal-cs'); window.renderToday(); });
   const head = (await page.locator('#today-head').textContent()).replace(/\s+/g, ' ');
   check('the window is shown as a range, never as one day',
     /5–6 Sep 2026/.test(head) && !/HAL CS: 5 Sep 2026/.test(head), head.slice(0, 160));
-  await page.goto(`http://localhost:${PORT}/learn.html?exam=ts-si#study`, { waitUntil: 'networkidle' });
-  const tsHead = (await page.locator('#today-head').textContent()).replace(/\s+/g, ' ');
-  check('an exam with no date still says so rather than guessing',
-    /date not configured/.test(tsHead), tsHead.slice(0, 160));
+  /* The principle, exercised on a synthetic exam rather than on whichever
+     real one happens to be undated this month. */
+  const undated = await page.evaluate(() => {
+    const fake = { key: '__undated', short: 'ZZZ', name: 'Undated Exam', sections: [] };
+    return typeof examWhen === 'function'
+      ? examWhen(fake)
+      : (window.JobhuntNav ? window.JobhuntNav.examWhen(fake) : null);
+  });
+  check('an exam with no date says so rather than guessing one',
+    !!undated && undated.days === null && /not announced|TBA/i.test(undated.text + ' ' + undated.short),
+    JSON.stringify(undated));
   await page.goto(`http://localhost:${PORT}/learn.html?exam=hal-cs#study`, { waitUntil: 'networkidle' });
 
   // Urgency counts back from the EARLIEST day of the window: ready a day early
@@ -808,9 +834,14 @@ function check(name, cond, detail){
     urgency.halUrgency === null ||
     Math.abs(urgency.halUrgency - (1 + (60 - urgency.halDays) / 60)) < 0.001,
     `${urgency.halUrgency} for ${urgency.halDays} days`);
-  check('an exam with no date still gets no urgency multiplier',
-    urgency.tsHasDate === false && (urgency.tsUrgency === null || urgency.tsUrgency === 1),
-    String(urgency.tsUrgency));
+  /* An exam the app cannot date must not be given urgency it has not earned.
+     TS SI carries a date now, so the property is asserted directly: urgency
+     only ever comes from a real examDateStart. */
+  check('urgency is only ever derived from a configured date',
+    urgency.tsHasDate === true
+      ? (urgency.tsUrgency === null || urgency.tsUrgency >= 1)
+      : (urgency.tsUrgency === null || urgency.tsUrgency === 1),
+    `hasDate=${urgency.tsHasDate} urgency=${urgency.tsUrgency}`);
 
   // Question provenance survives the planner: nothing is relabelled by which
   // exam happened to schedule it.

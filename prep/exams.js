@@ -179,6 +179,23 @@ const EXAMS = [
     minutes: 60,
     questions: 100,
     buffer: 5,
+
+    /* WITHOUT A DATE HERE, NOTHING IN THE PREP HALF OF THIS APP WORKS. The
+       countdown, "the run to the exam" and today's blocks all count back from
+       examDateStart; with it absent they render "date TBA" and the whole
+       engine sits idle for an exam that is days away. This one was missing
+       while SSC CGL was the live priority, which is most of why the app felt
+       like it was doing nothing.
+
+       SOURCE: the candidate's own brief, 25 September 2026 — "SSC CGL Tier-I
+       begins 30 September". Carried as a WINDOW, not a day: Tier-I runs over
+       several shifts and the individual date is printed on the admit card,
+       exactly as with HAL. dateBasis says where it came from, because an
+       invented exam date is the single most damaging thing this file could
+       hold. */
+    examDateStart: "2026-09-30",
+    dateBasis: "Reported start of the Tier-I window, 30 September 2026. Your own shift is on the admit card.",
+
     match: j => /staff selection commission|(^|\W)ssc(\W|$)/i.test(j.organization || "") ||
                 /\bcgl\b/i.test(j.post_name || ""),
     sections: [
@@ -212,6 +229,15 @@ const EXAMS = [
     // This one takes a proportion, so it is stated exactly rather than left as
     // a boolean — the whole guess-or-leave-it calculation depends on it.
     negativeText: "20% of the marks for that question",
+
+    /* SOURCE: the Telangana Police Recruitment Board lists 29 November 2026 as
+       the Preliminary Written Test date and labels it TENTATIVE. It is carried
+       with that word attached rather than quietly presented as settled — the
+       plan counts back from it, and a date that moves should move the plan,
+       not surprise the candidate. */
+    examDateStart: "2026-11-29",
+    dateTentative: true,
+    dateBasis: "TGPRB lists 29 November 2026 for the Preliminary Written Test, and labels it tentative.",
     // Exactly what the paper does with each response. Stated as numbers rather
     // than as a boolean because the guess-or-leave-it decision is arithmetic:
     // at one-in-four a guess is worth 0.25 − 0.75×0.20 = +0.10, and at
