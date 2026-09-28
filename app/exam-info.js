@@ -74,8 +74,10 @@ function renderExamInfo(){
     (exam.tactics || []).map(t=>`<li>${escHtml(t)}</li>`).join('') ||
     '<li class="muted">No tactics written for this exam yet.</li>';
 
-  const lessonsFor = name => (typeof CURRICULUM === 'undefined')
-    ? 0 : CURRICULUM.filter(l=>l.subject === name).length;
+  const lessonsFor = name => (typeof lessonsForExam === 'function')
+    ? lessonsForExam(name, exam && exam.key).length
+    : (typeof CURRICULUM === 'undefined')
+      ? 0 : CURRICULUM.filter(l=>l.subject === name).length;
   document.getElementById('ei-subjects').innerHTML = exam.sections.map(s=>
     s.subjects.map((sub, i)=>{
       const qn = (typeof QUESTION_BANK !== 'undefined' && QUESTION_BANK[sub]) ? QUESTION_BANK[sub].length : 0;

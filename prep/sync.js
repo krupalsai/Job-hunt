@@ -201,7 +201,9 @@
   /* Every subject the exam examines, whether or not it has lessons yet. */
   function subjects() {
     return examSubjects().map(name => {
-      const lessons = CURRICULUM.filter(l => l.subject === name);
+      const lessons = (typeof lessonsForExam === "function")
+        ? lessonsForExam(name, CURRENT_EXAM && CURRENT_EXAM.key)
+        : CURRICULUM.filter(l => l.subject === name);
       return {
         name,
         lessons,
@@ -357,7 +359,7 @@
       ".ls-links-note{color:var(--dim);font-size:11.5px;line-height:1.5;margin:2px 0 0;}" +
       /* The badge for a topic you said had not landed. Warm rather than red:
          it is a bookmark, not a mark against you. */
-      ".ls-badge.unclear{background:var(--warn);color:var(--bg);border-color:transparent;}";
+      ".ls-badge.unclear{background:var(--warn);color:var(--on-accent);border-color:transparent;}";
     document.head.appendChild(css);
   })();
 
@@ -962,7 +964,9 @@
     const exam = planExam();
     const order = planOrder(exam);
     const lessons = [];
-    order.forEach(sub => CURRICULUM.filter(l => l.subject === sub).forEach(l => lessons.push(l)));
+    order.forEach(sub => (typeof lessonsForExam === "function"
+      ? lessonsForExam(sub, exam && exam.key)
+      : CURRICULUM.filter(l => l.subject === sub)).forEach(l => lessons.push(l)));
 
     const left = daysLeft(exam);
     // Two lessons a day is the pace the path was written for. Where the date
