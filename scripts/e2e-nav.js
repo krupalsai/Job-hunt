@@ -520,11 +520,12 @@ async function reachable(page, selector, where, minH){
     (await page.locator(BAR + '.is-on').getAttribute('data-tab')) === 'progress');
 
   /* ── The drawer ─────────────────────────────────────────────────────── */
-  /* The game font has to actually arrive, not merely be referenced. A wrong
-     @font-face path, a missing file or a bad MIME type all fail silently into
-     the fallback stack — the app still works and just quietly stops looking
-     like itself, which is the kind of regression nobody files a bug for. */
-  console.log('\n── the typography actually loads ────────────────────────');
+  /* The game font is GONE, deliberately: the app renders in the phone's own
+     text face everywhere. The check is now the mirror of the old one — no
+     webfont may be required, because a required download is a first paint
+     waiting on a font file, and a display face is the look the redesign
+     retired. A future "make it look more like a game" fails here. */
+  console.log('\n── the typography needs no downloads ─────────────────────');
   const typo = await page.evaluate(async () => {
     await document.fonts.ready;
     const fam = sel => { const e = document.querySelector(sel);
@@ -535,19 +536,15 @@ async function reachable(page, selector, where, minH){
       heading: fam('header h1'),
     };
   });
-  check('both self-hosted faces load, rather than falling back silently',
-    typo.loaded.includes('Rajdhani') && typo.loaded.includes('Orbitron'),
-    JSON.stringify(typo));
-  check('and the chrome is actually rendered in the UI face',
-    typo.body === 'Rajdhani' && typo.heading === 'Rajdhani', JSON.stringify(typo));
-  /* The other half of the rule: reading surfaces must NOT take the game font.
-     This is the check that stops a future "make it look more like a game" from
-     quietly slowing down every question on a 150-minute paper. */
+  check('no webfont is loaded or referenced — the system face does everything',
+    typo.loaded.length === 0, JSON.stringify(typo));
+  /* Reading surfaces and chrome share one stack: hierarchy is weight and
+     size, not a costume. */
   const reading = await page.evaluate(() => {
     const e = document.querySelector('.qtext') || document.querySelector('.ls-p');
     return e ? getComputedStyle(e).fontFamily : null;
   });
-  check('but question text is left in a text face, not the display one',
+  check('but question text is left in a text face, not a display one',
     reading === null || (!/Orbitron/.test(reading) && !/Rajdhani/.test(reading)),
     String(reading));
 
@@ -570,9 +567,9 @@ async function reachable(page, selector, where, minH){
      name, and every row is titled exactly as the screen it opens. */
   const rows = (await page.locator('#nav-drawer .nav-row').allTextContents())
     .map(t => t.trim().split('\n')[0].trim());
-  const expected = ['Change exam', 'Jobs', 'All lessons', 'The run to the exam',
+  const expected = ['Change exam', 'Jobs', 'Instinct', 'All lessons', 'The run to the exam',
                     'Current affairs', 'Syllabus', 'Reset prep progress'];
-  check('the menu holds Change exam, the five destinations and Settings — and nothing else',
+  check('the menu holds Change exam, the six destinations and Settings — and nothing else',
     rows.length === expected.length && expected.every((e, i) => rows[i].indexOf(e) === 0),
     rows.join(' | '));
   for (const [id, title] of [['lessons','All lessons'], ['plan','The run to the exam'],

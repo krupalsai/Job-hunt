@@ -10,16 +10,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <!-- Inline so there is no extra request and no 404 for a missing file. -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1120'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%2322c55e' font-family='sans-serif' font-weight='bold'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E" />
 <!-- The bottom bar, the drawer and the exam switcher, shared with the job list.
      Deferred, so it runs after prep/exams.js at the foot of the body has
      defined EXAMS, and so its stylesheet lands after the one below. -->
 <script src="/nav.js" defer></script>
 <link rel="stylesheet" href="/fonts/fonts.css" />
-<!-- The two faces used above the fold, fetched in parallel with the CSS
-     rather than after it, so the first paint is not the fallback. -->
-<link rel="preload" href="/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/orbitron-var-latin.woff2" as="font" type="font/woff2" crossorigin />
 <style>
   /* Palette matched to index.html so the tracker and the prep read as one app.
      White ground, not the dark one this app started on: a light background
@@ -32,17 +28,21 @@
      how the subject chips ended up black-on-black. */
   :root{
     color-scheme: light dark;
-    --bg:#ffffff;
-    --panel:#f8faf9;
-    --panel-border:#e2e8ec;
-    --surface-2:#eef3f0;        /* raised inside a card: chips, mode rows */
-    --surface-2-border:#dbe6e0;
-    --tint:#eef8f1;             /* accent wash behind a highlighted block */
-    --tint-2:#f3f7f5;
-    --header-bg:#ffffffee;
-    --accent:#16a34a;
-    --accent-soft:#15803d;
-    --link:#1d4ed8;
+    --bg:#f5f6f8;
+    --panel:#ffffff;
+    --panel-border:#e4e7ec;
+    --surface-2:#f1f3f6;        /* raised inside a card: chips, mode rows */
+    --surface-2-border:#e2e6eb;
+    --tint:#eef0fe;             /* accent wash behind a highlighted block */
+    --tint-2:#f4f5fb;
+    --header-bg:#f5f6f8ee;
+    --accent:#4f46e5;
+    --accent-soft:#4338ca;
+    --accent-tint:#4f46e514;
+    --accent-tint-2:#4f46e526;
+    --accent-line:#4f46e555;
+    --link:#4338ca;
+    --on-accent:#ffffff;
     --text:#0f172a;
     --muted:#5b6b7a;
     --dim:#8794a1;
@@ -52,17 +52,21 @@
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#0b1120;
-      --panel:#131c31;
-      --panel-border:#1e293b;
-      --surface-2:#0f172a;
-      --surface-2-border:#243049;
-      --tint:#14351f;
-      --tint-2:#122031;
-      --header-bg:#0b1120ee;
-      --accent:#22c55e;
-      --accent-soft:#4ade80;
-      --link:#7db4ea;
+      --bg:#0b0f16;
+      --panel:#131a26;
+      --panel-border:#212b3a;
+      --surface-2:#0f1622;
+      --surface-2-border:#233047;
+      --tint:#1b2140;
+      --tint-2:#161c30;
+      --header-bg:#0b0f16ee;
+      --accent:#818cf8;
+      --accent-soft:#a5b4fc;
+      --accent-tint:#818cf81a;
+      --accent-tint-2:#818cf833;
+      --accent-line:#818cf866;
+      --link:#a5b4fc;
+      --on-accent:#ffffff;
       --text:#e2e8f0;
       --muted:#94a3b8;
       --dim:#64748b;
@@ -111,7 +115,7 @@
   .topic-sub{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:5px; }
   th{ color:var(--dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
   .pill{ display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
-  .p1{ background:#16a34a1f; color:#15803d; }
+  .p1{ background:var(--accent-tint); color:var(--accent-soft); }
   .p2{ background:#2563eb1f; color:var(--link); }
   .p3{ background:#47556933; color:#94a3b8; }
   ul{ padding-left:18px; margin:6px 0; font-size:13.5px; line-height:1.65; }
@@ -125,7 +129,7 @@
   /* Fun mode — same questions, same pool, a streak that moves. */
   .fun-streak{
     display:flex; align-items:center; gap:8px; margin-bottom:10px; padding:9px 12px;
-    background:linear-gradient(90deg,var(--tint),var(--tint-2)); border:1px solid #16a34a33;
+    background:linear-gradient(90deg,var(--tint),var(--tint-2)); border:1px solid var(--accent-line);
     border-radius:20px; font-size:12.5px; font-weight:700; color:var(--accent-soft);
   }
   .fun-flame{ font-size:15px; }
@@ -164,8 +168,8 @@
      coverage rather than as a pile of facts. */
   .ca-top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .ca-topic{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.6px;
-             color:var(--accent-soft); background:var(--tint, #16a34a1a);
-             border:1px solid #22c55e44; border-radius:20px; padding:2px 8px; }
+             color:var(--accent-soft); background:var(--tint, var(--accent-tint));
+             border:1px solid var(--accent-line); border-radius:20px; padding:2px 8px; }
   .ca-date{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--dim); }
   /* The takeaway is labelled, because "why it matters" is the part that turns a
      headline into a mark and it is the part a reader skips. */
@@ -193,17 +197,17 @@
   .opt-label{ flex:1; min-width:0; }
   .opt:hover:not([disabled]){ border-color:var(--accent); }
   .opt.correct{ border-color:var(--good); background:#16a34a26; }
-  .opt.correct .opt-letter{ background:var(--good); color:var(--bg); }
+  .opt.correct .opt-letter{ background:var(--good); color:var(--on-accent); }
   .opt.wrong{ border-color:var(--bad); background:#dc262626; }
-  .opt.wrong .opt-letter{ background:var(--bad); color:var(--bg); }
+  .opt.wrong .opt-letter{ background:var(--bad); color:var(--on-accent); }
   /* A mock marks your choice without saying whether it was right — revealing
      that is what the results screen is for, once the paper is over. */
   .opt.picked{ border-color:var(--accent-soft); background:var(--surface-2-border); }
-  .opt.picked .opt-letter{ background:var(--accent-soft); color:var(--bg); }
+  .opt.picked .opt-letter{ background:var(--accent-soft); color:var(--on-accent); }
   .opt[disabled]{ cursor:default; }
   .quiz-actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
   button.primary{
-    background:var(--accent); color:var(--bg); border:none; padding:10px 18px;
+    background:var(--accent); color:var(--on-accent); border:none; padding:10px 18px;
     border-radius:9px; font-weight:700; cursor:pointer; font-size:14px;
   }
   button.ghost{
@@ -223,7 +227,7 @@
     padding:5px 10px; border-radius:20px; font-size:12px;
     border:1px solid var(--panel-border); background:var(--surface-2); cursor:pointer;
   }
-  .tag.active{ background:var(--accent); color:var(--bg); font-weight:700; border-color:transparent; }
+  .tag.active{ background:var(--accent); color:var(--on-accent); font-weight:700; border-color:transparent; }
   .hidden{ display:none !important; }
   /* Section ids double as hash targets, so the browser scrolls them into view
      on load and keeps re-applying that as the page settles — landing the top of
@@ -254,7 +258,7 @@
     border:1px solid var(--panel-border); border-radius:9px; padding:8px 12px; margin-bottom:12px;
   }
   .rotate-bar strong{ color:var(--accent-soft); font-variant-numeric:tabular-nums; }
-  .rotate-bar.fresh{ border-color:#22c55e66; background:#16a34a1a; }
+  .rotate-bar.fresh{ border-color:var(--accent-line); background:var(--accent-tint); }
 
   /* Full mock */
   .mock-cta{ width:100%; margin-top:10px; min-height:44px; }
@@ -341,7 +345,7 @@
               font-weight:700; margin-top:3px; }
   .basic-rule{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:6px; }
   .drill-name{ font-size:19px; margin:4px 0 6px; }
-  .drill-rule{ border-left:3px solid var(--accent); background:#16a34a14;
+  .drill-rule{ border-left:3px solid var(--accent); background:var(--accent-tint);
                border-radius:0 8px 8px 0; padding:10px 12px; margin:0 0 14px;
                font-size:13.5px; line-height:1.65; }
 
@@ -358,7 +362,7 @@
   /* Which chapter to open right now — computed from real performance where
      there is any, and from the intended learning sequence where there is
      none, so this never reads as an empty list of equal-looking rows. */
-  .ls-recommend{ border-left:3px solid var(--accent); background:#16a34a14;
+  .ls-recommend{ border-left:3px solid var(--accent); background:var(--accent-tint);
                  border-radius:0 9px 9px 0; padding:10px 13px; margin-top:12px;
                  font-size:13px; line-height:1.55; }
   .ls-recommend strong{ color:var(--accent-soft); }
@@ -375,7 +379,7 @@
   .ls-title{ font-size:14px; font-weight:600; }
   .ls-why{ font-size:12px; color:var(--muted); margin-top:3px; line-height:1.45; }
   .ls-badge{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; }
-  .ls-badge.done{ background:#16a34a33; color:var(--good); }
+  .ls-badge.done{ background:var(--accent-tint-2); color:var(--accent-soft); }
   .ls-badge.open{ background:#2563eb1f; color:var(--link); }
   .ls-badge.lock{ background:#47556933; color:var(--dim); }
   .ls-meta{ font-size:11.5px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; margin-top:12px; }
@@ -413,7 +417,7 @@
     font-weight:600; cursor:pointer; text-align:left;
   }
   .subj-chip:active{ filter:brightness(.95); border-color:var(--accent); }
-  .subj-chip.is-done{ border-color:#16a34a55; background:#16a34a14; }
+  .subj-chip.is-done{ border-color:var(--accent-line); background:var(--accent-tint); }
   .subj-chip .subj-meta{ font-size:11px; font-weight:700; color:var(--dim);
                          font-variant-numeric:tabular-nums; }
   .subj-chip.is-done .subj-meta{ color:var(--accent); }
@@ -432,7 +436,7 @@
   #focus-pill .fp-topic{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
                          min-width:0; color:var(--text); }
   #focus-pill .fp-time{ font-variant-numeric:tabular-nums; color:var(--muted); }
-  #focus-pill.settled{ border-color:#16a34a55; }
+  #focus-pill.settled{ border-color:var(--accent-line); }
   #focus-pill.settled .fp-dot{ background:var(--accent); }
   #focus-pill.settled .fp-time{ color:var(--accent-soft); }
 
@@ -460,7 +464,7 @@
   .ds-sub{ font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
   /* Today's test is the headline action for the last fortnight, not one row
      among six. */
-  .mode-row.is-lead{ border-color:var(--accent); background:var(--tint, #16a34a12); }
+  .mode-row.is-lead{ border-color:var(--accent); background:var(--tint, var(--accent-tint)); }
   .mode-row.is-lead .mode-name{ color:var(--accent-soft); }
   .mode-row{
     display:flex; align-items:center; gap:12px; width:100%; text-align:left;
@@ -468,7 +472,7 @@
     padding:13px 14px; margin-top:10px; color:var(--text); font-family:inherit; cursor:pointer;
     min-height:56px;
   }
-  .mode-row:active{ filter:brightness(.9); border-color:#22c55e55; }
+  .mode-row:active{ filter:brightness(.9); border-color:var(--accent-line); }
   .mode-main{ flex:1; min-width:0; }
   .mode-name{ display:block; font-size:14.5px; font-weight:700; }
   .mode-what{ display:block; font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.45; }
@@ -476,7 +480,7 @@
               text-align:right; max-width:34%; line-height:1.35; }
 
   /* Progress — the instruction, before the numbers */
-  .next-task{ border-color:#22c55e55; background:linear-gradient(180deg,var(--tint),var(--tint-2)); }
+  .next-task{ border-color:var(--accent-line); background:linear-gradient(180deg,var(--tint),var(--tint-2)); }
   .nt-kicker{ font-size:10px; letter-spacing:.8px; text-transform:uppercase;
               font-weight:800; color:var(--accent); }
   .nt-title{ font-size:17px; font-weight:700; margin-top:5px; line-height:1.3; }
@@ -485,7 +489,7 @@
   .nt-why{ font-size:12.5px; color:var(--muted); margin-top:7px; line-height:1.5; }
   .nt-meta{ display:flex; gap:8px; margin-top:10px; }
   .nt-meta span{ font-size:11px; font-weight:700; color:var(--accent-soft);
-                 background:#16a34a1f; border:1px solid #22c55e33; border-radius:20px; padding:4px 10px; }
+                 background:var(--accent-tint); border:1px solid var(--accent-tint-2); border-radius:20px; padding:4px 10px; }
   .nt-stop{ font-size:11.5px; color:var(--dim); margin-top:8px; line-height:1.5; }
   .nt-go{ width:100%; margin-top:12px; }
 
@@ -501,7 +505,7 @@
   .plan-day.is-done{ opacity:.55; }
   .plan-top{ display:flex; gap:12px; align-items:flex-start; }
   .plan-tick{ flex:0 0 auto; width:26px; height:26px; border-radius:8px; cursor:pointer;
-              background:var(--surface-2); border:1px solid var(--panel-border); color:var(--bg);
+              background:var(--surface-2); border:1px solid var(--panel-border); color:var(--panel);
               font-weight:900; font-size:15px; line-height:1; }
   .plan-day.is-done .plan-tick{ background:var(--accent); border-color:transparent; }
   .plan-main{ flex:1; min-width:0; }

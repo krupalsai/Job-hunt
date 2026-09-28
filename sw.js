@@ -16,7 +16,17 @@
  *           shown as current.
  */
 
-/* v11 retires the four-day HAL crash course.
+/* v12 drops the two self-hosted display fonts (the UI uses the system face
+   now), precaches the Instinct feed shell, and picks up the deferred fold
+   rendering on the jobs page.
+
+   THE BUMP IS LOAD-BEARING. A phone that installed v11 holds the old pages and
+   the font files in its cache, and the fetch handler serves them cache-first.
+   Deleting the files from the repo does nothing to a device that already has
+   them — without a new cache name the activate handler never evicts the old
+   one, and the old look would keep opening offline from storage.
+
+   v11 retired the four-day HAL crash course.
 
    THE BUMP IS LOAD-BEARING. A phone that installed v10 holds /crash.html, its
    runtime and its 256KB content file in the cache, and the fetch handler
@@ -24,7 +34,7 @@
    device that already has them — without a new cache name the activate
    handler never evicts the old one, and the course would keep opening offline
    from storage long after the exam it was built for. */
-const CACHE = 'jobhunt-v11';
+const CACHE = 'jobhunt-v12';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -61,14 +71,14 @@ const PREP_ASSETS = [
   '/prep/ts-si-lessons.js',
   '/prep/sync.js',
   '/prep/today.js',
-  /* Typography. Self-hosted precisely so it survives offline — a font fetched
-     from another origin at runtime is one this cache cannot hold, and the app
-     would silently drop to the system face exactly when there is no signal. */
+  /* The Instinct feed's shell. The posts themselves are NEVER cached, for the
+     same reason job deadlines are not: a stale "today's lesson" is worse than
+     an empty one. */
+  '/feed.html',
+  '/app/feed.js',
+  /* Typography is the phone's own face now — nothing to cache, and nothing to
+     download before first paint. fonts.css holds only the token aliases. */
   '/fonts/fonts.css',
-  '/fonts/orbitron-var-latin.woff2',
-  '/fonts/rajdhani-500-latin.woff2',
-  '/fonts/rajdhani-600-latin.woff2',
-  '/fonts/rajdhani-700-latin.woff2',
   '/manifest.json',
   '/icon-192.svg',
 ];
@@ -102,6 +112,7 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
   const isPrep = url.pathname === '/learn.html'
+              || url.pathname === '/feed.html'
               || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
               || url.pathname.startsWith('/app/')

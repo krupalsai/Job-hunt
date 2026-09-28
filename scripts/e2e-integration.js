@@ -183,17 +183,21 @@ function check(name, cond, detail){
     uncached.length === 0, `missing from sw.js: ${uncached.join(', ')}`);
   check('and the service worker serves the split-out app modules from cache',
     /startsWith\('\/app\/'\)/.test(sw));
-  /* Same trap, different asset type: a self-hosted font is only worth
-     self-hosting if it is actually cached. Otherwise the app quietly drops to
-     the system face offline, which is the one situation it was self-hosted
-     for. */
+  /* The self-hosted font is retired: the app renders in the system face, so
+     there must be nothing left to go stale — no font files, no @font-face and
+     no font preloads. Reintroducing a display font is the regression the
+     redesign removed. */
   const cssHrefs = [...learnHtml.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m => m[1]);
   const uncachedCss = cssHrefs.filter(h => !sw.includes(`'${h}'`));
   check('every stylesheet the prep page loads is precached too',
     uncachedCss.length === 0, `missing from sw.js: ${uncachedCss.join(', ')}`);
-  const fontFiles = fs.readdirSync(path.join(ROOT, 'fonts')).filter(f => f.endsWith('.woff2'));
-  check('and every font file it ships is precached, or offline loses the look',
-    fontFiles.length > 0 && fontFiles.every(f => sw.includes(`'/fonts/${f}'`)),
+  const fontDir = path.join(ROOT, 'fonts');
+  const fontFiles = fs.existsSync(fontDir)
+    ? fs.readdirSync(fontDir).filter(f => f.endsWith('.woff2')) : [];
+  check('and no webfont ships at all — the system face needs no download',
+    fontFiles.length === 0 && !/\.woff2/.test(sw) &&
+    !/@font-face/.test(fs.readFileSync(path.join(ROOT, 'fonts', 'fonts.css'), 'utf8')) &&
+    !/rel="preload"[^>]*as="font"/.test(fs.readFileSync(path.join(ROOT, 'learn.html'), 'utf8')),
     fontFiles.join(', '));
   /* Order is load-bearing: these were one script, and top-level const/let are
      shared across classic scripts but dead until their own script has run. */

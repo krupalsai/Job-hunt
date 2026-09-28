@@ -1,102 +1,42 @@
 /* ============================================================================
-   TYPOGRAPHY — a game font, without making the exam harder to read.
+   TYPOGRAPHY — the phone's own text face, everywhere.
 
-   THE RULE THIS FILE EXISTS TO ENFORCE:
+   This app used to ship two display fonts (Orbitron for scores and titles,
+   Rajdhani for UI chrome). It looked like a game HUD, and the person using it
+   said so: a study tool should look like a tool. Display faces also cost
+   first paint — two font downloads before the first title could render.
 
-       CHROME gets the game font. READING SURFACES do not.
+   There is exactly one family now: the system text face. San Francisco on
+   iOS, Roboto on Android. It is the face every polished app on the phone
+   already uses, it renders instantly, it works offline by definition, and
+   hierarchy is carried by weight and size rather than by a costume.
 
-   A display face across question text and lesson prose looks the part and
-   costs you marks — at 15px, over a 150-minute paper, a display face is slower
-   to read than a text face, and slower reading on a paper decided by minutes
-   is a worse trade than any amount of atmosphere is worth.
-
-   So there are three roles, not one:
-
-     --font-display  Orbitron. Scores, big numbers, screen titles, badges. The
-                     wide squared-off HUD look, used where there are a handful
-                     of glyphs and they are meant to be looked AT.
-     --font-ui       Rajdhani. Buttons, labels, nav, chips, headings. Squared
-                     and technical but drawn as a UI face, so it carries the
-                     look across most of the surface without hurting.
-     --font-read     The system stack. Question text, explanations, lesson
-                     prose — everything read a paragraph at a time.
-                     Deliberately unchanged.
-
-   SELF-HOSTED ON PURPOSE. These could come from fonts.googleapis.com in two
-   lines, and they would fail on a train. The prep half of this app is built to
-   work with no signal, and the service worker precaches these alongside the
-   scripts. 58KB of woff2 buys an app that looks the same offline as online.
-   Latin subsets only — the app is English, and shipping subsets nothing
-   renders would multiply that for no glyphs.
-
-   Orbitron and Rajdhani are both under the SIL Open Font License 1.1, which
-   permits redistribution like this.
+   The three tokens are kept because the pages and the tests reference them —
+   they now all resolve to the same stack, and a future face change happens
+   here, once, rather than in three stylesheets.
    ========================================================================== */
 
-/* Orbitron ships as a variable font, so one file covers 700 through 900. */
-@font-face {
-  font-family: 'Orbitron';
-  font-style: normal;
-  font-weight: 700 900;
-  font-display: swap;
-  src: url('/fonts/orbitron-var-latin.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Rajdhani';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/rajdhani-500-latin.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Rajdhani';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/rajdhani-600-latin.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Rajdhani';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/rajdhani-700-latin.woff2') format('woff2');
-}
-
 :root {
-  /* Every stack ends in the system font, so a failed download degrades to a
-     readable app rather than a broken-looking one. */
-  --font-display: 'Orbitron', 'Rajdhani', -apple-system, system-ui, sans-serif;
-  --font-ui:      'Rajdhani', -apple-system, system-ui, sans-serif;
-  --font-read:    -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-ui:      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-read:    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* ── Chrome ──────────────────────────────────────────────────────────────
-   The page sets body to --font-ui; nav.js and every button already say
-   `font-family: inherit`, so the whole shell follows from that one line. */
-
-/* Numbers meant to be read as a SCORE rather than as prose. Tabular so a
-   counting number does not jitter, and wider tracking because Orbitron is
-   already wide — tight tracking makes it look cramped rather than technical. */
+/* Numbers meant to be read as a SCORE rather than as prose: tabular, so a
+   counting number does not jitter. */
 #score-big, .ms-marks, .ds-head strong, .fun-best, .stat-num,
 .pick-when, .nav-when, .font-display {
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
-  letter-spacing: .01em;
 }
 
-/* Screen titles and card headings: the game look where the glyph count is
-   small and the words are labels rather than sentences. */
+/* Screen titles and card headings: weight, not a different face. */
 header h1, .card h2, .mode-name, .ds-head, .ca-topic, .ls-group, .ls-subject,
 .plan-daynum, .bar-note strong, th {
   font-family: var(--font-ui);
-  letter-spacing: .01em;
 }
 
-/* ── Reading surfaces — deliberately NOT the game font ───────────────────
-   Everything below is read a paragraph at a time, under time pressure, and is
-   where marks are actually won. If a future change makes the app look more
-   like a game by touching this block, it has made the app worse. */
+/* Reading surfaces — question text, explanations, lesson prose. */
 .qtext,
 .explain, .explain .why, .explain .trick,
 .ls-main, .ls-p, .ls-why, .ls-body,
