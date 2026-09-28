@@ -957,6 +957,7 @@ const CURRICULUM = [
 /* ─────────────────────── GENERAL AWARENESS ─────────────────────── */
 {
   key: "ga-hal", subject: "General Awareness", topic: "General Awareness",
+  exams: ["hal-cs"],
   title: "HAL, defence and space — the static core", minutes: 5,
   why: "For a HAL paper this is the most likely GK, and unlike news it does not go stale.",
   blocks: [
@@ -994,3 +995,15 @@ const CURRICULUM = [
   ],
 },
 ];
+
+/* ── Which lessons belong on one exam's path ────────────────────────────────
+   A lesson with no `exams` list is shared: it teaches wherever its subject is
+   examined. One that names exams is written for those papers ONLY — "HAL,
+   defence and space" is static GK for the HAL paper, and for a while it was
+   also the first lesson an SSC CGL morning opened with, because every filter
+   matched on subject alone. Subject says WHERE a lesson sits; `exams` says
+   WHO it was written for. */
+function lessonsForExam(subject, examKey) {
+  return CURRICULUM.filter(l =>
+    l.subject === subject && (!l.exams || !examKey || l.exams.indexOf(examKey) !== -1));
+}

@@ -49,10 +49,10 @@ first. Both pages share one navigation, injected by `nav.js`:
   seven tabs in a strip that scrolled off both edges, so the tab you wanted was
   as often invisible as visible.
 - **A side drawer** behind the hamburger — Change exam, then the destinations
-  that are opened when they are wanted rather than every day: **Jobs**, **All
-  lessons**, **The run to the exam**, **Current affairs**, **Syllabus** — and
-  the settings (qualification, reset prep progress). Every row is titled exactly
-  as the screen it opens.
+  that are opened when they are wanted rather than every day: **Jobs**,
+  **Instinct**, **All lessons**, **The run to the exam**, **Current affairs**,
+  **Syllabus** — and the settings (qualification, reset prep progress). Every
+  row is titled exactly as the screen it opens.
 - **An exam switcher in the header** — HAL CS, SSC CGL and TS SI swap without
   editing the URL. On both pages the title *is* the switcher.
 - **The first-run exam question**, over everything until it is answered.
@@ -104,22 +104,14 @@ tests derived from the HTML rather than hard-coded:
 
 # Typography (`fonts/`)
 
-The rule: **chrome gets the game font, reading surfaces do not.**
-
-- `--font-display` — **Orbitron**, for scores, big numbers and badges.
-- `--font-ui` — **Rajdhani**, for headings, buttons, labels and the nav.
-- `--font-read` — the system stack, for question text, explanations and lesson
-  prose. Deliberately unchanged.
-
-A display face across question text looks right and costs marks: at 15px over a
-150-minute paper it is measurably slower to read, and this app is for a paper
-decided by minutes. `npm run test:nav` asserts both halves — that the two faces
-really load, and that `.qtext` is *not* rendered in either of them.
-
-The files are **self-hosted, not loaded from Google Fonts**, because the prep
-half of the app is built to work with no signal and a service worker cannot
-precache a font fetched from another origin at runtime. 58KB of woff2, latin
-subsets only. Both faces are SIL Open Font License 1.1.
+The rule is simpler than it used to be: **everything renders in the phone's
+own text face.** The app shipped two display fonts (Orbitron, Rajdhani) for
+its first year. They made a study tool look like a game HUD, and they cost
+first paint — two downloads before the first title could render. Both are
+gone. `fonts/fonts.css` now holds only the token aliases, all pointing at the
+system stack, so hierarchy comes from weight and size rather than a costume.
+The tests assert the removal, not the presence: no webfont may load, no
+@font-face may return, and `.qtext` stays in the system stack.
 
 ---
 
@@ -368,11 +360,31 @@ HTML table did, so the scraper reads the homepage, finds the hashed
 SSC and HAL need a real browser; that belongs in a GitHub Actions job, where
 Playwright is free and unmetered, rather than a Vercel function.
 
+# The Instinct feed (`/feed.html`)
+
+The day's lessons, quizzes, job lists, mocks and revision notes arrive on
+WhatsApp; the feed is the same material inside the app, where it is easier to
+sit and read. `feed.html` reads the `instinct_posts` table (migration 0007)
+through the public anon key — read-only by design, same as the job list.
+
+Posting goes through `api/feed.ts`:
+
+    GET    /api/feed?limit=30&type=lesson&before=<iso>   public, paginated
+    POST   /api/feed        Authorization: Bearer $INSTINCT_FEED_SECRET
+    DELETE /api/feed?id=N   Authorization: Bearer $INSTINCT_FEED_SECRET
+
+POST body: `{ "type": "lesson|quiz|jobs|mock|revision|note", "title": "...",
+"body": "..." }`. Writes use the service-role key server-side; the table's own
+RLS lets anyone read and nobody write. `/post.html` is an unlisted compose
+page for posting by hand (or by an agent filling the secret from the vault);
+it is a convenience, not the security — the secret is.
+
 ## Environment variables
 
     SUPABASE_URL                 https://xbjgmudcgjiompbroayr.supabase.co
     SUPABASE_SERVICE_ROLE_KEY    Supabase → Settings → API (server-side only)
     CRON_SECRET                  any long random string
+    INSTINCT_FEED_SECRET         any long random string (feed writes)
 
 ## Running ingestion
 

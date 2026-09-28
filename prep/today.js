@@ -314,8 +314,10 @@
     const staleness = days / 14;
 
     // Lessons still unmastered in this subject.
-    const lessons = (typeof CURRICULUM !== "undefined")
-      ? CURRICULUM.filter(l => l.subject === subject) : [];
+    const lessons = (typeof lessonsForExam === "function")
+      ? lessonsForExam(subject, exam && exam.key)
+      : (typeof CURRICULUM !== "undefined")
+        ? CURRICULUM.filter(l => l.subject === subject) : [];
     const mastered = masteredLessons();
     const unmastered = lessons.filter(l => !(mastered[l.key] || {}).mastered);
     const lessonGap = lessons.length ? unmastered.length / lessons.length : 0;
@@ -642,15 +644,15 @@
       ".td-domain:first-child{margin-top:0;padding-top:0;}" +
       ".td-chip{flex:1;min-width:52px;min-height:44px;border-radius:9px;cursor:pointer;" +
         "background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:13px;}" +
-      ".td-chip.is-on{background:var(--accent);color:var(--bg);font-weight:700;border-color:transparent;}" +
+      ".td-chip.is-on{background:var(--accent);color:var(--on-accent);font-weight:700;border-color:transparent;}" +
       ".td-block{display:flex;gap:11px;align-items:flex-start;padding:13px 0;" +
         "border-bottom:1px solid var(--panel-border);}" +
       ".td-block:last-child{border-bottom:none;}" +
       ".td-block.is-done{opacity:.5;}" +
       ".td-block.is-done .td-title{text-decoration:line-through;}" +
       ".td-tick{flex:0 0 auto;width:26px;height:26px;border-radius:8px;cursor:pointer;margin-top:2px;" +
-        "background:var(--panel);border:1px solid var(--panel-border);color:var(--bg);font-weight:900;font-size:15px;line-height:1;}" +
-      ".td-block.is-done .td-tick{background:var(--accent);border-color:transparent;}" +
+        "background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-weight:900;font-size:15px;line-height:1;}" +
+      ".td-block.is-done .td-tick{background:var(--accent);border-color:transparent;color:var(--on-accent);}" +
       ".td-main{flex:1;min-width:0;}" +
       ".td-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;}" +
       ".td-title{font-size:14px;font-weight:700;line-height:1.35;}" +

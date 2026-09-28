@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Post to the feed</title>
+<!-- Deliberately NOT in the navigation: this is the publishing tool, not app
+     chrome. It is protected by the feed secret, not by obscurity — the URL is
+     worthless without it. -->
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E" />
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#f5f6f8; --panel:#ffffff; --panel-border:#e4e7ec;
+    --accent:#4f46e5; --accent-soft:#4338ca;
+    --text:#0f172a; --muted:#5b6b7a; --bad:#dc2626; --good:#16a34a; --on-accent:#ffffff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b0f16; --panel:#131a26; --panel-border:#212b3a;
+      --accent:#818cf8; --accent-soft:#a5b4fc;
+      --text:#e2e8f0; --muted:#94a3b8; --bad:#f87171; --good:#4ade80; --on-accent:#ffffff;
+    }
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  main{ max-width:560px; margin:0 auto; padding:24px 16px 60px; }
+  h1{ font-size:19px; margin:0 0 4px; }
+  .sub{ color:var(--muted); font-size:12.5px; margin-bottom:20px; }
+  label{ display:block; font-size:12px; font-weight:700; color:var(--muted);
+         text-transform:uppercase; letter-spacing:.5px; margin:16px 0 6px; }
+  input, select, textarea{
+    width:100%; background:var(--panel); color:var(--text); font:inherit; font-size:15px;
+    border:1px solid var(--panel-border); border-radius:10px; padding:11px 12px;
+  }
+  textarea{ min-height:220px; resize:vertical; line-height:1.6; }
+  button{
+    width:100%; min-height:48px; margin-top:20px; border:0; border-radius:12px;
+    background:var(--accent); color:var(--on-accent); font:inherit; font-size:15px; font-weight:700;
+    cursor:pointer;
+  }
+  button:active{ filter:brightness(.92); }
+  #status{ margin-top:14px; font-size:13.5px; line-height:1.5; }
+  #status.ok{ color:var(--good); }
+  #status.err{ color:var(--bad); }
+  .recent{ margin-top:34px; border-top:1px solid var(--panel-border); padding-top:16px; }
+  .recent h2{ font-size:14px; margin:0 0 10px; }
+  .rrow{ display:flex; align-items:baseline; gap:10px; padding:9px 0;
+         border-bottom:1px solid var(--panel-border); font-size:13px; }
+  .rrow .rt{ flex:1; min-width:0; }
+  .rrow .rw{ color:var(--muted); font-size:11px; white-space:nowrap; }
+  .rrow button{ width:auto; min-height:34px; margin:0; padding:5px 12px; font-size:12px;
+                background:transparent; color:var(--bad); border:1px solid var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Post to the feed</h1>
+  <div class="sub">Everything posted here appears in the app under Instinct, alongside the day's lessons and jobs.</div>
+
+  <form id="f">
+    <label for="secret">Feed secret</label>
+    <input id="secret" name="password" type="password" autocomplete="current-password" required />
+
+    <label for="type">Type</label>
+    <select id="type">
+      <option value="lesson">Lesson</option>
+      <option value="quiz">Quiz</option>
+      <option value="jobs">Jobs list</option>
+      <option value="mock">Mock test</option>
+      <option value="revision">Revision</option>
+      <option value="note">Note</option>
+    </select>
+
+    <label for="title">Title</label>
+    <input id="title" name="title" type="text" maxlength="200" required
+           placeholder="Polity — Fundamental Rights, lesson 3" />
+
+    <label for="body">Body</label>
+    <textarea id="body" maxlength="20000" required
+      placeholder="Plain text. Blank lines are kept. Links become tappable."></textarea>
+
+    <button type="submit" id="go">Post</button>
+  </form>
+  <div id="status"></div>
+
+  <div class="recent">
+    <h2>Latest posts</h2>
+    <div id="recent">…</div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  const el = id => document.getElementById(id);
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
+    c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  async function recent() {
+    try {
+      const res = await fetch("/api/feed?limit=10");
+      const data = await res.json();
+      const posts = data.posts || [];
+      el("recent").innerHTML = posts.length ? posts.map(p =>
+        `<div class="rrow"><span class="rt"><strong>${esc(p.type)}</strong> · ${esc(p.title)}</span>` +
+        `<span class="rw">${esc(new Date(p.created_at).toLocaleString("en-IN",
+          { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }))}</span>` +
+        `<button type="button" data-del="${p.id}">Delete</button></div>`).join("")
+        : "Nothing posted yet.";
+      el("recent").querySelectorAll("[data-del]").forEach(b => {
+        b.addEventListener("click", async () => {
+          const secret = el("secret").value;
+          if (!secret) { setStatus("Enter the feed secret first.", false); return; }
+          if (!confirm("Delete this post from the feed?")) return;
+          const res = await fetch("/api/feed?id=" + b.dataset.del, {
+            method: "DELETE",
+            headers: { Authorization: "Bearer " + secret },
+          });
+          if (res.ok) { setStatus("Deleted.", true); recent(); }
+          else setStatus("Delete failed: " + (await res.json().catch(() => ({}))).error || res.status, false);
+        });
+      });
+    } catch (e) {
+      el("recent").textContent = "Could not load recent posts.";
+    }
+  }
+
+  function setStatus(msg, ok) {
+    const s = el("status");
+    s.textContent = msg;
+    s.className = ok ? "ok" : "err";
+  }
+
+  el("f").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const go = el("go");
+    go.disabled = true;
+    setStatus("Posting…", true);
+    try {
+      const res = await fetch("/api/feed", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + el("secret").value,
+        },
+        body: JSON.stringify({
+          type: el("type").value,
+          title: el("title").value,
+          body: el("body").value,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setStatus("Posted. It is on the feed now.", true);
+        el("title").value = "";
+        el("body").value = "";
+        recent();
+      } else {
+        setStatus("Not posted: " + (data.error || ("HTTP " + res.status)), false);
+      }
+    } catch (err) {
+      setStatus("Not posted: no connection.", false);
+    }
+    go.disabled = false;
+  });
+
+  recent();
+})();
+</script>
+</body>
+</html>

@@ -217,6 +217,9 @@ const ROWS = [
     areas[5] === 'IT, software & data', areas[5]);
 
   console.log('\n── and the page still works ─────────────────────────────');
+  /* Folds render their rows on first open — open them, then count. */
+  for (const sel of await page.locator('details summary').all())
+    await sel.click().catch(() => {});
   check('every surviving row is rendered', (await page.locator('.other-row, .card').count()) >= 3);
   check('no JavaScript errors', errors.length === 0, errors.slice(0, 2).join(' | '));
 

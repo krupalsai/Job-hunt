@@ -14,7 +14,7 @@
    One name each, and the name in the menu is the title of the screen it opens:
 
        Study · Test · Progress                 the bottom bar, always visible
-       ☰ → Change exam · Jobs · All lessons
+       ☰ → Change exam · Jobs · Instinct · All lessons
            · The run to the exam
            · Current affairs · Syllabus
            · Settings                          everything else
@@ -163,6 +163,7 @@
     gear:  svg('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'),
     cal:   svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3"/>'),
     news:  svg('<path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/>'),
+    spark: svg('<path d="M13 2.5L4.8 13.4h6L9.3 21.5l8.7-11.4h-6.2L13 2.5z"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
@@ -187,6 +188,8 @@
   const MENU_DESTS = [
     { id: "jobs", label: "Jobs", icon: ICON.jobs, href: "/",
       sub: "Openings tracked for this exam" },
+    { id: "feed", label: "Instinct", icon: ICON.spark, href: "/feed.html",
+      sub: "lessons, quizzes and job lists as they are sent" },
     { id: "lessons", label: "All lessons", icon: ICON.book,
       sub: "Every subject, and every topic inside it" },
     { id: "plan", label: "The run to the exam", icon: ICON.cal,
@@ -197,12 +200,14 @@
       sub: "Pattern, marking, time budget, exam-hall tactics" },
   ];
 
+  /* Jobs and Instinct are their own pages; the rest are sections of the
+     prep page. */
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
   function learnHref(section) {
     return "/learn.html?exam=" + encodeURIComponent(currentKey) + (section ? "#" + section : "");
   }
 
-  let activeId = IS_LEARN ? "study" : "jobs";
+  let activeId = IS_LEARN ? "study" : PAGE;
 
   /* ── Styles ──────────────────────────────────────────────────────────────
      Own namespace (--nav-*) rather than the pages' variables: index.html has
@@ -212,10 +217,10 @@
     const s = document.createElement("style");
     s.textContent = `
 :root{
-  --nav-bg:#ffffff; --nav-panel:#f8faf9; --nav-line:#e2e8ec; --nav-accent:#16a34a;
-  --nav-accent-soft:#15803d; --nav-text:#0f172a; --nav-muted:#5b6b7a; --nav-dim:#8794a1;
-  --nav-bar-bg:#ffffffef; --nav-scrim:#0f172a66; --nav-on-accent:#ffffff;
-  --nav-tint:#16a34a14; --nav-tint-line:var(--nav-tint-line);
+  --nav-bg:#f5f6f8; --nav-panel:#ffffff; --nav-line:#e4e7ec; --nav-accent:#4f46e5;
+  --nav-accent-soft:#4338ca; --nav-text:#0f172a; --nav-muted:#5b6b7a; --nav-dim:#8794a1;
+  --nav-bar-bg:#f5f6f8ef; --nav-scrim:#0f172a66; --nav-on-accent:#ffffff;
+  --nav-tint:#4f46e514; --nav-tint-2:#4f46e526; --nav-tint-line:#4f46e555;
   --nav-h:60px;
 }
 /* The navigation follows the phone's setting, same as both pages do. Its own
@@ -224,10 +229,10 @@
    two pages is worse than one that repeats a dozen values. */
 @media (prefers-color-scheme: dark){
   :root{
-    --nav-bg:#0b1120; --nav-panel:#131c31; --nav-line:#1e293b; --nav-accent:#22c55e;
-    --nav-accent-soft:#4ade80; --nav-text:#e2e8f0; --nav-muted:#94a3b8; --nav-dim:#64748b;
-    --nav-bar-bg:#0f172af7; --nav-scrim:#020617b8; --nav-on-accent:#0b1120;
-    --nav-tint:#16a34a1f; --nav-tint-line:#22c55e55;
+    --nav-bg:#0b0f16; --nav-panel:#131a26; --nav-line:#212b3a; --nav-accent:#818cf8;
+    --nav-accent-soft:#a5b4fc; --nav-text:#e2e8f0; --nav-muted:#94a3b8; --nav-dim:#64748b;
+    --nav-bar-bg:#0b0f16f7; --nav-scrim:#020617b8; --nav-on-accent:#ffffff;
+    --nav-tint:#818cf81a; --nav-tint-2:#818cf833; --nav-tint-line:#818cf866;
   }
 }
 html{ -webkit-text-size-adjust:100%; }
@@ -296,8 +301,9 @@ nav#nav-bottom .nav-item.is-on::before{
 .nav-avatar{
   flex:0 0 auto; width:42px; height:42px; border-radius:50%; background:var(--nav-tint);
   border:1px solid var(--nav-tint-line); display:flex; align-items:center; justify-content:center;
-  font-size:19px;
 }
+.nav-avatar .nav-ico{ width:22px; height:22px; color:var(--nav-accent); }
+.pick-mark .nav-ico{ width:26px; height:26px; color:var(--nav-accent); }
 .nav-acct-main{ min-width:0; flex:1; }
 .nav-acct-name{ font-size:14.5px; font-weight:700; color:var(--nav-text);
                 overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -325,7 +331,7 @@ nav#nav-bottom .nav-item.is-on::before{
 .nav-row.is-on .nav-ico{ color:var(--nav-accent); }
 .nav-chip{
   flex:0 0 auto; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
-  padding:3px 8px; border-radius:20px; background:#16a34a33; color:var(--nav-accent-soft);
+  padding:3px 8px; border-radius:20px; background:var(--nav-tint-2); color:var(--nav-accent-soft);
 }
 .nav-sep{ height:1px; background:var(--nav-line); margin:10px 16px 0; }
 .nav-field{ padding:6px 16px 4px; }
@@ -376,7 +382,7 @@ nav#nav-bottom .nav-item.is-on::before{
   border:1px solid var(--nav-line); border-radius:14px; padding:14px 15px;
   color:var(--nav-text); font-family:inherit;
 }
-.pick-row[aria-checked="true"]{ border-color:var(--nav-accent); background:#16a34a1a; }
+.pick-row[aria-checked="true"]{ border-color:var(--nav-accent); background:var(--nav-tint); }
 .pick-row[disabled]{ cursor:default; opacity:1; }
 .pick-dot{
   flex:0 0 auto; width:20px; height:20px; border-radius:50%; margin-top:2px;
@@ -408,7 +414,7 @@ nav#nav-bottom .nav-item.is-on::before{
 .pick-go{
   display:block; width:100%; max-width:520px; margin:0 auto; min-height:48px;
   border:0; border-radius:12px; font-family:inherit; font-size:15px; font-weight:800;
-  letter-spacing:.02em; background:var(--nav-accent); color:#0b1120; cursor:pointer;
+  letter-spacing:.02em; background:var(--nav-accent); color:var(--nav-on-accent); cursor:pointer;
 }
 .pick-go[disabled]{ background:var(--nav-line); color:var(--nav-dim); cursor:default; }
 
@@ -461,7 +467,7 @@ nav#nav-bottom .nav-item.is-on::before{
     const ex = currentExam();
     return '' +
       '<div class="nav-acct">' +
-        '<div class="nav-avatar">🎯</div>' +
+        '<div class="nav-avatar">' + ICON.exam + '</div>' +
         '<div class="nav-acct-main">' +
           '<div class="nav-acct-name" id="nav-acct-name">' + esc(ex ? ex.short : "No exam") + "</div>" +
           '<div class="nav-acct-sub" id="nav-acct-sub"></div>' +
@@ -567,7 +573,7 @@ nav#nav-bottom .nav-item.is-on::before{
           '<div class="pick-group">Current</div>' +
           (ex ? pickRowHtml(ex, { current: true }) : "") +
           '<div class="pick-group">Switch to</div>' + rows
-        : '<div class="pick-mark">🎯</div>' +
+        : '<div class="pick-mark">' + ICON.exam + '</div>' +
           '<h2 class="pick-h">Which exam are you preparing for?</h2>' +
           '<p class="pick-p">Everything in the app follows this one answer: the syllabus, the ' +
           'lessons, the practice questions, what to study today, the marking and timing advice, ' +

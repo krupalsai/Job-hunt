@@ -16,25 +16,24 @@
      stylesheet lands after the one below. -->
 <script src="/nav.js" defer></script>
 <link rel="stylesheet" href="/fonts/fonts.css" />
-<!-- The two faces used above the fold, fetched in parallel with the CSS
-     rather than after it, so the first paint is not the fallback. -->
-<link rel="preload" href="/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/orbitron-var-latin.woff2" as="font" type="font/woff2" crossorigin />
 <style>
   /* Light is the base; dark is the same tokens redefined under the system
      preference, so the app follows the phone. Literal hexes below were
      replaced by these — a literal is a colour that only works in one scheme. */
   :root {
     color-scheme: light dark;
-    --bg:#ffffff;
-    --panel:#f8faf9;
-    --panel-border:#e2e8ec;
-    --surface-2:#eef3f0;
-    --surface-2-border:#dbe6e0;
-    --tint:#eef8f1;
-    --header-bg:#ffffffee;
-    --accent:#16a34a;
-    --accent-soft:#15803d;
+    --bg:#f5f6f8;
+    --panel:#ffffff;
+    --panel-border:#e4e7ec;
+    --surface-2:#f1f3f6;
+    --surface-2-border:#e2e6eb;
+    --tint:#eef0fe;
+    --header-bg:#f5f6f8ee;
+    --accent:#4f46e5;
+    --accent-soft:#4338ca;
+    --accent-tint:#4f46e514;
+    --accent-tint-2:#4f46e526;
+    --accent-line:#4f46e555;
     --text:#0f172a;
     --muted:#5b6b7a;
     --dim:#8794a1;
@@ -44,21 +43,24 @@
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#0b1120;
-      --panel:#131c31;
-      --panel-border:#1e293b;
-      --surface-2:#0f172a;
-      --surface-2-border:#243049;
-      --tint:#14351f;
-      --header-bg:#0b1120ee;
-      --accent:#22c55e;
-      --accent-soft:#4ade80;
+      --bg:#0b0f16;
+      --panel:#131a26;
+      --panel-border:#212b3a;
+      --surface-2:#0f1622;
+      --surface-2-border:#233047;
+      --tint:#1b2140;
+      --header-bg:#0b0f16ee;
+      --accent:#818cf8;
+      --accent-soft:#a5b4fc;
+      --accent-tint:#818cf81a;
+      --accent-tint-2:#818cf833;
+      --accent-line:#818cf866;
       --text:#e2e8f0;
       --muted:#94a3b8;
       --dim:#64748b;
       --bad:#f87171;
       --warn:#f59e0b;
-      --on-accent:#0b1120;
+      --on-accent:#ffffff;
     }
   }
   * { box-sizing: border-box; }
@@ -102,7 +104,7 @@
   .org { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.4px; }
   .post { font-size: 15px; font-weight: 600; margin: 3px 0 8px; }
   .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
-  .badge.NEW { background: #16a34a22; color: var(--accent-soft); }
+  .badge.NEW { background: var(--accent-tint); color: var(--accent-soft); }
   .badge.UPDATED { background: #2563eb1f; color: var(--accent-soft); }
   .badge.DEADLINE_APPROACHING { background: #dc262622; color: var(--bad); }
   .badge.CLOSED { background: #64748b22; color: var(--dim); }
@@ -117,7 +119,7 @@
            color: var(--on-accent); background: var(--accent); border: 0; border-radius: 8px;
            padding: 9px 16px; min-height: 38px; cursor: pointer; }
   .install-banner {
-    margin: 14px 12px 0; padding: 12px 14px; background: var(--tint); border: 1px solid #16a34a55;
+    margin: 14px 12px 0; padding: 12px 14px; background: var(--tint); border: 1px solid var(--accent-line);
     border-radius: 10px; font-size: 12.5px; color: var(--muted); display: none;
   }
   .install-banner.show { display: block; }
@@ -134,7 +136,7 @@
      first-time visitor would never find the control that makes the list
      theirs. */
   .qual-prompt { margin: 0 12px 10px; padding: 11px 13px; border-radius: 10px;
-                 background: var(--tint); border: 1px solid #16a34a55; color: var(--muted);
+                 background: var(--tint); border: 1px solid var(--accent-line); color: var(--muted);
                  font-size: 12.5px; text-align: left; width: calc(100% - 24px);
                  font-family: inherit; cursor: pointer; display: none; }
   .qual-prompt.show { display: block; }
@@ -277,13 +279,13 @@
   .applied-q { font-size:12.5px; color:var(--dim); }
   .btn-y, .btn-n { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px;
                    border:1px solid var(--surface-2-border); background:var(--surface-2); color:var(--text); cursor:pointer; }
-  .btn-y.on { background:var(--accent); color:var(--bg); border-color:transparent; }
+  .btn-y.on { background:var(--accent); color:var(--on-accent); border-color:transparent; }
   .applied-tag { font-size:11px; font-weight:700; color:var(--accent-soft); }
   .syllabus-link { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
-                   color:var(--bg); background:var(--accent); padding:8px 14px; border-radius:8px;
+                   color:var(--on-accent); background:var(--accent); padding:8px 14px; border-radius:8px;
                    text-decoration:none; }
   .syllabus-box { margin-top:10px; padding:12px; border-radius:10px;
-                  background:var(--surface-2); border:1px solid #16a34a33; }
+                  background:var(--surface-2); border:1px solid var(--accent-tint-2); }
   .syllabus-pattern { font-size:12px; color:var(--accent-soft); font-weight:600; }
   .syllabus-sections { font-size:12px; color:var(--dim); margin-top:4px; line-height:1.6; }
 </style>
@@ -370,7 +372,7 @@
 </button>
 
 <div class="install-banner" id="installBanner">
-  📲 Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
+  Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
 </div>
 
 <script src="/prep/exams.js"></script>
@@ -522,6 +524,13 @@ function setApplied(jobId, yes) {
    for. The table passed it on 20 September. */
 const PAGE = 1000;
 
+/* Only the columns this screen reads. select=* also pulled source_key, the
+   raw scrape payload and the rest of the row for every opening on the board —
+   on a phone connection that is the difference between the list appearing and
+   the list thinking about it. */
+const JOB_COLS = 'id,organization,post_name,profile,eligibility,deadline,deadline_text,' +
+  'is_estimated,status,source_url,apply_url,notification_url,location,pay_scale,updated_at,last_checked_at';
+
 const SB_HEADERS = () => ({ apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` });
 
 /** One filtered query, paged until the server stops handing rows back. */
@@ -564,7 +573,7 @@ async function load() {
   try {
     const nowIso = new Date().toISOString();
     const liveQuery =
-      `select=*&or=(deadline.gte.${nowIso},deadline.is.null)` +
+      `select=${JOB_COLS}&or=(deadline.gte.${nowIso},deadline.is.null)` +
       `&order=is_estimated.asc,deadline.asc.nullslast`;
 
     const appliedIds = Object.keys(applied);
@@ -572,7 +581,7 @@ async function load() {
     if (appliedIds.length) {
       // Closed ones still worth showing: the ones already applied for.
       const ids = appliedIds.map(encodeURIComponent).join(',');
-      jobs.push(await fetchAllPages(`select=*&id=in.(${ids})`));
+      jobs.push(await fetchAllPages(`select=${JOB_COLS}&id=in.(${ids})`));
     }
 
     /* De-duplicate. Two reasons, and the second is not hypothetical.
@@ -644,8 +653,76 @@ function stampAge() {
   el.className = ageH >= 48 ? 'sub stale' : 'sub';
 }
 
+/* ── Deferred fold bodies ───────────────────────────────────────────────
+   The folded lists are most of the DOM on this screen — hundreds of rows
+   behind a closed <details> that most opens of the app never touch. Building
+   them on every render was the lag: hundreds of elements created so they
+   could sit hidden. A closed fold now carries a thunk instead of its rows,
+   and the rows are built the first time the fold is actually opened. Counts
+   and visibility stay eager — they are the part you can see. */
+const pendingBodies = new Map();   // token -> () => html
+let pendingSeq = 0;
+
+function stashBody(body, makeHtml) {
+  const old = body.getAttribute('data-pending');
+  if (old) pendingBodies.delete(old);
+  const token = 'pb' + (++pendingSeq);
+  pendingBodies.set(token, makeHtml);
+  body.setAttribute('data-pending', token);
+  body.innerHTML = '';
+}
+
+function setFoldBody(foldId, bodyId, makeHtml, countText, hide) {
+  const fold = document.getElementById(foldId);
+  const body = document.getElementById(bodyId);
+  if (!fold || !body) return;
+  fold.classList.toggle('hidden', !!hide);
+  // The count lives on the fold's own summary: otherFold → otherCount.
+  if (countText != null) {
+    const counter = document.getElementById(foldId.replace(/Fold$/, 'Count'));
+    if (counter) counter.textContent = countText;
+  }
+  if (hide) { stashBody(body, () => ''); return; }
+  if (fold.open) {
+    const old = body.getAttribute('data-pending');
+    if (old) { pendingBodies.delete(old); body.removeAttribute('data-pending'); }
+    body.innerHTML = makeHtml();
+  } else {
+    stashBody(body, makeHtml);
+  }
+}
+
+function fillPending(d) {
+  const body = d.querySelector('[data-pending]');
+  if (!body) return;
+  const token = body.getAttribute('data-pending');
+  const make = pendingBodies.get(token);
+  pendingBodies.delete(token);
+  body.removeAttribute('data-pending');
+  body.innerHTML = make ? make() : '';
+}
+/* A fold's rows exist before they are seen. The summary's click runs before
+   the details element flips open, so filling here means the content is
+   already there the moment anything — a tap, a script, a test — looks at it.
+   The toggle listener is the backstop for opens that skip the click: the
+   keyboard, or code setting .open directly. toggle does not bubble, but it
+   does capture. */
+document.addEventListener('click', e => {
+  const sum = e.target instanceof Element ? e.target.closest('summary') : null;
+  if (sum && sum.parentElement instanceof HTMLDetailsElement) fillPending(sum.parentElement);
+}, true);
+document.addEventListener('toggle', e => {
+  const d = e.target;
+  if (!(d instanceof HTMLDetailsElement) || !d.open) return;
+  fillPending(d);
+}, true);
+
 function render() {
   const exam = currentExam();
+  /* Every render re-stashes every closed fold below, so tokens from the
+     previous pass are dead weight — their bodies were rebuilt or replaced.
+     Clearing here keeps the map from accumulating one closure per render. */
+  pendingBodies.clear();
   const list = document.getElementById('examJobs');
   document.getElementById('qualPrompt').classList.toggle('show', !qualification);
 
@@ -741,30 +818,19 @@ function render() {
   const private_ = others.filter(j => sectorOf(j) === 'private'    && canApply(j));
   const notMine  = others.filter(j => !canApply(j));
 
-  document.getElementById('otherFold').classList.toggle('hidden', govt.length === 0);
-  document.getElementById('otherCount').textContent = `Government openings (${govt.length})`;
-  document.getElementById('otherJobs').innerHTML = govt.map(otherHtml).join('');
-
-  document.getElementById('privateFold').classList.toggle('hidden', private_.length === 0);
-  document.getElementById('privateCount').textContent = `Private openings (${private_.length})`;
-  document.getElementById('privateJobs').innerHTML = private_.map(otherHtml).join('');
-
-  const nmFold = document.getElementById('notMineFold');
-  if (nmFold) {
-    nmFold.classList.toggle('hidden', notMine.length === 0);
-    document.getElementById('notMineCount').textContent =
-      `Needs a qualification you have not entered (${notMine.length})`;
-    document.getElementById('notMineJobs').innerHTML = notMine.map(otherHtml).join('');
-  }
+  setFoldBody('otherFold', 'otherJobs', () => govt.map(otherHtml).join(''),
+    `Government openings (${govt.length})`, govt.length === 0);
+  setFoldBody('privateFold', 'privateJobs', () => private_.map(otherHtml).join(''),
+    `Private openings (${private_.length})`, private_.length === 0);
+  setFoldBody('notMineFold', 'notMineJobs', () => notMine.map(otherHtml).join(''),
+    `Needs a qualification you have not entered (${notMine.length})`, notMine.length === 0);
 
   /* Closed openings are no longer fetched wholesale — see load(). The only
      ones that arrive now are those marked applied, and those genuinely
      matter: an application you sent is a thing you are waiting on. The 556
      closed jobs nobody applied for that used to live here were the single
      biggest block of noise on the screen. */
-  document.getElementById('closedFold').classList.toggle('hidden', closed.length === 0);
-  document.getElementById('closedCount').textContent = `Closed (${closed.length})`;
-  document.getElementById('closedJobs').innerHTML = closed.map(j => {
+  setFoldBody('closedFold', 'closedJobs', () => closed.map(j => {
     const e = examForJob(j);
     return `<div class="other-row is-closed">
       <div class="other-main">
@@ -777,7 +843,7 @@ function render() {
         ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">${escapeHtml(e.short)} →</button>`
         : `<span class="other-none">closed</span>`}
     </div>`;
-  }).join('');
+  }).join(''), `Closed (${closed.length})`, closed.length === 0);
 }
 
 /** Applications closed. Three signals, because no single one is reliable
@@ -903,13 +969,10 @@ function renderAreas() {
     mine.length + ' open posts you qualify for, across ' + ordered.length +
     ' areas. Biggest first.';
 
-  document.getElementById('areasList').innerHTML = ordered.map(name => {
-    const list = groups[name].slice().sort((a, b) => {
-      const x = daysLeft(a), y = daysLeft(b);
-      if (x === null) return y === null ? 0 : 1;
-      if (y === null) return -1;
-      return x - y;
-    });
+  /* Bodies deferred like the list folds: an area's rows are built the first
+     time the area is opened, not for every area on every render. */
+  document.getElementById('areasList').innerHTML = ordered.map((name, i) => {
+    const list = groups[name];
     const soonest = list.find(j => daysLeft(j) !== null);
     const when = soonest
       ? 'next closes ' + new Date(soonest.deadline).toLocaleDateString('en-IN',
@@ -919,10 +982,18 @@ function renderAreas() {
         '<span class="area-n">' + list.length + '</span>' +
         '<span class="area-name">' + escapeHtml(name) + '</span>' +
         '<span class="area-when">' + escapeHtml(when) + '</span>' +
-      '</summary><div class="area-body">' +
-        list.map(otherHtml).join('') +
-      '</div></details>';
+      '</summary><div class="area-body" data-area="' + i + '"></div></details>';
   }).join('');
+  document.querySelectorAll('#areasList .area-body').forEach(body => {
+    const list = groups[ordered[+body.getAttribute('data-area')]].slice().sort((a, b) => {
+      const x = daysLeft(a), y = daysLeft(b);
+      if (x === null) return y === null ? 0 : 1;
+      if (y === null) return -1;
+      return x - y;
+    });
+    body.removeAttribute('data-area');
+    stashBody(body, () => list.map(otherHtml).join(''));
+  });
 }
 
 /* ── TODAY'S SHORTLIST ─────────────────────────────────────────────────────
@@ -1323,9 +1394,9 @@ function cardHtml(j) {
       ${j.pay_scale ? `<div class="jrow"><span class="jlab">Pay</span><span class="jval">₹${escapeHtml(j.pay_scale)}</span></div>` : ''}
 
       <div class="links">
-        ${cardNotif ? `<a href="${escapeHtml(cardNotif)}" target="_blank" rel="noopener">📄 Notification</a>` : ''}
-        ${cardApply ? `<a href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">🔗 Apply</a>` : ''}
-        ${cardDetails ? `<a href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">🔎 Details on FreeJobAlert</a>` : ''}
+        ${cardNotif ? `<a href="${escapeHtml(cardNotif)}" target="_blank" rel="noopener">Notification →</a>` : ''}
+        ${cardApply ? `<a href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">Apply →</a>` : ''}
+        ${cardDetails ? `<a href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>` : ''}
       </div>
       <a class="study-now" href="${examHref('study')}">Study now →</a>
     </div>
