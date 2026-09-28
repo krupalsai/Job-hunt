@@ -141,6 +141,19 @@ const EXAMS = [
       byCategory: { "UR": 70, "OBC-NCL": 70, "EWS": 70, "SC": 60, "ST": 60, "PwBD": 60 },
     },
 
+    /* The OTHER gates besides marks. Only rules with a source are written
+       down; HAL's age limit is not held in the app, so it is not asserted. */
+    eligibility: {
+      education: { anyOf: ["B.Tech CSE"], label: "B.E./B.Tech in Computer Science",
+        basis: "Advt. HAL/CHRC-TM/RECT-02/2026 — Management Trainee in the CS discipline." },
+    },
+
+    guidance: [
+      "The paper is decided in Part III: 100 of 160 marks are Computer Science. Everything else is there to keep you eligible, not to rank you — so CS is where the ranking happens and where most of the run should live.",
+      "Clause 7.6's 50% cut-off (80 of 160) is the real first target, not a formality. A candidate who spreads evenly across all eight CS subjects typically clears nothing; the plan orders subjects by how cheaply their marks can be bought, not by syllabus order.",
+      "The notification states no marking scheme, which is unusual and decides your exam-hall behaviour. Settle it from the admit card before the day: if there is no penalty, the correct tactic is to attempt all 160; if there is one, blind guessing hands marks back.",
+    ],
+
     focus: {
       basis: "For a candidate starting from scratch, aiming first at the 50% (80/160) needed to stay in the selection. A judgement, not from the notification.",
       order: ["English", "Reasoning", "Operating Systems", "DBMS",
@@ -187,14 +200,18 @@ const EXAMS = [
        while SSC CGL was the live priority, which is most of why the app felt
        like it was doing nothing.
 
-       SOURCE: the candidate's own brief, 25 September 2026 — "SSC CGL Tier-I
-       begins 30 September". Carried as a WINDOW, not a day: Tier-I runs over
-       several shifts and the individual date is printed on the admit card,
-       exactly as with HAL. dateBasis says where it came from, because an
-       invented exam date is the single most damaging thing this file could
-       hold. */
-    examDateStart: "2026-09-30",
-    dateBasis: "Reported start of the Tier-I window, 30 September 2026. Your own shift is on the admit card.",
+       SOURCE: the candidate's own sitting. The Commission's notice of
+       12 September 2026 sets the Tier-I window at 30 September to 30
+       October 2026 (ssc.gov.in, "Important Notice 2026_cgle_2026"), and the
+       candidate's own shift inside that window — stated 27 September, after
+       the city intimation slip came out on 21 September — is 14 October
+       2026. The countdown aims at HIS day, not the window's first:
+       preparing to the 30th when he sits on the 14th would plan two weeks
+       of study he does not have. dateBasis says where it came from, because
+       an invented exam date is the single most damaging thing this file
+       could hold. */
+    examDateStart: "2026-10-14",
+    dateBasis: "His own shift, 14 October 2026 (his statement), inside the official Tier-I window of 30 September to 30 October 2026 — SSC notice of 12 September 2026.",
 
     match: j => /staff selection commission|(^|\W)ssc(\W|$)/i.test(j.organization || "") ||
                 /\bcgl\b/i.test(j.post_name || ""),
@@ -214,6 +231,21 @@ const EXAMS = [
       "Order: Reasoning, then English, then General Awareness, then Quant. The first three are the fastest marks and Quant will eat whatever time you leave it.",
       "Skip any Quant question needing more than 90 seconds of setup and come back only if time remains.",
       "Keep the last 5 minutes for checking answers you marked, not for filling blanks.",
+    ],
+
+    /* CGL's age limit is per-POST (18–27 for most, up to 30–32 for some,
+       with category relaxation on top), so the app holds no single age rule
+       — asserting one would be wrong for someone. Verify your post's limit
+       in the notification. */
+    eligibility: {
+      education: { anyOf: ["B.Tech CSE", "Graduate"], label: "a bachelor's degree in any subject",
+        basis: "SSC CGL requires a bachelor's degree. Per-post age limits vary and are not held in the app — check the notification for your post." },
+    },
+
+    guidance: [
+      "Sixty minutes for 100 questions with half a mark deducted per wrong answer makes this a speed-and-selectivity paper, not a knowledge paper. The marks are in answering fast what you know and refusing everything else.",
+      "Quant is the section that eats time: 25 questions that can each consume five minutes if you let them. The budget gives it 22 minutes and the tactic is to skip anything needing more than 90 seconds of setup — coming back is cheaper than stalling.",
+      "General Awareness rewards a daily trickle over a cram. It is 50 marks of pure recall, and recall built over weeks beats a weekend of it — which is why the run gives it a fixed daily slot instead of study blocks.",
     ],
   },
   {
@@ -295,6 +327,19 @@ const EXAMS = [
       "The prelims are a gate, not a score. Nothing you earn here carries into the final merit, so clear it and move on rather than chasing every last mark.",
       "Papers I and II are only qualifying. Passing them is compulsory, but an extra hour spent on English polish is an hour taken from Papers III and IV, which are what actually rank you.",
       "Telangana Movement is the section a candidate from outside the state cannot bluff and you can. Treat it as the cheapest marks on the paper, not as background reading.",
+    ],
+
+    eligibility: {
+      education: { anyOf: ["B.Tech CSE", "Graduate"], label: "a bachelor's degree",
+        basis: "TGPRB requires a degree for SI (Civil)." },
+      domicile: { state: "Telangana",
+        basis: "TGPRB recruitment is for Telangana candidates. Age limits (with relaxation) are not held in the app — check the notification." },
+    },
+
+    guidance: [
+      "The prelims are a gate, not a score: nothing carries into the final merit. The right goal is to clear the cut with margin to spare, then turn every remaining week toward Papers III and IV, which are what rank you.",
+      "Two hundred questions in 180 minutes is 54 seconds a question, and the board publishes no per-section split — so pacing is your own discipline, and the app says the 54 seconds is derived every time it shows it.",
+      "General Studies includes Telangana Movement and State Formation, which rewards a local candidate directly. It is the cheapest block of marks on the paper for someone who grew up here — treat it as marks to bank, not background to skim.",
     ],
   },
 ];

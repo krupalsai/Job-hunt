@@ -41,6 +41,10 @@
      device to make this app work. */
   const MARKS_KEY = "jobhunt_marks_pct";
   const CAT_KEY   = "jobhunt_category";
+  /* Age and domicile decide eligibility as often as marks do. Same storage
+     rule as the marks sheet: the phone, never the server. */
+  const DOB_KEY   = "jobhunt_dob";
+  const STATE_KEY = "jobhunt_state";
   const DEVICE_KEY = "jobhunt_device_id";
   const DEFAULT_EXAM = "hal-cs";
 
@@ -389,6 +393,10 @@ nav#nav-bottom .nav-item.is-on::before{
   border:2px solid var(--nav-dim); display:flex; align-items:center; justify-content:center;
 }
 .pick-row[aria-checked="true"] .pick-dot{ border-color:var(--nav-accent); }
+.pick-elig{ display:block; font-size:12px; font-weight:600; margin-top:6px; }
+.pick-elig-yes{ color:var(--nav-accent); }
+.pick-elig-no{ color:#dc2626; }
+.pick-elig-check{ color:var(--nav-muted); font-weight:500; }
 .pick-row[aria-checked="true"] .pick-dot::after{
   content:""; width:10px; height:10px; border-radius:50%; background:var(--nav-accent);
 }
@@ -527,6 +535,17 @@ nav#nav-bottom .nav-item.is-on::before{
           "</div>" +
         "</details>" +
       "</div>" +
+
+      '<div class="nav-field">' +
+        '<label for="dobInp">My date of birth</label>' +
+        '<input id="dobInp" type="date" value="' + esc(ls.get(DOB_KEY) || "") + '">' +
+        '<div class="nav-hint">Age limits are checked against this — it never leaves the phone.</div>' +
+      "</div>" +
+      '<div class="nav-field">' +
+        '<label for="stateInp">My home state</label>' +
+        '<input id="stateInp" type="text" placeholder="e.g. Telangana" value="' + esc(ls.get(STATE_KEY) || "") + '">' +
+        '<div class="nav-hint">Some exams are for candidates of one state only.</div>' +
+      "</div>" +
       '<button type="button" class="nav-row nav-danger" id="nav-reset">' + ICON.trash +
         '<span class="nav-row-main"><span>Reset prep progress</span>' +
         '<span class="nav-row-sub">Quiz history, mastery and ticked days. Applied jobs are kept.</span></span></button>' +
@@ -536,6 +555,20 @@ nav#nav-bottom .nav-item.is-on::before{
   }
 
   /** One exam, as a row of the exam screen. */
+  /* "Can I actually sit this one" belongs ON the exam's row — an exam you
+     cannot apply for should never look like the same kind of choice as one
+     you can. eligibility.js is loaded before this script on both pages; if it
+     is missing the rows simply render without a badge. */
+  function eligBadge(e) {
+    if (typeof examEligibility !== "function" || typeof candidateProfile !== "function") return "";
+    const v = examEligibility(e, candidateProfile());
+    if (v.status === "yes")
+      return '<span class="pick-elig pick-elig-yes">You can apply</span>';
+    if (v.status === "no")
+      return '<span class="pick-elig pick-elig-no">Not eligible — ' + esc(v.reason) + "</span>";
+    return '<span class="pick-elig pick-elig-check">' + esc(v.reason) + "</span>";
+  }
+
   function pickRowHtml(e, opts) {
     const when = examWhen(e);
     // The pattern already carries the marks for all three exams; repeating the
@@ -547,7 +580,7 @@ nav#nav-bottom .nav-item.is-on::before{
           '<span class="' + (when.days !== null && when.days >= 0 ? "pick-when" : "") + '">' +
           esc(when.text) + "</span>" +
           (e.negative ? ' · <span class="pick-warn">wrong answers lose marks</span>' : "") +
-        "</span>" +
+        "</span>" + eligBadge(e) +
       "</span>";
     if (opts && opts.current) {
       return '<div class="pick-row pick-current" data-current-exam="' + esc(e.key) + '">' +
@@ -776,6 +809,24 @@ nav#nav-bottom .nav-item.is-on::before{
       const n = parseFloat(marksInp.value);
       if (isFinite(n) && n > 0 && n <= 100) ls.set(MARKS_KEY, String(n));
       else { ls.del(MARKS_KEY); marksInp.value = ""; }
+      document.dispatchEvent(new CustomEvent("jobhunt:profile"));
+    });
+  }
+
+  const dobInp = drawer.querySelector("#dobInp");
+  if (dobInp) {
+    dobInp.addEventListener("change", () => {
+      const v = (dobInp.value || "").trim();
+      if (v) ls.set(DOB_KEY, v); else ls.del(DOB_KEY);
+      document.dispatchEvent(new CustomEvent("jobhunt:profile"));
+    });
+  }
+
+  const stateInp = drawer.querySelector("#stateInp");
+  if (stateInp) {
+    stateInp.addEventListener("change", () => {
+      const v = (stateInp.value || "").trim();
+      if (v) ls.set(STATE_KEY, v); else ls.del(STATE_KEY);
       document.dispatchEvent(new CustomEvent("jobhunt:profile"));
     });
   }

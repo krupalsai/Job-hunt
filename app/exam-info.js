@@ -33,9 +33,41 @@ function currentExamObj(){
   return EXAMS.find(e=>e.key === k) || EXAMS.find(e=>e.key === 'hal-cs') || EXAMS[0] || null;
 }
 
+/* Profile edits in the menu change the eligibility answer. */
+document.addEventListener("jobhunt:profile", () => { try { renderExamInfo(); } catch (e) {} });
+
 function renderExamInfo(){
   const exam = currentExamObj();
   if(!exam || !document.getElementById('ei-snapshot')) return;
+
+  /* "Can you apply" — the first question about any exam, answered from the
+     profile on the phone. eligibility.js loads with exams.js on both pages;
+     if it is absent the card stays hidden rather than guessing. */
+  const eligCard = document.getElementById('ei-elig');
+  if (eligCard) {
+    if (typeof examEligibility === 'function' && typeof candidateProfile === 'function') {
+      const v = examEligibility(exam, candidateProfile());
+      const head = v.status === 'yes'
+        ? '<p><strong style="color:var(--accent)">You can apply for this one.</strong> ' + escHtml(v.reason) + '</p>'
+        : v.status === 'no'
+        ? '<p><strong style="color:var(--bad)">Not eligible.</strong> ' + escHtml(v.reason) + '</p>'
+        : '<p><strong>To check:</strong> ' + escHtml(v.reason) + '</p>';
+      document.getElementById('ei-elig-body').innerHTML = head +
+        (v.reasons && v.reasons.length
+          ? '<ul class="muted">' + v.reasons.map(r => '<li>' + escHtml(r) + '</li>').join('') + '</ul>'
+          : '');
+      eligCard.classList.remove('hidden');
+    }
+  }
+
+  /* "How to approach it" — the in-depth read on the exam, written per exam in
+     prep/exams.js, not generic study tips that would be wrong for one of them. */
+  const guidCard = document.getElementById('ei-guidance');
+  if (guidCard && exam.guidance && exam.guidance.length) {
+    document.getElementById('ei-guidance-body').innerHTML =
+      exam.guidance.map(g => '<p>' + escHtml(g) + '</p>').join('');
+    guidCard.classList.remove('hidden');
+  }
 
   const totalMarks = exam.sections.reduce((n,s)=> n + s.marks, 0);
   const totalQs = exam.questions || exam.sections.reduce((n,s)=> n + (s.questions || s.marks), 0);
