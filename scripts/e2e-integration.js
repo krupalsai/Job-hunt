@@ -583,6 +583,53 @@ function check(name, cond, detail){
   const keys = await page.evaluate(()=>Object.keys(localStorage));
   check('progress is stored under a job-hunt key', keys.includes('jobhunt_prep_hal_cs_v1'), keys.join(', '));
 
+  console.log('\n── eligibility answers the first question about an exam ──');
+  // The user: B.Tech CSE 2025, 6.54 CGPA, SC, born 15-04-2003, Telangana.
+  await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => {
+    localStorage.setItem('jobhunt_qualification', 'B.Tech CSE');
+    localStorage.setItem('jobhunt_category', 'SC');
+    localStorage.setItem('jobhunt_marks_pct', '65.4');
+    localStorage.setItem('jobhunt_dob', '2003-04-15');
+    localStorage.setItem('jobhunt_state', 'Telangana');
+  });
+  await page.reload({ waitUntil: 'networkidle' });
+  const elig = await page.evaluate(() => {
+    const p = candidateProfile();
+    return {
+      hal: examEligibility(EXAMS.find(e => e.key === 'hal-cs'), p),
+      ssc: examEligibility(EXAMS.find(e => e.key === 'ssc-cgl'), p),
+      si:  examEligibility(EXAMS.find(e => e.key === 'ts-si'), p),
+      dob: p.dob, state: p.state, cat: p.category
+    };
+  });
+  check('the profile on the phone feeds the verdict (DOB, state, category read)',
+    elig.dob === '2003-04-15' && elig.state === 'Telangana' && elig.cat === 'SC');
+  check('a B.Tech CSE 2025 graduate above the HAL bar can apply to HAL',
+    elig.hal.status === 'yes', JSON.stringify(elig.hal));
+  check('every graduate can apply to SSC CGL',
+    elig.ssc.status === 'yes', JSON.stringify(elig.ssc));
+  check('a Telangana graduate can apply to TS SI',
+    elig.si.status === 'yes', JSON.stringify(elig.si));
+  check('verdicts always carry their reasons and never an empty verdict',
+    [elig.hal, elig.ssc, elig.si].every(v => v.reasons.length >= 1 && v.reason.length > 5));
+  const noTech = await page.evaluate(() => {
+    localStorage.setItem('jobhunt_qualification', 'Graduate');
+    return examEligibility(EXAMS.find(e => e.key === 'hal-cs'), candidateProfile());
+  });
+  check('a plain graduate is told HAL needs an engineering degree',
+    noTech.status === 'no' && /B\.E\.\/B\.Tech|engineering degree/i.test(noTech.reason), JSON.stringify(noTech));
+
+  console.log('\n── the picker badges follow the profile ─────────────────');
+  // The suite pins jobhunt_current_exam via addInitScript, so the first-run
+  // picker never shows; the "Change exam" picker renders the same rows.
+  await page.evaluate(() => window.JobhuntNav.openChangeExam());
+  const badgeTexts = await page.$$eval('.pick-elig', els => els.map(e => e.textContent));
+  check('every picker row carries an eligibility line', badgeTexts.length >= 3);
+  check('HAL reads not eligible after the qualification change, the rest apply',
+    badgeTexts.some(t => /Not eligible/.test(t)) && (badgeTexts.filter(t => /can apply/.test(t)).length >= 2),
+    badgeTexts.join(' | '));
+
   await browser.close();
   server.close();
   console.log(`\n${fail === 0 ? '✅' : '❌'} ${pass} passed, ${fail} failed\n`);

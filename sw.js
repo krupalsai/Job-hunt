@@ -34,7 +34,7 @@
    device that already has them — without a new cache name the activate
    handler never evicts the old one, and the course would keep opening offline
    from storage long after the exam it was built for. */
-const CACHE = 'jobhunt-v12';
+const CACHE = 'jobhunt-v13';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -61,6 +61,7 @@ const PREP_ASSETS = [
   '/app/skills.js',
   '/app/progress.js',
   '/prep/exams.js',
+  '/prep/eligibility.js',
   '/prep/skills.js',
   '/prep/hal-cs.js',
   '/prep/ts-si.js',
