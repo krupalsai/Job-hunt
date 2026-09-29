@@ -1,4 +1,4 @@
-/* A self-study checklist, not a lesson engine. Stable topic IDs preserve ticks
+/* Offline study lessons and a progress checklist. Stable topic IDs preserve ticks
  * when labels change. This is deliberately device-local and works offline. */
 (function () {
   'use strict';
@@ -52,6 +52,7 @@
   let selected = 'quant';
   const summary = document.getElementById('roadmapSummary');
   const panel = document.getElementById('roadmapTopics');
+  let opened = null;
   if (!summary || !panel) return;
   const safe = s => String(s).replace(/[&<>"']/g, c =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -82,16 +83,43 @@
       return `<details class="roadmap-phase" ${i === firstIncomplete ? 'open' : ''}>
         <summary><span>${safe(phase.name)}</span><span>${complete}/${phase.topics.length}</span></summary>
         ${phase.note ? `<p class="roadmap-phase-caption">${safe(phase.note)}</p>` : ''}
-        ${phase.topics.map(([id, label]) => `<label class="roadmap-item">
-          <input type="checkbox" data-roadmap-topic="${id}" ${done[selected + ':' + id] === true ? 'checked' : ''}>
-          <span>${safe(label)}</span></label>`).join('')}</details>`;
+        ${phase.topics.map(([id, label]) => `<div class="roadmap-item">
+          <input type="checkbox" data-roadmap-topic="${id}" aria-label="Mark ${safe(label)} done" ${done[selected + ':' + id] === true ? 'checked' : ''}>
+          <button type="button" class="roadmap-open" data-roadmap-open="${id}" aria-expanded="${opened === id}">${safe(label)}<span aria-hidden="true">${opened === id ? '−' : '→'}</span></button>
+          </div>${opened === id ? lessonHtml(selected, id) : ''}`).join('')}</details>`;
     }).join('');
   }
   document.querySelectorAll('[data-roadmap-tab]').forEach(tab => tab.addEventListener('click', () => {
     selected = tab.dataset.roadmapTab;
+    opened = null;
     drawTopics();
     tab.focus();
   }));
+  function lessonHtml(track, id) {
+    const data = window.STUDY_LESSONS && window.STUDY_LESSONS[track] && window.STUDY_LESSONS[track][id];
+    if (!data) return '<div class="roadmap-lesson" role="status">This lesson is not available offline yet.</div>';
+    const [title, concept, worked, questions] = data;
+    return `<article class="roadmap-lesson" id="activeRoadmapLesson" aria-label="${safe(title)} lesson">
+      <div class="lesson-kicker">Study · ${track === 'quant' ? 'Quant' : 'Reasoning'}</div>
+      <h3>${safe(title)}</h3>
+      <p>${safe(concept)}</p>
+      <h4>Worked example</h4><p>${safe(worked)}</p>
+      <h4>Try it yourself</h4>
+      ${questions.map(([question, answer, reason], i) => `<details class="lesson-question"><summary>${i + 1}. ${safe(question)} <span>Show answer</span></summary><p><strong>${safe(answer)}</strong> · ${safe(reason)}</p></details>`).join('')}
+      <p class="lesson-hint">When you can solve these without peeking, use the box beside this topic to mark it done.</p>
+    </article>`;
+  }
+  panel.addEventListener('click', e => {
+    const button = e.target.closest('[data-roadmap-open]');
+    if (!button) return;
+    const id = button.dataset.roadmapOpen;
+    if (!all[selected].some(([key]) => key === id)) return;
+    const closing = opened === id;
+    opened = closing ? null : id;
+    drawTopics();
+    const target = panel.querySelector(closing ? `[data-roadmap-open="${id}"]` : '#activeRoadmapLesson');
+    if (target) target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
   panel.addEventListener('change', e => {
     const input = e.target.closest('[data-roadmap-topic]');
     if (!input) return;
@@ -103,7 +131,7 @@
     // Keep the open phase and checkbox in place instead of rerendering under a tap.
     const phase = input.closest('.roadmap-phase');
     if (phase) phase.querySelector('summary span:last-child').textContent =
-      phase.querySelectorAll('input:checked').length + '/' + phase.querySelectorAll('input').length;
+      phase.querySelectorAll('[data-roadmap-topic]:checked').length + '/' + phase.querySelectorAll('[data-roadmap-topic]').length;
   });
   drawSummary();
   drawTopics();

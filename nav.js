@@ -46,7 +46,9 @@
   const DOB_KEY   = "jobhunt_dob";
   const STATE_KEY = "jobhunt_state";
   const DEVICE_KEY = "jobhunt_device_id";
-  const DEFAULT_EXAM = "hal-cs";
+  // Retain historical exam data, not historical choices. The list also rolls
+  // forward after a sitting passes, without discarding any saved answers.
+  const STUDY_EXAMS = ["ssc-cgl", "ts-si"];
 
   /* Prep progress only. `jobhunt_applied` is not in here on purpose: which jobs
      you have applied for is a record of the outside world, not a study score,
@@ -78,12 +80,20 @@
      falls back to the stored choice and the address is corrected to match.
      prep/sync.js and currentExamObj() in learn.html resolve it in the same
      order — three readers of one answer. */
-  const validKey = k => !!exams.find(e => e.key === k);
+  const localDate = () => {
+    const d = new Date();
+    return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"),
+      String(d.getDate()).padStart(2, "0")].join("-");
+  };
+  const activeExam = e => STUDY_EXAMS.includes(e.key) &&
+    (!e.examDateEnd && !e.examDateStart || (e.examDateEnd || e.examDateStart) >= localDate());
+  const validKey = k => !!exams.find(e => e.key === k && activeExam(e));
+  const DEFAULT_EXAM = (exams.find(e => activeExam(e)) || exams.find(e => e.key === "ts-si") || exams[0] || {}).key;
   const urlExam = new URLSearchParams(location.search).get("exam");
   const storedKey = ls.get(EXAM_KEY);
 
   /** False until an exam has actually been chosen. Nothing may render before it. */
-  const hasChosen = validKey(storedKey) || (IS_LEARN && validKey(urlExam));
+  const hasChosen = !!storedKey || (IS_LEARN && validKey(urlExam));
 
   let currentKey;
   if (IS_LEARN) {
@@ -104,6 +114,12 @@
   } else {
     currentKey = validKey(storedKey) ? storedKey : DEFAULT_EXAM;
   }
+  // A bookmarked past paper is retained in historical records, but its study route lands on the current active paper.
+  if (IS_LEARN && urlExam && !validKey(urlExam)) {
+    try { history.replaceState(null, "", location.pathname + "?exam=" +
+      encodeURIComponent(currentKey) + (location.hash || "")); } catch (e) {}
+  }
+  if (!validKey(storedKey)) ls.set(EXAM_KEY, currentKey);
   const currentExam = () => exams.find(e => e.key === currentKey) || null;
 
   /* ── When is the exam ────────────────────────────────────────────────────
@@ -596,7 +612,7 @@ nav#nav-bottom .nav-item.is-on::before{
   function pickerHtml() {
     const change = pickerMode === "change";
     const ex = currentExam();
-    const others = exams.filter(e => !change || e.key !== currentKey);
+    const others = exams.filter(e => activeExam(e) && (!change || e.key !== currentKey));
     const rows = others.map(e => pickRowHtml(e, null)).join("");
 
     return '<div class="pick-inner">' +

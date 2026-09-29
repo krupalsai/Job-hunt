@@ -160,10 +160,11 @@
   const CURRENT_EXAM = (function () {
     if (typeof EXAMS === "undefined") return null;
     let key = new URLSearchParams(location.search).get("exam");
-    if (!key) {
+    // nav.js normalises a saved past sitting and the URL before this script.
+    if (!key || key === "hal-cs") {
       try { key = localStorage.getItem("jobhunt_current_exam"); } catch (e) { key = null; }
     }
-    return EXAMS.find(e => e.key === key) || null;
+    return EXAMS.find(e => e.key === key && e.key !== "hal-cs") || EXAMS.find(e => e.key === "ts-si") || null;
   })();
 
   /* The header names the screen and, underneath it, the exam — and nav.js is
@@ -922,8 +923,8 @@
 
   function planExam() {
     let key = new URLSearchParams(location.search).get("exam");
-    if (!key) { try { key = localStorage.getItem("jobhunt_current_exam"); } catch (e) {} }
-    return (typeof EXAMS !== "undefined") ? (EXAMS.find(e => e.key === key) || null) : null;
+    if (!key || key === "hal-cs") { try { key = localStorage.getItem("jobhunt_current_exam"); } catch (e) {} }
+    return (typeof EXAMS !== "undefined") ? (EXAMS.find(e => e.key === key && e.key !== "hal-cs") || EXAMS.find(e => e.key === "ssc-cgl") || null) : null;
   }
 
   /* The order the run TEACHES subjects in, which is not the order the paper

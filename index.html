@@ -320,11 +320,25 @@
   .roadmap-phase { border-top: 1px solid var(--panel-border); }
   .roadmap-phase > summary span:last-child { font-size: 11px; color: var(--dim); margin-left: auto; }
   .roadmap-phase-caption { font-size: 11px; color: var(--dim); margin: -3px 0 8px; }
-  .roadmap-item { display: flex; align-items: center; gap: 11px; min-height: 45px;
-    padding: 6px 4px; font-size: 13px; line-height: 1.35; cursor: pointer; }
-  .roadmap-item + .roadmap-item { border-top: 1px solid var(--panel-border); }
+  .roadmap-item { display: flex; align-items: center; gap: 11px; min-height: 48px;
+    padding: 4px; font-size: 13px; line-height: 1.35; }
+  .roadmap-item:not(:first-child) { border-top: 1px solid var(--panel-border); }
   .roadmap-item input { flex: 0 0 auto; width: 19px; height: 19px; accent-color: var(--accent); cursor: pointer; }
-  .roadmap-item input:checked + span { color: var(--muted); text-decoration: line-through; }
+  .roadmap-open { display:flex; align-items:center; justify-content:space-between; flex:1; min-height:42px;
+    text-align:left; border:0; background:transparent; color:var(--text); font:inherit; cursor:pointer; padding:6px 3px; }
+  .roadmap-open span { color:var(--accent-soft); font-size:17px; margin-left:8px; }
+  .roadmap-item input:checked + .roadmap-open { color:var(--muted); }
+  .roadmap-lesson { border:1px solid var(--accent-line); background:var(--surface-2); border-radius:12px;
+    padding:16px; margin:4px 0 14px; line-height:1.55; font-size:13px; }
+  .lesson-kicker { font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent-soft); font-weight:700; }
+  .roadmap-lesson h3 { margin:6px 0 10px; font-size:18px; letter-spacing:-.02em; }
+  .roadmap-lesson h4 { margin:16px 0 5px; font-size:12px; }
+  .roadmap-lesson p { margin:0 0 8px; }
+  .lesson-question { border-top:1px solid var(--panel-border); padding:10px 0; }
+  .lesson-question summary { cursor:pointer; font-weight:600; }
+  .lesson-question summary span { display:block; font-size:11px; font-weight:400; color:var(--accent-soft); }
+  .lesson-question p { margin:8px 0 0; }
+  .roadmap-lesson .lesson-hint { color:var(--muted); font-size:11px; margin:12px 0 0; }
   .roadmap-footnote { margin: 12px 0 1px; color: var(--dim); font-size: 11px; line-height: 1.45; }
 
   /* Shrestha's job posts — the daily private-sector feed. Same calm rows as
@@ -408,10 +422,10 @@
 <section class="study-roadmap" aria-labelledby="roadmapTitle">
   <div class="roadmap-eyebrow">Your study path</div>
   <h2 class="roadmap-title" id="roadmapTitle">Build your basics</h2>
-  <p class="roadmap-intro">Study on your own, then tick off each topic. Quant starts with calculations before percentages; reasoning runs alongside it.</p>
+  <p class="roadmap-intro">Open any topic for a short lesson, worked example and practice. Mark it done when you are ready.</p>
   <div class="roadmap-tracks" id="roadmapSummary" aria-live="polite"></div>
   <details class="roadmap-fold" id="roadmapFold">
-    <summary>Open study checklist</summary>
+    <summary>Open study lessons</summary>
     <div class="roadmap-tabs" role="tablist" aria-label="Study track">
       <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
       <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
@@ -508,6 +522,7 @@
   Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
 </div>
 
+<script src="/study-lessons.js" defer></script>
 <script src="/study-roadmap.js" defer></script>
 <script src="/prep/exams.js"></script>
 <script src="/prep/eligibility.js"></script>
@@ -2036,4 +2051,4 @@ load();
 loadShrestha();
 </script>
 </body>
-</html>
+                 </html>
