@@ -247,6 +247,13 @@ function merge(current, posts) {
   const byKey = new Map(jobs.map(j => [j.key, j]));
   let added = 0, updated = 0, skipped = 0;
 
+  // Fields the extractor owns. Anything else on a job (status, notes,
+  // first_seen_at) is hand- or app-managed and never overwritten here.
+  const MANAGED = ['company', 'role', 'location', 'qualification', 'experience',
+    'skills', 'package', 'graduation_year', 'dm_keyword', 'apply_hint',
+    'deadline', 'posted_at', 'post_url', 'duplicate_of', 'status'];
+  const snap = j => MANAGED.map(k => JSON.stringify(j[k] ?? null)).join('|');
+
   for (const post of posts) {
     const job = extractJob(post);
     if (job.skipped) { skipped++; continue; }
@@ -255,11 +262,13 @@ function merge(current, posts) {
       job.first_seen_at = now;
       jobs.push(job); added++;
     } else {
-      // Refresh extractor-managed fields, keep everything else (status, notes,
-      // first_seen_at). Captions don't change, so this is usually a no-op.
+      // Refresh extractor-managed fields, keep everything else. Captions
+      // don't change, so this is usually a no-op — and only real changes
+      // count as updates.
+      const before = snap(old);
       const keep = { status: old.status, notes: old.notes, first_seen_at: old.first_seen_at };
       Object.assign(old, job, keep);
-      updated++;
+      if (snap(old) !== before) updated++;
     }
   }
 
@@ -289,13 +298,19 @@ function merge(current, posts) {
     }
   }
 
+  // Did anything actually change? Compare against the pre-merge snapshot so
+  // a quiet day doesn't rewrite updated_at or trigger a no-op push.
+  const beforeAll = JSON.stringify((current && current.jobs) || []);
+  const changed = added > 0 || JSON.stringify(jobs) !== beforeAll;
+
   return {
     data: {
       source: 'instagram @careerwithshrestha',
-      updated_at: now,
+      updated_at: changed ? now : (current && current.updated_at) || now,
       jobs,
     },
     stats: { added, updated, skipped, total: jobs.length },
+    changed,
   };
 }
 
@@ -380,17 +395,17 @@ async function main() {
     die('github CLI not found and no --json given; cannot read the current feed.', 4);
   }
 
-  const { data, stats } = merge(current, posts);
+  const { data, stats, changed } = merge(current, posts);
   const out = JSON.stringify(data, null, 2) + '\n';
   console.log(`new: ${stats.added}, updated: ${stats.updated}, skipped (non-job): ${stats.skipped}, ` +
               `total: ${stats.total}`);
 
   if (FLAG('--push')) {
-    if (!stats.added && !stats.updated) {
+    if (!changed) {
       console.log('no changes; not pushing.');
       return;
     }
-    const msg = `jobs: daily Shrestha pull — ${stats.added} new, ${stats.updated} updated, ${stats.stale} stale`;
+    const msg = `jobs: daily Shrestha pull — ${stats.added} new, ${stats.updated} updated`;
     const res = pushFile(out, msg);
     console.log('pushed to main:', String(res).slice(0, 300));
   } else {
