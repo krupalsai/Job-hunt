@@ -1,0 +1,28 @@
+{
+  "ig-17902741311665253": {
+    "draft": {
+      "at": "2026-09-29",
+      "ats_score": 78,
+      "file": "data/resume-drafts/ig-17902741311665253.md",
+      "status": "draft"
+    },
+    "learn": {
+      "at": "2026-09-29",
+      "file": "data/learn/ig-17902741311665253.md"
+    },
+    "session": null
+  },
+  "ig-17910658281466911": {
+    "draft": {
+      "at": "2026-09-29",
+      "ats_score": 76,
+      "file": "data/resume-drafts/ig-17910658281466911.md",
+      "status": "draft"
+    },
+    "learn": {
+      "at": "2026-09-29",
+      "file": "data/learn/ig-17910658281466911.md"
+    },
+    "session": null
+  }
+}
