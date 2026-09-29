@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Job Hunt</title>
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<!-- The bottom bar, the drawer, the exam switcher and the first-run exam
+     question, shared with the prep page. Deferred, so it runs after
+     prep/exams.js at the foot of the body has defined EXAMS, and so its
+     stylesheet lands after the one below. -->
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<style>
+  /* Light is the base; dark is the same tokens redefined under the system
+     preference, so the app follows the phone. Literal hexes below were
+     replaced by these — a literal is a colour that only works in one scheme. */
+  :root {
+    color-scheme: light dark;
+    --bg:#f5f6f8;
+    --panel:#ffffff;
+    --panel-border:#e4e7ec;
+    --surface-2:#f1f3f6;
+    --surface-2-border:#e2e6eb;
+    --tint:#eef0fe;
+    --header-bg:#f5f6f8ee;
+    --accent:#4f46e5;
+    --accent-soft:#4338ca;
+    --accent-tint:#4f46e514;
+    --accent-tint-2:#4f46e526;
+    --accent-line:#4f46e555;
+    --text:#0f172a;
+    --muted:#5b6b7a;
+    --dim:#8794a1;
+    --bad:#dc2626;
+    --warn:#b45309;
+    --on-accent:#ffffff;        /* text on a filled accent button */
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b0f16;
+      --panel:#131a26;
+      --panel-border:#212b3a;
+      --surface-2:#0f1622;
+      --surface-2-border:#233047;
+      --tint:#1b2140;
+      --header-bg:#0b0f16ee;
+      --accent:#818cf8;
+      --accent-soft:#a5b4fc;
+      --accent-tint:#818cf81a;
+      --accent-tint-2:#818cf833;
+      --accent-line:#818cf866;
+      --text:#e2e8f0;
+      --muted:#94a3b8;
+      --dim:#64748b;
+      --bad:#f87171;
+      --warn:#f59e0b;
+      --on-accent:#ffffff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: var(--font-ui);
+    background: var(--bg); color: var(--text);
+    /* Cleared by nav.js too; stated here so the bottom bar never covers the
+       last job card during the moment before that stylesheet lands. */
+    padding-bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+  header {
+    padding: 10px 12px; position: sticky; top: 0;
+    background: var(--header-bg); backdrop-filter: blur(8px); z-index: 10;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  h1 { font-size: 17px; margin: 0; }
+  .sub { color: var(--dim); font-size: 11.5px; line-height: 1.35; }
+
+  /* Card sections: a title, and where there is more behind it, a way through. */
+  .sec { padding: 14px 12px 0; }
+  .view-all { background: none; border: 0; padding: 0; color: var(--accent-soft); font: inherit;
+              font-size: 12px; font-weight: 700; cursor: pointer; }
+
+  /* ── The exam you chose ────────────────────────────────────────────────
+     The first thing on the home screen, because it is the thing every other
+     screen in the app is about. Pattern, marking and date live here rather
+     than three taps away in the syllabus: they are what you need to know
+     before you decide what to do today. */
+
+  /* Round icon tiles — everything you actually do, one tap from the home screen. */
+
+
+  .list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 14px; padding: 14px;
+    box-shadow: 0 1px 3px rgba(15,23,42,.06);
+  }
+  /* A tap should feel like it landed — the same rule learn.html uses. */
+  button:active:not(:disabled), a.syllabus-link:active, .hero-cta:active { filter: brightness(.92); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .org { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.4px; }
+  .post { font-size: 15px; font-weight: 600; margin: 3px 0 8px; }
+  .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .badge.NEW { background: var(--accent-tint); color: var(--accent-soft); }
+  .badge.UPDATED { background: #2563eb1f; color: var(--accent-soft); }
+  .badge.DEADLINE_APPROACHING { background: #dc262622; color: var(--bad); }
+  .badge.CLOSED { background: #64748b22; color: var(--dim); }
+  .meta { font-size: 12.5px; color: var(--dim); line-height: 1.7; }
+  .meta b { color: var(--text); }
+  .links { display: flex; gap: 10px; margin-top: 10px; }
+  .links a {
+    font-size: 12.5px; color: var(--accent-soft); text-decoration: none; font-weight: 600;
+  }
+  .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 13.5px; line-height: 1.6; }
+  .retry { margin-top: 12px; font-family: inherit; font-size: 12.5px; font-weight: 700;
+           color: var(--on-accent); background: var(--accent); border: 0; border-radius: 8px;
+           padding: 9px 16px; min-height: 38px; cursor: pointer; }
+  .install-banner {
+    margin: 14px 12px 0; padding: 12px 14px; background: var(--tint); border: 1px solid var(--accent-line);
+    border-radius: 10px; font-size: 12.5px; color: var(--muted); display: none;
+  }
+  .install-banner.show { display: block; }
+  /* Refreshing sits with the data age it refreshes, not in a floating circle
+     over the middle of the page — which is where a fixed button ends up once
+     the home screen is the exam rather than one long list. */
+  .age-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  #refreshBtn { min-height: 34px; padding: 0 4px; }
+  .est { font-size: 11px; color: var(--warn); border: 1px solid #f59e0b55;
+         border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+  #lastUpdated.stale { color: var(--warn); }
+  /* The qualification picker itself lives in the drawer with the other
+     settings. This is the nudge on the list that opens it — without one, a
+     first-time visitor would never find the control that makes the list
+     theirs. */
+  .qual-prompt { margin: 0 12px 10px; padding: 11px 13px; border-radius: 10px;
+                 background: var(--tint); border: 1px solid var(--accent-line); color: var(--muted);
+                 font-size: 12.5px; text-align: left; width: calc(100% - 24px);
+                 font-family: inherit; cursor: pointer; display: none; }
+  .qual-prompt.show { display: block; }
+  /* Shown only once the selected exam's date is behind us. Warn-coloured
+     rather than accent: it is not something to do next, it is something that
+     has gone stale and needs a decision. */
+  .exam-over { margin: 12px 12px 0; padding: 12px 14px; border-radius: 10px;
+               background: transparent; border: 1px solid var(--warn); color: var(--muted);
+               font-size: 12.5px; line-height: 1.5; text-align: left;
+               width: calc(100% - 24px); font-family: inherit; cursor: pointer; display: none; }
+  .exam-over.show { display: block; }
+
+  /* ── Today's shortlist ──────────────────────────────────────────────
+     The screen used to open on 508 undifferentiated openings and leave the
+     ranking to the reader. This is the answer to "what do I do today", in
+     the order it should be done, and it is the first thing on the page. */
+  .shortlist { padding-top: 14px; }
+  .shortlist.hidden { display: none; }
+  .shortlist-h { font-size: 19px; margin: 0 0 3px; font-weight: 700; }
+  .shortlist-sub { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
+  .sl-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .sl-table th { text-align: left; font-size: 11px; text-transform: uppercase;
+                 letter-spacing: .4px; color: var(--dim); font-weight: 700;
+                 padding: 0 0 6px; border-bottom: 1px solid var(--panel-border); }
+  .sl-table th.sl-p { width: 72px; }
+  .sl-table th.sl-s { text-align: right; width: 92px; }
+  .sl-table td { padding: 11px 0; border-bottom: 1px solid var(--panel-border);
+                 vertical-align: top; line-height: 1.35; }
+  .sl-table tr:last-child td { border-bottom: 0; }
+  .sl-rank { display: flex; align-items: center; gap: 8px; font-weight: 700;
+             font-family: var(--font-display, inherit); }
+  .sl-dot { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto; }
+  .sl-dot.red   { background: #ef4444; }
+  .sl-dot.amber { background: #f59e0b; }
+  .sl-dot.green { background: #22c55e; }
+  .sl-dot.grey  { background: #94a3b8; }
+  .sl-name { font-weight: 600; }
+  .sl-why { color: var(--dim); font-size: 11.5px; margin-top: 2px; }
+  .sl-status { text-align: right; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+  .sl-status.is-applied { color: var(--accent-soft); font-weight: 700; }
+  .sl-row { cursor: pointer; }
+
+  /* ── Areas ──────────────────────────────────────────────────────────
+     "In which area will I get a job" is a question the feed can answer and
+     never did: it listed 574 openings and left the reader to work out that
+     36 of them were research fellowships and 45 were PSU officer grade. */
+  .areas { padding-top: 18px; }
+  .areas.hidden { display: none; }
+  .areas-h { font-size: 17px; margin: 0 0 3px; font-weight: 700; }
+  .areas-sub { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
+  .area-fold { border-top: 1px solid var(--panel-border); }
+  .area-fold:last-child { border-bottom: 1px solid var(--panel-border); }
+  .area-fold > summary { list-style: none; cursor: pointer; padding: 12px 0;
+                         display: flex; align-items: baseline; gap: 10px; }
+  .area-fold > summary::-webkit-details-marker { display: none; }
+  .area-n { font-family: var(--font-display, inherit); font-weight: 800;
+            font-size: 15px; color: var(--accent-soft); min-width: 30px; }
+  .area-name { font-weight: 600; font-size: 14px; flex: 1; }
+  .area-when { font-size: 11.5px; color: var(--dim); white-space: nowrap; }
+  .area-body { padding: 0 0 8px 40px; }
+  .exam-over b { color: var(--warn); }
+  .qual-prompt b { color: var(--accent-soft); }
+  /* Job card rows — label on the left, answer on the right, so "have I
+     applied / which exam / when is it" are read without hunting. */
+  .jrow { display: flex; gap: 10px; align-items: baseline; padding: 7px 0;
+          border-top: 1px solid var(--panel-border); font-size: 12.5px; }
+  .jlab { flex: 0 0 88px; color: var(--dim); font-size: 11px; text-transform: uppercase;
+          letter-spacing: .4px; }
+  .jval { flex: 1; min-width: 0; color: var(--text); line-height: 1.5; }
+  .ok-tag { color: var(--accent-soft); font-weight: 700; font-size: 11px; }
+  .no-tag { color: var(--warn); font-weight: 700; font-size: 11px; }
+  .study-now { display: block; margin-top: 12px; text-align: center; text-decoration: none;
+               font-size: 13.5px; font-weight: 800; color: var(--on-accent); background: var(--accent);
+               border-radius: 10px; padding: 12px 14px; }
+  /* Other openings — present, but plainly secondary to the exam you chose. */
+  .other-fold { padding: 14px 12px 0; }
+  .other-fold summary { cursor: pointer; font-size: 12.5px; font-weight: 700; color: var(--muted);
+                        list-style: none; display: flex; align-items: center; gap: 6px;
+                        min-height: 40px; }
+  .other-fold summary::-webkit-details-marker { display: none; }
+  .other-fold summary::after { content: "▾"; color: var(--accent-soft); font-size: 11px; }
+  .other-fold[open] summary::after { content: "▴"; }
+  /* The countdown column. A deadline tracker's one job is telling you how long
+     you have, so it is a number in the corner of the eye rather than a date to
+     parse out of a sentence. */
+  .other-cd { flex: 0 0 46px; text-align: center; padding: 6px 0; border-radius: 10px;
+              background: var(--surface-2); border: 1px solid var(--panel-border);
+              align-self: flex-start; }
+  .cd-num  { display: block; font-size: 19px; font-weight: 800; line-height: 1;
+             font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+  .cd-unit { display: block; font-size: 9.5px; text-transform: uppercase;
+             letter-spacing: .5px; color: var(--dim); margin-top: 2px; }
+  .cd-none { display: block; font-size: 9.5px; color: var(--dim); line-height: 1.3; padding: 4px 2px; }
+  .other-row.is-urgent .other-cd { border-color: var(--bad); background: #7f1d1d33; }
+  .other-row.is-urgent .cd-num   { color: var(--bad); }
+  .other-row.is-soon   .other-cd { border-color: var(--warn); }
+  .other-row.is-soon   .cd-num   { color: var(--warn); }
+  .marks-filter { display: flex; align-items: center; gap: 9px; padding: 11px 13px;
+                  margin: 12px 0; border-radius: 11px; background: var(--surface-2);
+                  border: 1px solid var(--panel-border); font-size: 12.5px; cursor: pointer; }
+  .marks-filter input { width: 18px; height: 18px; accent-color: var(--accent); }
+  .marks-filter.hidden { display: none; }
+  .marks-note { font-size: 11px; color: var(--dim); margin-top: 4px; line-height: 1.5; }
+  .marks-basis { display: block; font-size: 10.5px; color: var(--dim); margin-top: 3px; line-height: 1.45; }
+  .muted-inline { color: var(--muted); }
+  .other-vac  { color: var(--accent-soft); font-weight: 700; }
+  .other-elig { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+  .other-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  /* Applying is the point of the screen, so it is a real target, not a link
+     buried in a line of grey text. */
+  .other-apply, .other-mark, .other-switch {
+    font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;
+    padding: 7px 11px; border-radius: 8px; text-decoration: none;
+    border: 1px solid var(--panel-border); background: var(--surface-2); color: var(--text);
+  }
+  .other-apply { border-color: var(--accent); color: var(--accent-soft); }
+  /* A link to the aggregator is not the notification, so it does not get the
+     accent that means "this is the official document". */
+  .other-apply.is-secondhand { border-color: var(--panel-border); color: var(--muted); }
+  .other-applylink { border-color: var(--accent); background: var(--tint); }
+  .other-row { display: flex; align-items: flex-start; gap: 10px; padding: 13px 0;
+               border-top: 1px solid var(--panel-border); }
+  .other-main { flex: 1; min-width: 0; }
+  .other-org { font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .4px; }
+  .other-post { font-size: 13px; font-weight: 600; margin-top: 2px; line-height: 1.35; }
+  .other-meta { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .other-switch-legacy { flex: 0 0 auto; font-family: inherit; font-size: 11.5px; font-weight: 700;
+                  color: var(--accent-soft); background: var(--tint);
+                  border: 1px solid var(--surface-2-border); border-radius: 20px;
+                  padding: 8px 11px; min-height: 40px; cursor: pointer; white-space: nowrap; }
+  .other-none { align-self: center; font-size: 10.5px; color: var(--dim);
+                padding: 7px 2px; text-align: left;
+                max-width: 90px; line-height: 1.3; }
+  /* Closed rows read as past, not as something to act on. */
+  .other-row.is-closed .other-post { color: var(--muted); }
+  .other-row.is-closed .other-org { opacity: .75; }
+  .hidden { display: none !important; }
+  .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
+                 border-top:1px solid var(--panel-border); padding-top:10px; }
+  .applied-q { font-size:12.5px; color:var(--dim); }
+  .btn-y, .btn-n { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px;
+                   border:1px solid var(--surface-2-border); background:var(--surface-2); color:var(--text); cursor:pointer; }
+  .btn-y.on { background:var(--accent); color:var(--on-accent); border-color:transparent; }
+  .applied-tag { font-size:11px; font-weight:700; color:var(--accent-soft); }
+  .syllabus-link { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
+                   color:var(--on-accent); background:var(--accent); padding:8px 14px; border-radius:8px;
+                   text-decoration:none; }
+  .syllabus-box { margin-top:10px; padding:12px; border-radius:10px;
+                  background:var(--surface-2); border:1px solid var(--accent-tint-2); }
+  .syllabus-pattern { font-size:12px; color:var(--accent-soft); font-weight:600; }
+  .syllabus-sections { font-size:12px; color:var(--dim); margin-top:4px; line-height:1.6; }
+
+  /* Self-study road map: calm, compact at first glance, detailed on demand. */
+  .study-roadmap { margin: 16px 12px 4px; padding: 18px; border: 1px solid var(--panel-border);
+    border-radius: 16px; background: var(--panel); box-shadow: 0 2px 12px #0f172a09; }
+  .roadmap-eyebrow { color: var(--accent-soft); text-transform: uppercase; letter-spacing: .11em;
+    font-size: 10px; font-weight: 800; }
+  .roadmap-title { margin: 5px 0 3px; font-size: 20px; letter-spacing: -.03em; }
+  .roadmap-intro { margin: 0 0 14px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+  .roadmap-tracks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+  .roadmap-track { border: 1px solid var(--panel-border); background: var(--surface-2);
+    border-radius: 12px; padding: 12px; font-size: 12px; }
+  .roadmap-track b { display: block; font-size: 14px; margin-bottom: 2px; }
+  .roadmap-track small { display: block; color: var(--muted); line-height: 1.35; min-height: 32px; }
+  .roadmap-track progress { display: block; width: 100%; height: 5px; margin-top: 12px;
+    accent-color: var(--accent); }
+  .roadmap-track .roadmap-count { display: block; color: var(--dim); font-size: 11px; margin-top: 6px; }
+  .roadmap-fold { border-top: 1px solid var(--panel-border); margin-top: 15px; padding-top: 2px; }
+  .roadmap-fold > summary, .roadmap-phase > summary { cursor: pointer; list-style: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px;
+    font-size: 13px; font-weight: 700; }
+  .roadmap-fold > summary::-webkit-details-marker, .roadmap-phase > summary::-webkit-details-marker { display: none; }
+  .roadmap-fold > summary::after, .roadmap-phase > summary::after { content: '⌄'; color: var(--accent-soft); }
+  .roadmap-fold[open] > summary::after, .roadmap-phase[open] > summary::after { content: '⌃'; }
+  .roadmap-tabs { display: flex; gap: 6px; margin: 5px 0 10px; }
+  .roadmap-tabs button { flex: 1; min-height: 42px; border: 1px solid var(--panel-border);
+    border-radius: 9px; color: var(--muted); background: var(--surface-2);
+    font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .roadmap-tabs button[aria-selected="true"] { color: var(--accent-soft); border-color: var(--accent-line);
+    background: var(--tint); }
+  .roadmap-phase { border-top: 1px solid var(--panel-border); }
+  .roadmap-phase > summary span:last-child { font-size: 11px; color: var(--dim); margin-left: auto; }
+  .roadmap-phase-caption { font-size: 11px; color: var(--dim); margin: -3px 0 8px; }
+  .roadmap-item { display: flex; align-items: center; gap: 11px; min-height: 48px;
+    padding: 4px; font-size: 13px; line-height: 1.35; }
+  .roadmap-item:not(:first-child) { border-top: 1px solid var(--panel-border); }
+  .roadmap-item input { flex: 0 0 auto; width: 19px; height: 19px; accent-color: var(--accent); cursor: pointer; }
+  .roadmap-open { display:flex; align-items:center; justify-content:space-between; flex:1; min-height:42px;
+    text-align:left; border:0; background:transparent; color:var(--text); font:inherit; cursor:pointer; padding:6px 3px; }
+  .roadmap-open span { color:var(--accent-soft); font-size:17px; margin-left:8px; }
+  .roadmap-item input:checked + .roadmap-open { color:var(--muted); }
+  .roadmap-lesson { border:1px solid var(--accent-line); background:var(--surface-2); border-radius:12px;
+    padding:16px; margin:4px 0 14px; line-height:1.55; font-size:13px; }
+  .lesson-kicker { font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent-soft); font-weight:700; }
+  .roadmap-lesson h3 { margin:6px 0 10px; font-size:18px; letter-spacing:-.02em; }
+  .roadmap-lesson h4 { margin:16px 0 5px; font-size:12px; }
+  .roadmap-lesson p { margin:0 0 8px; }
+  .lesson-question { border-top:1px solid var(--panel-border); padding:10px 0; }
+  .lesson-question summary { cursor:pointer; font-weight:600; }
+  .lesson-question summary span { display:block; font-size:11px; font-weight:400; color:var(--accent-soft); }
+  .lesson-question p { margin:8px 0 0; }
+  .roadmap-lesson .lesson-hint { color:var(--muted); font-size:11px; margin:12px 0 0; }
+  .roadmap-footnote { margin: 12px 0 1px; color: var(--dim); font-size: 11px; line-height: 1.45; }
+
+  /* Shrestha's job posts — the daily private-sector feed. Same calm rows as
+     the other openings; pipeline states are text chips, not colours, so
+     nothing here reads as more urgent than a real deadline. */
+  .shrestha-sec { margin-top: 20px; }
+  .shrestha-h { font-size: 15px; margin: 0 0 2px; letter-spacing: -.01em; }
+  .shrestha-sub { font-size: 11.5px; color: var(--dim); margin-bottom: 4px; line-height: 1.5; }
+  .sh-card { border-top: 1px solid var(--panel-border); }
+  .sh-head { display: flex; gap: 10px; width: 100%; text-align: left; background: none;
+             border: 0; padding: 13px 0; cursor: pointer; font: inherit; color: inherit;
+             min-height: 44px; }
+  .sh-main { flex: 1; min-width: 0; display: block; }
+  .sh-org { display: block; font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .4px; }
+  .sh-role { display: block; font-size: 13.5px; font-weight: 700; margin-top: 2px; line-height: 1.35; }
+  .sh-meta { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .sh-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .sh-chip { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+             border: 1px solid var(--panel-border); color: var(--muted); white-space: nowrap; }
+  .sh-chip.elig { color: var(--accent-soft); border-color: var(--accent-line); background: var(--tint); }
+  .sh-chip.st-approved, .sh-chip.st-applied { color: var(--accent-soft); border-color: var(--accent); }
+  .sh-chip.st-rejected, .sh-chip.st-expired { color: var(--warn); }
+  .sh-chip.notfit { color: var(--warn); }
+  .sh-fitreason { display: block; font-size: 11px; color: var(--dim); margin-top: 6px; line-height: 1.4; }
+  .sh-caret { color: var(--accent-soft); font-size: 12px; padding-top: 2px; }
+  .sh-detail { margin: 0 0 14px; padding: 14px 12px; border-radius: 12px;
+               background: var(--surface-2); border: 1px solid var(--panel-border);
+               font-size: 12.5px; line-height: 1.6; }
+  .sh-detail h4 { margin: 16px 0 6px; font-size: 11px; text-transform: uppercase;
+                  letter-spacing: .5px; color: var(--dim); }
+  .sh-detail h4:first-child { margin-top: 0; }
+  .sh-step { display: flex; gap: 8px; padding: 3px 0; align-items: baseline; }
+  .sh-k { flex: 0 0 92px; color: var(--dim); font-size: 10.5px; text-transform: uppercase; letter-spacing: .3px; }
+  .sh-v { flex: 1; min-width: 0; }
+  .sh-stepnum { display: inline-block; font-size: 10px; font-weight: 800; color: var(--on-accent);
+                background: var(--accent); border-radius: 20px; padding: 2px 8px; margin-right: 6px; }
+  .sh-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .btn-approve, .btn-reject, .btn-stage {
+    font: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer; text-decoration: none;
+    padding: 10px 16px; border-radius: 10px; border: 1px solid var(--panel-border);
+    background: var(--surface-2); color: var(--text); min-height: 44px;
+    display: inline-flex; align-items: center; }
+  .btn-approve { background: var(--accent); border-color: transparent; color: var(--on-accent); }
+  .btn-reject { color: var(--warn); }
+  .ats-badge { display: inline-block; font-size: 12px; font-weight: 800; padding: 4px 12px;
+               border-radius: 8px; border: 1px solid var(--accent-line);
+               color: var(--accent-soft); background: var(--tint); }
+  .ats-badge.low { color: var(--warn); border-color: var(--warn); background: none; }
+  .ats-note { font-size: 11px; color: var(--dim); margin-top: 4px; }
+  .sh-md h3 { font-size: 13.5px; margin: 12px 0 4px; }
+  .sh-md h4 { font-size: 12.5px; margin: 10px 0 4px; text-transform: none; letter-spacing: 0; color: var(--text); }
+  .sh-md p { margin: 6px 0; }
+  .sh-md ul { margin: 6px 0; padding-left: 18px; }
+  .sh-md li { margin: 3px 0; }
+  .sh-md hr { border: 0; border-top: 1px solid var(--panel-border); margin: 10px 0; }
+  .sh-check { display: flex; gap: 10px; align-items: flex-start; padding: 9px 2px;
+              border-top: 1px solid var(--panel-border); font-size: 12.5px; cursor: pointer;
+              line-height: 1.45; }
+  .sh-check input { flex: 0 0 auto; width: 19px; height: 19px; accent-color: var(--accent);
+                    margin-top: 1px; cursor: pointer; }
+  .sh-check input:checked + span { color: var(--muted); text-decoration: line-through; }
+  .sh-gate-note { font-size: 11.5px; color: var(--dim); margin-top: 8px; line-height: 1.5; }
+
+</style>
+</head>
+<body data-page="jobs">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">Jobs</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+
+
+<section class="study-roadmap" aria-labelledby="roadmapTitle">
+  <div class="roadmap-eyebrow">Your study path</div>
+  <h2 class="roadmap-title" id="roadmapTitle">Build your basics</h2>
+  <p class="roadmap-intro">Open any topic for a short lesson, worked example and practice. Mark it done when you are ready.</p>
+  <div class="roadmap-tracks" id="roadmapSummary" aria-live="polite"></div>
+  <details class="roadmap-fold" id="roadmapFold">
+    <summary>Open study lessons</summary>
+    <div class="roadmap-tabs" role="tablist" aria-label="Study track">
+      <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
+      <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
+    </div>
+    <div id="roadmapTopics" role="tabpanel" aria-labelledby="roadmapQuantTab"></div>
+    <p class="roadmap-footnote">Your ticks are saved on this device, including when offline. They do not sync across devices.</p>
+  </details>
+</section>
+
+<section class="sec shortlist hidden" id="shortlist">
+  <h2 class="shortlist-h">Today's shortlist</h2>
+  <div class="shortlist-sub" id="shortlistSub"></div>
+  <table class="sl-table"><thead><tr>
+    <th class="sl-p">Priority</th><th>Recruitment</th><th class="sl-s">Status</th>
+  </tr></thead><tbody id="shortlistBody"></tbody></table>
+</section>
+
+<button class="exam-over" id="examOver">
+  <b>That exam is behind you</b><br>
+  <span id="examOverWhen"></span> Everything on this screen is still scoped to it.
+  Tap to pick what you are preparing for next.
+</button>
+
+<!-- Only the openings for the exam being prepared for. A job list that mixed
+     all three would put the student back in the position of working out which
+     rows were theirs — which is the job the app is supposed to do. -->
+<div class="list" id="examJobs"><div class="empty">Loading…</div></div>
+
+<div class="sec">
+  <div class="age-row">
+    <span class="sub" id="lastUpdated">Loading…</span>
+    <button class="view-all" id="refreshBtn" onclick="load()">↻ Refresh</button>
+  </div>
+</div>
+
+<!-- Filtering by marks is opt-in and narrow on purpose: see marksFilterHides(). -->
+<label class="marks-filter hidden" id="marksFilter">
+  <input type="checkbox" id="marksFilterOn">
+  <span id="marksFilterLabel">Hide openings my marks fall short of</span>
+</label>
+
+<section class="sec areas hidden" id="areasSec">
+  <h2 class="areas-h">Where your qualification fits</h2>
+  <div class="areas-sub" id="areasSub"></div>
+  <div id="areasList"></div>
+</section>
+
+<details class="sec other-fold hidden" id="otherFold">
+  <summary id="otherCount">Government openings</summary>
+  <div id="otherJobs"></div>
+</details>
+
+<!-- Private sector, kept apart. The two are prepared for and applied to in
+     completely different ways — one is a syllabus and a written paper months
+     out, the other is a CV and an interview — so mixing them in one list makes
+     the reader sort them mentally every time they open the screen. -->
+<details class="sec other-fold hidden" id="privateFold">
+  <summary id="privateCount">Private openings</summary>
+  <div id="privateJobs"></div>
+</details>
+
+
+<!-- Shrestha's job posts — the daily private-sector feed from @careerwithshrestha.
+     Rendered newest-first from /data/shrestha-jobs.json, a static file the
+     daily pull (scripts/pull-shrestha.js) rewrites; the redeploy picks it up.
+     Kept apart from the Supabase jobs on purpose: these are Instagram
+     postings, not official notifications, so they never enter the jobs table.
+     Per-job pipeline, in order: Learn → Resume draft (+ATS) → Approve (the
+     hard gate; the app never submits anything) → Applied (he applies from the
+     post link himself) → Study session (created after approval). -->
+<section class="sec shrestha-sec" id="shresthaSec">
+  <h2 class="shrestha-h">Shrestha's job posts</h2>
+  <div class="shrestha-sub" id="shresthaSub">Newest first · pulled daily from @careerwithshrestha</div>
+  <div class="list" id="shresthaJobs"><div class="empty">Loading…</div></div>
+  <div id="shresthaStudy"></div>
+</section>
+
+<details class="sec other-fold hidden" id="notMineFold">
+  <summary id="notMineCount">Needs a qualification you have not entered</summary>
+  <div id="notMineJobs"></div>
+</details>
+
+<details class="sec other-fold hidden" id="closedFold">
+  <summary id="closedCount">Closed</summary>
+  <div id="closedJobs"></div>
+</details>
+
+<button class="qual-prompt" id="qualPrompt">
+  <b>Tell the app what you studied</b><br>
+  and it can say whether you are eligible for this opening. Tap to set it.
+</button>
+
+<div class="install-banner" id="installBanner">
+  Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
+</div>
+
+<script src="/study-lessons.js" defer></script>
+<script src="/study-roadmap.js" defer></script>
+<script src="/prep/exams.js"></script>
+<script src="/prep/eligibility.js"></script>
+<script>
+const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
+
+/* Every screen in this app is about one exam. This one shows the openings for
+   that exam and nothing else — a mixed list would put the student back to
+   working out which rows are theirs, which is the job the app exists to do. */
+let allJobs = [];
+let applied = {};          // job_id -> true
+let qualification = null;
+let loadFailed = false;
+
+/* Device id, shared with the prep page so one person is one history. */
+const DEVICE_KEY = 'jobhunt_device_id';
+let deviceId = localStorage.getItem(DEVICE_KEY);
+if (!deviceId) {
+  deviceId = (crypto.randomUUID && crypto.randomUUID()) ||
+    ('id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+  localStorage.setItem(DEVICE_KEY, deviceId);
+}
+
+/* The ingestion writes profile as "B.Tech CSE" / "Graduate" / "Intermediate",
+   while the seeded rows use "person1" / "person2". Both are in the table right
+   now, so matching on either alone hides half the jobs. */
+const PROFILE_ALIASES = { 'person1': 'B.Tech CSE', 'person2': 'Intermediate' };
+const normProfile = p => PROFILE_ALIASES[p] || p || '';
+
+/* ── "you qualify" ───────────────────────────────────────────────────────
+   READ THE QUALIFICATION LINE, NOT THE ROUTING BUCKET.
+
+   This used to answer from job.profile, which is the coarse bucket the
+   scraper assigns to decide whose feed a row belongs in — "B.Tech CSE",
+   "Graduate", "Intermediate". profileFor() puts anything containing the word
+   "graduate" or "b.sc" into "Graduate", so a Medical Officer post reading
+   "Any Post Graduate, MBBS" became "Graduate", and a B.Tech holder was told
+   "you qualify" directly underneath the words MBBS. Same for an AIIMS post
+   wanting B.Sc/BSW/MSW.
+
+   So the claim is now made against j.eligibility — the same string printed on
+   the row — and it is three-valued on purpose:
+
+       true   a listed qualification is one the candidate actually holds
+       false  qualifications were listed and every one is read and unheld
+       null   something in the line could not be read — SAY NOTHING
+
+   The null case is the important one. An unrecognised token means "I do not
+   know", and the honest response to not knowing is silence, not a badge. */
+
+/** Printed tokens a candidate at this level genuinely satisfies. */
+const HOLDS = {
+  'B.Tech CSE': [
+    /^b\s*tech/, /^b\s*e$/, /^be$/, /^bebtech$/, /^btechbe$/,
+    /^bachelor.*(engineering|technology)$/,
+    /^anygraduate$/, /^anydegree$/, /^graduate$/, /^graduation$/,
+    /^anybachelor/, /^bachelorsdegree$/, /^bachelordegree$/, /^degree$/,
+    /^engineeringgraduate$/, /^anyengineering/,
+  ],
+  'Graduate': [
+    /^anygraduate$/, /^anydegree$/, /^graduate$/, /^graduation$/,
+    /^anybachelor/, /^bachelorsdegree$/, /^bachelordegree$/, /^degree$/,
+  ],
+  'Intermediate': [
+    /^12th$/, /^intermediate$/, /^10\+2$/, /^hsc$/, /^plustwo$/,
+  ],
+};
+
+/* Tokens that are read and understood, but are NOT held by a bachelor's
+   candidate. Listing them explicitly is what lets a "no" be a confident no
+   rather than an unread line — a post-graduate or professional degree is not
+   something a B.Tech holder has, and a diploma or 10th-pass post is aimed at
+   someone else even though the candidate technically exceeds it. */
+const KNOWN_UNHELD = [
+  /^anypostgraduate$/, /^postgraduate$/, /^pg$/, /^masters?degree$/, /^mastersdegree$/,
+  /^m\s*tech/, /^m\s*e$/, /^memtech$/, /^mtechme$/, /^m\s*sc$/, /^m\s*com$/, /^ma$/,
+  /^mca$/, /^mba/, /^pgdm$/, /^mbapgdm$/, /^msw$/, /^mph$/, /^mha$/, /^mlis$/,
+  /^mphil/, /^phd$/, /^mphilphd$/, /^doctorate$/, /^netjrf$/,
+  /^mbbs$/, /^bds$/, /^bams$/, /^bhms$/, /^md$/, /^ms$/, /^gnm$/, /^anm$/, /^bsc.*nursing$/,
+  /^b\s*sc$/, /^b\s*com$/, /^ba$/, /^bba$/, /^bbm$/, /^bca$/, /^llb$/, /^llm$/,
+  /^bsw$/, /^b\s*ed$/, /^b\s*pharm$/, /^m\s*pharm$/, /^b\s*arch$/, /^bpt$/, /^bvsc$/,
+  /^diploma/, /^iti$/, /^10th$/, /^8th$/, /^12th$/, /^intermediate$/, /^matriculation$/,
+  /^ca$/, /^icwa$/, /^cs$/, /^cma$/,
+];
+
+/** "B.Tech/B.E" → ["btech","be"].  Slash-joined names are alternatives. */
+function qualTokens(text) {
+  return String(text || '')
+    .split(/[,;]|\band\b|\bor\b/i)
+    .flatMap(part => part.split('/'))
+    .map(t => t.toLowerCase().replace(/[^a-z0-9+]/g, ''))
+    .filter(Boolean);
+}
+
+function eligibility(job) {
+  if (!qualification) return null;                       // nothing to say yet
+  const tokens = qualTokens(job.eligibility);
+  if (!tokens.length) return null;                       // nothing printed to judge
+
+  const holds = HOLDS[qualification] || [];
+  let allRead = true;
+  for (const t of tokens) {
+    if (holds.some(re => re.test(t))) return true;       // one match is enough
+    if (!KNOWN_UNHELD.some(re => re.test(t))) allRead = false;
+  }
+  // Every token was recognised and none was held → a confident no.
+  // Otherwise something was unreadable, and silence beats a guess.
+  return allRead ? false : null;
+}
+
+/** The exam this whole screen is about. */
+function currentExam() {
+  return (window.JobhuntNav && window.JobhuntNav.exam) || null;
+}
+function examHref(section) {
+  return window.JobhuntNav ? window.JobhuntNav.learnHref(section) : '/learn.html#' + section;
+}
+
+async function saveProgress(payload) {
+  try {
+    await fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ device_id: deviceId }, payload)),
+    });
+  } catch (e) { /* offline: localStorage below still holds it */ }
+}
+
+function loadLocal() {
+  try { applied = JSON.parse(localStorage.getItem('jobhunt_applied')) || {}; } catch (e) { applied = {}; }
+  qualification = localStorage.getItem('jobhunt_qualification') || null;
+}
+function saveLocal() {
+  try {
+    localStorage.setItem('jobhunt_applied', JSON.stringify(applied));
+    if (qualification) localStorage.setItem('jobhunt_qualification', qualification);
+  } catch (e) {}
+}
+
+function setApplied(jobId, yes) {
+  if (yes) applied[jobId] = true; else delete applied[jobId];
+  saveLocal();
+  saveProgress({ action: 'applied', job_id: jobId, applied: !!yes });
+  render();
+}
+
+/* PostgREST hands back at most this many rows per request, whatever you ask
+   for. The table passed it on 20 September. */
+const PAGE = 1000;
+
+/* Only the columns this screen reads. select=* also pulled source_key, the
+   raw scrape payload and the rest of the row for every opening on the board —
+   on a phone connection that is the difference between the list appearing and
+   the list thinking about it. */
+const JOB_COLS = 'id,organization,post_name,profile,eligibility,deadline,deadline_text,' +
+  'is_estimated,status,source_url,apply_url,notification_url,location,pay_scale,updated_at,last_checked_at';
+
+const SB_HEADERS = () => ({ apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` });
+
+/** One filtered query, paged until the server stops handing rows back. */
+async function fetchAllPages(query) {
+  const out = [];
+  for (let from = 0; ; from += PAGE) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/jobs?${query}&offset=${from}&limit=${PAGE}`,
+      { headers: SB_HEADERS() });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json();
+    if (!Array.isArray(rows)) throw new Error('unexpected response');
+    out.push(...rows);
+    if (rows.length < PAGE) return out;          // last page
+    if (from > 20 * PAGE) return out;            // runaway guard
+  }
+}
+
+/* WHAT THE APP ASKS THE SERVER FOR.
+
+   This was `select=*` with no filter and no limit — every row in the table,
+   closed or not. Two things went wrong at once, and neither reported itself.
+
+   PostgREST caps a response at 1000 rows however many you ask for. The table
+   passed 1000, and because the order puts the soonest deadlines first, the
+   rows that fell off the end were the ones with the MOST time left: 127 live
+   openings that never reached the phone at all. The list simply stopped a
+   fortnight early. That is the same failure as the ingest cap, one layer down,
+   and it is why this pages instead of trusting one request.
+
+   Of the 1000 that did arrive, 556 were already CLOSED — more than half the
+   payload spent on openings nobody can apply for, rendered into a fold
+   nobody opens.
+
+   So it asks for what is still open, pages until the server runs out, and
+   fetches a closed opening only when it is one this candidate marked applied
+   for. A closed job you never applied for is not information. */
+async function load() {
+  loadFailed = false;
+  try {
+    const nowIso = new Date().toISOString();
+    const liveQuery =
+      `select=${JOB_COLS}&or=(deadline.gte.${nowIso},deadline.is.null)` +
+      `&order=is_estimated.asc,deadline.asc.nullslast`;
+
+    const appliedIds = Object.keys(applied);
+    const jobs = [await fetchAllPages(liveQuery)];
+    if (appliedIds.length) {
+      // Closed ones still worth showing: the ones already applied for.
+      const ids = appliedIds.map(encodeURIComponent).join(',');
+      jobs.push(await fetchAllPages(`select=${JOB_COLS}&id=in.(${ids})`));
+    }
+
+    /* De-duplicate. Two reasons, and the second is not hypothetical.
+
+       An applied job that is still open comes back in both queries, so it has
+       to be collapsed on id.
+
+       And the same POSTING can arrive as two rows with different ids. That
+       happened for real: 87 rows were written into this table by hand with a
+       source_key computed by a different hash than lib/sources.ts uses, so
+       the nightly upsert could not recognise its own jobs and inserted a
+       second copy of each. 90 of 595 openings were doubles on screen. The
+       rows are gone, but the app should not depend on the table being clean.
+
+       A ROW IS ONLY A DUPLICATE WHEN THE ARTICLE, THE ORGANISATION AND THE
+       TITLE ALL MATCH. Each of the three is load-bearing:
+
+       - The article alone is NOT an identity. TGPRB's scraper gives all 18 of
+         its vacancies the same sourceUrl, the board's homepage — Sub
+         Inspector, Constable, Fire Fighter, Warder, Deputy Jailor. Collapsing
+         on the article would have hidden 17 real jobs.
+       - The title alone is NOT an identity either. BITS Pilani lists two
+         "Junior Research Fellow – 1 Posts" closing the same day with
+         different supervisors and different notifications, and Kerala High
+         Court lists two distinct "Registrar – 1 Posts".
+
+       Requiring all three collapses exactly the contamination above — the
+       same posting written twice under two keys — and nothing else. It leaves
+       a handful of near-duplicates visible, where the source revised a
+       vacancy count and the title changed with it. Showing an opening twice
+       costs a second of confusion; hiding one costs the job. */
+    const seenId = new Set();
+    const seenPosting = new Set();
+    allJobs = jobs.flat().filter(j => {
+      if (seenId.has(j.id)) return false;
+      const posting = j.source_url
+        ? [j.source_url, j.organization, j.post_name].join('\u0000')
+        : null;
+      if (posting && seenPosting.has(posting)) return false;
+      seenId.add(j.id);
+      if (posting) seenPosting.add(posting);
+      return true;
+    });
+  } catch (e) {
+    // Say so, and offer the way out. Leaving "Loading…" on screen forever
+    // reads as a broken app rather than as a phone with no signal — and the
+    // prep, which needs no network at all, looks broken with it.
+    loadFailed = true;
+    allJobs = [];
+  }
+  stampAge();
+  render();
+}
+
+function stampAge() {
+  const el = document.getElementById('lastUpdated');
+  if (loadFailed) { el.textContent = 'Could not refresh the openings'; el.className = 'sub stale'; return; }
+  const newest = allJobs.reduce((max, j) => {
+    const t = new Date(j.updated_at || j.last_checked_at || 0).getTime();
+    return t > max ? t : max;
+  }, 0);
+  if (!newest) { el.textContent = 'Data age unknown'; el.className = 'sub'; return; }
+  const ageH = Math.floor((Date.now() - newest) / 3600000);
+  const at = new Date(newest);
+  const when = ageH < 24
+    ? at.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
+    : at.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  el.textContent = 'Updated ' + when + (ageH >= 24 ? ` · ${Math.floor(ageH / 24)}d old` : ageH >= 1 ? ` · ${ageH}h old` : ' · just now');
+  el.className = ageH >= 48 ? 'sub stale' : 'sub';
+}
+
+/* ── Deferred fold bodies ───────────────────────────────────────────────
+   The folded lists are most of the DOM on this screen — hundreds of rows
+   behind a closed <details> that most opens of the app never touch. Building
+   them on every render was the lag: hundreds of elements created so they
+   could sit hidden. A closed fold now carries a thunk instead of its rows,
+   and the rows are built the first time the fold is actually opened. Counts
+   and visibility stay eager — they are the part you can see. */
+const pendingBodies = new Map();   // token -> () => html
+let pendingSeq = 0;
+
+function stashBody(body, makeHtml) {
+  const old = body.getAttribute('data-pending');
+  if (old) pendingBodies.delete(old);
+  const token = 'pb' + (++pendingSeq);
+  pendingBodies.set(token, makeHtml);
+  body.setAttribute('data-pending', token);
+  body.innerHTML = '';
+}
+
+function setFoldBody(foldId, bodyId, makeHtml, countText, hide) {
+  const fold = document.getElementById(foldId);
+  const body = document.getElementById(bodyId);
+  if (!fold || !body) return;
+  fold.classList.toggle('hidden', !!hide);
+  // The count lives on the fold's own summary: otherFold → otherCount.
+  if (countText != null) {
+    const counter = document.getElementById(foldId.replace(/Fold$/, 'Count'));
+    if (counter) counter.textContent = countText;
+  }
+  if (hide) { stashBody(body, () => ''); return; }
+  if (fold.open) {
+    const old = body.getAttribute('data-pending');
+    if (old) { pendingBodies.delete(old); body.removeAttribute('data-pending'); }
+    body.innerHTML = makeHtml();
+  } else {
+    stashBody(body, makeHtml);
+  }
+}
+
+function fillPending(d) {
+  const body = d.querySelector('[data-pending]');
+  if (!body) return;
+  const token = body.getAttribute('data-pending');
+  const make = pendingBodies.get(token);
+  pendingBodies.delete(token);
+  body.removeAttribute('data-pending');
+  body.innerHTML = make ? make() : '';
+}
+/* A fold's rows exist before they are seen. The summary's click runs before
+   the details element flips open, so filling here means the content is
+   already there the moment anything — a tap, a script, a test — looks at it.
+   The toggle listener is the backstop for opens that skip the click: the
+   keyboard, or code setting .open directly. toggle does not bubble, but it
+   does capture. */
+document.addEventListener('click', e => {
+  const sum = e.target instanceof Element ? e.target.closest('summary') : null;
+  if (sum && sum.parentElement instanceof HTMLDetailsElement) fillPending(sum.parentElement);
+}, true);
+document.addEventListener('toggle', e => {
+  const d = e.target;
+  if (!(d instanceof HTMLDetailsElement) || !d.open) return;
+  fillPending(d);
+}, true);
+
+function render() {
+  const exam = currentExam();
+  /* Every render re-stashes every closed fold below, so tokens from the
+     previous pass are dead weight — their bodies were rebuilt or replaced.
+     Clearing here keeps the map from accumulating one closure per render. */
+  pendingBodies.clear();
+  const list = document.getElementById('examJobs');
+  document.getElementById('qualPrompt').classList.toggle('show', !qualification);
+
+  /* The selected exam is the root context of every screen in this app. When
+     its date goes by, nothing noticed: the header quietly read "date passed",
+     "Study now →" still led to prep for a finished paper, and the whole list
+     stayed scoped to it. Saying so, and offering the one control that fixes
+     it, is the least this can do — it does NOT pick the next exam, because
+     that is not the app's decision to make. */
+  renderShortlist();
+  renderAreas();
+
+  const overBtn = document.getElementById('examOver');
+  if (overBtn) {
+    const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
+    const isOver = !!(when && when.days !== null && when.days < 0);
+    overBtn.classList.toggle('show', isOver);
+    if (isOver) {
+      document.getElementById('examOverWhen').textContent =
+        `${exam.short} sat on ${when.short === 'date passed' ? 'a date now past' : when.short}.`;
+    }
+  }
+
+  if (loadFailed) {
+    list.innerHTML = '<div class="empty">Could not reach the openings.<br>' +
+      'Your preparation works offline — only this list needs a connection.' +
+      '<br><button class="retry" onclick="load()">Try again</button></div>';
+    /* Nothing loaded, so nothing belongs in either fold — and #otherNote,
+       which this used to write to, no longer exists: reading it threw and
+       left both folds showing the last successful load's counts. */
+    document.getElementById('otherFold').classList.add('hidden');
+    document.getElementById('privateFold').classList.add('hidden');
+    document.getElementById('closedFold').classList.add('hidden');
+    return;
+  }
+  if (!allJobs.length) { list.innerHTML = '<div class="empty">Loading…</div>'; return; }
+
+  /* Closed applications are not openings. Two of the seven tracked rows say
+     "(applications closed)" in their own title while still carrying status
+     UPDATED — the ingestion never set CLOSED on them — so the status field
+     alone would leave them sitting among the live ones. Both signals are read,
+     and the wording matched is the explicit one, not a guess. */
+  const live = allJobs.filter(j => !isClosed(j));
+  const closed = allJobs.filter(isClosed);
+  const mine = exam
+    ? live.filter(j => { const e = examForJob(j); return e && e.key === exam.key; })
+    : [];
+  list.innerHTML = mine.length
+    ? mine.map(cardHtml).join('')
+    : '<div class="empty">No opening is being tracked for ' +
+      escapeHtml(exam ? exam.short : 'this exam') + ' right now.<br>' +
+      'The nightly run adds them as they are published — your preparation carries on either way.</div>';
+
+  /* Everything else, behind a fold.
+
+     This screen is scoped to the selected exam, and it leads with it — but
+     scoping it to ONLY that exam lost three of the seven openings entirely:
+     the Air Force, railway and Singareni notifications match no exam in the
+     app, so no amount of switching would ever reveal them. A tracker that
+     silently drops what it tracked is a worse failure than a mixed list, so
+     the rest are here, folded away, each saying which exam it belongs to. */
+  const others = live.filter(j => mine.indexOf(j) === -1 && !marksFilterHides(j));
+
+  /* The toggle only appears once it could actually do something — with no
+     marks entered it would be a checkbox that changes nothing. */
+  const nav = window.JobhuntNav;
+  const canFilter = !!(nav && nav.marksPct != null && nav.category);
+  const filterBox = document.getElementById('marksFilter');
+  if (filterBox) {
+    filterBox.classList.toggle('hidden', !canFilter);
+    const cb = document.getElementById('marksFilterOn');
+    if (cb) cb.checked = marksFilterOn();
+    const lbl = document.getElementById('marksFilterLabel');
+    if (lbl) lbl.innerHTML = 'Hide openings my marks fall short of' +
+      '<span class="marks-note">Only hides ones with a published threshold. Most of this ' +
+      'feed states a qualification and no minimum percentage, so it will hide little — ' +
+      'that is deliberate.</span>';
+  }
+  /* ── WHAT YOU CAN APPLY FOR COMES FIRST ────────────────────────────────
+     134 of the 442 openings on this list were ones eligibility() had already
+     worked out the candidate cannot apply for — MBBS, nursing, LLB,
+     post-graduate-only posts — and they sat interleaved with the rest in
+     closing-date order. Labelling them "not your qualification" told the
+     truth but still made the reader do the filtering, which is the job this
+     app exists to do.
+
+     They are not deleted: eligibility() answers `null` whenever it cannot
+     read the qualification line, and only a definite `false` is moved. A
+     confident no goes to the bottom, behind its own fold, where it stays
+     available and stops competing with work you can actually get. */
+  const canApply = j => eligibility(j) !== false;
+  const govt     = others.filter(j => sectorOf(j) === 'government' && canApply(j));
+  const private_ = others.filter(j => sectorOf(j) === 'private'    && canApply(j));
+  const notMine  = others.filter(j => !canApply(j));
+
+  setFoldBody('otherFold', 'otherJobs', () => govt.map(otherHtml).join(''),
+    `Government openings (${govt.length})`, govt.length === 0);
+  setFoldBody('privateFold', 'privateJobs', () => private_.map(otherHtml).join(''),
+    `Private openings (${private_.length})`, private_.length === 0);
+  setFoldBody('notMineFold', 'notMineJobs', () => notMine.map(otherHtml).join(''),
+    `Needs a qualification you have not entered (${notMine.length})`, notMine.length === 0);
+
+  /* Closed openings are no longer fetched wholesale — see load(). The only
+     ones that arrive now are those marked applied, and those genuinely
+     matter: an application you sent is a thing you are waiting on. The 556
+     closed jobs nobody applied for that used to live here were the single
+     biggest block of noise on the screen. */
+  setFoldBody('closedFold', 'closedJobs', () => closed.map(j => {
+    const e = examForJob(j);
+    return `<div class="other-row is-closed">
+      <div class="other-main">
+        <div class="other-org">${escapeHtml(j.organization)}</div>
+        <div class="other-post">${escapeHtml(j.post_name)}</div>
+        <div class="other-meta">${escapeHtml(j.deadline_text || 'applications closed')}${
+          applied[j.id] ? ' · <span class="ok-tag">you applied</span>' : ''}</div>
+      </div>
+      ${e && applied[j.id]
+        ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">${escapeHtml(e.short)} →</button>`
+        : `<span class="other-none">closed</span>`}
+    </div>`;
+  }).join(''), `Closed (${closed.length})`, closed.length === 0);
+}
+
+/** Applications closed. Three signals, because no single one is reliable
+    here: the status where the ingestion set it; the notification's own
+    wording where it did not — "(applications closed)" in a title is explicit,
+    not an inference; and a real closing date that has passed. The date is
+    only trusted when the row is not an estimate — closing an opening on a
+    guessed date would hide one you could still apply for, the more damaging
+    of the two mistakes. */
+function isClosed(j){
+  if (String(j.status || '').toUpperCase() === 'CLOSED') return true;
+  const text = `${j.post_name || ''} ${j.deadline_text || ''}`;
+  if (/\bapplications?\s+closed\b|\bclosed\b\s*\)/i.test(text)) return true;
+  if (j.deadline && !j.is_estimated) {
+    const t = new Date(j.deadline).getTime();
+    if (t && t < Date.now()) return true;
+  }
+  return false;
+}
+
+/* Switching from an opening is the same switch the ☰ menu offers — one route,
+   so the app cannot end up with two ways to change the thing everything else
+   depends on. */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-switch-exam]');
+  if (b && window.JobhuntNav) window.JobhuntNav.openChangeExam();
+});
+
+/* One card, answering the four things a tracked opening has to answer: have I
+   applied, which exam is it, when is that exam, and what do I do about it. */
+/* Private-sector employers this feed carries, by name. India's private banks
+   are the hard case: "Bank" reads as public sector, but Federal, South Indian,
+   Tamilnad Mercantile, Nainital, Karur Vysya and the rest are private
+   companies with completely different hiring. Naming them is more honest than
+   a clever rule that gets them wrong quietly. */
+const PRIVATE_NAMES = [
+  'federal bank', 'south indian bank', 'nainital bank', 'tamilnad mercantile', 'tmb',
+  'karur vysya', 'city union', 'rbl', 'hdfc', 'icici', 'axis bank', 'kotak',
+  'indusind', 'bandhan', 'dcb bank', 'csb bank', 'dhanlaxmi', 'ujjivan',
+  'equitas', 'au small', 'fincare', 'yes bank', 'idfc first', 'jana small',
+  'esaf', 'suryoday', 'utkarsh', 'shivalik', 'capital small',
+  'reliance', 'infosys', 'wipro', 'tcs', 'tech mahindra', 'hcl', 'cognizant',
+  'accenture', 'capgemini', 'amazon', 'flipkart', 'private limited', 'pvt',
+];
+
+/**
+ * Government or private, for the two lists on this screen.
+ *
+ * A heuristic, and labelled as one: it reads a name, not a company register.
+ * It defaults to GOVERNMENT because this is a government-job tracker and the
+ * feed behind it is overwhelmingly public sector — so the failure mode is a
+ * private role appearing in the government list, not a government notification
+ * going missing, which is the one that would actually cost an application.
+ */
+/* ── WHICH AREAS THIS QUALIFICATION OPENS ─────────────────────────────────
+   The feed could always answer "in which area will I get a job" and never
+   did: it printed 574 openings in date order and left the reader to notice
+   that 36 were research fellowships, 45 were PSU officer grade and 28 were
+   core engineering posts. Counting them is the app's job.
+
+   ORDERED MOST-SPECIFIC-FIRST, first match wins. A Junior Research Fellow is
+   research, not "assistant", even though the word assistant appears further
+   down the list — so the ordering here is load-bearing, not cosmetic.
+
+   These are buckets for reading a feed, not a taxonomy of the Indian public
+   sector. Anything that matches nothing lands in "Other" and is still shown,
+   because a bucket nobody wrote a rule for is not a reason to hide a job. */
+const AREA_RULES = [
+  ['Research & fellowships',
+   /junior research fellow|\bjrf\b|senior research fellow|\bsrf\b|research associate|research assistant|project associate|project fellow|project scientist|post[- ]?doctoral/i],
+  ['Teaching & faculty',
+   /professor|lecturer|\btgt\b|\bpgt\b|teacher|teaching|instructor|tutor|principal|faculty|coach|\bpt\b trainer/i],
+  ['Healthcare & medical',
+   /medical officer|staff nurse|\bnurse\b|nursing|pharmacist|lab technician|\bdmlt\b|radiographer|physiotherap|dental|ayush|paramedic|health worker/i],
+  ['Civil services & PSC',
+   /civil services|\bpsc\b|state services|group [abc]\b|deputy collector|tehsildar|\bbdo\b|revenue officer/i],
+  ['PSU officer & management grade',
+   /management trainee|executive trainee|\bdgm\b|general manager|deputy manager|assistant manager|senior manager|\bmanager\b|officer trainee|graduate engineer trainee|probationary officer|assistant vice president|\bavp\b|chief\b|director|\bexecutive\b|administrative officer/i],
+  ['Engineering posts (core)',
+   /\bengineer\b|engineering assistant|draughtsman|supervisor|foreman/i],
+  ['IT, software & data',
+   /software|programmer|developer|data (entry|scientist|analyst)|\bdeo\b|system|network|cyber|informatics|technical assistant|scientific.*assistant/i],
+  ['Apprentice & internship',
+   /apprentice|internship|\bintern\b/i],
+  ['Banking & finance',
+   /\bbank\b|financial|finance|accounts|auditor|audit officer|treasury/i],
+  ['Consultant & contract',
+   /consultant|young professional|advisor|specialist/i],
+  ['Administrative & clerical',
+   /assistant\b|clerk|steno|typist|\budc\b|\bldc\b|registrar|secretary|coordinator/i],
+  /* Posts a B.Tech qualifies for only through "Any Graduate". Named rather
+     than left in Other, because seeing that they ARE support-grade is the
+     point — the candidate can then decide, instead of scrolling past them. */
+  ['Support & facility staff',
+   /chowkidar|warden|driver|cook|sweeper|peon|guard|attendant|helper|support person|\bmts\b|multi[- ]tasking/i],
+  ['Sports & other quota',
+   /sports quota|sportsperson|meritorious sports/i],
+];
+
+function areaOf(j) {
+  const text = (j.post_name || '') + ' ' + (j.organization || '');
+  for (let i = 0; i < AREA_RULES.length; i++) {
+    if (AREA_RULES[i][1].test(text)) return AREA_RULES[i][0];
+  }
+  return 'Other';
+}
+
+function renderAreas() {
+  const box = document.getElementById('areasSec');
+  if (!box) return;
+
+  /* Only openings this candidate can actually apply for. The question is
+     "where do I fit", so a job that rules them out is not an answer to it. */
+  const mine = allJobs.filter(j => !isClosed(j) && eligibility(j) === true);
+  box.classList.toggle('hidden', mine.length === 0);
+  if (!mine.length) return;
+
+  const groups = {};
+  mine.forEach(j => { (groups[areaOf(j)] = groups[areaOf(j)] || []).push(j); });
+  const ordered = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length);
+
+  document.getElementById('areasSub').textContent =
+    mine.length + ' open posts you qualify for, across ' + ordered.length +
+    ' areas. Biggest first.';
+
+  /* Bodies deferred like the list folds: an area's rows are built the first
+     time the area is opened, not for every area on every render. */
+  document.getElementById('areasList').innerHTML = ordered.map((name, i) => {
+    const list = groups[name];
+    const soonest = list.find(j => daysLeft(j) !== null);
+    const when = soonest
+      ? 'next closes ' + new Date(soonest.deadline).toLocaleDateString('en-IN',
+          { day: 'numeric', month: 'short' })
+      : 'no dated closing';
+    return '<details class="area-fold"><summary>' +
+        '<span class="area-n">' + list.length + '</span>' +
+        '<span class="area-name">' + escapeHtml(name) + '</span>' +
+        '<span class="area-when">' + escapeHtml(when) + '</span>' +
+      '</summary><div class="area-body" data-area="' + i + '"></div></details>';
+  }).join('');
+  document.querySelectorAll('#areasList .area-body').forEach(body => {
+    const list = groups[ordered[+body.getAttribute('data-area')]].slice().sort((a, b) => {
+      const x = daysLeft(a), y = daysLeft(b);
+      if (x === null) return y === null ? 0 : 1;
+      if (y === null) return -1;
+      return x - y;
+    });
+    body.removeAttribute('data-area');
+    stashBody(body, () => list.map(otherHtml).join(''));
+  });
+}
+
+/* ── TODAY'S SHORTLIST ─────────────────────────────────────────────────────
+   WHAT THIS REPLACES. The screen opened on 508 openings in closing-date order
+   and left every judgement to the reader: which of these is mine, which is
+   urgent, which have I already applied for, and which exam am I actually
+   sitting this week. That is the work the app exists to do, and it was not
+   doing it.
+
+   Everything here is derived, never typed in:
+
+     - EXAMS supplies the exams being prepared for and their dates. An exam
+       whose date has passed drops out; it is history, not a priority.
+     - allJobs supplies the openings, already filtered to ones still open and
+       ones this candidate can actually apply for.
+     - `applied` supplies the status, so something already sent stops shouting.
+
+   RANK IS RELEVANCE FIRST, THEN DAYS — and the first version of this got that
+   wrong in a way worth recording. Ranking on the calendar alone produced eight
+   rows of Vocational Instructor, Support Person and Medical Officer posts that
+   happened to close tomorrow, and left SSC CGL — three days away, the exam
+   actually being sat — off the list entirely. A shortlist that buries the
+   thing you are revising for under forms you were never going to send is the
+   same failure as the 508-row list, in less space.
+
+   So:
+
+     1. THE EXAMS COME FIRST, always, in date order. Missing a paper cannot be
+        undone; missing a form usually can, next cycle. They are also few, so
+        they cost almost none of the eight rows.
+     2. THEN OPENINGS, in date order, and only ones eligibility() answers a
+        confident YES to. The main list shows anything not ruled out, because
+        hiding a job is worse than showing a doubtful one — but a shortlist is
+        a claim that these are the ones worth acting on, and "I could not read
+        the qualification line" is not that claim. Those stay downstairs. */
+const SL_MAX = 8;
+
+/** Red under a week, amber under three, green beyond, grey with no date. */
+function slBand(days) {
+  if (days === null) return 'grey';
+  if (days <= 7)  return 'red';
+  if (days <= 21) return 'amber';
+  return 'green';
+}
+function slDays(iso) {
+  if (!iso) return null;
+  const t = Date.parse(iso.length <= 10 ? iso + 'T00:00:00' : iso);
+  if (!isFinite(t)) return null;
+  return Math.ceil((t - Date.now()) / 864e5);
+}
+
+/* WHY THE FILTER IS ON THE ROLE AND NOT THE DEGREE.
+
+   Three versions of this filter tried to rank on the qualification line and
+   all three produced the same nonsense: Vocational Instructor, Contractual
+   Teacher and Support Person at the top of a shortlist for a computer-science
+   engineer. The reason is in the data. PM SHRI Kendriya Vidyalaya's Vocational
+   Instructor post reads, in full, "B.Tech/B.E, M.E/M.Tech" — it genuinely does
+   ask for an engineering degree. No amount of reading that line distinguishes
+   it from GACL's Executive Trainee, because the difference is not the degree.
+   It is the JOB.
+
+   So the shortlist ranks on the role. TRACK holds the grades this candidate is
+   chasing — trainee, engineer, officer, executive, scientist, manager — and
+   ASIDE holds the ones they are not, which have to be named because a teaching
+   post at a school asks for the same B.Tech. Neither list hides anything: the
+   full list downstairs is untouched, and this only decides the order of eight
+   rows.
+
+   Both are plain word lists precisely so they can be argued with. */
+const SL_TRACK = /\b(engineer|engineering|executive|management\s*trainee|\bmt\b|trainee|officer|assistant\s*manager|deputy\s*manager|manager|scientist|analyst|programmer|developer|specialist|probationary|apprentice|technical\s*assistant)\b/i;
+const SL_ASIDE = /\b(teacher|teaching|instructor|tutor|professor|lecturer|principal|warden|nurse|nursing|medical|doctor|pharmacist|lab\s*attendant|attendant|driver|cook|sweeper|peon|guard|helper|support\s*person|counsellor|librarian|steno|typist|clerk\s*cum)\b/i;
+
+/** Is this the kind of post this candidate is actually chasing? */
+function onMyTrack(j) {
+  const text = (titleOf(j) || '') + ' ' + (j.post_name || '');
+  if (SL_ASIDE.test(text)) return false;
+  return SL_TRACK.test(text);
+}
+
+function shortlistRows() {
+  const rows = [];
+
+  /* The exams. These are the reason the app exists, so they are here whether
+     or not an opening for them happens to be in the feed. */
+  (typeof EXAMS !== 'undefined' ? EXAMS : []).forEach(e => {
+    if (!e.key || !e.examDateStart) return;
+    const days = slDays(e.examDateStart);
+    if (days === null || days < 0) return;            // sat already
+    rows.push({
+      // `short` is usually a prefix of `name` ("SSC CGL" / "SSC CGL Tier 1"),
+      // and printing both reads as a stutter.
+      days, name: (e.name && e.name.indexOf(e.short) === 0) ? e.name
+                : (e.short + ' — ' + (e.name || '')),
+      why: e.dateTentative ? 'Exam date is tentative' : 'Exam',
+      status: days === 0 ? 'Today' : days + (days === 1 ? ' day' : ' days'),
+      applied: false, exam: e.key,
+    });
+  });
+
+  /* The openings. Applied ones are kept regardless — an application you sent
+     is a thing you are waiting on. Everything else has to be a CONFIDENT
+     match: `=== true`, not "not ruled out". */
+  const openings = [];
+  allJobs.forEach(j => {
+    if (isClosed(j) && !applied[j.id]) return;
+    if (!applied[j.id] && eligibility(j) !== true) return;
+    /* And it has to be a post on this candidate's track. See SL_TRACK. */
+    if (!applied[j.id] && !onMyTrack(j)) return;
+    const days = daysLeft(j);
+    if (days !== null && days < 0 && !applied[j.id]) return;
+    openings.push({
+      days, name: j.organization + ' — ' + titleOf(j),
+      why: applied[j.id] ? 'Application sent'
+         : days === null ? 'Closing date not published'
+         : 'Closes ' + new Date(j.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+      status: applied[j.id] ? 'Applied'
+            : days === null ? '—'
+            : days + (days === 1 ? ' day' : ' days'),
+      applied: !!applied[j.id], job: j,
+    });
+  });
+
+  /* Soonest first within each group. A row with no date cannot be ranked
+     against one that has one, so it sorts last rather than being guessed at. */
+  const bySoonest = (a, b) => {
+    if (a.days === null) return b.days === null ? 0 : 1;
+    if (b.days === null) return -1;
+    return a.days - b.days;
+  };
+  rows.sort(bySoonest);
+  openings.sort(bySoonest);
+
+  // Exams keep their places; openings fill whatever is left.
+  return rows.concat(openings).slice(0, SL_MAX);
+}
+
+function renderShortlist() {
+  const box = document.getElementById('shortlist');
+  if (!box) return;
+  const rows = shortlistRows();
+  box.classList.toggle('hidden', rows.length === 0);
+  if (!rows.length) return;
+
+  const soon = rows.filter(r => r.days !== null && r.days <= 7 && !r.applied).length;
+  document.getElementById('shortlistSub').textContent =
+    (soon ? soon + (soon === 1 ? ' thing needs' : ' things need') + ' attention this week. '
+          : 'Nothing is due in the next seven days. ') +
+    'Exams first, then engineer and officer-grade openings you qualify for.';
+
+  document.getElementById('shortlistBody').innerHTML = rows.map((r, i) =>
+    '<tr class="sl-row"' + (r.job ? ' data-sl-job="' + escapeHtml(r.job.id) + '"' : '') +
+      (r.exam ? ' data-sl-exam="' + escapeHtml(r.exam) + '"' : '') + '>' +
+      '<td><span class="sl-rank"><span class="sl-dot ' +
+        (r.applied ? 'green' : slBand(r.days)) + '"></span>' + (i + 1) + '</span></td>' +
+      '<td><div class="sl-name">' + escapeHtml(r.name) + '</div>' +
+        '<div class="sl-why">' + escapeHtml(r.why) + '</div></td>' +
+      '<td class="sl-status' + (r.applied ? ' is-applied' : '') + '">' +
+        escapeHtml(r.status) + '</td>' +
+    '</tr>').join('');
+}
+
+/* A shortlist row is a shortcut to the thing it names. */
+document.addEventListener('click', e => {
+  const row = e.target.closest && e.target.closest('[data-sl-exam]');
+  if (row && window.JobhuntNav) {
+    window.JobhuntNav.go ? window.JobhuntNav.go('study')
+      : (location.href = window.JobhuntNav.learnHref('study'));
+  }
+});
+
+function sectorOf(j) {
+  const name = ((j.organization || '') + ' ' + (j.post_name || '')).toLowerCase();
+  if (PRIVATE_NAMES.some(p => name.includes(p))) return 'private';
+  return 'government';
+}
+
+const MARKS_FILTER_KEY = 'jobhunt_marks_filter';
+
+/**
+ * Should this opening be hidden because the candidate's marks fall short?
+ *
+ * Only ever true when the app KNOWS the answer — that is, the opening maps to
+ * an exam that publishes a threshold, and the candidate has entered both marks
+ * and category. Every scraped opening in this list arrives with a
+ * qualification line and NO minimum percentage, because the feed does not
+ * carry one, so this hides almost nothing and that is correct.
+ *
+ * The alternative — treating "no stated requirement" as a failure — would hide
+ * most of the list on a guess, and the openings it hid would be the ones the
+ * candidate could actually apply to. A filter that quietly removes real
+ * chances is worse than no filter.
+ */
+function marksFilterHides(j) {
+  if (!marksFilterOn()) return false;
+  if (typeof marksVerdict !== 'function' || typeof examForJob !== 'function') return false;
+  const e = examForJob(j);
+  if (!e || !e.minMarks) return false;                    // nothing published
+  const nav = window.JobhuntNav;
+  const v = marksVerdict(e, nav ? nav.marksPct : null, nav ? nav.category : null);
+  return v.known && !v.clears;
+}
+
+function marksFilterOn() {
+  try { return localStorage.getItem(MARKS_FILTER_KEY) === '1'; } catch (e) { return false; }
+}
+
+/** Days until a real closing date. Null when there is no confirmed date —
+    never a guess, which is the rule the whole tracker is built on. */
+function daysLeft(j) {
+  if (!j.deadline) return null;
+  const t = new Date(j.deadline).getTime();
+  if (isNaN(t)) return null;
+  return Math.ceil((t - Date.now()) / 86400000);
+}
+
+/** "… — 470 Posts" → "470". The feed puts the vacancy count in the title, and
+    it is the number people scan for first. */
+function vacanciesOf(j) {
+  const m = /(?:^|[–—-]\s*)([\d,]{1,7})\s*Posts?\b/i.exec(j.post_name || '');
+  return m ? m[1] : null;
+}
+
+/** Title without the trailing "– N Posts", since the count gets its own chip
+    and repeating it wastes the line that has to carry the actual role. */
+function titleOf(j) {
+  return String(j.post_name || '').replace(/\s*[–—-]\s*[\d,]+\s*Posts?\b\s*$/i, '').trim()
+      || String(j.post_name || '');
+}
+
+/**
+ * One opening in the folded list.
+ *
+ * This used to be three lines — organisation, title, and the raw
+ * deadline_text — which on a list of fifty read as fifty near-identical grey
+ * paragraphs, repeated the words "reported by FreeJobAlert, confirm on the
+ * official notification" fifty times, and offered NO WAY TO APPLY. Every field
+ * it needed was already on the client; `select=*` had been fetching them all
+ * along and the renderer threw them away.
+ *
+ * What a row has to answer, in the order it is asked: how long have I got,
+ * what is it, am I eligible, and where do I apply.
+ */
+function otherHtml(j) {
+  const e = examForJob(j);
+  const left = daysLeft(j);
+  const vac = vacanciesOf(j);
+  const elig = eligibility(j);
+
+  /* Urgency is the whole point of a deadline tracker, so it is a colour and a
+     number rather than a sentence to read. Three days is the band where an
+     application stops being something you can leave until the weekend. */
+  const urgency = left === null ? '' : left <= 3 ? ' is-urgent' : left <= 7 ? ' is-soon' : '';
+  const countdown = left === null
+    ? `<span class="cd-none">date TBA</span>`
+    : `<span class="cd-num">${left}</span><span class="cd-unit">day${left === 1 ? '' : 's'}</span>`;
+
+  /* WHAT "OPEN NOTIFICATION" ACTUALLY OPENS.
+     This was `j.apply_url || j.notification_url`, and both columns held the
+     same FreeJobAlert article for every discovered row — so a button reading
+     "Open notification" opened an aggregator page carrying ads, and when an
+     apply link did exist it opened the application FORM under the same
+     label. The notification is now its own link, applying is its own link,
+     and where neither has been resolved the row says it is going to
+     FreeJobAlert instead of calling that a notification. */
+  const isArticle = u => /freejobalert\.com\/articles\//i.test(u || '');
+  const notif = !isArticle(j.notification_url) ? j.notification_url : null;
+  const applyTo = (j.apply_url && j.apply_url !== notif && !isArticle(j.apply_url))
+    ? j.apply_url : null;
+  const details = j.source_url || (isArticle(j.notification_url) ? j.notification_url : null);
+
+  return `<div class="other-row${urgency}">
+    <div class="other-cd">${countdown}</div>
+    <div class="other-main">
+      <div class="other-org">${escapeHtml(j.organization)}${
+        vac ? ` · <span class="other-vac">${escapeHtml(vac)} posts</span>` : ''}</div>
+      <div class="other-post">${escapeHtml(titleOf(j))}</div>
+      ${j.eligibility ? `<div class="other-elig">${escapeHtml(j.eligibility)}${
+        elig === true ? ' <span class="ok-tag">you qualify</span>'
+        : elig === false ? ' <span class="no-tag">not your qualification</span>'
+        : ''}</div>` : ''}
+      <div class="other-meta">${
+        left === null
+          ? escapeHtml(j.deadline_text || 'closing date TBA')
+          : `Closes ${escapeHtml(new Date(j.deadline).toLocaleDateString('en-IN',
+              { day: 'numeric', month: 'short' }))}`
+      }${j.is_estimated ? ' <span class="est">estimate</span>' : ''}${
+        applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}</div>
+      <div class="other-actions">
+        ${notif
+          ? `<a class="other-apply" href="${escapeHtml(notif)}" target="_blank" rel="noopener">Open notification →</a>`
+          : details
+            ? `<a class="other-apply is-secondhand" href="${escapeHtml(details)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>`
+            : ''}
+        ${applyTo ? `<a class="other-apply other-applylink" href="${escapeHtml(applyTo)}" target="_blank" rel="noopener">Apply →</a>` : ''}
+        ${applied[j.id]
+          ? `<button class="other-mark" data-unapply="${escapeHtml(j.id)}">Undo</button>`
+          : `<button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button>`}
+        ${e
+          ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">${escapeHtml(e.short)} →</button>`
+          /* Said plainly, because the alternative is an opening that looks as
+             prepared-for as the others and is not. It sits with the actions
+             rather than alone in the right margin, where fifty repetitions of
+             it were the only thing the column contained. */
+          : `<span class="other-none">no syllabus yet</span>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+/**
+ * The marks bar for this exam, read against what the candidate entered.
+ *
+ * Shows one of three things and never confuses them: a verdict when the
+ * threshold is published AND the candidate has filled in marks and category;
+ * a prompt when something is missing; nothing at all when the exam publishes
+ * no requirement. A red cross for "we don't know" would be the worst outcome
+ * here — it would talk someone out of a post they can apply for.
+ */
+function marksRowHtml(exam) {
+  if (!exam || typeof marksVerdict !== 'function') return '';
+  const nav = window.JobhuntNav;
+  const v = marksVerdict(exam, nav ? nav.marksPct : null, nav ? nav.category : null);
+  if (!v.known) {
+    if (!exam.minMarks) return '';       // nothing published — say nothing
+    return `<div class="jrow">
+      <span class="jlab">Marks bar</span>
+      <span class="jval muted-inline">${escapeHtml(v.why)}</span>
+    </div>`;
+  }
+  const tone = v.clears ? 'ok-tag' : 'no-tag';
+  const verdict = v.clears
+    ? `you clear it by ${v.margin}%`
+    : `${Math.abs(v.margin)}% short`;
+  return `<div class="jrow">
+    <span class="jlab">Marks bar</span>
+    <span class="jval">${v.need}% for ${escapeHtml(nav.category)} · you have ${v.pct}%
+      <span class="${tone}">${escapeHtml(verdict)}</span>
+      <span class="marks-basis">${escapeHtml(v.basis)}${
+        exam.minMarks.noRounding ? ' · no rounding' : ''}</span></span>
+  </div>`;
+}
+
+function cardHtml(j) {
+  const exam = currentExam();
+  const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
+  const elig = eligibility(j);
+  /* Same rule as the list row: an aggregator article is never labelled
+     "Notification". See the note above `isArticle` in otherHtml. */
+  const isArt = u => /freejobalert\.com\/articles\//i.test(u || '');
+  const cardNotif = !isArt(j.notification_url) ? j.notification_url : null;
+  const cardApply = (j.apply_url && j.apply_url !== cardNotif && !isArt(j.apply_url)) ? j.apply_url : null;
+  const cardDetails = j.source_url || (isArt(j.notification_url) ? j.notification_url : null);
+  return `
+    <div class="card">
+      <div class="card-top">
+        <div>
+          <div class="org">${escapeHtml(j.organization)}</div>
+          <div class="post">${escapeHtml(j.post_name)}</div>
+        </div>
+        <span class="badge ${escapeHtml(j.status)}">${escapeHtml(String(j.status || '').replace('_',' '))}</span>
+      </div>
+
+      <div class="jrow">
+        <span class="jlab">Application</span>
+        <span class="jval">${applied[j.id]
+          ? `<span class="applied-tag">✓ Applied</span> <button class="btn-n" data-unapply="${escapeHtml(j.id)}">Undo</button>`
+          : `<button class="btn-y" data-apply="${escapeHtml(j.id)}">Mark as applied</button>`}</span>
+      </div>
+      <div class="jrow">
+        <span class="jlab">Closes</span>
+        <span class="jval">${escapeHtml(j.deadline_text || 'TBA')}${
+          j.is_estimated ? ' <span class="est">estimate</span>' : ''}</span>
+      </div>
+      ${exam ? `
+      <div class="jrow">
+        <span class="jlab">Exam</span>
+        <span class="jval">${escapeHtml(exam.name)}</span>
+      </div>
+      <div class="jrow">
+        <span class="jlab">Exam date</span>
+        <span class="jval">${escapeHtml(when ? when.text : 'not announced')}</span>
+      </div>
+      <div class="jrow">
+        <span class="jlab">Paper</span>
+        <span class="jval">${escapeHtml(exam.pattern)}</span>
+      </div>` : ''}
+      ${marksRowHtml(exam)}
+      ${j.eligibility ? `
+      <div class="jrow">
+        <span class="jlab">Eligibility</span>
+        <span class="jval">${escapeHtml(j.eligibility)}${
+          elig === null ? '' : elig
+            ? ' <span class="ok-tag">you qualify</span>'
+            : ' <span class="no-tag">asks for a qualification you have not entered</span>'}</span>
+      </div>` : ''}
+      ${j.location ? `<div class="jrow"><span class="jlab">Location</span><span class="jval">${escapeHtml(j.location)}</span></div>` : ''}
+      ${j.pay_scale ? `<div class="jrow"><span class="jlab">Pay</span><span class="jval">₹${escapeHtml(j.pay_scale)}</span></div>` : ''}
+
+      <div class="links">
+        ${cardNotif ? `<a href="${escapeHtml(cardNotif)}" target="_blank" rel="noopener">Notification →</a>` : ''}
+        ${cardApply ? `<a href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">Apply →</a>` : ''}
+        ${cardDetails ? `<a href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>` : ''}
+      </div>
+      <a class="study-now" href="${examHref('study')}">Study now →</a>
+    </div>
+  `;
+}
+
+/* One delegated handler, rather than rebinding per card. */
+document.addEventListener('click', (e) => {
+  const y = e.target.closest && e.target.closest('[data-apply]');
+  if (y) { setApplied(y.getAttribute('data-apply'), true); return; }
+  const n = e.target.closest && e.target.closest('[data-unapply]');
+  if (n) { setApplied(n.getAttribute('data-unapply'), false); }
+});
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* The qualification picker lives in the menu, with the other settings, so
+   there is one of it rather than one per page. nav.js writes it; this page
+   only has to re-render. */
+document.getElementById('qualPrompt').addEventListener('click', () => {
+  if (window.JobhuntNav) window.JobhuntNav.openDrawer();
+});
+document.getElementById('examOver').addEventListener('click', () => {
+  if (window.JobhuntNav) window.JobhuntNav.openChangeExam();
+});
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'marksFilterOn') {
+    try { localStorage.setItem('jobhunt_marks_filter', e.target.checked ? '1' : '0'); } catch (err) {}
+    render();
+  }
+});
+document.addEventListener('jobhunt:profile', () => { loadLocal(); render(); });
+document.addEventListener('jobhunt:qualification', (e) => {
+  qualification = (e.detail && e.detail.qualification) || null;
+  saveLocal();
+  render();
+});
+
+/* Switching exam rebuilds this screen too: which openings belong here, what
+   the cards say about the exam, and where "Study now" goes. */
+
+/* ── Shrestha's job posts (private-sector feed) ─────────────────────────────
+   Daily feed from @careerwithshrestha, rendered newest-first from
+   /data/shrestha-jobs.json — a static file the daily pull
+   (scripts/pull-shrestha.js) rewrites; the redeploy picks it up. Kept out of
+   the Supabase jobs table on purpose: these are Instagram postings, not
+   official notifications.
+
+   Per-job pipeline, in Krupal's order:
+     1. LEARN    what to learn for the job (data/learn/<key>.md), simplest-first,
+                 written for someone starting from absolute zero
+     2. DRAFT    tailored resume + ATS badge (data/resume-drafts/<key>.md).
+                 HONESTY RULE: drafts never claim language proficiency or
+                 professional experience he does not have. The honest framing
+                 (his words): B.Tech CSE 2025 fresher who builds and ships
+                 working systems with AI assistance — he owns integration,
+                 deployment, debugging and operations — and is now learning
+                 programming fundamentals. Never invent.
+     3. APPROVE  hard gate — nothing is ever submitted by the app
+     4. APPLIED  he applies from the original post link himself, then marks it
+     5. STUDY    session auto-created after approval (data/study-sessions/<key>.md)
+
+   Drafting, learn guides and study sessions are written by Muse and committed
+   as markdown; data/job-content.json records which jobs have which. The
+   approval itself is the one thing that happens in the app, and it lives in
+   localStorage next to jobhunt_applied:
+
+     jobhunt_shrestha_status = { "<job-key>": { status, at } }
+     jobhunt_shrestha_study  = { "<job-key>": { "<item>": true } }
+
+   Statuses: new → (draft appears) → waiting → approved → applied →
+   interviewing → offer, with rejected as the terminal no.
+*/
+const SH_JOBS_URL = '/data/shrestha-jobs.json';
+const SH_CONTENT_URL = '/data/job-content.json';
+let shJobs = [];
+let shContent = {};
+let shStatus = {};
+let shStudy = {};
+
+function shLoadState() {
+  try { shStatus = JSON.parse(localStorage.getItem('jobhunt_shrestha_status')) || {}; } catch (e) { shStatus = {}; }
+  try { shStudy = JSON.parse(localStorage.getItem('jobhunt_shrestha_study')) || {}; } catch (e) { shStudy = {}; }
+}
+function shSaveState() {
+  try {
+    localStorage.setItem('jobhunt_shrestha_status', JSON.stringify(shStatus));
+    localStorage.setItem('jobhunt_shrestha_study', JSON.stringify(shStudy));
+  } catch (e) {}
+}
+
+/* Fit for Krupal — and this is strict on purpose.
+   "Eligible" appears ONLY on genuine 0-experience fresher roles: the post
+   itself must invite freshers. Everything else stays visible in the feed but
+   carries an honest not-fit label with the reason, so he can still try his
+   luck with full information. Krupal confirmed 2026-09-29 that his coding
+   knowledge is effectively zero; the app must never imply he is qualified
+   for something he is not. */
+function shFit(j) {
+  const role = (j.role || '').toLowerCase();
+  const blob = [j.role, j.qualification, j.experience, j.graduation_year, j.notes].join(' ').toLowerCase();
+  if (/2027|2028/.test(blob)) return { ok: false, reason: 'for 2027/28 graduates — not 2025' };
+  if (j.graduation_year && !/2025/.test(j.graduation_year))
+    return { ok: false, reason: 'pass-out year does not include 2025' };
+  if (/intern(ship|s)/.test(role)) return { ok: false, reason: 'internship, not a full-time fresher job' };
+  if (/mainframe/.test(role)) return { ok: false, reason: 'Mainframe role — not software/AI-ML' };
+  // A testing role naming its automation stack is not a 0-experience role.
+  if (/sdet|qa|test/.test(role) && j.skills && j.skills.length)
+    return { ok: false, reason: `needs ${j.skills.slice(0, 3).join(', ')} experience — not 0-experience` };
+  // Genuine 0-experience fresher intake: the post says freshers, plainly.
+  const fresherIntake = /fresher|entry-level|students?/i.test(
+    [j.experience, j.role, j.qualification, j.notes].join(' '));
+  if (fresherIntake) return { ok: true, reason: '' };
+  return { ok: false, reason: 'no fresher intake stated in the post' };
+}
+
+function shPreferredCity(j) {
+  const loc = (j.location || '').toLowerCase();
+  if (/hyderabad/.test(loc)) return 'Hyderabad';
+  if (/bengaluru|bangalore/.test(loc)) return 'Bengaluru';
+  return null;
+}
+
+/* Stored decision wins; otherwise a committed draft means "waiting for him",
+   otherwise the listing is simply new. */
+function shStatusOf(j) {
+  const s = shStatus[j.key];
+  if (s && s.status) return s.status;
+  const c = shContent[j.key];
+  if (c && c.draft) return 'waiting';
+  return 'new';
+}
+
+function shDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso.length <= 10 ? iso + 'T00:00:00' : iso);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+}
+
+/* Tiny markdown renderer: headings, bold, lists, rules, paragraphs.
+   Frontmatter is stripped. Everything is escaped first. */
+function shMd(md) {
+  let t = String(md || '').replace(/^---\n[\s\S]*?\n---\n/, '');
+  const lines = t.split('\n');
+  let html = '', inList = false;
+  const inline = s => escapeHtml(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+  for (const line of lines) {
+    const x = line.trim();
+    if (/^---+$/.test(x)) { closeList(); html += '<hr>'; continue; }
+    let m = /^(#{1,3})\s+(.*)/.exec(x);
+    if (m) { closeList(); html += `<h${m[1].length + 2}>${inline(m[2])}</h${m[1].length + 2}>`; continue; }
+    m = /^[-*]\s+(.*)/.exec(x);
+    if (m) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${inline(m[1])}</li>`; continue; }
+    m = /^\d+[.)]\s+(.*)/.exec(x);
+    if (m) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${inline(m[1])}</li>`; continue; }
+    if (!x) { closeList(); continue; }
+    closeList(); html += `<p>${inline(x)}</p>`;
+  }
+  closeList();
+  return `<div class="sh-md">${html}</div>`;
+}
+
+async function shFetchText(url) {
+  try {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) return null;
+    return await r.text();
+  } catch (e) { return null; }
+}
+
+const SH_STEP_LABELS = {
+  new: 'New', waiting: 'Draft ready — waiting approval', approved: 'Approved',
+  rejected: 'Rejected', applied: 'Applied', interviewing: 'Interviewing', offer: 'Offer',
+};
+
+function shChips(j) {
+  const st = shStatusOf(j);
+  const fit = shFit(j);
+  const chips = [];
+  chips.push(fit.ok
+    ? '<span class="sh-chip elig">Eligible</span>'
+    : `<span class="sh-chip notfit" title="${escapeHtml(fit.reason)}">Not a fit</span>`);
+  const city = shPreferredCity(j);
+  if (city) chips.push(`<span class="sh-chip">${escapeHtml(city)}</span>`);
+  chips.push(`<span class="sh-chip st-${st}">${SH_STEP_LABELS[st] || st}</span>`);
+  if (j.status === 'expired') chips.push('<span class="sh-chip st-expired">Expired</span>');
+  else if (j.status === 'stale') chips.push('<span class="sh-chip">Stale</span>');
+  return chips.join('');
+}
+
+function shCardHtml(j, idx) {
+  const loc = j.location ? escapeHtml(j.location) : '';
+  const posted = shDate(j.posted_at);
+  const meta = [loc, posted].filter(Boolean).join(' · ');
+  const fit = shFit(j);
+  return `<article class="sh-card">
+    <button class="sh-head" data-sh-idx="${idx}" aria-expanded="false" aria-controls="sh-detail-${idx}">
+      <span class="sh-main">
+        <span class="sh-org">${escapeHtml(j.company || 'Company not named in post')}</span>
+        <span class="sh-role">${escapeHtml(j.role || 'Opening')}</span>
+        ${meta ? `<span class="sh-meta">${meta}</span>` : ''}
+        <span class="sh-chips">${shChips(j)}</span>
+        ${fit.ok ? '' : `<span class="sh-fitreason">Not a fit — ${escapeHtml(fit.reason)}</span>`}
+      </span>
+      <span class="sh-caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="sh-detail" id="sh-detail-${idx}" hidden></div>
+  </article>`;
+}
+
+function shFactsHtml(j) {
+  const row = (k, v) => v
+    ? `<div class="sh-step"><span class="sh-k">${k}</span><span class="sh-v">${escapeHtml(v)}</span></div>` : '';
+  const fit = shFit(j);
+  const fitRow = fit.ok
+    ? row('Fit', 'Eligible — genuine fresher intake')
+    : row('Fit', 'Not a fit — ' + fit.reason);
+  const dupes = shJobs.filter(x => x.duplicate_of === j.key);
+  const dupeRow = dupes.length
+    ? `<div class="sh-step"><span class="sh-k">Also shared</span><span class="sh-v">${
+        dupes.map(d => `${shDate(d.posted_at)} (<a href="${escapeHtml(d.post_url)}" target="_blank" rel="noopener">post</a>)`).join(', ')
+      } — same opening, older posts</span></div>` : '';
+  return `<h4>The posting</h4>
+    ${fitRow}
+    ${row('Role', j.role)}
+    ${row('Company', j.company)}
+    ${row('Location', j.location)}
+    ${row('Qualification', j.qualification)}
+    ${row('Experience', j.experience)}
+    ${row('Package', j.package)}
+    ${row('Posted', shDate(j.posted_at))}
+    ${row('How to apply', j.apply_hint || 'Apply link is shared by DM on the Instagram post')}
+    ${dupeRow}
+    <div class="sh-actions">
+      <a class="btn-stage" href="${escapeHtml(j.post_url)}" target="_blank" rel="noopener">Open Instagram post</a>
+    </div>`;
+}
+
+async function shLearnHtml(j) {
+  const c = shContent[j.key] || {};
+  if (!c.learn) return `<h4><span class="sh-stepnum">1</span> Learn first</h4>
+    <p class="sh-gate-note">No learn guide for this job yet — one is written per
+    job, simplest topic first, for someone starting from zero.</p>`;
+  const md = await shFetchText('/' + c.learn.file);
+  return `<h4><span class="sh-stepnum">1</span> Learn first</h4>` +
+    (md ? shMd(md) : '<p class="sh-gate-note">Could not load the learn guide.</p>');
+}
+
+async function shDraftHtml(j) {
+  const c = shContent[j.key] || {};
+  if (!c.draft) return `<h4><span class="sh-stepnum">2</span> Resume draft</h4>
+    <p class="sh-gate-note">No tailored draft for this job yet. Drafts are
+    written from the job description — never with invented experience — and
+    appear here with an ATS score.</p>`;
+  const badge = c.draft.ats_score >= 80
+    ? `<span class="ats-badge">ATS ~${c.draft.ats_score}</span>`
+    : `<span class="ats-badge low">ATS ~${c.draft.ats_score} — below the 80 target, needs work</span>`;
+  const md = await shFetchText('/' + c.draft.file);
+  return `<h4><span class="sh-stepnum">2</span> Resume draft</h4>
+    <p>${badge}</p>
+    <p class="ats-note">Estimate, not a guarantee. Review every line before approving.</p>` +
+    (md ? shMd(md) : '<p class="sh-gate-note">Could not load the draft.</p>');
+}
+
+/* The hard gate. The app never submits anything; "Applied" is set only when
+   he confirms he applied from the original post himself. */
+function shGateHtml(j) {
+  const st = shStatusOf(j);
+  const c = shContent[j.key] || {};
+  let inner = `<h4><span class="sh-stepnum">3</span> Your approval</h4>`;
+  if (!c.draft) {
+    inner += `<p class="sh-gate-note">There is no draft to approve yet. Nothing
+      can be approved — or applied for from here — before you have seen the
+      tailored resume above.</p>`;
+  } else if (st === 'waiting' || st === 'new') {
+    inner += `<p class="sh-gate-note">Read the draft above. Approving only means
+      <em>you</em> are happy with it — the app will never submit anything
+      anywhere.</p>
+      <div class="sh-actions">
+        <button class="btn-approve" data-sh-act="approve" data-sh-key="${escapeHtml(j.key)}">Approve</button>
+        <button class="btn-reject" data-sh-act="reject" data-sh-key="${escapeHtml(j.key)}">Reject</button>
+      </div>`;
+  } else if (st === 'approved') {
+    inner += `<p><span class="sh-chip st-approved">Approved</span></p>
+      <p class="sh-gate-note">Apply from the Instagram post link yourself, then
+      mark it here.</p>
+      <div class="sh-actions">
+        <button class="btn-stage" data-sh-act="applied" data-sh-key="${escapeHtml(j.key)}">I applied from the post</button>
+        <button class="btn-stage" data-sh-act="interviewing" data-sh-key="${escapeHtml(j.key)}">Interviewing</button>
+      </div>`;
+  } else if (st === 'applied') {
+    inner += `<p><span class="sh-chip st-applied">Applied</span></p>
+      <div class="sh-actions">
+        <button class="btn-stage" data-sh-act="interviewing" data-sh-key="${escapeHtml(j.key)}">Interviewing</button>
+        <button class="btn-stage" data-sh-act="offer" data-sh-key="${escapeHtml(j.key)}">Offer</button>
+        <button class="btn-reject" data-sh-act="rejected" data-sh-key="${escapeHtml(j.key)}">Rejected</button>
+      </div>`;
+  } else if (st === 'interviewing') {
+    inner += `<p><span class="sh-chip st-approved">Interviewing</span></p>
+      <div class="sh-actions">
+        <button class="btn-stage" data-sh-act="offer" data-sh-key="${escapeHtml(j.key)}">Offer</button>
+        <button class="btn-reject" data-sh-act="rejected" data-sh-key="${escapeHtml(j.key)}">Rejected</button>
+      </div>`;
+  } else if (st === 'rejected') {
+    inner += `<p><span class="sh-chip st-rejected">Rejected</span>
+      <span class="sh-gate-note">Nothing was submitted. This one is closed.</span></p>`;
+  } else if (st === 'offer') {
+    inner += `<p><span class="sh-chip st-approved">Offer</span></p>`;
+  }
+  return inner;
+}
+
+async function shStudyHtml(j) {
+  const st = shStatusOf(j);
+  const c = shContent[j.key] || {};
+  let inner = `<h4><span class="sh-stepnum">4</span> Study session</h4>`;
+  if (!['approved', 'applied', 'interviewing', 'offer'].includes(st)) {
+    inner += `<p class="sh-gate-note">The study session (interview questions,
+      checklist, daily plan) is created after you approve the job.</p>`;
+    return inner;
+  }
+  if (!c.session) {
+    inner += `<p class="sh-gate-note">Approved — your study session is being
+      prepared and will appear here.</p>`;
+    return inner;
+  }
+  const md = await shFetchText('/' + c.session.file);
+  inner += md ? shMd(md) : '<p class="sh-gate-note">Could not load the study session.</p>';
+  return inner;
+}
+
+async function shRenderDetail(j, idx) {
+  const box = document.getElementById('sh-detail-' + idx);
+  if (!box) return;
+  box.innerHTML = '<p class="sh-gate-note">Loading…</p>';
+  const [learn, draft, study] = await Promise.all([
+    shLearnHtml(j), shDraftHtml(j), shStudyHtml(j),
+  ]);
+  box.innerHTML = shFactsHtml(j) + learn + draft + shGateHtml(j) + study;
+}
+
+function shSetStatus(key, status) {
+  shStatus[key] = { status, at: new Date().toISOString() };
+  shSaveState();
+  renderShrestha();
+}
+
+function shAct(el) {
+  const key = el.getAttribute('data-sh-key');
+  const act = el.getAttribute('data-sh-act');
+  if (act === 'applied') {
+    if (!confirm('Mark this as applied only after you have applied from the original post link yourself. The app never applies for you.')) return;
+  }
+  if (act === 'approve' || act === 'reject') {
+    shSetStatus(key, act === 'approve' ? 'approved' : 'rejected');
+    return;
+  }
+  shSetStatus(key, act);
+}
+
+function shToggle(idx) {
+  const j = shJobs[idx];
+  const box = document.getElementById('sh-detail-' + idx);
+  const head = document.querySelector(`[data-sh-idx="${idx}"]`);
+  if (!box || !j) return;
+  const open = box.hidden;
+  box.hidden = !open;
+  if (head) {
+    head.setAttribute('aria-expanded', String(open));
+    head.querySelector('.sh-caret').textContent = open ? '▴' : '▾';
+  }
+  if (open && !box.dataset.loaded) {
+    box.dataset.loaded = '1';
+    shRenderDetail(j, idx);
+  }
+}
+
+function renderShrestha() {
+  const wrap = document.getElementById('shresthaJobs');
+  if (!wrap) return;
+  // Each opening shows once (newest post wins); older reposts of the same
+  // opening live under "Also shared" inside the detail view.
+  const shown = shJobs.filter(j => !j.duplicate_of);
+  const live = shown.filter(j => j.status === 'live');
+  const done = shown.filter(j => j.status !== 'live');
+  let html = live.map((j, i) => shCardHtml(j, shJobs.indexOf(j))).join('');
+  if (!live.length) html = '<div class="empty">No live postings right now.</div>';
+  if (done.length) {
+    html += `<details class="other-fold"><summary>Expired or stale (${done.length})</summary><div>` +
+      done.map(j => shCardHtml(j, shJobs.indexOf(j))).join('') + '</div></details>';
+  }
+  wrap.innerHTML = html;
+  renderShStudy();
+}
+
+/* The job-interview study plan: approved jobs, their sessions, checkmarks. */
+function renderShStudy() {
+  const el = document.getElementById('shresthaStudy');
+  if (!el) return;
+  const approved = shJobs.filter(j =>
+    ['approved', 'applied', 'interviewing'].includes(shStatusOf(j)));
+  if (!approved.length) {
+    el.innerHTML = `<h3 class="shrestha-h" style="margin-top:18px">Job interview study plan</h3>
+      <p class="sh-gate-note">Nothing here yet. Approve a job above and its study
+      session — interview questions, checklist, daily plan — lands here.</p>`;
+    return;
+  }
+  el.innerHTML = `<h3 class="shrestha-h" style="margin-top:18px">Job interview study plan</h3>
+    <p class="shrestha-sub">Check off what you finish. This is separate from exam prep.</p>` +
+    approved.map(j => {
+      const c = shContent[j.key] || {};
+      const st = shStatusOf(j);
+      return `<div class="sh-card">
+        <div class="sh-org">${escapeHtml(j.company || '')}</div>
+        <div class="sh-role" style="font-size:12.5px">${escapeHtml(j.role || '')}</div>
+        <div class="sh-chips"><span class="sh-chip st-${st}">${SH_STEP_LABELS[st]}</span></div>
+        <div class="sh-gate-note" data-sh-session="${escapeHtml(j.key)}">${
+          c.session ? 'Loading session…' : 'Study session is being prepared after your approval.'}</div>
+      </div>`;
+    }).join('');
+  // Lazy-load each session's checklist.
+  approved.forEach(async j => {
+    const c = shContent[j.key] || {};
+    const slot = el.querySelector(`[data-sh-session="${j.key}"]`);
+    if (!slot || !c.session) return;
+    const md = await shFetchText('/' + c.session.file);
+    if (!md) { slot.textContent = 'Could not load the study session.'; return; }
+    const body = md.replace(/^---\n[\s\S]*?\n---\n/, '');
+    const items = [];
+    body.split('\n').forEach(line => {
+      const m = /^\s*[-*]\s+\[( |x)\]\s+(.*)/.exec(line) || /^\s*[-*]\s+(.*)/.exec(line);
+      if (m) items.push(m[2] || m[1]);
+    });
+    const checks = shStudy[j.key] || {};
+    slot.innerHTML = items.length
+      ? items.map((t, i) =>
+          `<label class="sh-check"><input type="checkbox" data-sh-job="${escapeHtml(j.key)}" data-sh-item="${i}"${checks[i] ? ' checked' : ''}><span>${escapeHtml(t)}</span></label>`).join('')
+      : shMd(body);
+  });
+}
+
+async function loadShrestha() {
+  shLoadState();
+  const wrap = document.getElementById('shresthaJobs');
+  if (!wrap) return;
+  try {
+    const [jobsR, contentR] = await Promise.all([
+      fetch(SH_JOBS_URL, { cache: 'no-store' }),
+      fetch(SH_CONTENT_URL, { cache: 'no-store' }),
+    ]);
+    if (jobsR.ok) {
+      const d = await jobsR.json();
+      shJobs = Array.isArray(d.jobs) ? d.jobs : [];
+      const upd = d.updated_at ? shDate(d.updated_at) : '';
+      const sub = document.getElementById('shresthaSub');
+      if (sub) sub.textContent = `Newest first · pulled daily from @careerwithshrestha${upd ? ' · updated ' + upd : ''} · ${shJobs.length} postings`;
+    }
+    if (contentR.ok) shContent = await contentR.json();
+  } catch (e) {
+    wrap.innerHTML = '<div class="empty">Could not load the job posts. Check your connection and tap Refresh.</div>';
+    return;
+  }
+  renderShrestha();
+}
+
+document.addEventListener('click', e => {
+  const head = e.target instanceof Element ? e.target.closest('[data-sh-idx]') : null;
+  if (head) { shToggle(head.getAttribute('data-sh-idx')); return; }
+  const act = e.target instanceof Element ? e.target.closest('[data-sh-act]') : null;
+  if (act) { shAct(act); return; }
+  const box = e.target instanceof Element ? e.target.closest('[data-sh-job]') : null;
+  if (box && e.target.type === 'checkbox') {
+    const k = box.getAttribute('data-sh-job'), i = box.getAttribute('data-sh-item');
+    shStudy[k] = shStudy[k] || {};
+    if (e.target.checked) shStudy[k][i] = true; else delete shStudy[k][i];
+    shSaveState();
+    const label = box.closest('.sh-check');
+    if (label) { const s = label.querySelector('span'); if (s) s.style.cssText = e.target.checked ? 'color:var(--muted);text-decoration:line-through' : ''; }
+  }
+});
+
+
+document.addEventListener('jobhunt:exam', render);
+document.addEventListener('DOMContentLoaded', render);
+
+loadLocal();
+
+if (!window.matchMedia('(display-mode: standalone)').matches) {
+  document.getElementById('installBanner').classList.add('show');
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
+load();
+loadShrestha();
+</script>
+</body>
+</html>
