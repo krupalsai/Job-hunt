@@ -360,6 +360,90 @@ HTML table did, so the scraper reads the homepage, finds the hashed
 SSC and HAL need a real browser; that belongs in a GitHub Actions job, where
 Playwright is free and unmetered, rather than a Vercel function.
 
+# Shrestha's job posts — the private-sector pipeline
+
+A daily feed of private-sector fresher jobs from Instagram
+`@careerwithshrestha`, rendered on `/` below the exam openings, newest first.
+It is deliberately separate from the Supabase jobs above it: those are
+official notifications; these are Instagram postings. They never enter the
+jobs table.
+
+## The pipeline, in order
+
+Every job moves through five stages, in this order:
+
+1. **Learn** — `data/learn/<job-key>.md`. What to learn for this job, key
+   skills/topics pulled from the post, simplest first, written for someone
+   filling in programming fundamentals. This comes first on purpose.
+2. **Draft** — `data/resume-drafts/<job-key>.md`, rendered with an ATS score
+   badge (an estimate, labelled as one — never a guarantee).
+3. **Approve** — the hard gate, in the app. Tapping Approve only records that
+   *he* is happy with the draft. The app never submits anything, anywhere.
+4. **Applied** — he applies himself from the original Instagram post link,
+   then marks it in the app (with a confirmation prompt).
+5. **Study** — after approval, a study session
+   (`data/study-sessions/<job-key>.md`: interview questions, checklist,
+   daily plan) is created and lands in the "Job interview study plan" block,
+   with checkmarks that persist in `localStorage`.
+
+Statuses: `new → waiting (draft ready) → approved → applied → interviewing →
+offer`, with `rejected` as the terminal no. Personal state lives in
+`localStorage` (`jobhunt_shrestha_status`, `jobhunt_shrestha_study`), next to
+the existing `jobhunt_applied`.
+
+## The honesty rule for drafts
+
+Krupal confirmed first-hand: he used AI to write code, but he did all the
+integration himself — wiring payments, database and bots together, deploying,
+debugging live, operating for real users. That is real work, and the drafts
+say so openly.
+
+So drafts **never** claim language proficiency or years of professional
+experience he does not have. The honest framing is: *B.Tech CSE 2025 fresher
+who builds and ships working systems with AI assistance; owns integration,
+deployment, debugging and operations; now learning programming fundamentals.*
+Every draft carries `status: draft` until he approves it, and no deadline,
+employer, date or skill is ever invented — if the post does not state it, the
+draft does not contain it.
+
+## Fit labels
+
+The "Eligible" badge appears **only** on genuine 0-experience fresher roles —
+the post itself must invite freshers. Everything else stays visible in the
+feed but carries an honest not-fit label with the reason ("needs testing
+skills (Selenium, Playwright) — not 0-experience", "for 2027/28 graduates —
+not 2025", "internship, not a full-time fresher job", …), so he can still try
+his luck with full information.
+
+## The daily pull
+
+`scripts/pull-shrestha.js` (node, no dependencies) pulls the latest 25 posts
+via `instagram-cli` (IG account `17841425543579586`) and merges them into
+`data/shrestha-jobs.json`, keyed idempotently by Instagram post id
+(`ig-<post_id>`, post URL `https://www.instagram.com/p/<post_id>/`).
+
+- Repeated posts of the same opening (same company/role/location) are grouped
+  via `duplicate_of`: the newest post is canonical, older reposts are kept in
+  the data and listed under "Also shared" in the detail view, but the feed
+  shows each opening once.
+- A post is marked `expired` only when a deadline stated in its own caption
+  has passed. Absence from a limited pull proves nothing, so nothing is ever
+  marked stale or deleted.
+- `data/job-content.json` records which jobs have a learn guide, a draft
+  (with ATS score and status) and a study session. New learn guides, drafts
+  and sessions are written as markdown by Muse and committed; the app reads
+  them as static files.
+
+Run it any time:
+
+```
+node scripts/pull-shrestha.js --posts <saved-posts.json> --out data/shrestha-jobs.json
+node scripts/pull-shrestha.js --push   # commits data/shrestha-jobs.json to main
+```
+
+`--json` prints the parsed jobs instead of merging (for inspection).
+`--limit N` controls how many posts the live pull fetches (default 25).
+
 # The Instinct feed (`/feed.html`)
 
 The day's lessons, quizzes, job lists, mocks and revision notes arrive on
