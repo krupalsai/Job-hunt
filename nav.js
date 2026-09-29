@@ -58,6 +58,7 @@
     "jobhunt_plan_done",
     "jobhunt_today_done",
     "jobhunt_pending_attempts",
+    "jobhunt_study_roadmap_v1",
   ];
 
   const exams = (typeof EXAMS !== "undefined" && Array.isArray(EXAMS)) ? EXAMS : [];
