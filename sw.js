@@ -34,7 +34,7 @@
    device that already has them — without a new cache name the activate
    handler never evicts the old one, and the course would keep opening offline
    from storage long after the exam it was built for. */
-const CACHE = 'jobhunt-v14';
+const CACHE = 'jobhunt-v15';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -45,6 +45,7 @@ const PREP_ASSETS = [
   '/learn.html',
   '/nav.js',
   '/study-roadmap.js',
+  '/study-lessons.js',
   /* The prep page's runtime, split out of what was one inline <script>.
      Inline code was cached for free as part of learn.html; these are
      separate requests and have to be listed, or the page loads offline
