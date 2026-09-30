@@ -34,7 +34,12 @@
    device that already has them — without a new cache name the activate
    handler never evicts the old one, and the course would keep opening offline
    from storage long after the exam it was built for. */
-const CACHE = 'jobhunt-v15';
+/* v16 adds the Professor chat shell (/chat.html). The page itself is cached so
+   it opens offline; the AI answers need network and fail with a plain-English
+   note when there is none.
+
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v16';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -42,6 +47,9 @@ const CACHE = 'jobhunt-v15';
 // nav.js and exams.js are in here because the navigation is now shared: without
 // them the prep page would open offline with no bottom bar and no way out of it.
 const PREP_ASSETS = [
+  /* The jobs page shell. Served network-first by the fetch handler below, but
+     precached so a failed network still opens the page instead of nothing. */
+  '/index.html',
   '/learn.html',
   '/nav.js',
   '/study-roadmap.js',
@@ -79,6 +87,10 @@ const PREP_ASSETS = [
      an empty one. */
   '/feed.html',
   '/app/feed.js',
+  /* The Professor chat's shell. The AI answers always need the network; the
+     page itself is static and safe to serve offline, where it shows a
+     plain-English offline note instead of the chat working. */
+  '/chat.html',
   /* Typography is the phone's own face now — nothing to cache, and nothing to
      download before first paint. fonts.css holds only the token aliases. */
   '/fonts/fonts.css',
@@ -116,6 +128,7 @@ self.addEventListener('fetch', event => {
 
   const isPrep = url.pathname === '/learn.html'
               || url.pathname === '/feed.html'
+              || url.pathname === '/chat.html'
               || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
               || url.pathname.startsWith('/app/')

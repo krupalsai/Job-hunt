@@ -185,6 +185,10 @@
     cal:   svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3"/>'),
     news:  svg('<path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/>'),
     spark: svg('<path d="M13 2.5L4.8 13.4h6L9.3 21.5l8.7-11.4h-6.2L13 2.5z"/>'),
+    /* A speech bubble: the Professor chat. New in Sep 2026 with chat.html —
+       plain page links (plain:true) in MENU_DESTS are real pages, never
+       prep-page sections, and are left alone by the href rewriting below. */
+    chat:  svg('<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
@@ -211,6 +215,11 @@
       sub: "Openings tracked for this exam" },
     { id: "feed", label: "Instinct", icon: ICON.spark, href: "/feed.html",
       sub: "lessons, quizzes and job lists as they are sent" },
+    /* Professor is its own page (chat.html), not a section of the prep page —
+       plain:true keeps the drawer href rewrite and the in-page section switch
+       from ever treating it as one. */
+    { id: "professor", label: "Professor", icon: ICON.chat, href: "/chat.html",
+      plain: true, sub: "Ask the professor anything, explained simply" },
     { id: "lessons", label: "All lessons", icon: ICON.book,
       sub: "Every subject, and every topic inside it" },
     { id: "plan", label: "The run to the exam", icon: ICON.cal,
@@ -505,7 +514,8 @@ nav#nav-bottom .nav-item.is-on::before{
         '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
 
       MENU_DESTS.map(d =>
-        '<a class="nav-row' + (activeId === d.id ? " is-on" : "") + '" data-goto="' + d.id + '" href="' +
+        '<a class="nav-row' + (activeId === d.id ? " is-on" : "") + '" data-goto="' + d.id + '"' +
+          (d.plain ? ' data-plain="1"' : "") + ' href="' +
           esc(d.href || learnHref(d.id)) + '">' + d.icon +
           '<span class="nav-row-main"><span>' + esc(d.label) + "</span>" +
           '<span class="nav-row-sub">' + esc(d.sub) + "</span></span></a>").join("") +
@@ -780,8 +790,9 @@ nav#nav-bottom .nav-item.is-on::before{
   drawer.addEventListener("click", e => {
     const row = e.target.closest && e.target.closest("[data-goto]");
     // Jobs is a different page, not a section of the prep page — it must
-    // navigate for real, never be caught as an in-page section switch.
-    if (row && IS_LEARN && row.getAttribute("data-goto") !== "jobs") {
+    // navigate for real, never be caught as an in-page section switch. Plain
+    // pages (data-plain) are the same: real links, no section to switch to.
+    if (row && IS_LEARN && row.getAttribute("data-goto") !== "jobs" && !row.hasAttribute("data-plain")) {
       e.preventDefault();
       closeAll();
       go(row.getAttribute("data-goto"));
@@ -909,7 +920,9 @@ nav#nav-bottom .nav-item.is-on::before{
       r.classList.toggle("is-on", on);
       // Jobs always points at "/" — it is a different page, not a section of
       // the prep page, so it never takes the ?exam=…#section shape the others do.
-      if (!IS_LEARN && goto !== "jobs") r.setAttribute("href", learnHref(goto));
+      // Plain pages (data-plain, e.g. the Professor chat) keep their own href.
+      if (!IS_LEARN && goto !== "jobs" && !r.hasAttribute("data-plain"))
+        r.setAttribute("href", learnHref(goto));
     });
 
     const name = document.getElementById("nav-acct-name");
@@ -950,6 +963,10 @@ nav#nav-bottom .nav-item.is-on::before{
 
   refresh();
 
-  /* Ask before showing anything else. */
-  if (!hasChosen && exams.length) openPicker("first");
+  /* Ask before showing anything else. Guarded on at least one ACTIVE exam: with
+     none (every date passed, or the list failed to load) the first-run picker
+     would render "No syllabus loaded." with its Continue button permanently
+     disabled and no way to dismiss it — the whole page stuck behind a modal
+     that can never be completed. */
+  if (!hasChosen && exams.some(activeExam)) openPicker("first");
 })();
