@@ -108,6 +108,7 @@
       ${questions.map(([question, answer, reason], i) => `<details class="lesson-question"><summary>${i + 1}. ${safe(question)} <span>Show answer</span></summary><p><strong>${safe(answer)}</strong> · ${safe(reason)}</p></details>`).join('')}
       <p class="lesson-hint">When you can solve these without peeking, use the box beside this topic to mark it done.</p>
       <p><a class="lesson-ask" href="/chat.html?topic=${encodeURIComponent(id)}&track=${encodeURIComponent(track)}" aria-label="Ask the Professor about ${safe(title)}">Ask the Professor about this topic →</a></p>
+      <p><a class="lesson-ask" href="/chat.html?topic=${encodeURIComponent(id)}&track=${encodeURIComponent(track)}&weak=1" aria-label="Tell the Professor you are weak at ${safe(title)}">I'm weak here — teach me from scratch →</a></p>
     </article>`;
   }
   panel.addEventListener('click', e => {

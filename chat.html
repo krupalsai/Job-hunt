@@ -225,7 +225,7 @@
 
 <main>
   <div id="topicChip" class="topic-chip" hidden>
-    <span><span class="tc-label">Discussing:</span> <b id="topicChipTitle"></b></span>
+    <span><span class="tc-label" id="topicChipLabel">Discussing:</span> <b id="topicChipTitle"></b></span>
     <button type="button" id="topicChipX" aria-label="Stop discussing this topic">✕</button>
   </div>
 
@@ -328,6 +328,7 @@
     var params = new URLSearchParams(location.search);
     var topicId = params.get("topic");
     var track = params.get("track");
+    var weakMode = params.get("weak") === "1";
     var lib = (typeof window.STUDY_LESSONS !== "undefined") ? window.STUDY_LESSONS : null;
     if (topicId && track && lib && lib[track] && lib[track][topicId]) {
       var card = lib[track][topicId];
@@ -352,6 +353,12 @@
       p += "\n\nThe student opened this chat from the lesson \"" + topicContext.title + "\". " +
         "The lesson teaches this concept: " + topicContext.concept + ". " +
         "Keep your answers tied to this topic unless the student asks about something else.";
+      if (weakMode) {
+        p += " IMPORTANT: the student says they are WEAK at this topic. " +
+          "Start from the absolute basics as if they know nothing. Go slower than usual, " +
+          "use the simplest numbers first, give one tiny step at a time, and be encouraging. " +
+          "Give extra practice questions (3 or 4) and celebrate each correct answer.";
+      }
     }
     return p;
   }
@@ -526,6 +533,13 @@
   /* ── Topic chip ─────────────────────────────────────────────────────── */
   if (topicContext) {
     document.getElementById("topicChipTitle").textContent = topicContext.title;
+    if (weakMode) {
+      document.getElementById("topicChipLabel").textContent = "Extra help:";
+      var input = document.getElementById("input");
+      if (input && !input.value) {
+        input.value = "I am weak at " + topicContext.title + ". Please teach me from the very basics.";
+      }
+    }
     topicChip.hidden = false;
     document.getElementById("topicChipX").addEventListener("click", function () {
       topicContext = null;
