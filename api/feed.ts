@@ -2,10 +2,8 @@
  * /api/feed — the Instinct feed: lessons, quizzes, job lists, mocks and
  * revision notes, delivered inside the app as well as on WhatsApp.
  *
- * GET     Public and read-only. The page could read the table straight
- *         through the anon key (the RLS allows it); this endpoint exists so
- *         there is ONE validated shape to the data and one place that shape
- *         is enforced.
+ * GET     Bearer INSTINCT_FEED_READ_SECRET, a separate read-only owner key.
+ *         No browser talks directly to the table after migration 0008.
  *
  * POST    Bearer INSTINCT_FEED_SECRET. This is how the daily runs publish.
  *         The secret is checked before anything is touched, the service-role
@@ -17,10 +15,12 @@
  *         broken link has to be retractable, or mistakes are permanent.
  */
 
+import { createHash, timingSafeEqual } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL ?? "";
 const SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+const READ_SECRET = process.env.INSTINCT_FEED_READ_SECRET ?? "";
 const FEED_SECRET  = process.env.INSTINCT_FEED_SECRET ?? "";
 
 const TYPES = new Set(["lesson", "quiz", "jobs", "mock", "revision", "note"]);
@@ -33,7 +33,22 @@ function authorised(req: any): boolean {
   return !!FEED_SECRET && auth === `Bearer ${FEED_SECRET}`;
 }
 
+function readAuthorised(req: any): boolean {
+  const auth = req.headers?.authorization;
+  if (READ_SECRET.length < 32 || READ_SECRET === FEED_SECRET || typeof auth !== "string" || !auth.startsWith("Bearer ")) return false;
+  const digest = (value: string) => createHash("sha256").update(value).digest();
+  return timingSafeEqual(digest(auth.slice(7)), digest(READ_SECRET));
+}
+
 export default async function handler(req: any, res: any) {
+  // Includes errors and writes: never allow a shared cache to retain feed data.
+  res.setHeader("Cache-Control", "private, no-store, max-age=0");
+  res.setHeader("CDN-Cache-Control", "no-store");
+  res.setHeader("Vercel-CDN-Cache-Control", "no-store");
+  res.setHeader("Vary", "Authorization");
+  if (req.method === "GET" && !readAuthorised(req)) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   if (!SUPABASE_URL || !SERVICE_KEY) {
     console.error("[feed] Supabase env vars are not set");
     return res.status(500).json({ error: "Server is not configured." });
@@ -46,7 +61,7 @@ export default async function handler(req: any, res: any) {
     const before = String(req.query?.before ?? "");
     const type = String(req.query?.type ?? "");
     let q = db.from("instinct_posts")
-      .select("id,created_at,type,title,body,meta")
+      .select("id,created_at,type,title,body")
       .order("created_at", { ascending: false })
       .limit(limit);
     if (before && !isNaN(Date.parse(before))) q = q.lt("created_at", before);
@@ -56,8 +71,6 @@ export default async function handler(req: any, res: any) {
       console.error("[feed] read failed", error);
       return res.status(500).json({ error: "Could not read the feed." });
     }
-    // Fresh but not hammered: the page also refetches on focus.
-    res.setHeader("Cache-Control", "public, max-age=15");
     return res.status(200).json({ posts: data ?? [] });
   }
 
