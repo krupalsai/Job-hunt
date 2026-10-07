@@ -9,9 +9,13 @@
     "test:generated": "node scripts/validate-generated.js",
     "test:prep": "node scripts/e2e-prep.js",
     "test:integration": "node scripts/e2e-integration.js",
-    "test:nav": "node scripts/e2e-nav.js && node scripts/e2e-dedupe.js"
+    "test:nav": "node scripts/e2e-nav.js && node scripts/e2e-dedupe.js",
+    "test:feed-privacy": "node scripts/test-feed-privacy.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
   }
 }
