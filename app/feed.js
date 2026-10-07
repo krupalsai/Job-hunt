@@ -1,23 +1,7 @@
-/* ============================================================================
-   THE INSTINCT FEED — reader.
-
-   Everything Instinct sends on WhatsApp lands here too: the morning lesson
-   and quiz, the jobs list, the evening mock, the revision notes. One place,
-   inside the app, instead of scrolled-back-to in a chat.
-
-   Reads go STRAIGHT to Supabase with the anon key — the same pattern as the
-   jobs list, and for the same reason: the RLS policy on instinct_posts allows
-   public reads, and skipping the serverless hop means no cold start between
-   the student and today's lesson. Writes never happen here. A post is data,
-   not a deadline, but the same rule holds as the jobs list: nothing about the
-   feed is ever cached, because a stale "today's lesson" is worse than none.
-   ========================================================================== */
-
+/* Owner-only reader. The read key stays in this tab's memory, never in URLs or storage. */
 (function () {
   "use strict";
 
-  const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
   const PAGE = 30;
 
   const TYPES = [
@@ -32,6 +16,8 @@
   const TYPE_LABEL = {};
   TYPES.forEach(([k, v]) => { if (k) TYPE_LABEL[k] = v.replace(/s$/, ""); });
 
+  let readKey = "";
+  let generation = 0; // Ignore any response from before locking/changing filters.
   let filter = "";
   let posts = [];
   let oldest = null;       // created_at of the last row: the "before" cursor
@@ -87,6 +73,7 @@
   function render() {
     const box = el("feed");
     if (!posts.length) {
+      el("loadMore").classList.add("hidden");
       box.innerHTML = '<div class="empty">Nothing here yet.<br>' +
         "The day's lesson, quiz and jobs list land here as Instinct sends them.</div>";
       return;
@@ -101,18 +88,33 @@
     el("loadMore").classList.toggle("hidden", exhausted);
   }
 
-  async function fetchPosts(before) {
-    let url = `${SUPABASE_URL}/rest/v1/instinct_posts` +
-      `?select=id,created_at,type,title,body&order=created_at.desc&limit=${PAGE}`;
-    if (filter) url += `&type=eq.${encodeURIComponent(filter)}`;
-    if (before) url += `&created_at=lt.${encodeURIComponent(before)}`;
-    const res = await fetch(url, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+  async function fetchPosts(before, key) {
+    const query = new URLSearchParams({ limit: String(PAGE) });
+    if (filter) query.set("type", filter);
+    if (before) query.set("before", before);
+    const res = await fetch("/api/feed?" + query, {
+      cache: "no-store",
+      headers: { Authorization: "Bearer " + key },
     });
+    if (res.status === 401) throw new Error("locked");
     if (!res.ok) throw new Error("HTTP " + res.status);
-    const rows = await res.json();
-    if (!Array.isArray(rows)) throw new Error("unexpected response");
-    return rows;
+    const data = await res.json();
+    if (!Array.isArray(data.posts)) throw new Error("unexpected response");
+    return data.posts;
+  }
+
+  function lock(message) {
+    generation++;
+    readKey = "";
+    posts = []; oldest = null; exhausted = false;
+    el("feed").replaceChildren();
+    el("chips").replaceChildren();
+    el("loadMore").classList.add("hidden");
+    el("lockBtn").classList.add("hidden");
+    el("unlockPanel").classList.remove("hidden");
+    el("feedStatus").textContent = "Private feed";
+    el("unlockMessage").textContent = message || "";
+    el("ownerKey").value = "";
   }
 
   function stamp(rows, failed) {
@@ -124,26 +126,41 @@
   }
 
   async function load(fresh) {
+    if (!readKey) return;
+    const request = ++generation;
     if (fresh) { posts = []; oldest = null; exhausted = false; renderChips(); }
-    render();
+    el("loadMore").classList.add("hidden");
+    el("feedStatus").textContent = "Loading…";
     try {
-      const rows = await fetchPosts(oldest);
+      const rows = await fetchPosts(oldest, readKey);
+      if (request !== generation) return;
       if (rows.length < PAGE) exhausted = true;
       if (rows.length) oldest = rows[rows.length - 1].created_at;
       posts = fresh ? rows : posts.concat(rows);
+      el("unlockPanel").classList.add("hidden");
+      el("lockBtn").classList.remove("hidden");
       stamp(posts, false);
+      render();
     } catch (e) {
-      if (!posts.length) {
-        el("feed").innerHTML = '<div class="empty">Could not reach the feed.<br>' +
-          'Your preparation works offline — only this page needs a connection.' +
-          '<br><button class="retry" id="feedRetry">Try again</button></div>';
-        const r = el("feedRetry");
-        if (r) r.addEventListener("click", () => load(true));
-      }
+      if (request !== generation) return;
+      if (e.message === "locked") { lock("That key was not accepted. Try your owner read key."); return; }
+      el("feed").innerHTML = '<div class="empty">Could not reach the feed.<br>' +
+        'Check your connection and tap Refresh to try again.</div>';
       stamp(posts, true);
     }
-    render();
   }
+
+  el("unlockForm").addEventListener("submit", event => {
+    event.preventDefault();
+    readKey = el("ownerKey").value.trim();
+    el("ownerKey").value = "";
+    if (!readKey) { lock("Enter your owner read key."); return; }
+    el("unlockMessage").textContent = "";
+    load(true);
+  });
+  el("lockBtn").addEventListener("click", () => lock());
+  // Navigating away clears the key and any visible posts, including bfcache.
+  window.addEventListener("pagehide", () => lock());
 
   el("refreshBtn").addEventListener("click", () => load(true));
   el("loadMore").addEventListener("click", () => load(false));
@@ -152,5 +169,5 @@
     if (!document.hidden) load(true);
   });
 
-  load(true);
+  lock();
 })();
