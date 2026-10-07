@@ -104,6 +104,8 @@
     background:var(--panel); color:var(--text); border:1px solid var(--panel-border);
     border-radius:10px; font-family:inherit; font-size:13px; font-weight:600;
   }
+  .owner-key{ width:100%; box-sizing:border-box; margin:12px 0; min-height:44px; padding:10px; border:1px solid var(--panel-border); border-radius:8px; background:var(--panel); color:var(--text); font:inherit; }
+  #unlockMessage{ color:var(--muted); margin-top:10px; }
   .hidden{ display:none !important; }
 </style>
 </head>
@@ -123,11 +125,22 @@
 
 <main>
   <div class="age-row">
-    <span class="sub" id="feedStatus">Loading…</span>
+    <span class="sub" id="feedStatus">Private feed</span>
+    <button class="view-all hidden" id="lockBtn">Lock feed</button>
     <button class="view-all" id="refreshBtn">↻ Refresh</button>
   </div>
+  <section class="empty" id="unlockPanel" aria-label="Unlock private feed">
+    <h2>Private feed</h2>
+    <p>Enter your owner read key to see your posts. It stays only in this tab until you leave or lock the feed.</p>
+    <form id="unlockForm">
+      <label for="ownerKey">Owner read key</label>
+      <input class="owner-key" id="ownerKey" type="password" autocomplete="off" spellcheck="false" required>
+      <button class="retry" type="submit">Unlock feed</button>
+    </form>
+    <p id="unlockMessage" role="status" aria-live="polite"></p>
+  </section>
   <div class="chips" id="chips"></div>
-  <div id="feed"><div class="empty">Loading…</div></div>
+  <div id="feed"></div>
   <button id="loadMore" class="hidden">Show earlier posts</button>
 </main>
 

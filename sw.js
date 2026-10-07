@@ -39,7 +39,8 @@
    note when there is none.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v16';
+// v17 evicts the old anonymous feed reader on existing installations.
+const CACHE = 'jobhunt-v17';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.

@@ -448,20 +448,64 @@ node scripts/pull-shrestha.js --push   # commits data/shrestha-jobs.json to main
 
 The day's lessons, quizzes, job lists, mocks and revision notes arrive on
 WhatsApp; the feed is the same material inside the app, where it is easier to
-sit and read. `feed.html` reads the `instinct_posts` table (migration 0007)
-through the public anon key — read-only by design, same as the job list.
+sit and read. The app has no owner login or Supabase Auth session. The feed
+therefore uses a separate high-entropy owner read key, entered on `/feed.html`.
+The browser reads only `/api/feed`; no feed data goes through the anon key.
+The key stays in memory in one tab, not localStorage, cookies, URLs or source.
+Leaving/reloading the page or tapping Lock clears it. This is a minimal
+single-owner gate, not an account system: anyone holding the read key can read.
+Never share the key, and use a new key for any later revocation.
 
-Posting goes through `api/feed.ts`:
-
-    GET    /api/feed?limit=30&type=lesson&before=<iso>   public, paginated
+    GET    /api/feed?limit=30&type=lesson&before=<iso>
+           Authorization: Bearer $INSTINCT_FEED_READ_SECRET
     POST   /api/feed        Authorization: Bearer $INSTINCT_FEED_SECRET
     DELETE /api/feed?id=N   Authorization: Bearer $INSTINCT_FEED_SECRET
 
+Reads fail closed without a read key of at least 32 characters on the server.
+Read keys cannot publish/delete; writer keys cannot read. GET also fails
+closed if the read and write keys are accidentally set to the same value. All API responses are private and
+no-store, including CDN caches. The reader never requests `meta`.
+
 POST body: `{ "type": "lesson|quiz|jobs|mock|revision|note", "title": "...",
-"body": "..." }`. Writes use the service-role key server-side; the table's own
-RLS lets anyone read and nobody write. `/post.html` is an unlisted compose
-page for posting by hand (or by an agent filling the secret from the vault);
-it is a convenience, not the security — the secret is.
+"body": "..." }`. Service-role access remains server-side. `/post.html` and the
+existing publishing key are unchanged.
+
+### Owner-reviewed rollout (not automatic on merge)
+
+1. Review this access model with the owner before merging. No production
+   access changes are included merely by opening the draft PR.
+2. In Vercel project settings, add `INSTINCT_FEED_READ_SECRET` as a server-only
+   sensitive env var (Production; Preview only if testing with an approved
+   isolated database). Generate at least 32 random bytes, for example with
+   `openssl rand -hex 32`, and save it in the owner's password manager/vault.
+   It must differ from `INSTINCT_FEED_SECRET`. Never paste it into chat or Git.
+   Confirm existing `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and publishing
+   `INSTINCT_FEED_SECRET` remain set; do not rotate or expose their values.
+3. Merge only after approval and deploy/redeploy Production so the new env var
+   is loaded. Verify GET without a token, with a wrong token, and with the
+   publishing token returns 401; the owner read token returns 200. Verify all
+   responses carry no-store headers. Confirm the owner can unlock on a phone.
+4. In Supabase SQL Editor for project `xbjgmudcgjiompbroayr`, run exactly
+   `supabase/migrations/0008_private_instinct_posts.sql`. It enables RLS,
+   removes the public read policy and revokes PUBLIC/anon/authenticated table
+   and sequence privileges while retaining service_role access. Migration
+   files are not auto-applied by Vercel. Do not change other tables or keys.
+5. Verify an anonymous PostgREST SELECT returns no rows (normally permission
+   denied), and an ordinary authenticated role also cannot read. If an
+   unexpected grant/policy remains, stop and inspect it. Confirm the owner
+   reader still works; refresh/reopen the PWA to pick up service worker v17.
+   Keep personal publishing paused until both HTTP and database checks pass.
+
+The deployment-first order temporarily leaves direct anon reads open until
+step 4, so complete both in one maintenance window; the alternative of
+locking the database first causes a brief feed outage. Do not roll back by
+re-opening public SELECT. On a failed rollout leave RLS/revokes in place and
+fix the server/env configuration. Existing preview deployments with old
+public `/api/feed` code and production database credentials must be removed
+or access-protected as part of rollout; otherwise they bypass this fix.
+
+Scope: this protects only `instinct_posts` and `/api/feed`. Public progress
+APIs, other tables, and the app's wider authentication model are unchanged.
 
 ## Environment variables
 
@@ -469,6 +513,7 @@ it is a convenience, not the security — the secret is.
     SUPABASE_SERVICE_ROLE_KEY    Supabase → Settings → API (server-side only)
     CRON_SECRET                  any long random string
     INSTINCT_FEED_SECRET         any long random string (feed writes)
+    INSTINCT_FEED_READ_SECRET    separate random owner key, at least 32 chars
 
 ## Running ingestion
 
