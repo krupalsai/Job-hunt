@@ -462,8 +462,8 @@ Never share the key, and use a new key for any later revocation.
     DELETE /api/feed?id=N   Authorization: Bearer $INSTINCT_FEED_SECRET
 
 Reads fail closed without a read key of at least 32 characters on the server.
-Read keys cannot publish/delete; writer keys cannot read unless deliberately
-misconfigured to be equal (do not do that). All API responses are private and
+Read keys cannot publish/delete; writer keys cannot read. GET also fails
+closed if the read and write keys are accidentally set to the same value. All API responses are private and
 no-store, including CDN caches. The reader never requests `meta`.
 
 POST body: `{ "type": "lesson|quiz|jobs|mock|revision|note", "title": "...",
