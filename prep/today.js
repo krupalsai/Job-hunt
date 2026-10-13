@@ -639,7 +639,7 @@
     const css = document.createElement("style");
     css.textContent =
       ".td-chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;}" +
-      ".td-domain{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent-soft);"+
+      ".td-domain{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent-ink);"+
         "font-weight:700;margin:16px 0 2px;padding-top:6px;}" +
       ".td-domain:first-child{margin-top:0;padding-top:0;}" +
       ".td-chip{flex:1;min-width:52px;min-height:44px;border-radius:9px;cursor:pointer;" +
@@ -656,7 +656,7 @@
       ".td-main{flex:1;min-width:0;}" +
       ".td-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;}" +
       ".td-title{font-size:14px;font-weight:700;line-height:1.35;}" +
-      ".td-mins{font-size:12.5px;font-weight:700;color:var(--accent-soft);white-space:nowrap;" +
+      ".td-mins{font-size:12.5px;font-weight:700;color:var(--accent-ink);white-space:nowrap;" +
         "font-variant-numeric:tabular-nums;}" +
       ".td-detail{font-size:12.5px;color:var(--text);margin-top:3px;line-height:1.45;}" +
       ".td-n{color:var(--dim);font-weight:800;}" +
@@ -667,10 +667,10 @@
       ".td-only span{color:var(--dim);}" +
       ".td-why{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.45;}" +
       // What happens after the reading, and how you know the task is over.
-      ".td-then{font-size:11.5px;color:var(--accent-soft);margin-top:6px;line-height:1.45;}" +
-      ".td-then strong{color:var(--accent-soft);}" +
+      ".td-then{font-size:11.5px;color:var(--accent-ink);margin-top:6px;line-height:1.45;}" +
+      ".td-then strong{color:var(--accent-ink);}" +
       ".td-block.kind-basic .td-title{color:var(--warn);}" +
-      ".td-block.kind-speed .td-title{color:var(--accent-soft);}" +
+      ".td-block.kind-speed .td-title{color:var(--accent-ink);}" +
       ".td-go{margin-top:9px;padding:9px 12px;font-size:12.5px;width:100%;min-height:44px;text-align:center;}";
     document.head.appendChild(css);
   })();

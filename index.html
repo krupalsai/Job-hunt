@@ -4,533 +4,476 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Job Hunt</title>
+<meta name="description" content="Upcoming exams, openings you can apply for, and the preparation for each — government and private." />
 <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#0e2654" />
 <link rel="apple-touch-icon" href="/icon-192.svg" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<!-- The bottom bar, the drawer, the exam switcher and the first-run exam
-     question, shared with the prep page. Deferred, so it runs after
-     prep/exams.js at the foot of the body has defined EXAMS, and so its
-     stylesheet lands after the one below. -->
+<!-- The bottom bar, the drawer and the exam switcher, shared with every page.
+     Deferred, so it runs after prep/exams.js at the foot of the body. -->
 <script src="/nav.js" defer></script>
 <link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
 <style>
-  /* Light is the base; dark is the same tokens redefined under the system
-     preference, so the app follows the phone. Literal hexes below were
-     replaced by these — a literal is a colour that only works in one scheme. */
-  :root {
-    color-scheme: light dark;
-    --bg:#f5f6f8;
-    --panel:#ffffff;
-    --panel-border:#e4e7ec;
-    --surface-2:#f1f3f6;
-    --surface-2-border:#e2e6eb;
-    --tint:#eef0fe;
-    --header-bg:#f5f6f8ee;
-    --accent:#4f46e5;
-    --accent-soft:#4338ca;
-    --accent-tint:#4f46e514;
-    --accent-tint-2:#4f46e526;
-    --accent-line:#4f46e555;
-    --text:#0f172a;
-    --muted:#5b6b7a;
-    --dim:#8794a1;
-    --bad:#dc2626;
-    --warn:#b45309;
-    --on-accent:#ffffff;        /* text on a filled accent button */
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0b0f16;
-      --panel:#131a26;
-      --panel-border:#212b3a;
-      --surface-2:#0f1622;
-      --surface-2-border:#233047;
-      --tint:#1b2140;
-      --header-bg:#0b0f16ee;
-      --accent:#818cf8;
-      --accent-soft:#a5b4fc;
-      --accent-tint:#818cf81a;
-      --accent-tint-2:#818cf833;
-      --accent-line:#818cf866;
-      --text:#e2e8f0;
-      --muted:#94a3b8;
-      --dim:#64748b;
-      --bad:#f87171;
-      --warn:#f59e0b;
-      --on-accent:#ffffff;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; font-family: var(--font-ui);
-    background: var(--bg); color: var(--text);
-    /* Cleared by nav.js too; stated here so the bottom bar never covers the
-       last job card during the moment before that stylesheet lands. */
-    padding-bottom: calc(74px + env(safe-area-inset-bottom));
-  }
-  header {
-    padding: 10px 12px; position: sticky; top: 0;
-    background: var(--header-bg); backdrop-filter: blur(8px); z-index: 10;
-    border-bottom: 1px solid var(--panel-border);
-  }
-  h1 { font-size: 17px; margin: 0; }
-  .sub { color: var(--dim); font-size: 11.5px; line-height: 1.35; }
+  /* ============================================================================
+     HOME — the news first, then the choice.
 
-  /* Card sections: a title, and where there is more behind it, a way through. */
-  .sec { padding: 14px 12px 0; }
-  .view-all { background: none; border: 0; padding: 0; color: var(--accent-soft); font: inherit;
-              font-size: 12px; font-weight: 700; cursor: pointer; }
+     What the screen answers, in the order it is asked:
+       1. What is coming up?            the exams, with a countdown each
+       2. What can I apply for now?     confident matches, closing soonest
+       3. What is new?                  openings first seen in the last 2 days
+       4. Government or private?        one tap picks the track
+       5. For that track: the exams, the openings, and the study material.
+     Everything visual comes from ui.css; this block is layout only.
+     ========================================================================== */
 
-  /* ── The exam you chose ────────────────────────────────────────────────
-     The first thing on the home screen, because it is the thing every other
-     screen in the app is about. Pattern, marking and date live here rather
-     than three taps away in the syllabus: they are what you need to know
-     before you decide what to do today. */
+  /* The hero continues the navy app bar, so the news sits on the brand. */
+  .hero { padding-top: 2px; }
+  .hero-date { font-size: 13px; font-weight: 650; color: var(--on-brand-2); }
+  .hero-h { font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin: 2px 0 14px; color: var(--on-brand); }
 
-  /* Round icon tiles — everything you actually do, one tap from the home screen. */
+  /* Exam cards — white on navy. */
+  .xcards { display: flex; flex-direction: column; gap: 10px; }
+  .xcard { background: var(--surface); color: var(--ink); border-radius: var(--r-lg);
+           padding: 16px; box-shadow: var(--shadow-2); }
+  .xcard-top { display: flex; gap: 12px; align-items: flex-start; }
+  .xcard-main { flex: 1; min-width: 0; }
+  .xcard-kicker { font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  .xcard-name { font-size: 18px; font-weight: 800; letter-spacing: -.015em; line-height: 1.25; margin-top: 2px; }
+  .xcard-when { font-size: 13.5px; color: var(--ink-2); margin-top: 4px; font-weight: 600; }
+  .xcard-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .xcount { flex: 0 0 auto; min-width: 66px; padding: 9px 8px 8px; border-radius: 14px; text-align: center;
+            background: var(--accent-soft); color: var(--accent); }
+  .xcount b { display: block; font-size: 26px; font-weight: 850; line-height: 1; font-variant-numeric: tabular-nums; }
+  .xcount small { display: block; font-size: 10.5px; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; margin-top: 4px; }
+  .xcount.is-now { background: var(--bad-soft); color: var(--bad); }
+  .xcount.is-now b { font-size: 17px; line-height: 1.15; }
+  .xcard .chips { margin-top: 12px; }
+  .xplan { margin-top: 14px; padding: 12px; border-radius: var(--r-md); background: var(--surface-2);
+           border: 1px solid var(--line); }
+  .xplan-row { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+  .xplan-row span { display: block; font-weight: 600; color: var(--muted); font-size: 13px; margin-top: 2px; line-height: 1.4; }
+  .xcard .btn-row { margin-top: 14px; }
+  .xcard .btn-row .btn { flex: 1 1 auto; }
 
-
-  .list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
-  .card {
-    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 14px; padding: 14px;
-    box-shadow: 0 1px 3px rgba(15,23,42,.06);
-  }
-  /* A tap should feel like it landed — the same rule learn.html uses. */
-  button:active:not(:disabled), a.syllabus-link:active, .hero-cta:active { filter: brightness(.92); }
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .org { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.4px; }
-  .post { font-size: 15px; font-weight: 600; margin: 3px 0 8px; }
-  .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
-  .badge.NEW { background: var(--accent-tint); color: var(--accent-soft); }
-  .badge.UPDATED { background: #2563eb1f; color: var(--accent-soft); }
-  .badge.DEADLINE_APPROACHING { background: #dc262622; color: var(--bad); }
-  .badge.CLOSED { background: #64748b22; color: var(--dim); }
-  .meta { font-size: 12.5px; color: var(--dim); line-height: 1.7; }
-  .meta b { color: var(--text); }
-  .links { display: flex; gap: 10px; margin-top: 10px; }
-  .links a {
-    font-size: 12.5px; color: var(--accent-soft); text-decoration: none; font-weight: 600;
-  }
-  .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 13.5px; line-height: 1.6; }
-  .retry { margin-top: 12px; font-family: inherit; font-size: 12.5px; font-weight: 700;
-           color: var(--on-accent); background: var(--accent); border: 0; border-radius: 8px;
-           padding: 9px 16px; min-height: 38px; cursor: pointer; }
-  .install-banner {
-    margin: 14px 12px 0; padding: 12px 14px; background: var(--tint); border: 1px solid var(--accent-line);
-    border-radius: 10px; font-size: 12.5px; color: var(--muted); display: none;
-  }
-  .install-banner.show { display: block; }
-  /* Refreshing sits with the data age it refreshes, not in a floating circle
-     over the middle of the page — which is where a fixed button ends up once
-     the home screen is the exam rather than one long list. */
-  .age-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  #refreshBtn { min-height: 34px; padding: 0 4px; }
-  .est { font-size: 11px; color: var(--warn); border: 1px solid #f59e0b55;
-         border-radius: 6px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
-  #lastUpdated.stale { color: var(--warn); }
-  /* The qualification picker itself lives in the drawer with the other
-     settings. This is the nudge on the list that opens it — without one, a
-     first-time visitor would never find the control that makes the list
-     theirs. */
-  .qual-prompt { margin: 0 12px 10px; padding: 11px 13px; border-radius: 10px;
-                 background: var(--tint); border: 1px solid var(--accent-line); color: var(--muted);
-                 font-size: 12.5px; text-align: left; width: calc(100% - 24px);
-                 font-family: inherit; cursor: pointer; display: none; }
-  .qual-prompt.show { display: block; }
-  /* Shown only once the selected exam's date is behind us. Warn-coloured
-     rather than accent: it is not something to do next, it is something that
-     has gone stale and needs a decision. */
-  .exam-over { margin: 12px 12px 0; padding: 12px 14px; border-radius: 10px;
-               background: transparent; border: 1px solid var(--warn); color: var(--muted);
-               font-size: 12.5px; line-height: 1.5; text-align: left;
-               width: calc(100% - 24px); font-family: inherit; cursor: pointer; display: none; }
-  .exam-over.show { display: block; }
-
-  /* ── Today's shortlist ──────────────────────────────────────────────
-     The screen used to open on 508 undifferentiated openings and leave the
-     ranking to the reader. This is the answer to "what do I do today", in
-     the order it should be done, and it is the first thing on the page. */
-  .shortlist { padding-top: 14px; }
-  .shortlist.hidden { display: none; }
-  .shortlist-h { font-size: 19px; margin: 0 0 3px; font-weight: 700; }
-  .shortlist-sub { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
-  .sl-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  .sl-table th { text-align: left; font-size: 11px; text-transform: uppercase;
-                 letter-spacing: .4px; color: var(--dim); font-weight: 700;
-                 padding: 0 0 6px; border-bottom: 1px solid var(--panel-border); }
-  .sl-table th.sl-p { width: 72px; }
-  .sl-table th.sl-s { text-align: right; width: 92px; }
-  .sl-table td { padding: 11px 0; border-bottom: 1px solid var(--panel-border);
-                 vertical-align: top; line-height: 1.35; }
-  .sl-table tr:last-child td { border-bottom: 0; }
-  .sl-rank { display: flex; align-items: center; gap: 8px; font-weight: 700;
-             font-family: var(--font-display, inherit); }
-  .sl-dot { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto; }
-  .sl-dot.red   { background: #ef4444; }
-  .sl-dot.amber { background: #f59e0b; }
-  .sl-dot.green { background: #22c55e; }
-  .sl-dot.grey  { background: #94a3b8; }
-  .sl-name { font-weight: 600; }
-  .sl-why { color: var(--dim); font-size: 11.5px; margin-top: 2px; }
-  .sl-status { text-align: right; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
-  .sl-status.is-applied { color: var(--accent-soft); font-weight: 700; }
-  .sl-row { cursor: pointer; }
-
-  /* ── Areas ──────────────────────────────────────────────────────────
-     "In which area will I get a job" is a question the feed can answer and
-     never did: it listed 574 openings and left the reader to work out that
-     36 of them were research fellowships and 45 were PSU officer grade. */
-  .areas { padding-top: 18px; }
-  .areas.hidden { display: none; }
-  .areas-h { font-size: 17px; margin: 0 0 3px; font-weight: 700; }
-  .areas-sub { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
-  .area-fold { border-top: 1px solid var(--panel-border); }
-  .area-fold:last-child { border-bottom: 1px solid var(--panel-border); }
-  .area-fold > summary { list-style: none; cursor: pointer; padding: 12px 0;
-                         display: flex; align-items: baseline; gap: 10px; }
-  .area-fold > summary::-webkit-details-marker { display: none; }
-  .area-n { font-family: var(--font-display, inherit); font-weight: 800;
-            font-size: 15px; color: var(--accent-soft); min-width: 30px; }
-  .area-name { font-weight: 600; font-size: 14px; flex: 1; }
-  .area-when { font-size: 11.5px; color: var(--dim); white-space: nowrap; }
-  .area-body { padding: 0 0 8px 40px; }
-  .exam-over b { color: var(--warn); }
-  .qual-prompt b { color: var(--accent-soft); }
-  /* Job card rows — label on the left, answer on the right, so "have I
-     applied / which exam / when is it" are read without hunting. */
-  .jrow { display: flex; gap: 10px; align-items: baseline; padding: 7px 0;
-          border-top: 1px solid var(--panel-border); font-size: 12.5px; }
-  .jlab { flex: 0 0 88px; color: var(--dim); font-size: 11px; text-transform: uppercase;
-          letter-spacing: .4px; }
-  .jval { flex: 1; min-width: 0; color: var(--text); line-height: 1.5; }
-  .ok-tag { color: var(--accent-soft); font-weight: 700; font-size: 11px; }
-  .no-tag { color: var(--warn); font-weight: 700; font-size: 11px; }
-  .study-now { display: block; margin-top: 12px; text-align: center; text-decoration: none;
-               font-size: 13.5px; font-weight: 800; color: var(--on-accent); background: var(--accent);
-               border-radius: 10px; padding: 12px 14px; }
-  /* Other openings — present, but plainly secondary to the exam you chose. */
-  .other-fold { padding: 14px 12px 0; }
-  .other-fold summary { cursor: pointer; font-size: 12.5px; font-weight: 700; color: var(--muted);
-                        list-style: none; display: flex; align-items: center; gap: 6px;
-                        min-height: 40px; }
-  .other-fold summary::-webkit-details-marker { display: none; }
-  .other-fold summary::after { content: "▾"; color: var(--accent-soft); font-size: 11px; }
-  .other-fold[open] summary::after { content: "▴"; }
-  /* The countdown column. A deadline tracker's one job is telling you how long
-     you have, so it is a number in the corner of the eye rather than a date to
-     parse out of a sentence. */
-  .other-cd { flex: 0 0 46px; text-align: center; padding: 6px 0; border-radius: 10px;
-              background: var(--surface-2); border: 1px solid var(--panel-border);
-              align-self: flex-start; }
-  .cd-num  { display: block; font-size: 19px; font-weight: 800; line-height: 1;
-             font-family: var(--font-display); font-variant-numeric: tabular-nums; }
-  .cd-unit { display: block; font-size: 9.5px; text-transform: uppercase;
-             letter-spacing: .5px; color: var(--dim); margin-top: 2px; }
-  .cd-none { display: block; font-size: 9.5px; color: var(--dim); line-height: 1.3; padding: 4px 2px; }
-  .other-row.is-urgent .other-cd { border-color: var(--bad); background: #7f1d1d33; }
-  .other-row.is-urgent .cd-num   { color: var(--bad); }
-  .other-row.is-soon   .other-cd { border-color: var(--warn); }
-  .other-row.is-soon   .cd-num   { color: var(--warn); }
-  .marks-filter { display: flex; align-items: center; gap: 9px; padding: 11px 13px;
-                  margin: 12px 0; border-radius: 11px; background: var(--surface-2);
-                  border: 1px solid var(--panel-border); font-size: 12.5px; cursor: pointer; }
-  .marks-filter input { width: 18px; height: 18px; accent-color: var(--accent); }
-  .marks-filter.hidden { display: none; }
-  .marks-note { font-size: 11px; color: var(--dim); margin-top: 4px; line-height: 1.5; }
-  .marks-basis { display: block; font-size: 10.5px; color: var(--dim); margin-top: 3px; line-height: 1.45; }
-  .muted-inline { color: var(--muted); }
-  .other-vac  { color: var(--accent-soft); font-weight: 700; }
-  .other-elig { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
-  .other-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  /* Applying is the point of the screen, so it is a real target, not a link
-     buried in a line of grey text. */
-  .other-apply, .other-mark, .other-switch {
-    font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;
-    padding: 7px 11px; border-radius: 8px; text-decoration: none;
-    border: 1px solid var(--panel-border); background: var(--surface-2); color: var(--text);
-  }
-  .other-apply { border-color: var(--accent); color: var(--accent-soft); }
-  /* A link to the aggregator is not the notification, so it does not get the
-     accent that means "this is the official document". */
-  .other-apply.is-secondhand { border-color: var(--panel-border); color: var(--muted); }
-  .other-applylink { border-color: var(--accent); background: var(--tint); }
-  .other-row { display: flex; align-items: flex-start; gap: 10px; padding: 13px 0;
-               border-top: 1px solid var(--panel-border); }
+  /* Job rows. One row answers: how long, what, am I eligible, where to apply. */
+  .other-row { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--surface); }
   .other-main { flex: 1; min-width: 0; }
-  .other-org { font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .4px; }
-  .other-post { font-size: 13px; font-weight: 600; margin-top: 2px; line-height: 1.35; }
-  .other-meta { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
-  .other-switch-legacy { flex: 0 0 auto; font-family: inherit; font-size: 11.5px; font-weight: 700;
-                  color: var(--accent-soft); background: var(--tint);
-                  border: 1px solid var(--surface-2-border); border-radius: 20px;
-                  padding: 8px 11px; min-height: 40px; cursor: pointer; white-space: nowrap; }
-  .other-none { align-self: center; font-size: 10.5px; color: var(--dim);
-                padding: 7px 2px; text-align: left;
-                max-width: 90px; line-height: 1.3; }
-  /* Closed rows read as past, not as something to act on. */
+  .other-org { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .02em; }
+  .other-vac { color: var(--accent); font-weight: 750; }
+  .other-post { font-size: 15px; font-weight: 700; line-height: 1.35; margin-top: 2px; color: var(--ink); }
+  .other-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .other-elig { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+  .other-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+  .other-apply, .other-mark, .other-switch {
+    display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: var(--r-sm);
+    font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none;
+    border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
+  }
+  .other-apply:hover, .other-mark:hover, .other-switch:hover { text-decoration: none; background: var(--surface-2); }
+  .other-apply { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+  .other-apply.is-secondhand { background: var(--surface); border-color: var(--line-2); color: var(--ink-2); }
+  .other-applylink { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .other-applylink:hover { background: var(--accent-2); }
+  .other-switch { color: var(--gov); border-color: var(--gov-line); }
+  .other-none { font-size: 12px; color: var(--faint); }
   .other-row.is-closed .other-post { color: var(--muted); }
-  .other-row.is-closed .other-org { opacity: .75; }
-  .hidden { display: none !important; }
-  .applied-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;
-                 border-top:1px solid var(--panel-border); padding-top:10px; }
-  .applied-q { font-size:12.5px; color:var(--dim); }
-  .btn-y, .btn-n { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px;
-                   border:1px solid var(--surface-2-border); background:var(--surface-2); color:var(--text); cursor:pointer; }
-  .btn-y.on { background:var(--accent); color:var(--on-accent); border-color:transparent; }
-  .applied-tag { font-size:11px; font-weight:700; color:var(--accent-soft); }
-  .syllabus-link { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
-                   color:var(--on-accent); background:var(--accent); padding:8px 14px; border-radius:8px;
-                   text-decoration:none; }
-  .syllabus-box { margin-top:10px; padding:12px; border-radius:10px;
-                  background:var(--surface-2); border:1px solid var(--accent-tint-2); }
-  .syllabus-pattern { font-size:12px; color:var(--accent-soft); font-weight:600; }
-  .syllabus-sections { font-size:12px; color:var(--dim); margin-top:4px; line-height:1.6; }
+  .ok-tag { color: var(--ok); font-weight: 750; }
+  .no-tag { color: var(--warn); font-weight: 750; }
+  .est { font-size: 11.5px; font-weight: 700; color: var(--warn); background: var(--warn-soft);
+         border-radius: var(--r-pill); padding: 1px 7px; }
+  .list .empty { background: var(--surface); }
+  .more-btn { margin-top: 10px; }
 
-  /* Self-study road map: calm, compact at first glance, detailed on demand. */
-  .study-roadmap { margin: 16px 12px 4px; padding: 18px; border: 1px solid var(--panel-border);
-    border-radius: 16px; background: var(--panel); box-shadow: 0 2px 12px #0f172a09; }
-  .roadmap-eyebrow { color: var(--accent-soft); text-transform: uppercase; letter-spacing: .11em;
-    font-size: 10px; font-weight: 800; }
-  .roadmap-title { margin: 5px 0 3px; font-size: 20px; letter-spacing: -.03em; }
-  .roadmap-intro { margin: 0 0 14px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
-  .roadmap-tracks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
-  .roadmap-track { border: 1px solid var(--panel-border); background: var(--surface-2);
-    border-radius: 12px; padding: 12px; font-size: 12px; }
-  .roadmap-track b { display: block; font-size: 14px; margin-bottom: 2px; }
-  .roadmap-track small { display: block; color: var(--muted); line-height: 1.35; min-height: 32px; }
-  .roadmap-track progress { display: block; width: 100%; height: 5px; margin-top: 12px;
-    accent-color: var(--accent); }
-  .roadmap-track .roadmap-count { display: block; color: var(--dim); font-size: 11px; margin-top: 6px; }
-  .roadmap-fold { border-top: 1px solid var(--panel-border); margin-top: 15px; padding-top: 2px; }
-  .roadmap-fold > summary, .roadmap-phase > summary { cursor: pointer; list-style: none;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px;
-    font-size: 13px; font-weight: 700; }
-  .roadmap-fold > summary::-webkit-details-marker, .roadmap-phase > summary::-webkit-details-marker { display: none; }
-  .roadmap-fold > summary::after, .roadmap-phase > summary::after { content: '⌄'; color: var(--accent-soft); }
-  .roadmap-fold[open] > summary::after, .roadmap-phase[open] > summary::after { content: '⌃'; }
-  .roadmap-tabs { display: flex; gap: 6px; margin: 5px 0 10px; }
-  .roadmap-tabs button { flex: 1; min-height: 42px; border: 1px solid var(--panel-border);
-    border-radius: 9px; color: var(--muted); background: var(--surface-2);
-    font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
-  .roadmap-tabs button[aria-selected="true"] { color: var(--accent-soft); border-color: var(--accent-line);
-    background: var(--tint); }
-  .roadmap-phase { border-top: 1px solid var(--panel-border); }
-  .roadmap-phase > summary span:last-child { font-size: 11px; color: var(--dim); margin-left: auto; }
-  .roadmap-phase-caption { font-size: 11px; color: var(--dim); margin: -3px 0 8px; }
-  .roadmap-item { display: flex; align-items: center; gap: 11px; min-height: 48px;
-    padding: 4px; font-size: 13px; line-height: 1.35; }
-  .roadmap-item:not(:first-child) { border-top: 1px solid var(--panel-border); }
-  .roadmap-item input { flex: 0 0 auto; width: 19px; height: 19px; accent-color: var(--accent); cursor: pointer; }
-  .roadmap-open { display:flex; align-items:center; justify-content:space-between; flex:1; min-height:42px;
-    text-align:left; border:0; background:transparent; color:var(--text); font:inherit; cursor:pointer; padding:6px 3px; }
-  .roadmap-open span { color:var(--accent-soft); font-size:17px; margin-left:8px; }
-  .roadmap-item input:checked + .roadmap-open { color:var(--muted); }
-  .roadmap-lesson { border:1px solid var(--accent-line); background:var(--surface-2); border-radius:12px;
-    padding:16px; margin:4px 0 14px; line-height:1.55; font-size:13px; }
-  .lesson-kicker { font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent-soft); font-weight:700; }
-  .roadmap-lesson h3 { margin:6px 0 10px; font-size:18px; letter-spacing:-.02em; }
-  .roadmap-lesson h4 { margin:16px 0 5px; font-size:12px; }
-  .roadmap-lesson p { margin:0 0 8px; }
-  .lesson-question { border-top:1px solid var(--panel-border); padding:10px 0; }
-  .lesson-question summary { cursor:pointer; font-weight:600; }
-  .lesson-question summary span { display:block; font-size:11px; font-weight:400; color:var(--accent-soft); }
-  .lesson-question p { margin:8px 0 0; }
-  .roadmap-lesson .lesson-hint { color:var(--muted); font-size:11px; margin:12px 0 0; }
-  /* The Professor link: opens chat.html with the topic as context (?topic=&track=). */
-  .lesson-ask { display:inline-block; margin-top:10px; font-size:13px; font-weight:700;
-                color:var(--on-accent); background:var(--accent); text-decoration:none;
-                padding:9px 14px; border-radius:10px; min-height:38px; }
-  .lesson-ask:active { filter:brightness(.92); }
-  .roadmap-footnote { margin: 12px 0 1px; color: var(--dim); font-size: 11px; line-height: 1.45; }
+  /* The choice. Two cards, side by side, the picked one outlined in its colour. */
+  .track-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .track-btn {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left;
+    min-height: 116px; padding: 14px; border-radius: var(--r-lg); cursor: pointer;
+    background: var(--surface); border: 1.5px solid var(--line); box-shadow: var(--shadow-1); color: var(--ink);
+  }
+  .track-ico { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .track-ico svg { width: 22px; height: 22px; }
+  .track-btn.is-gov .track-ico { background: var(--gov-soft); color: var(--gov); }
+  .track-btn.is-pvt .track-ico { background: var(--pvt-soft); color: var(--pvt); }
+  .track-name { font-size: 16.5px; font-weight: 800; letter-spacing: -.01em; }
+  .track-meta { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+  .track-btn.is-gov[aria-selected="true"] { border-color: var(--gov); box-shadow: 0 0 0 3px var(--gov-soft); }
+  .track-btn.is-pvt[aria-selected="true"] { border-color: var(--pvt); box-shadow: 0 0 0 3px var(--pvt-soft); }
+  .panel-kicker { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+  #trackGov .panel-kicker { color: var(--gov); }
+  #trackPvt .panel-kicker { color: var(--pvt); }
 
-  /* Shrestha's job posts — the daily private-sector feed. Same calm rows as
-     the other openings; pipeline states are text chips, not colours, so
-     nothing here reads as more urgent than a real deadline. */
-  .shrestha-sec { margin-top: 20px; }
-  .shrestha-h { font-size: 15px; margin: 0 0 2px; letter-spacing: -.01em; }
-  .shrestha-sub { font-size: 11.5px; color: var(--dim); margin-bottom: 4px; line-height: 1.5; }
-  .sh-card { border-top: 1px solid var(--panel-border); }
-  .sh-head { display: flex; gap: 10px; width: 100%; text-align: left; background: none;
-             border: 0; padding: 13px 0; cursor: pointer; font: inherit; color: inherit;
-             min-height: 44px; }
+  /* Area filter chips — wrap onto two lines rather than scroll sideways. */
+  .fchips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 12px; }
+  .fchip { min-height: 34px; padding: 0 12px; border-radius: var(--r-pill); cursor: pointer;
+           border: 1px solid var(--line-2); background: var(--surface); color: var(--ink-2);
+           font: inherit; font-size: 13px; font-weight: 650; }
+  .fchip b { font-weight: 800; margin-left: 4px; color: var(--muted); }
+  .fchip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+  .fchip[aria-pressed="true"] b { color: var(--surface); opacity: .8; }
+
+  /* Study material tiles. */
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile { display: flex; flex-direction: column; gap: 4px; min-height: 96px; padding: 14px;
+          background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+          box-shadow: var(--shadow-1); color: var(--ink); text-decoration: none; }
+  .tile:hover { text-decoration: none; border-color: var(--line-2); }
+  .tile-ico { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+              background: var(--accent-soft); color: var(--accent); margin-bottom: 6px; }
+  .tile-ico svg { width: 19px; height: 19px; }
+  .tile.is-gov .tile-ico { background: var(--gov-soft); color: var(--gov); }
+  .tile.is-pvt .tile-ico { background: var(--pvt-soft); color: var(--pvt); }
+  .tile-name { font-size: 14.5px; font-weight: 750; line-height: 1.25; }
+  .tile-sub { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+  .tile.is-wide { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; gap: 12px; }
+  .tile.is-wide .tile-ico { margin-bottom: 0; }
+
+  /* Tracked application cards (openings that belong to one of your exams). */
+  .card .org { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .card .post { font-size: 15.5px; font-weight: 750; line-height: 1.35; margin: 2px 0 8px; }
+  .card-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+  .jrow { display: flex; gap: 10px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
+  .jlab { flex: 0 0 92px; color: var(--faint); font-size: 12px; font-weight: 650; }
+  .jval { flex: 1; min-width: 0; color: var(--ink-2); line-height: 1.5; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .links a { font-size: 13px; font-weight: 700; }
+  .marks-basis { display: block; font-size: 11.5px; color: var(--faint); margin-top: 3px; line-height: 1.45; }
+  .muted-inline { color: var(--muted); }
+  .btn-y, .btn-n { min-height: 34px; padding: 0 12px; border-radius: var(--r-sm); font: inherit; font-size: 13px;
+                   font-weight: 700; border: 1px solid var(--line-2); background: var(--surface); cursor: pointer; }
+  .btn-y { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .applied-tag { font-weight: 750; color: var(--ok); }
+  .study-now { display: flex; margin-top: 12px; }
+  .badge { font-size: 11px; font-weight: 750; padding: 3px 9px; border-radius: var(--r-pill); white-space: nowrap;
+           background: var(--surface-3); color: var(--muted); }
+
+  /* The marks filter: opt-in and narrow on purpose (see marksFilterHides). */
+  .marks-filter { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; margin: 0 0 12px;
+                  border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; cursor: pointer; }
+  .marks-filter input { width: 20px; height: 20px; accent-color: var(--accent); margin-top: 1px; }
+  .marks-note { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+
+  /* Prompts that only show when they can change something. */
+  .qual-pick { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .exam-over, .qual-prompt { display: none; width: calc(100% - 32px); margin: 14px 16px 0; text-align: left;
+    padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--warn-line); background: var(--warn-soft);
+    color: var(--ink-2); font: inherit; font-size: 13.5px; line-height: 1.5; cursor: pointer; }
+  .exam-over.show, .qual-prompt.show { display: block; }
+  .qual-prompt { border-color: var(--accent-line); background: var(--accent-soft); }
+
+  /* ₹40 LPA+ list. */
+  .tp-row { padding: 14px 16px; background: var(--surface); }
+  .tp-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .tp-co { font-size: 15px; font-weight: 800; }
+  .tp-pay { font-size: 14px; font-weight: 800; color: var(--pvt); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tp-role { font-size: 13.5px; color: var(--ink-2); margin-top: 2px; }
+  .tp-tests { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+  .tp-note { font-size: 12px; color: var(--faint); margin-top: 4px; line-height: 1.45; }
+  .tp-row .chips { margin-top: 8px; }
+  .tp-row .btn-row { margin-top: 10px; }
+  .tp-src { margin-top: 10px; }
+  .tp-src a { display: block; margin-top: 4px; }
+
+  /* Coding path — stages you tick through. */
+  .cp-stage .fold-body { padding-top: 0; }
+  .cp-when { font-size: 12.5px; color: var(--muted); font-weight: 500; display: block; margin-top: 2px; }
+  .cp-count { font-size: 12px; font-weight: 750; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .ck { display: flex; gap: 12px; align-items: flex-start; padding: 11px 0; border-top: 1px solid var(--line);
+        font-size: 14px; line-height: 1.45; cursor: pointer; }
+  .ck input { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 1px; accent-color: var(--pvt); cursor: pointer; }
+  .ck input:checked + span { color: var(--muted); text-decoration: line-through; }
+
+  /* Private feed (@careerwithshrestha) — the same calm rows as the openings. */
+  .sh-card { background: var(--surface); }
+  .sh-head { display: flex; gap: 12px; width: 100%; text-align: left; background: none; border: 0;
+             padding: 14px 16px; cursor: pointer; font: inherit; color: inherit; min-height: 44px; }
   .sh-main { flex: 1; min-width: 0; display: block; }
-  .sh-org { display: block; font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .4px; }
-  .sh-role { display: block; font-size: 13.5px; font-weight: 700; margin-top: 2px; line-height: 1.35; }
-  .sh-meta { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
-  .sh-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
-  .sh-chip { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
-             border: 1px solid var(--panel-border); color: var(--muted); white-space: nowrap; }
-  .sh-chip.elig { color: var(--accent-soft); border-color: var(--accent-line); background: var(--tint); }
-  .sh-chip.st-approved, .sh-chip.st-applied { color: var(--accent-soft); border-color: var(--accent); }
-  .sh-chip.st-rejected, .sh-chip.st-expired { color: var(--warn); }
-  .sh-chip.notfit { color: var(--warn); }
-  .sh-fitreason { display: block; font-size: 11px; color: var(--dim); margin-top: 6px; line-height: 1.4; }
-  .sh-caret { color: var(--accent-soft); font-size: 12px; padding-top: 2px; }
-  .sh-detail { margin: 0 0 14px; padding: 14px 12px; border-radius: 12px;
-               background: var(--surface-2); border: 1px solid var(--panel-border);
-               font-size: 12.5px; line-height: 1.6; }
-  .sh-detail h4 { margin: 16px 0 6px; font-size: 11px; text-transform: uppercase;
-                  letter-spacing: .5px; color: var(--dim); }
+  .sh-org { display: block; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .sh-role { display: block; font-size: 15px; font-weight: 700; margin-top: 2px; line-height: 1.35; }
+  .sh-meta { display: block; font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .sh-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .sh-chip { font-size: 12px; font-weight: 650; padding: 3px 9px; border-radius: var(--r-pill);
+             background: var(--surface-3); color: var(--ink-2); white-space: nowrap; }
+  .sh-chip.elig { background: var(--ok-soft); color: var(--ok); }
+  .sh-chip.notfit { background: var(--warn-soft); color: var(--warn); }
+  .sh-chip.st-approved, .sh-chip.st-applied { background: var(--pvt-soft); color: var(--pvt); }
+  .sh-chip.st-rejected, .sh-chip.st-expired { background: var(--bad-soft); color: var(--bad); }
+  .sh-fitreason { display: block; font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+  .sh-caret { color: var(--faint); font-size: 14px; padding-top: 2px; }
+  .sh-detail { margin: 0 12px 14px; padding: 14px; border-radius: var(--r-md); background: var(--surface-2);
+               border: 1px solid var(--line); font-size: 13.5px; line-height: 1.6; }
+  .sh-detail h4 { margin: 18px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
   .sh-detail h4:first-child { margin-top: 0; }
-  .sh-step { display: flex; gap: 8px; padding: 3px 0; align-items: baseline; }
-  .sh-k { flex: 0 0 92px; color: var(--dim); font-size: 10.5px; text-transform: uppercase; letter-spacing: .3px; }
+  .sh-step { display: flex; gap: 10px; padding: 4px 0; align-items: baseline; }
+  .sh-k { flex: 0 0 96px; color: var(--faint); font-size: 12px; font-weight: 650; }
   .sh-v { flex: 1; min-width: 0; }
-  .sh-stepnum { display: inline-block; font-size: 10px; font-weight: 800; color: var(--on-accent);
-                background: var(--accent); border-radius: 20px; padding: 2px 8px; margin-right: 6px; }
+  .sh-stepnum { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px;
+                font-size: 12px; font-weight: 800; color: var(--on-accent); background: var(--pvt);
+                border-radius: var(--r-pill); margin-right: 8px; }
   .sh-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
   .btn-approve, .btn-reject, .btn-stage {
-    font: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer; text-decoration: none;
-    padding: 10px 16px; border-radius: 10px; border: 1px solid var(--panel-border);
-    background: var(--surface-2); color: var(--text); min-height: 44px;
-    display: inline-flex; align-items: center; }
-  .btn-approve { background: var(--accent); border-color: transparent; color: var(--on-accent); }
-  .btn-reject { color: var(--warn); }
-  .ats-badge { display: inline-block; font-size: 12px; font-weight: 800; padding: 4px 12px;
-               border-radius: 8px; border: 1px solid var(--accent-line);
-               color: var(--accent-soft); background: var(--tint); }
-  .ats-badge.low { color: var(--warn); border-color: var(--warn); background: none; }
-  .ats-note { font-size: 11px; color: var(--dim); margin-top: 4px; }
-  .sh-md h3 { font-size: 13.5px; margin: 12px 0 4px; }
-  .sh-md h4 { font-size: 12.5px; margin: 10px 0 4px; text-transform: none; letter-spacing: 0; color: var(--text); }
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: var(--r-md);
+    font: inherit; font-size: 13.5px; font-weight: 750; cursor: pointer; text-decoration: none;
+    border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); }
+  .btn-approve { background: var(--pvt); border-color: var(--pvt); color: #fff; }
+  .btn-reject { color: var(--bad); }
+  .ats-badge { display: inline-block; font-size: 13px; font-weight: 800; padding: 4px 12px; border-radius: var(--r-sm);
+               background: var(--ok-soft); color: var(--ok); }
+  .ats-badge.low { background: var(--warn-soft); color: var(--warn); }
+  .ats-note { font-size: 12px; color: var(--faint); margin-top: 4px; }
+  .sh-md h3 { font-size: 15px; margin: 14px 0 4px; }
+  .sh-md h4 { font-size: 13.5px; margin: 12px 0 4px; text-transform: none; letter-spacing: 0; color: var(--ink); }
   .sh-md p { margin: 6px 0; }
-  .sh-md ul { margin: 6px 0; padding-left: 18px; }
+  .sh-md ul { margin: 6px 0; padding-left: 20px; }
   .sh-md li { margin: 3px 0; }
-  .sh-md hr { border: 0; border-top: 1px solid var(--panel-border); margin: 10px 0; }
-  .sh-check { display: flex; gap: 10px; align-items: flex-start; padding: 9px 2px;
-              border-top: 1px solid var(--panel-border); font-size: 12.5px; cursor: pointer;
-              line-height: 1.45; }
-  .sh-check input { flex: 0 0 auto; width: 19px; height: 19px; accent-color: var(--accent);
-                    margin-top: 1px; cursor: pointer; }
+  .sh-md hr { border: 0; border-top: 1px solid var(--line); margin: 12px 0; }
+  .sh-check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 2px; border-top: 1px solid var(--line);
+              font-size: 13.5px; cursor: pointer; line-height: 1.45; }
+  .sh-check input { flex: 0 0 auto; width: 20px; height: 20px; accent-color: var(--pvt); margin-top: 1px; cursor: pointer; }
   .sh-check input:checked + span { color: var(--muted); text-decoration: line-through; }
-  .sh-gate-note { font-size: 11.5px; color: var(--dim); margin-top: 8px; line-height: 1.5; }
+  .sh-gate-note { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+  #shresthaStudy .sh-card { padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-lg); margin-top: 10px; }
 
+  /* Basics (study-roadmap.js) — common to both tracks. */
+  .study-roadmap { margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);
+                   background: var(--surface); box-shadow: var(--shadow-1); }
+  .roadmap-tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .roadmap-track { border: 1px solid var(--line); background: var(--surface-2); border-radius: var(--r-md); padding: 12px; font-size: 13px; }
+  .roadmap-track b { display: block; font-size: 15px; margin-bottom: 2px; }
+  .roadmap-track small { display: block; color: var(--muted); line-height: 1.35; min-height: 34px; font-size: 12.5px; }
+  .roadmap-track progress { display: block; width: 100%; height: 6px; margin-top: 12px; accent-color: var(--accent); }
+  .roadmap-track .roadmap-count { display: block; color: var(--faint); font-size: 12px; margin-top: 6px; }
+  .roadmap-fold { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 2px; }
+  .roadmap-fold > summary, .roadmap-phase > summary { cursor: pointer; list-style: none; display: flex; align-items: center;
+    justify-content: space-between; gap: 12px; min-height: 48px; font-size: 14px; font-weight: 700; }
+  .roadmap-fold > summary::-webkit-details-marker, .roadmap-phase > summary::-webkit-details-marker { display: none; }
+  .roadmap-fold > summary::after, .roadmap-phase > summary::after { content: '⌄'; color: var(--faint); }
+  .roadmap-fold[open] > summary::after, .roadmap-phase[open] > summary::after { content: '⌃'; }
+  .roadmap-tabs { display: flex; gap: 4px; margin: 4px 0 10px; padding: 4px; border-radius: var(--r-md); background: var(--surface-3); }
+  .roadmap-tabs button { flex: 1; min-height: 40px; border: 0; border-radius: var(--r-sm); color: var(--muted); background: transparent;
+    font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+  .roadmap-tabs button[aria-selected="true"] { color: var(--ink); background: var(--surface); box-shadow: var(--shadow-1); }
+  .roadmap-phase { border-top: 1px solid var(--line); }
+  .roadmap-phase > summary span:last-child { font-size: 12px; color: var(--faint); margin-left: auto; }
+  .roadmap-phase-caption { font-size: 12.5px; color: var(--muted); margin: -3px 0 8px; }
+  .roadmap-item { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 4px; font-size: 14px; line-height: 1.35; }
+  .roadmap-item:not(:first-child) { border-top: 1px solid var(--line); }
+  .roadmap-item input { flex: 0 0 auto; width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+  .roadmap-open { display: flex; align-items: center; justify-content: space-between; flex: 1; min-height: 42px; text-align: left;
+    border: 0; background: transparent; color: var(--ink); font: inherit; cursor: pointer; padding: 6px 3px; }
+  .roadmap-open span { color: var(--faint); font-size: 17px; margin-left: 8px; }
+  .roadmap-item input:checked + .roadmap-open { color: var(--muted); }
+  .roadmap-lesson { border: 1px solid var(--accent-line); background: var(--surface-2); border-radius: var(--r-md);
+    padding: 16px; margin: 4px 0 14px; line-height: 1.6; font-size: 14px; }
+  .lesson-kicker { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); font-weight: 750; }
+  .roadmap-lesson h3 { margin: 6px 0 10px; font-size: 19px; letter-spacing: -.02em; }
+  .roadmap-lesson h4 { margin: 16px 0 5px; font-size: 13px; }
+  .roadmap-lesson p { margin: 0 0 8px; }
+  .lesson-question { border-top: 1px solid var(--line); padding: 10px 0; }
+  .lesson-question summary { cursor: pointer; font-weight: 650; }
+  .lesson-question summary span { display: block; font-size: 12px; font-weight: 500; color: var(--accent); }
+  .lesson-question p { margin: 8px 0 0; }
+  .roadmap-lesson .lesson-hint { color: var(--muted); font-size: 12px; margin: 12px 0 0; }
+  .lesson-ask { display: inline-flex; align-items: center; margin-top: 10px; min-height: 40px; padding: 0 14px;
+    border-radius: var(--r-md); font-size: 13.5px; font-weight: 700; color: var(--on-accent); background: var(--accent); }
+  .lesson-ask:hover { text-decoration: none; background: var(--accent-2); }
+  .roadmap-footnote { margin: 12px 0 1px; color: var(--faint); font-size: 12px; line-height: 1.45; }
+
+  .data-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+               margin: 26px 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
+  .data-foot .sub { font-size: 12.5px; color: var(--muted); }
+  .data-foot .sub.stale { color: var(--warn); font-weight: 650; }
+  .install-banner { display: none; margin: 14px 16px 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .install-banner.show { display: block; }
+  .retry { margin-top: 12px; }
 </style>
 </head>
 <body data-page="jobs">
-<header>
+<header class="is-brand">
   <div class="nav-bar">
     <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
-      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
     <div class="nav-title">
-      <h1 id="screen-title">Jobs</h1>
+      <h1 id="screen-title">Home</h1>
       <div class="nav-exam" id="nav-exam"></div>
     </div>
+    <button class="nav-burger" id="refreshBtn" onclick="load()" aria-label="Refresh openings" title="Refresh">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+    </button>
   </div>
 </header>
 
+<main class="page">
 
-<section class="study-roadmap" aria-labelledby="roadmapTitle">
-  <div class="roadmap-eyebrow">Your study path</div>
-  <h2 class="roadmap-title" id="roadmapTitle">Build your basics</h2>
-  <p class="roadmap-intro">Open any topic for a short lesson, worked example and practice. Mark it done when you are ready.</p>
-  <div class="roadmap-tracks" id="roadmapSummary" aria-live="polite"></div>
-  <details class="roadmap-fold" id="roadmapFold">
-    <summary>Open study lessons</summary>
-    <div class="roadmap-tabs" role="tablist" aria-label="Study track">
-      <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
-      <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
+  <!-- 1. COMING UP — the exams, on the brand colour, before anything else. -->
+  <section class="hero" aria-labelledby="newsH">
+    <div class="hero-date" id="heroDate"></div>
+    <h2 class="hero-h" id="newsH">Coming up</h2>
+    <div class="xcards" id="newsExams"></div>
+  </section>
+
+  <button class="exam-over" id="examOver">
+    <b>That exam is behind you</b><br>
+    <span id="examOverWhen"></span> Tap to pick what you are preparing for next.
+  </button>
+
+  <!-- 2. OPEN NOW — confident matches only, closing soonest first. -->
+  <section class="sec" id="openSec" aria-labelledby="openH">
+    <div class="sec-head"><h2 id="openH">Open now — you can apply</h2><span class="chip chip-gov num" id="openCount"></span></div>
+    <p class="sec-sub" id="openSub">Officer, engineer and trainee posts whose printed qualification includes yours.</p>
+    <div class="list" id="openList"><div class="empty">Loading openings…</div></div>
+    <button class="sec-link hidden" id="openAll" type="button">See every government opening →</button>
+  </section>
+
+  <!-- 3. NEW — first seen in the last two days, that you are not ruled out of. -->
+  <section class="sec hidden" id="newSec" aria-labelledby="newH">
+    <div class="sec-head"><h2 id="newH">New in the last 2 days</h2><span class="chip num" id="newCount"></span></div>
+    <p class="sec-sub">Added by the nightly run and matching your qualification.</p>
+    <div class="list" id="newList"></div>
+  </section>
+
+  <!-- 4. THE CHOICE -->
+  <section class="sec" id="trackSec" aria-labelledby="trackH">
+    <div class="sec-head"><h2 id="trackH">Choose your track</h2></div>
+    <p class="sec-sub">Each shows its own exams, openings and study material.</p>
+    <div class="track-pick" role="tablist" aria-label="Government or private">
+      <button type="button" role="tab" class="track-btn is-gov" id="tabGov" data-track="gov"
+              aria-controls="trackGov" aria-selected="true">
+        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 20.5h17"/></svg></span>
+        <span class="track-name">Government</span>
+        <span class="track-meta" id="govMeta">Exams, notifications, prep</span>
+      </button>
+      <button type="button" role="tab" class="track-btn is-pvt" id="tabPvt" data-track="pvt"
+              aria-controls="trackPvt" aria-selected="false">
+        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5.5A2 2 0 0 1 10.5 3.5h3a2 2 0 0 1 2 2V7"/><path d="M3 12.5h18"/></svg></span>
+        <span class="track-name">Private</span>
+        <span class="track-meta" id="pvtMeta">Fresher IT jobs, ₹40 LPA+ path</span>
+      </button>
     </div>
-    <div id="roadmapTopics" role="tabpanel" aria-labelledby="roadmapQuantTab"></div>
-    <p class="roadmap-footnote">Your ticks are saved on this device, including when offline. They do not sync across devices.</p>
-  </details>
-</section>
+  </section>
 
-<section class="sec shortlist hidden" id="shortlist">
-  <h2 class="shortlist-h">Today's shortlist</h2>
-  <div class="shortlist-sub" id="shortlistSub"></div>
-  <table class="sl-table"><thead><tr>
-    <th class="sl-p">Priority</th><th>Recruitment</th><th class="sl-s">Status</th>
-  </tr></thead><tbody id="shortlistBody"></tbody></table>
-</section>
+  <!-- ═══════════ GOVERNMENT ═══════════ -->
+  <div id="trackGov" role="tabpanel" aria-labelledby="tabGov">
 
-<button class="exam-over" id="examOver">
-  <b>That exam is behind you</b><br>
-  <span id="examOverWhen"></span> Everything on this screen is still scoped to it.
-  Tap to pick what you are preparing for next.
-</button>
+    <section class="sec" aria-labelledby="prepH">
+      <div class="panel-kicker">Government</div>
+      <div class="sec-head"><h2 id="prepH">Prepare for your exams</h2></div>
+      <p class="sec-sub">The plan, the paper and practice — for each exam you are sitting.</p>
+      <div class="tiles" id="govStudy"></div>
+    </section>
 
-<!-- Only the openings for the exam being prepared for. A job list that mixed
-     all three would put the student back in the position of working out which
-     rows were theirs — which is the job the app is supposed to do. -->
-<div class="list" id="examJobs"><div class="empty">Loading…</div></div>
+    <!-- Openings that belong to one of your exams. -->
+    <section class="sec" id="trackedSec" aria-labelledby="trackedH">
+      <div class="sec-head"><h2 id="trackedH">Tracked for your exams</h2></div>
+      <div class="stack" id="examJobs"><div class="empty">Loading…</div></div>
+    </section>
 
-<div class="sec">
-  <div class="age-row">
-    <span class="sub" id="lastUpdated">Loading…</span>
-    <button class="view-all" id="refreshBtn" onclick="load()">↻ Refresh</button>
+    <section class="sec" id="govSec" aria-labelledby="govH">
+      <div class="sec-head"><h2 id="govH">Government openings</h2><span class="chip chip-gov num" id="otherCount"></span></div>
+      <p class="sec-sub" id="govSub">Best matches first, then the soonest to close. Filter by area.</p>
+      <label class="marks-filter hidden" id="marksFilter">
+        <input type="checkbox" id="marksFilterOn">
+        <span id="marksFilterLabel">Hide openings my marks fall short of</span>
+      </label>
+      <div class="fchips" id="areaChips" role="group" aria-label="Filter by area"></div>
+      <div id="otherFold"><div class="list" id="otherJobs"></div></div>
+      <button class="btn btn-block more-btn hidden" id="govMore" type="button">Show more</button>
+
+      <div style="margin-top:14px">
+        <details class="fold hidden" id="notMineFold">
+          <summary id="notMineCount">Not for your qualification</summary>
+          <div class="list" id="notMineJobs"></div>
+        </details>
+        <details class="fold hidden" id="closedFold">
+          <summary id="closedCount">Closed</summary>
+          <div class="list" id="closedJobs"></div>
+        </details>
+      </div>
+    </section>
   </div>
-</div>
 
-<!-- Filtering by marks is opt-in and narrow on purpose: see marksFilterHides(). -->
-<label class="marks-filter hidden" id="marksFilter">
-  <input type="checkbox" id="marksFilterOn">
-  <span id="marksFilterLabel">Hide openings my marks fall short of</span>
-</label>
+  <!-- ═══════════ PRIVATE ═══════════ -->
+  <div id="trackPvt" role="tabpanel" aria-labelledby="tabPvt" hidden>
 
-<section class="sec areas hidden" id="areasSec">
-  <h2 class="areas-h">Where your qualification fits</h2>
-  <div class="areas-sub" id="areasSub"></div>
-  <div id="areasList"></div>
-</section>
+    <section class="sec" id="shresthaSec" aria-labelledby="shH">
+      <div class="panel-kicker">Private</div>
+      <div class="sec-head"><h2 id="shH">Fresher IT openings</h2><span class="chip chip-pvt num" id="shCount"></span></div>
+      <p class="sec-sub" id="shresthaSub">Newest first · pulled daily from @careerwithshrestha</p>
+      <div class="list" id="shresthaJobs"><div class="empty">Loading…</div></div>
+      <div id="shNotFit"></div>
+    </section>
 
-<details class="sec other-fold hidden" id="otherFold">
-  <summary id="otherCount">Government openings</summary>
-  <div id="otherJobs"></div>
-</details>
+    <section class="sec" id="topPaySec" aria-labelledby="tpH">
+      <div class="sec-head"><h2 id="tpH">₹40 LPA+ fresher roles — off-campus</h2></div>
+      <p class="sec-sub" id="tpSub"></p>
+      <div class="list" id="topPayList"></div>
+      <details class="fold" id="stepFold" style="margin-top:10px">
+        <summary>Nearer rungs on the ladder</summary>
+        <div class="fold-body" id="stepBody"></div>
+      </details>
+      <p class="fine tp-src" id="tpSources"></p>
+    </section>
 
-<!-- Private sector, kept apart. The two are prepared for and applied to in
-     completely different ways — one is a syllabus and a written paper months
-     out, the other is a CV and an interview — so mixing them in one list makes
-     the reader sort them mentally every time they open the screen. -->
-<details class="sec other-fold hidden" id="privateFold">
-  <summary id="privateCount">Private openings</summary>
-  <div id="privateJobs"></div>
-</details>
+    <section class="sec" id="pathSec" aria-labelledby="pathH">
+      <div class="sec-head"><h2 id="pathH">Your path to those roles</h2><span class="chip chip-pvt num" id="pathCount"></span></div>
+      <p class="sec-sub">From zero coding to interview-ready, one stage at a time. Tick as you go — it stays on this phone.</p>
+      <div class="bar" style="margin-bottom:12px"><i id="pathBar" style="width:0%"></i></div>
+      <div id="codePath"></div>
+    </section>
 
+    <section class="sec" aria-labelledby="pvtMoreH">
+      <div class="sec-head"><h2 id="pvtMoreH">More private openings</h2></div>
+      <details class="fold hidden" id="privateFold">
+        <summary id="privateCount">From the job feed</summary>
+        <div class="list" id="privateJobs"></div>
+      </details>
+      <div id="shresthaStudy"></div>
+    </section>
+  </div>
 
-<!-- Shrestha's job posts — the daily private-sector feed from @careerwithshrestha.
-     Rendered newest-first from /data/shrestha-jobs.json, a static file the
-     daily pull (scripts/pull-shrestha.js) rewrites; the redeploy picks it up.
-     Kept apart from the Supabase jobs on purpose: these are Instagram
-     postings, not official notifications, so they never enter the jobs table.
-     Per-job pipeline, in order: Learn → Resume draft (+ATS) → Approve (the
-     hard gate; the app never submits anything) → Applied (he applies from the
-     post link himself) → Study session (created after approval). -->
-<section class="sec shrestha-sec" id="shresthaSec">
-  <h2 class="shrestha-h">Shrestha's job posts</h2>
-  <div class="shrestha-sub" id="shresthaSub">Newest first · pulled daily from @careerwithshrestha</div>
-  <div class="list" id="shresthaJobs"><div class="empty">Loading…</div></div>
-  <div id="shresthaStudy"></div>
-</section>
+  <!-- ═══════════ BASICS — both tracks ═══════════ -->
+  <section class="sec" aria-labelledby="roadmapTitle">
+    <div class="sec-head"><h2 id="roadmapTitle">Build your basics</h2></div>
+    <p class="sec-sub">Quant and reasoning from the ground up — the same skills every exam and every company aptitude test checks.</p>
+    <div class="study-roadmap">
+      <div class="roadmap-tracks" id="roadmapSummary" aria-live="polite"></div>
+      <details class="roadmap-fold" id="roadmapFold">
+        <summary>Open the lessons</summary>
+        <div class="roadmap-tabs" role="tablist" aria-label="Study track">
+          <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
+          <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
+        </div>
+        <div id="roadmapTopics" role="tabpanel" aria-labelledby="roadmapQuantTab"></div>
+        <p class="roadmap-footnote">Ticks are saved on this phone, offline too. They do not sync across devices.</p>
+      </details>
+    </div>
+  </section>
 
-<details class="sec other-fold hidden" id="notMineFold">
-  <summary id="notMineCount">Needs a qualification you have not entered</summary>
-  <div id="notMineJobs"></div>
-</details>
+  <button class="qual-prompt" id="qualPrompt">
+    <b>Tell the app what you studied</b><br>
+    and it can say which openings you are eligible for. Tap to set it.
+  </button>
 
-<details class="sec other-fold hidden" id="closedFold">
-  <summary id="closedCount">Closed</summary>
-  <div id="closedJobs"></div>
-</details>
-
-<button class="qual-prompt" id="qualPrompt">
-  <b>Tell the app what you studied</b><br>
-  and it can say whether you are eligible for this opening. Tap to set it.
-</button>
-
-<div class="install-banner" id="installBanner">
-  Tap your browser's Share/Menu button → "Add to Home Screen" to install this as an app.
-</div>
+  <div class="data-foot">
+    <span class="sub" id="lastUpdated">Loading…</span>
+    <button class="btn btn-sm" type="button" onclick="load()">Refresh</button>
+  </div>
+  <div class="install-banner" id="installBanner">
+    Install it: your browser's menu → "Add to Home screen".
+  </div>
+</main>
 
 <script src="/study-lessons.js" defer></script>
 <script src="/study-roadmap.js" defer></script>
 <script src="/prep/exams.js"></script>
 <script src="/prep/eligibility.js"></script>
+<script src="/data/top-pay.js"></script>
+<script src="/prep/si-plan.js" defer></script>
 <script>
 const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
@@ -684,7 +627,10 @@ const PAGE = 1000;
    on a phone connection that is the difference between the list appearing and
    the list thinking about it. */
 const JOB_COLS = 'id,organization,post_name,profile,eligibility,deadline,deadline_text,' +
-  'is_estimated,status,source_url,apply_url,notification_url,location,pay_scale,updated_at,last_checked_at';
+  'is_estimated,status,source_url,apply_url,notification_url,location,pay_scale,updated_at,last_checked_at,' +
+  /* first_seen_at: "New in the last 2 days", and telling an old cycle's row
+     from a new notification in cycleOver(). */
+  'first_seen_at';
 
 const SB_HEADERS = () => ({ apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` });
 
@@ -872,24 +818,420 @@ document.addEventListener('toggle', e => {
   fillPending(d);
 }, true);
 
+/* ══════════════════════════════════════════════════════════════════════════
+   HOME — THE NEWS FIRST, THEN THE CHOICE.
+
+   The screen used to open on a study checklist, then a table, then a card for
+   one exam, then 500 openings in folds — and kept showing exams whose papers
+   had already been sat. It now answers, in order:
+
+     Coming up         the exams still ahead, with a countdown each
+     Open now          openings you can apply for (a CONFIDENT match only),
+                       closing soonest first
+     New               first seen in the last two days, matching you
+     Government | Private
+                       one tap picks the track; each has its own exams,
+                       openings and study material
+
+   Nothing here is typed in: EXAMS supplies the exams, the jobs table the
+   openings, `applied` the status, data/top-pay.js the private targets.
+   ══════════════════════════════════════════════════════════════════════════ */
+const TRACK_KEY = 'jobhunt_track';
+let track = 'gov';
+try { if (localStorage.getItem(TRACK_KEY) === 'pvt') track = 'pvt'; } catch (e) {}
+let govArea = 'All';
+let areasOpen = false;
+const GOV_PAGE = 20;
+let govLimit = GOV_PAGE;
+const NEWS_MAX = 5;
+
+/** Today as YYYY-MM-DD in the phone's own time zone — exam dates are dates,
+    and comparing them to a UTC timestamp moves the day at 05:30 IST. */
+function todayISO() {
+  const d = new Date();
+  return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'),
+    String(d.getDate()).padStart(2, '0')].join('-');
+}
+function dayOf(iso) {
+  const d = new Date(String(iso || '').slice(0, 10) + 'T00:00:00');
+  return isNaN(d.getTime()) ? null : d;
+}
+function fmtDay(iso, withYear) {
+  const d = dayOf(iso);
+  if (!d) return '';
+  const o = { weekday: 'short', day: 'numeric', month: 'short' };
+  if (withYear) o.year = 'numeric';
+  return d.toLocaleDateString('en-IN', o);
+}
+function fmtShort(iso) {
+  const d = dayOf(iso);
+  return d ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '';
+}
+function daysTo(iso) {
+  const d = dayOf(iso);
+  if (!d) return null;
+  const t = new Date(); t.setHours(0, 0, 0, 0);
+  return Math.round((d.getTime() - t.getTime()) / 864e5);
+}
+
+/** Exams this app prepares for whose paper is still ahead, soonest first.
+    A sat paper drops off by itself — the complaint was finished exams still
+    being shown as if they were coming. */
+function upcomingExams() {
+  const today = todayISO();
+  return (typeof EXAMS !== 'undefined' ? EXAMS : [])
+    .filter(e => e.key && e.examDateStart && (e.examDateEnd || e.examDateStart) >= today)
+    .sort((a, b) => (a.examDateStart < b.examDateStart ? -1 : 1));
+}
+
+/** Day N of the authored plan, or null outside it. */
+function planDay(e) {
+  if (!e || !e.plan) return null;
+  const n = -daysTo(e.plan.start) + 1;
+  if (n < 1 || n > e.plan.days) return null;
+  return n;
+}
+
+const bySoonestJob = (a, b) => {
+  const x = daysLeft(a), y = daysLeft(b);
+  if (x === null) return y === null ? 0 : 1;
+  if (y === null) return -1;
+  return x - y;
+};
+
+/* ── 1. Coming up ─────────────────────────────────────────────────────── */
+function examCardHtml(e) {
+  const n = daysTo(e.examDateStart);
+  const count = n === 0 ? '<div class="xcount is-now"><b>Today</b></div>'
+    : n === 1 ? '<div class="xcount is-now"><b>Tomor&shy;row</b></div>'
+    : `<div class="xcount"><b>${n}</b><small>days</small></div>`;
+  const when = fmtDay(e.examDateStart, true) +
+    (e.session ? ' · ' + e.session.toLowerCase() : '') +
+    (e.dateTentative ? ' · tentative' : '');
+  const mins = e.minutes ? (e.minutes % 60 === 0 && e.minutes >= 120 ? (e.minutes / 60) + ' hours' : e.minutes + ' min') : null;
+  const pat = [e.questions ? e.questions + ' questions' : null, mins,
+    e.marking && e.marking.wrong ? '−' + Math.abs(e.marking.wrong) + ' per wrong' : null].filter(Boolean).join(' · ');
+
+  const today = todayISO();
+  const chips = [];
+  if (e.applyWindow) {
+    if (e.applyWindow.end < today) chips.push(`<span class="chip chip-line">Applications closed ${escapeHtml(fmtShort(e.applyWindow.end))}</span>`);
+    else if (e.applyWindow.start <= today) chips.push(`<span class="chip chip-warn">Apply by ${escapeHtml(fmtShort(e.applyWindow.end))}</span>`);
+  }
+  if (e.qualifying && e.qualifying.byCategory) {
+    const q = e.qualifying.byCategory;
+    chips.push(`<span class="chip chip-info">Pass mark: OC ${q.OC}% · BC ${q.BC}% · SC/ST ${q.SC}%</span>`);
+  }
+  if (!(e.applyWindow && e.applyWindow.end < today) &&
+      typeof examEligibility === 'function' && typeof candidateProfile === 'function') {
+    const v = examEligibility(e, candidateProfile());
+    if (v.status === 'yes') chips.push('<span class="chip chip-ok">You are eligible</span>');
+    else if (v.status === 'no') chips.push(`<span class="chip chip-bad">Not eligible — ${escapeHtml(v.reason)}</span>`);
+  }
+
+  // Three days out, the one rule that changes the score goes on the card.
+  const tip = n !== null && n <= 3 && e.tactics && e.tactics[0]
+    ? `<div class="notice is-warn" style="margin-top:12px"><div><b>Exam-hall rule.</b> ${escapeHtml(e.tactics[0])}</div></div>` : '';
+
+  let plan = '';
+  const day = planDay(e);
+  if (day) {
+    const today_ = (window.SI_PLAN && SI_PLAN.days && SI_PLAN.days[day - 1]) || null;
+    plan = `<div class="xplan">
+      <div class="xplan-row">Day ${day} of ${e.plan.days} — today<span>${escapeHtml(today_ ? today_.focus : 'Today\'s tasks are ready')}</span></div>
+      <div class="bar"><i style="width:${Math.round(day / e.plan.days * 100)}%"></i></div>
+    </div>`;
+  }
+
+  const learn = k => '/learn.html?exam=' + encodeURIComponent(e.key) + '#' + k;
+  const actions = e.plan
+    ? `<a class="btn btn-primary" href="${escapeHtml(e.plan.href)}">Today's plan</a>
+       <a class="btn" href="${escapeHtml(e.plan.href)}#paper">The paper</a>`
+    : `<a class="btn btn-primary" href="${learn('syllabus')}">Exam-day rules</a>
+       <a class="btn" href="${learn('test')}">Quick test</a>`;
+
+  return `<article class="xcard" data-exam-card="${escapeHtml(e.key)}">
+    <div class="xcard-top">
+      <div class="xcard-main">
+        <div class="xcard-kicker">${e.dateTentative ? 'Exam · date tentative' : 'Exam'}</div>
+        <div class="xcard-name">${escapeHtml(e.headline || e.name)}</div>
+        <div class="xcard-when">${escapeHtml(when)}</div>
+        ${pat ? `<div class="xcard-meta">${escapeHtml(pat)}</div>` : ''}
+      </div>
+      ${count}
+    </div>
+    ${chips.length ? `<div class="chips">${chips.join('')}</div>` : ''}
+    ${tip}${plan}
+    <div class="btn-row">${actions}</div>
+  </article>`;
+}
+
+function renderComingUp() {
+  const box = document.getElementById('newsExams');
+  if (!box) return;
+  const d = document.getElementById('heroDate');
+  if (d) d.textContent = new Date().toLocaleDateString('en-IN',
+    { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const list = upcomingExams();
+  box.innerHTML = list.length
+    ? list.map(examCardHtml).join('')
+    : '<div class="xcard"><div class="card-sub">No exam dates are in the app right now. When a notification sets one, it appears here.</div></div>';
+}
+
+/* ── 2. Open now, 3. New ──────────────────────────────────────────────── */
+/** A compact row for the news: countdown, what, and the one link that matters. */
+function briefHtml(j) {
+  const left = daysLeft(j);
+  const cls = left === null ? ' is-none' : left <= 3 ? ' is-urgent' : left <= 7 ? ' is-soon' : '';
+  const cd = left === null ? '<b>—</b><small>no date</small>'
+    : left <= 0 ? '<b style="font-size:14px">Today</b><small>closes</small>'
+    : `<b>${left}</b><small>day${left === 1 ? '' : 's'}</small>`;
+  const vac = vacanciesOf(j);
+  const isArticle = u => /freejobalert\.com\/articles\//i.test(u || '');
+  const notif = !isArticle(j.notification_url) ? j.notification_url : null;
+  const link = notif || j.source_url || (isArticle(j.notification_url) ? j.notification_url : null);
+  return `<div class="other-row">
+    <div class="cd${cls}">${cd}</div>
+    <div class="other-main">
+      <div class="other-org">${escapeHtml(j.organization)}${vac ? ` · <span class="other-vac">${escapeHtml(vac)} posts</span>` : ''}</div>
+      <div class="other-post">${escapeHtml(titleOf(j))}</div>
+      <div class="other-meta">${left === null ? escapeHtml(j.deadline_text || 'Closing date not published')
+        : 'Closes ' + escapeHtml(fmtShort(j.deadline))} · <span class="ok-tag">your qualification</span></div>
+      ${link ? `<div class="other-actions"><a class="other-apply${notif ? '' : ' is-secondhand'}" href="${escapeHtml(link)}" target="_blank" rel="noopener">${notif ? 'Notification →' : 'Details →'}</a>
+        <button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button></div>` : ''}
+    </div>
+  </div>`;
+}
+
+function qualPickerHtml() {
+  return `<div class="notice"><div><b>Which qualification do you have?</b><br>
+    Pick one and this list shows only openings that ask for it.
+    <div class="qual-pick">
+      <button type="button" class="btn btn-sm btn-primary" data-set-qual="B.Tech CSE">B.Tech / B.E.</button>
+      <button type="button" class="btn btn-sm" data-set-qual="Graduate">Any degree</button>
+      <button type="button" class="btn btn-sm" data-set-qual="Intermediate">Intermediate</button>
+    </div></div></div>`;
+}
+
+function renderOpenNow(live) {
+  const box = document.getElementById('openList');
+  const count = document.getElementById('openCount');
+  const all = document.getElementById('openAll');
+  if (!box) return;
+  if (!qualification) {
+    box.innerHTML = qualPickerHtml();
+    if (count) count.textContent = '';
+    if (all) all.classList.add('hidden');
+    return;
+  }
+  const rows = live.filter(j => !applied[j.id] && eligibility(j) === true && onMyTrack(j)).sort(bySoonestJob);
+  if (count) count.textContent = rows.length ? String(rows.length) : '';
+  box.innerHTML = rows.length
+    ? rows.slice(0, NEWS_MAX).map(briefHtml).join('')
+    : '<div class="empty">Nothing open right now asks for exactly your qualification on an officer, engineer or trainee post. The full lists below still show everything you are not ruled out of.</div>';
+  if (all) {
+    all.classList.toggle('hidden', rows.length <= NEWS_MAX);
+    all.textContent = `See all ${rows.length} →`;
+  }
+}
+
+function renderNew(live) {
+  const sec = document.getElementById('newSec');
+  if (!sec) return;
+  const since = Date.now() - 2 * 864e5;
+  const rows = qualification ? live.filter(j => {
+    const t = new Date(j.first_seen_at || 0).getTime();
+    return t >= since && eligibility(j) === true;
+  }).sort((a, b) => new Date(b.first_seen_at) - new Date(a.first_seen_at)) : [];
+  sec.classList.toggle('hidden', rows.length === 0);
+  if (!rows.length) return;
+  document.getElementById('newCount').textContent = String(rows.length);
+  document.getElementById('newList').innerHTML = rows.slice(0, 4).map(briefHtml).join('');
+}
+
+/* ── 4. The choice ────────────────────────────────────────────────────── */
+function setTrack(t, scroll) {
+  track = t === 'pvt' ? 'pvt' : 'gov';
+  try { localStorage.setItem(TRACK_KEY, track); } catch (e) {}
+  const gov = document.getElementById('trackGov'), pvt = document.getElementById('trackPvt');
+  if (gov) gov.hidden = track !== 'gov';
+  if (pvt) pvt.hidden = track !== 'pvt';
+  document.querySelectorAll('[data-track]').forEach(b =>
+    b.setAttribute('aria-selected', String(b.getAttribute('data-track') === track)));
+  if (scroll) {
+    const el = document.getElementById('trackSec');
+    if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+}
+
+document.addEventListener('click', e => {
+  const t = e.target instanceof Element ? e.target.closest('[data-track]') : null;
+  if (t) { setTrack(t.getAttribute('data-track'), false); return; }
+  const q = e.target instanceof Element ? e.target.closest('[data-set-qual]') : null;
+  if (q) {
+    const v = q.getAttribute('data-set-qual');
+    const sel = document.getElementById('qualSel');
+    if (sel) { sel.value = v; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+    else {
+      qualification = v; saveLocal();
+      document.dispatchEvent(new CustomEvent('jobhunt:qualification', { detail: { qualification: v } }));
+    }
+    return;
+  }
+  if (e.target instanceof Element && e.target.closest('#openAll')) {
+    setTrack('gov', false);
+    const el = document.getElementById('govSec');
+    if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    return;
+  }
+  const more = e.target instanceof Element ? e.target.closest('[data-areas-more]') : null;
+  if (more) { areasOpen = more.getAttribute('data-areas-more') === '1'; render(); return; }
+  const a = e.target instanceof Element ? e.target.closest('[data-area]') : null;
+  if (a) { govArea = a.getAttribute('data-area'); govLimit = GOV_PAGE; render(); return; }
+  if (e.target instanceof Element && e.target.closest('#govMore')) { govLimit += GOV_PAGE; render(); }
+});
+
+/* ── Government: study material ───────────────────────────────────────── */
+const TILE_ICON = {
+  plan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14.5l2.2 2.2L15.5 13"/></svg>',
+  paper: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+  test: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5l2.5 2.5L21 4.5"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8.5 4.5 4 4.5v13c4.5 0 6.5.5 8 2 1.5-1.5 3.5-2 8-2v-13c-4.5 0-6.5.5-8 2z"/><path d="M12 6.5V21"/></svg>',
+  news: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/></svg>',
+  chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5z"/></svg>',
+  rules: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+};
+function tile(href, icon, name, sub, cls) {
+  return `<a class="tile${cls ? ' ' + cls : ''}" href="${escapeHtml(href)}">
+    <span class="tile-ico">${TILE_ICON[icon] || TILE_ICON.book}</span>
+    <span><span class="tile-name">${escapeHtml(name)}</span><br><span class="tile-sub">${escapeHtml(sub)}</span></span></a>`;
+}
+function renderGovStudy(exams) {
+  const box = document.getElementById('govStudy');
+  if (!box) return;
+  const cur = currentExam();
+  const curKey = cur ? cur.key : (exams[0] && exams[0].key) || 'ts-si';
+  const html = [];
+  exams.forEach(e => {
+    const learn = k => '/learn.html?exam=' + encodeURIComponent(e.key) + '#' + k;
+    const day = planDay(e);
+    if (e.plan) {
+      html.push(tile(e.plan.href, 'plan', `${e.short} ${e.plan.days}-day plan`,
+        day ? `Day ${day} of ${e.plan.days} · today's tasks` : 'Day by day to the paper', 'is-gov is-wide'));
+      html.push(tile(e.plan.href + '#paper', 'paper', 'Previous papers', '2018 & 2022 decoded', 'is-gov'));
+      html.push(tile(learn('test'), 'test', 'Practice tests', 'Timed, with explanations', 'is-gov'));
+    } else {
+      const n = daysTo(e.examDateStart);
+      html.push(tile(learn('syllabus'), 'rules', `${e.short} exam-day rules`,
+        n === 1 ? 'Tomorrow · how to attempt' : 'Pattern, timing, attempting', 'is-gov'));
+      html.push(tile(learn('test'), 'test', `${e.short} quick test`, 'Ten questions, timed', 'is-gov'));
+    }
+  });
+  html.push(tile('/learn.html?exam=' + encodeURIComponent(curKey) + '#current-affairs', 'news', 'Current affairs', 'What to read today'));
+  html.push(tile('/learn.html?exam=' + encodeURIComponent(curKey) + '#lessons', 'book', 'All lessons', 'Every subject, every topic'));
+  html.push(tile('/chat.html', 'chat', 'Ask the Professor', 'Doubts, explained simply'));
+  box.innerHTML = html.join('');
+}
+
+/* ── Private: ₹40 LPA+ roles and the path ─────────────────────────────── */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const CP_KEY = 'jobhunt_code_path_v1';
+let cpDone = {};
+try { cpDone = JSON.parse(localStorage.getItem(CP_KEY) || '{}') || {}; } catch (e) { cpDone = {}; }
+
+function payText(r) {
+  return r.high ? `₹${r.low}–${r.high} LPA` : `₹${r.low}+ LPA`;
+}
+function opensIn(r) {
+  const m = new Date().getMonth() + 1;
+  return Math.min.apply(null, r.months.map(x => (x - m + 12) % 12));
+}
+function opensChip(r) {
+  const g = opensIn(r);
+  if (g === 0) return '<span class="chip chip-warn">Usually opens this month</span>';
+  if (g === 1) return '<span class="chip chip-info">Usually opens next month</span>';
+  return `<span class="chip chip-line">Usually opens ${r.months.map(x => MONTHS[x - 1]).join(' & ')}</span>`;
+}
+function renderTopPay() {
+  const T = window.TOP_PAY;
+  const list = document.getElementById('topPayList');
+  if (!T || !list) return;
+  document.getElementById('tpSub').textContent = T.context;
+  const rows = T.roles.slice().sort((a, b) => opensIn(a) - opensIn(b) || (b.high || b.low + 10) - (a.high || a.low + 10));
+  list.innerHTML = rows.map(r => `<div class="tp-row">
+      <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
+      <div class="tp-role">${escapeHtml(r.role)}</div>
+      <div class="chips">${opensChip(r)}<span class="chip chip-pvt">${escapeHtml(r.kind)}</span></div>
+      <div class="tp-tests">${escapeHtml(r.tests)}</div>
+      ${r.note ? `<div class="tp-note">${escapeHtml(r.note)}</div>` : ''}
+      <div class="btn-row"><a class="btn btn-sm btn-tonal" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">Official careers page →</a></div>
+    </div>`).join('');
+  document.getElementById('stepBody').innerHTML =
+    '<p class="sec-sub" style="margin-top:0">Off-campus fresher routes you can reach sooner, while you build towards the list above.</p>' +
+    T.steppingStones.map(r => `<div class="tp-row" style="padding:12px 0;border-top:1px solid var(--line)">
+      <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
+      <div class="tp-role">${escapeHtml(r.role)}</div>
+      <div class="chips">${opensChip(r)}</div>
+      <div class="btn-row"><a class="btn btn-sm" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">Careers page →</a></div>
+    </div>`).join('');
+  document.getElementById('tpSources').innerHTML =
+    `<b>Indicative pay, not a promise.</b> CTC includes stock and bonuses; monthly in-hand is much lower. Months are typical patterns, not announced dates. ${escapeHtml(T.safety)}<br>` +
+    `Sources (${escapeHtml(T.asOf)}):` +
+    T.sources.map(s => `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.label)}</a>`).join('');
+}
+
+function renderCodePath() {
+  const T = window.TOP_PAY;
+  const box = document.getElementById('codePath');
+  if (!T || !box) return;
+  const all = T.path.reduce((n, s) => n + s.items.length, 0);
+  const done = T.path.reduce((n, s) => n + s.items.filter(([k]) => cpDone[k]).length, 0);
+  document.getElementById('pathCount').textContent = `${done}/${all}`;
+  document.getElementById('pathBar').style.width = Math.round(done / all * 100) + '%';
+  const firstOpen = T.path.findIndex(s => s.items.some(([k]) => !cpDone[k]));
+  box.innerHTML = T.path.map((s, i) => {
+    const d = s.items.filter(([k]) => cpDone[k]).length;
+    return `<details class="fold cp-stage"${i === firstOpen ? ' open' : ''}>
+      <summary><span>${escapeHtml(s.name)}<span class="cp-when">${escapeHtml(s.when)}</span></span>
+        <span class="cp-count">${d}/${s.items.length}</span></summary>
+      <div class="fold-body">${s.items.map(([k, t]) =>
+        `<label class="ck"><input type="checkbox" data-cp="${escapeHtml(k)}"${cpDone[k] ? ' checked' : ''}><span>${escapeHtml(t)}</span></label>`).join('')}</div>
+    </details>`;
+  }).join('');
+}
+document.addEventListener('change', e => {
+  const c = e.target instanceof Element ? e.target.closest('[data-cp]') : null;
+  if (!c) return;
+  const k = c.getAttribute('data-cp');
+  if (c.checked) cpDone[k] = true; else delete cpDone[k];
+  try { localStorage.setItem(CP_KEY, JSON.stringify(cpDone)); } catch (err) {}
+  // Update the counts in place rather than rebuilding under a tap.
+  const T = window.TOP_PAY;
+  const all = T.path.reduce((n, s) => n + s.items.length, 0);
+  const done = T.path.reduce((n, s) => n + s.items.filter(([kk]) => cpDone[kk]).length, 0);
+  document.getElementById('pathCount').textContent = `${done}/${all}`;
+  document.getElementById('pathBar').style.width = Math.round(done / all * 100) + '%';
+  const st = c.closest('.cp-stage');
+  if (st) st.querySelector('.cp-count').textContent =
+    st.querySelectorAll('[data-cp]:checked').length + '/' + st.querySelectorAll('[data-cp]').length;
+});
+
+/* ── The whole screen ─────────────────────────────────────────────────── */
 function render() {
   const exam = currentExam();
   /* Every render re-stashes every closed fold below, so tokens from the
-     previous pass are dead weight — their bodies were rebuilt or replaced.
-     Clearing here keeps the map from accumulating one closure per render. */
+     previous pass are dead weight. */
   pendingBodies.clear();
-  const list = document.getElementById('examJobs');
   document.getElementById('qualPrompt').classList.toggle('show', !qualification);
+  setTrack(track, false);
 
-  /* The selected exam is the root context of every screen in this app. When
-     its date goes by, nothing noticed: the header quietly read "date passed",
-     "Study now →" still led to prep for a finished paper, and the whole list
-     stayed scoped to it. Saying so, and offering the one control that fixes
-     it, is the least this can do — it does NOT pick the next exam, because
-     that is not the app's decision to make. */
-  renderShortlist();
-  renderAreas();
+  const upcoming = upcomingExams();
+  renderComingUp();
+  renderGovStudy(upcoming);
 
+  /* The selected exam is the root context of the prep pages. When its date
+     goes by the app says so, and offers the one control that fixes it — it
+     does NOT pick the next exam, because that is not the app's decision. */
   const overBtn = document.getElementById('examOver');
   if (overBtn) {
     const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
@@ -901,48 +1243,49 @@ function render() {
     }
   }
 
+  const list = document.getElementById('examJobs');
+  const openList = document.getElementById('openList');
   if (loadFailed) {
-    list.innerHTML = '<div class="empty">Could not reach the openings.<br>' +
+    const msg = '<div class="empty">Could not reach the openings.<br>' +
       'Your preparation works offline — only this list needs a connection.' +
-      '<br><button class="retry" onclick="load()">Try again</button></div>';
-    /* Nothing loaded, so nothing belongs in either fold — and #otherNote,
-       which this used to write to, no longer exists: reading it threw and
-       left both folds showing the last successful load's counts. */
-    document.getElementById('otherFold').classList.add('hidden');
+      '<br><button class="btn btn-sm btn-primary retry" onclick="load()">Try again</button></div>';
+    list.innerHTML = msg;
+    if (openList) openList.innerHTML = msg;
+    document.getElementById('otherJobs').innerHTML = '';
+    document.getElementById('otherCount').textContent = '';
+    document.getElementById('areaChips').innerHTML = '';
+    document.getElementById('govMore').classList.add('hidden');
+    document.getElementById('newSec').classList.add('hidden');
     document.getElementById('privateFold').classList.add('hidden');
+    document.getElementById('notMineFold').classList.add('hidden');
     document.getElementById('closedFold').classList.add('hidden');
     return;
   }
   if (!allJobs.length) { list.innerHTML = '<div class="empty">Loading…</div>'; return; }
 
-  /* Closed applications are not openings. Two of the seven tracked rows say
-     "(applications closed)" in their own title while still carrying status
-     UPDATED — the ingestion never set CLOSED on them — so the status field
-     alone would leave them sitting among the live ones. Both signals are read,
-     and the wording matched is the explicit one, not a guess. */
+  /* Closed applications are not openings — by status, by the title's own
+     wording, by a real closing date, or because the exam they lead to has
+     been sat or its application window has shut (see isClosed). */
   const live = allJobs.filter(j => !isClosed(j));
   const closed = allJobs.filter(isClosed);
-  const mine = exam
-    ? live.filter(j => { const e = examForJob(j); return e && e.key === exam.key; })
-    : [];
+  renderOpenNow(live);
+  renderNew(live);
+
+  /* Openings that lead to an exam still ahead are tracked on their own. */
+  const upKeys = new Set(upcoming.map(e => e.key));
+  const mine = live.filter(j => { const e = examForJob(j); return e && upKeys.has(e.key); });
   list.innerHTML = mine.length
     ? mine.map(cardHtml).join('')
-    : '<div class="empty">No opening is being tracked for ' +
-      escapeHtml(exam ? exam.short : 'this exam') + ' right now.<br>' +
-      'The nightly run adds them as they are published — your preparation carries on either way.</div>';
+    : '<div class="empty">' + (upcoming.length
+        ? 'No application is open for ' + upcoming.map(e => escapeHtml(e.short)).join(' or ') + ' right now' +
+          (upcoming.some(e => e.applyWindow) ? ' — the window has closed, so the work now is the paper.' : '.')
+        : 'No exam is being tracked right now.') + '</div>';
 
-  /* Everything else, behind a fold.
-
-     This screen is scoped to the selected exam, and it leads with it — but
-     scoping it to ONLY that exam lost three of the seven openings entirely:
-     the Air Force, railway and Singareni notifications match no exam in the
-     app, so no amount of switching would ever reveal them. A tracker that
-     silently drops what it tracked is a worse failure than a mixed list, so
-     the rest are here, folded away, each saying which exam it belongs to. */
+  /* Everything else. A tracker that silently drops what it tracked is worse
+     than a long list, so every live opening lands in exactly one place. */
   const others = live.filter(j => mine.indexOf(j) === -1 && !marksFilterHides(j));
 
-  /* The toggle only appears once it could actually do something — with no
-     marks entered it would be a checkbox that changes nothing. */
+  /* The toggle only appears once it could actually do something. */
   const nav = window.JobhuntNav;
   const canFilter = !!(nav && nav.marksPct != null && nav.category);
   const filterBox = document.getElementById('marksFilter');
@@ -952,46 +1295,64 @@ function render() {
     if (cb) cb.checked = marksFilterOn();
     const lbl = document.getElementById('marksFilterLabel');
     if (lbl) lbl.innerHTML = 'Hide openings my marks fall short of' +
-      '<span class="marks-note">Only hides ones with a published threshold. Most of this ' +
-      'feed states a qualification and no minimum percentage, so it will hide little — ' +
-      'that is deliberate.</span>';
+      '<span class="marks-note">Only hides ones with a published threshold — most of this ' +
+      'feed states a qualification and no minimum percentage, so it will hide little.</span>';
   }
-  /* ── WHAT YOU CAN APPLY FOR COMES FIRST ────────────────────────────────
-     134 of the 442 openings on this list were ones eligibility() had already
-     worked out the candidate cannot apply for — MBBS, nursing, LLB,
-     post-graduate-only posts — and they sat interleaved with the rest in
-     closing-date order. Labelling them "not your qualification" told the
-     truth but still made the reader do the filtering, which is the job this
-     app exists to do.
 
-     They are not deleted: eligibility() answers `null` whenever it cannot
-     read the qualification line, and only a definite `false` is moved. A
-     confident no goes to the bottom, behind its own fold, where it stays
-     available and stops competing with work you can actually get. */
+  /* WHAT YOU CAN APPLY FOR COMES FIRST. Only a definite "no" from
+     eligibility() is moved out; `null` (an unreadable line) stays, because
+     "I do not know" is not grounds for hiding a job. */
   const canApply = j => eligibility(j) !== false;
   const govt     = others.filter(j => sectorOf(j) === 'government' && canApply(j));
   const private_ = others.filter(j => sectorOf(j) === 'private'    && canApply(j));
   const notMine  = others.filter(j => !canApply(j));
 
-  setFoldBody('otherFold', 'otherJobs', () => govt.map(otherHtml).join(''),
-    `Government openings (${govt.length})`, govt.length === 0);
-  setFoldBody('privateFold', 'privateJobs', () => private_.map(otherHtml).join(''),
-    `Private openings (${private_.length})`, private_.length === 0);
-  setFoldBody('notMineFold', 'notMineJobs', () => notMine.map(otherHtml).join(''),
-    `Needs a qualification you have not entered (${notMine.length})`, notMine.length === 0);
+  // Best matches first, then the soonest to close.
+  const rank = j => eligibility(j) === true ? (onMyTrack(j) ? 0 : 1) : 2;
+  govt.sort((a, b) => rank(a) - rank(b) || bySoonestJob(a, b));
 
-  /* Closed openings are no longer fetched wholesale — see load(). The only
-     ones that arrive now are those marked applied, and those genuinely
-     matter: an application you sent is a thing you are waiting on. The 556
-     closed jobs nobody applied for that used to live here were the single
-     biggest block of noise on the screen. */
+  const areas = {};
+  govt.forEach(j => { const a = areaOf(j); areas[a] = (areas[a] || 0) + 1; });
+  const areaNames = Object.keys(areas).filter(a => a !== 'Other')
+    .sort((a, b) => areas[b] - areas[a]).concat(areas.Other ? ['Other'] : []);
+  if (govArea !== 'All' && !areas[govArea]) govArea = 'All';
+  const chip = a => `<button type="button" class="fchip" data-area="${escapeHtml(a)}" aria-pressed="${govArea === a}">${escapeHtml(a)}<b>${areas[a]}</b></button>`;
+  /* Five areas and "All" fit in two lines on a phone; the rest wait behind
+     "More" rather than pushing the openings a screen further down. */
+  const firstFive = areaNames.slice(0, 5), rest = areaNames.slice(5);
+  const showAll = areasOpen || rest.indexOf(govArea) !== -1;
+  document.getElementById('areaChips').innerHTML =
+    `<button type="button" class="fchip" data-area="All" aria-pressed="${govArea === 'All'}">All<b>${govt.length}</b></button>` +
+    firstFive.map(chip).join('') +
+    (rest.length ? (showAll ? rest.map(chip).join('') + '<button type="button" class="fchip" data-areas-more="0">Fewer</button>'
+                            : `<button type="button" class="fchip" data-areas-more="1">More (${rest.length})</button>`) : '');
+  const shown = govArea === 'All' ? govt : govt.filter(j => areaOf(j) === govArea);
+  document.getElementById('otherCount').textContent = String(govt.length);
+  document.getElementById('otherJobs').innerHTML = shown.length
+    ? shown.slice(0, govLimit).map(otherHtml).join('')
+    : '<div class="empty">No government opening is being tracked right now.</div>';
+  const more = document.getElementById('govMore');
+  more.classList.toggle('hidden', shown.length <= govLimit);
+  more.textContent = `Show more (${Math.max(0, shown.length - govLimit)} left)`;
+
+  document.getElementById('govMeta').textContent =
+    `${upcoming.length} exam${upcoming.length === 1 ? '' : 's'} · ${govt.length} openings`;
+
+  setFoldBody('privateFold', 'privateJobs', () => private_.map(otherHtml).join(''),
+    `From the job feed (${private_.length})`, private_.length === 0);
+  setFoldBody('notMineFold', 'notMineJobs', () => notMine.map(otherHtml).join(''),
+    `Not for your qualification (${notMine.length})`, notMine.length === 0);
+
+  /* Closed: what was marked applied (fetched on purpose — an application
+     you sent is a thing you are waiting on), and tracked rows whose exam has
+     been sat or whose window has shut. */
   setFoldBody('closedFold', 'closedJobs', () => closed.map(j => {
     const e = examForJob(j);
     return `<div class="other-row is-closed">
       <div class="other-main">
         <div class="other-org">${escapeHtml(j.organization)}</div>
         <div class="other-post">${escapeHtml(j.post_name)}</div>
-        <div class="other-meta">${escapeHtml(j.deadline_text || 'applications closed')}${
+        <div class="other-meta">${escapeHtml(closedWhy(j))}${
           applied[j.id] ? ' · <span class="ok-tag">you applied</span>' : ''}</div>
       </div>
       ${e && applied[j.id]
@@ -1001,13 +1362,14 @@ function render() {
   }).join(''), `Closed (${closed.length})`, closed.length === 0);
 }
 
-/** Applications closed. Three signals, because no single one is reliable
+
+/** Applications closed. Four signals, because no single one is reliable
     here: the status where the ingestion set it; the notification's own
     wording where it did not — "(applications closed)" in a title is explicit,
-    not an inference; and a real closing date that has passed. The date is
-    only trusted when the row is not an estimate — closing an opening on a
-    guessed date would hide one you could still apply for, the more damaging
-    of the two mistakes. */
+    not an inference; a real closing date that has passed (only trusted when
+    the row is not an estimate — closing an opening on a guessed date would
+    hide one you could still apply for); and the exam the row leads to,
+    when its paper has been sat or its application window has shut. */
 function isClosed(j){
   if (String(j.status || '').toUpperCase() === 'CLOSED') return true;
   const text = `${j.post_name || ''} ${j.deadline_text || ''}`;
@@ -1016,15 +1378,48 @@ function isClosed(j){
     const t = new Date(j.deadline).getTime();
     if (t && t < Date.now()) return true;
   }
-  return false;
+  return cycleOver(j) !== null;
 }
 
-/* Switching from an opening is the same switch the ☰ menu offers — one route,
-   so the app cannot end up with two ways to change the thing everything else
-   depends on. */
+/* THE EXAM SAYS SO. Reported as "it's showing the exams which have already
+   been completed": the tracked HAL row still read "Exam tentatively 15 Oct",
+   SSC's "Tier 1 window Aug–Sep", and all 18 TGPRB vacancies "Check the
+   official notification for dates" — a month after applications shut on
+   16 September. None of those rows carries a closing date the app can read,
+   but the exam they belong to does: its paper date, and for TS SI its
+   application window. A row first seen AFTER that date is a new cycle's
+   notification and is left alone — this closes the old cycle, never the
+   next one. */
+function cycleOver(j) {
+  const e = typeof examForJob === 'function' ? examForJob(j) : null;
+  if (!e) return null;
+  const today = todayISO();
+  const seen = j.first_seen_at ? String(j.first_seen_at).slice(0, 10) : null;
+  const sat = e.examDateEnd || e.examDateStart;
+  if (sat && sat < today && (!seen || seen <= sat)) return 'exam';
+  if (e.applyWindow && e.applyWindow.end < today && (!seen || seen <= e.applyWindow.end)) return 'window';
+  return null;
+}
+
+/** Why a row is in Closed, in words. */
+function closedWhy(j) {
+  const why = cycleOver(j);
+  const e = why ? examForJob(j) : null;
+  if (why === 'exam') return `${e.short} paper already held (${fmtShort(e.examDateEnd || e.examDateStart)})`;
+  if (why === 'window') return `Applications closed ${fmtShort(e.applyWindow.end)} · ${e.short} paper ${fmtShort(e.examDateStart)}`;
+  if (j.deadline && !j.is_estimated && new Date(j.deadline).getTime() < Date.now())
+    return 'Closed ' + fmtShort(j.deadline);
+  return j.deadline_text || 'applications closed';
+}
+
+/* An opening that leads to an exam the app prepares for goes straight to
+   that preparation — the plan if there is one, the prep page otherwise. */
 document.addEventListener('click', e => {
   const b = e.target.closest && e.target.closest('[data-switch-exam]');
-  if (b && window.JobhuntNav) window.JobhuntNav.openChangeExam();
+  if (!b) return;
+  const key = b.getAttribute('data-switch-exam');
+  const ex = (typeof EXAMS !== 'undefined' ? EXAMS : []).find(x => x.key === key);
+  location.href = ex && ex.plan ? ex.plan.href : '/learn.html?exam=' + encodeURIComponent(key) + '#study';
 });
 
 /* One card, answering the four things a tracked opening has to answer: have I
@@ -1104,51 +1499,6 @@ function areaOf(j) {
     if (AREA_RULES[i][1].test(text)) return AREA_RULES[i][0];
   }
   return 'Other';
-}
-
-function renderAreas() {
-  const box = document.getElementById('areasSec');
-  if (!box) return;
-
-  /* Only openings this candidate can actually apply for. The question is
-     "where do I fit", so a job that rules them out is not an answer to it. */
-  const mine = allJobs.filter(j => !isClosed(j) && eligibility(j) === true);
-  box.classList.toggle('hidden', mine.length === 0);
-  if (!mine.length) return;
-
-  const groups = {};
-  mine.forEach(j => { (groups[areaOf(j)] = groups[areaOf(j)] || []).push(j); });
-  const ordered = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length);
-
-  document.getElementById('areasSub').textContent =
-    mine.length + ' open posts you qualify for, across ' + ordered.length +
-    ' areas. Biggest first.';
-
-  /* Bodies deferred like the list folds: an area's rows are built the first
-     time the area is opened, not for every area on every render. */
-  document.getElementById('areasList').innerHTML = ordered.map((name, i) => {
-    const list = groups[name];
-    const soonest = list.find(j => daysLeft(j) !== null);
-    const when = soonest
-      ? 'next closes ' + new Date(soonest.deadline).toLocaleDateString('en-IN',
-          { day: 'numeric', month: 'short' })
-      : 'no dated closing';
-    return '<details class="area-fold"><summary>' +
-        '<span class="area-n">' + list.length + '</span>' +
-        '<span class="area-name">' + escapeHtml(name) + '</span>' +
-        '<span class="area-when">' + escapeHtml(when) + '</span>' +
-      '</summary><div class="area-body" data-area="' + i + '"></div></details>';
-  }).join('');
-  document.querySelectorAll('#areasList .area-body').forEach(body => {
-    const list = groups[ordered[+body.getAttribute('data-area')]].slice().sort((a, b) => {
-      const x = daysLeft(a), y = daysLeft(b);
-      if (x === null) return y === null ? 0 : 1;
-      if (y === null) return -1;
-      return x - y;
-    });
-    body.removeAttribute('data-area');
-    stashBody(body, () => list.map(otherHtml).join(''));
-  });
 }
 
 /* ── TODAY'S SHORTLIST ─────────────────────────────────────────────────────
@@ -1286,40 +1636,6 @@ function shortlistRows() {
   return rows.concat(openings).slice(0, SL_MAX);
 }
 
-function renderShortlist() {
-  const box = document.getElementById('shortlist');
-  if (!box) return;
-  const rows = shortlistRows();
-  box.classList.toggle('hidden', rows.length === 0);
-  if (!rows.length) return;
-
-  const soon = rows.filter(r => r.days !== null && r.days <= 7 && !r.applied).length;
-  document.getElementById('shortlistSub').textContent =
-    (soon ? soon + (soon === 1 ? ' thing needs' : ' things need') + ' attention this week. '
-          : 'Nothing is due in the next seven days. ') +
-    'Exams first, then engineer and officer-grade openings you qualify for.';
-
-  document.getElementById('shortlistBody').innerHTML = rows.map((r, i) =>
-    '<tr class="sl-row"' + (r.job ? ' data-sl-job="' + escapeHtml(r.job.id) + '"' : '') +
-      (r.exam ? ' data-sl-exam="' + escapeHtml(r.exam) + '"' : '') + '>' +
-      '<td><span class="sl-rank"><span class="sl-dot ' +
-        (r.applied ? 'green' : slBand(r.days)) + '"></span>' + (i + 1) + '</span></td>' +
-      '<td><div class="sl-name">' + escapeHtml(r.name) + '</div>' +
-        '<div class="sl-why">' + escapeHtml(r.why) + '</div></td>' +
-      '<td class="sl-status' + (r.applied ? ' is-applied' : '') + '">' +
-        escapeHtml(r.status) + '</td>' +
-    '</tr>').join('');
-}
-
-/* A shortlist row is a shortcut to the thing it names. */
-document.addEventListener('click', e => {
-  const row = e.target.closest && e.target.closest('[data-sl-exam]');
-  if (row && window.JobhuntNav) {
-    window.JobhuntNav.go ? window.JobhuntNav.go('study')
-      : (location.href = window.JobhuntNav.learnHref('study'));
-  }
-});
-
 function sectorOf(j) {
   const name = ((j.organization || '') + ' ' + (j.post_name || '')).toLowerCase();
   if (PRIVATE_NAMES.some(p => name.includes(p))) return 'private';
@@ -1356,13 +1672,17 @@ function marksFilterOn() {
   try { return localStorage.getItem(MARKS_FILTER_KEY) === '1'; } catch (e) { return false; }
 }
 
-/** Days until a real closing date. Null when there is no confirmed date —
-    never a guess, which is the rule the whole tracker is built on. */
+/** Calendar days until a real closing date — 0 means it closes today. Null
+    when there is no confirmed date: never a guess, which is the rule the
+    whole tracker is built on. Counted in the phone's own days, so a form
+    closing at 11:59 pm tonight reads "today", not "1 day". */
 function daysLeft(j) {
   if (!j.deadline) return null;
-  const t = new Date(j.deadline).getTime();
-  if (isNaN(t)) return null;
-  return Math.ceil((t - Date.now()) / 86400000);
+  const d = new Date(j.deadline);
+  if (isNaN(d.getTime())) return null;
+  d.setHours(0, 0, 0, 0);
+  const t = new Date(); t.setHours(0, 0, 0, 0);
+  return Math.round((d.getTime() - t.getTime()) / 86400000);
 }
 
 /** "… — 470 Posts" → "470". The feed puts the vacancy count in the title, and
@@ -1380,17 +1700,12 @@ function titleOf(j) {
 }
 
 /**
- * One opening in the folded list.
- *
- * This used to be three lines — organisation, title, and the raw
- * deadline_text — which on a list of fifty read as fifty near-identical grey
- * paragraphs, repeated the words "reported by FreeJobAlert, confirm on the
- * official notification" fifty times, and offered NO WAY TO APPLY. Every field
- * it needed was already on the client; `select=*` had been fetching them all
- * along and the renderer threw them away.
+ * One opening in a list.
  *
  * What a row has to answer, in the order it is asked: how long have I got,
- * what is it, am I eligible, and where do I apply.
+ * what is it, am I eligible, and where do I apply. The countdown is a colour
+ * and a number rather than a sentence to read; three days is the band where
+ * an application stops being something you can leave until the weekend.
  */
 function otherHtml(j) {
   const e = examForJob(j);
@@ -1398,13 +1713,11 @@ function otherHtml(j) {
   const vac = vacanciesOf(j);
   const elig = eligibility(j);
 
-  /* Urgency is the whole point of a deadline tracker, so it is a colour and a
-     number rather than a sentence to read. Three days is the band where an
-     application stops being something you can leave until the weekend. */
-  const urgency = left === null ? '' : left <= 3 ? ' is-urgent' : left <= 7 ? ' is-soon' : '';
+  const urgency = left === null ? ' is-none' : left <= 3 ? ' is-urgent' : left <= 7 ? ' is-soon' : '';
   const countdown = left === null
-    ? `<span class="cd-none">date TBA</span>`
-    : `<span class="cd-num">${left}</span><span class="cd-unit">day${left === 1 ? '' : 's'}</span>`;
+    ? `<b>—</b><small>date TBA</small>`
+    : left <= 0 ? `<b style="font-size:14px">Today</b><small>closes</small>`
+    : `<b>${left}</b><small>day${left === 1 ? '' : 's'}</small>`;
 
   /* WHAT "OPEN NOTIFICATION" ACTUALLY OPENS.
      This was `j.apply_url || j.notification_url`, and both columns held the
@@ -1420,23 +1733,22 @@ function otherHtml(j) {
     ? j.apply_url : null;
   const details = j.source_url || (isArticle(j.notification_url) ? j.notification_url : null);
 
-  return `<div class="other-row${urgency}">
-    <div class="other-cd">${countdown}</div>
+  return `<div class="other-row">
+    <div class="cd${urgency}">${countdown}</div>
     <div class="other-main">
       <div class="other-org">${escapeHtml(j.organization)}${
         vac ? ` · <span class="other-vac">${escapeHtml(vac)} posts</span>` : ''}</div>
       <div class="other-post">${escapeHtml(titleOf(j))}</div>
-      ${j.eligibility ? `<div class="other-elig">${escapeHtml(j.eligibility)}${
-        elig === true ? ' <span class="ok-tag">you qualify</span>'
-        : elig === false ? ' <span class="no-tag">not your qualification</span>'
-        : ''}</div>` : ''}
       <div class="other-meta">${
         left === null
           ? escapeHtml(j.deadline_text || 'closing date TBA')
-          : `Closes ${escapeHtml(new Date(j.deadline).toLocaleDateString('en-IN',
-              { day: 'numeric', month: 'short' }))}`
+          : `Closes ${escapeHtml(fmtShort(j.deadline))}`
       }${j.is_estimated ? ' <span class="est">estimate</span>' : ''}${
         applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}</div>
+      ${j.eligibility ? `<div class="other-elig">${escapeHtml(j.eligibility)}${
+        elig === true ? ' · <span class="ok-tag">you qualify</span>'
+        : elig === false ? ' · <span class="no-tag">not your qualification</span>'
+        : ''}</div>` : ''}
       <div class="other-actions">
         ${notif
           ? `<a class="other-apply" href="${escapeHtml(notif)}" target="_blank" rel="noopener">Open notification →</a>`
@@ -1445,14 +1757,12 @@ function otherHtml(j) {
             : ''}
         ${applyTo ? `<a class="other-apply other-applylink" href="${escapeHtml(applyTo)}" target="_blank" rel="noopener">Apply →</a>` : ''}
         ${applied[j.id]
-          ? `<button class="other-mark" data-unapply="${escapeHtml(j.id)}">Undo</button>`
+          ? `<button class="other-mark" data-unapply="${escapeHtml(j.id)}">Undo applied</button>`
           : `<button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button>`}
         ${e
-          ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">${escapeHtml(e.short)} →</button>`
-          /* Said plainly, because the alternative is an opening that looks as
-             prepared-for as the others and is not. It sits with the actions
-             rather than alone in the right margin, where fifty repetitions of
-             it were the only thing the column contained. */
+          ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">Prepare: ${escapeHtml(e.short)} →</button>`
+          /* Said plainly, because the alternative is an opening that looks
+             as prepared-for as the others and is not. */
           : `<span class="other-none">no syllabus yet</span>`}
       </div>
     </div>
@@ -1492,8 +1802,9 @@ function marksRowHtml(exam) {
   </div>`;
 }
 
+/** An opening that leads to one of your exams: the full card. */
 function cardHtml(j) {
-  const exam = currentExam();
+  const exam = examForJob(j) || currentExam();
   const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
   const elig = eligibility(j);
   /* Same rule as the list row: an aggregator article is never labelled
@@ -1502,6 +1813,7 @@ function cardHtml(j) {
   const cardNotif = !isArt(j.notification_url) ? j.notification_url : null;
   const cardApply = (j.apply_url && j.apply_url !== cardNotif && !isArt(j.apply_url)) ? j.apply_url : null;
   const cardDetails = j.source_url || (isArt(j.notification_url) ? j.notification_url : null);
+  const prep = exam ? (exam.plan ? exam.plan.href : '/learn.html?exam=' + encodeURIComponent(exam.key) + '#study') : examHref('study');
   return `
     <div class="card">
       <div class="card-top">
@@ -1509,7 +1821,7 @@ function cardHtml(j) {
           <div class="org">${escapeHtml(j.organization)}</div>
           <div class="post">${escapeHtml(j.post_name)}</div>
         </div>
-        <span class="badge ${escapeHtml(j.status)}">${escapeHtml(String(j.status || '').replace('_',' '))}</span>
+        <span class="badge ${escapeHtml(j.status)}">${escapeHtml(String(j.status || '').replace('_',' ').toLowerCase())}</span>
       </div>
 
       <div class="jrow">
@@ -1553,7 +1865,7 @@ function cardHtml(j) {
         ${cardApply ? `<a href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">Apply →</a>` : ''}
         ${cardDetails ? `<a href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>` : ''}
       </div>
-      <a class="study-now" href="${examHref('study')}">Study now →</a>
+      <a class="btn btn-primary btn-block study-now" href="${escapeHtml(prep)}">Prepare for it →</a>
     </div>
   `;
 }
@@ -1942,13 +2254,24 @@ function renderShrestha() {
   const shown = shJobs.filter(j => !j.duplicate_of);
   const live = shown.filter(j => j.status === 'live');
   const done = shown.filter(j => j.status !== 'live');
-  let html = live.map((j, i) => shCardHtml(j, shJobs.indexOf(j))).join('');
-  if (!live.length) html = '<div class="empty">No live postings right now.</div>';
-  if (done.length) {
-    html += `<details class="other-fold"><summary>Expired or stale (${done.length})</summary><div>` +
-      done.map(j => shCardHtml(j, shJobs.indexOf(j))).join('') + '</div></details>';
-  }
-  wrap.innerHTML = html;
+  /* A real fresher intake first. "Not a fit" stays one tap away, each with
+     its reason, so he can still try his luck with full information. */
+  const fit = live.filter(j => shFit(j).ok);
+  const notFit = live.filter(j => !shFit(j).ok);
+  const card = j => shCardHtml(j, shJobs.indexOf(j));
+  wrap.innerHTML = fit.length
+    ? fit.map(card).join('')
+    : '<div class="empty">No posting in the feed invites freshers right now. The rest are below, each with the reason it is not a fit.</div>';
+  const cnt = document.getElementById('shCount');
+  if (cnt) cnt.textContent = String(fit.length);
+  const pm = document.getElementById('pvtMeta');
+  if (pm) pm.textContent = `${fit.length} fresher job${fit.length === 1 ? '' : 's'} · ₹40 LPA+ path`;
+  const nf = document.getElementById('shNotFit');
+  if (nf) nf.innerHTML =
+    (notFit.length ? `<details class="fold" style="margin-top:10px"><summary>Not a fit right now (${notFit.length})</summary>
+      <div class="list" style="border:0;border-radius:0;box-shadow:none">${notFit.map(card).join('')}</div></details>` : '') +
+    (done.length ? `<details class="fold" style="margin-top:10px"><summary>Expired or stale (${done.length})</summary>
+      <div class="list" style="border:0;border-radius:0;box-shadow:none">${done.map(card).join('')}</div></details>` : '');
   renderShStudy();
 }
 
@@ -1958,20 +2281,19 @@ function renderShStudy() {
   if (!el) return;
   const approved = shJobs.filter(j =>
     ['approved', 'applied', 'interviewing'].includes(shStatusOf(j)));
+  const head = '<div class="sec-head" style="margin-top:22px"><h2>Interview study plan</h2></div>';
   if (!approved.length) {
-    el.innerHTML = `<h3 class="shrestha-h" style="margin-top:18px">Job interview study plan</h3>
-      <p class="sh-gate-note">Nothing here yet. Approve a job above and its study
+    el.innerHTML = head + `<p class="sec-sub">Nothing here yet. Approve a job above and its study
       session — interview questions, checklist, daily plan — lands here.</p>`;
     return;
   }
-  el.innerHTML = `<h3 class="shrestha-h" style="margin-top:18px">Job interview study plan</h3>
-    <p class="shrestha-sub">Check off what you finish. This is separate from exam prep.</p>` +
+  el.innerHTML = head + `<p class="sec-sub">Check off what you finish. This is separate from exam prep.</p>` +
     approved.map(j => {
       const c = shContent[j.key] || {};
       const st = shStatusOf(j);
       return `<div class="sh-card">
         <div class="sh-org">${escapeHtml(j.company || '')}</div>
-        <div class="sh-role" style="font-size:12.5px">${escapeHtml(j.role || '')}</div>
+        <div class="sh-role">${escapeHtml(j.role || '')}</div>
         <div class="sh-chips"><span class="sh-chip st-${st}">${SH_STEP_LABELS[st]}</span></div>
         <div class="sh-gate-note" data-sh-session="${escapeHtml(j.key)}">${
           c.session ? 'Loading session…' : 'Study session is being prepared after your approval.'}</div>
@@ -2054,6 +2376,8 @@ if ('serviceWorker' in navigator) {
 
 load();
 loadShrestha();
+renderTopPay();
+renderCodePath();
 </script>
 </body>
-                 </html>
+</html>

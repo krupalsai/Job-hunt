@@ -61,6 +61,10 @@
     "jobhunt_today_done",
     "jobhunt_pending_attempts",
     "jobhunt_study_roadmap_v1",
+    /* The TS SI plan (si.html): ticked tasks, mock scores, mistake notebook. */
+    "jobhunt_si_ticks_v1",
+    "jobhunt_si_mocks_v1",
+    "jobhunt_si_mistakes_v1",
   ];
 
   const exams = (typeof EXAMS !== "undefined" && Array.isArray(EXAMS)) ? EXAMS : [];
@@ -175,6 +179,8 @@
       inner + '</svg>';
   }
   const ICON = {
+    home:  svg('<path d="M3.5 10.5L12 3.5l8.5 7"/><path d="M5.5 9v10.5h4.75V14h3.5v5.5h4.75V9"/>'),
+    target: svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v4.5l3 2"/><path d="M8.5 2.8h7"/>'),
     jobs:  svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A2.5 2.5 0 0 1 10.5 3h3A2.5 2.5 0 0 1 16 5.5V7"/><path d="M3 12.5h18"/>'),
     study: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
     test:  svg('<path d="M9 11.5l2.5 2.5L21 4.5"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'),
@@ -194,270 +200,239 @@
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
   };
 
-  /* ── The three destinations in the bar ───────────────────────────────────
-     All three are sections of the prep page. Everything else — Jobs, the
-     lessons, the run, current affairs, the syllabus — is in the menu: they are
-     opened when you want them, not every day, and a permanent slot for one of
-     them costs a slot Study or Test needs every day. */
+  /* ── The four destinations in the bar ────────────────────────────────────
+     Home is the news: what is coming up, what is open to apply for, then the
+     Government / Private choice. Study, Test and Progress are the prep. For
+     TS SI, Study IS the 47-day plan (si.html) — one place to answer "what do
+     I do today", not two competing lists. Everything else — lessons, current
+     affairs, the syllabus, the Professor — is in the menu. */
   const DESTS = [
-    { id: "study",    label: "Study",    icon: ICON.study, section: "study" },
-    { id: "test",     label: "Test",     icon: ICON.test,  section: "test" },
-    { id: "progress", label: "Progress", icon: ICON.stats, section: "progress" },
+    { id: "home",     label: "Home",     icon: null,       href: "/" },
+    { id: "study",    label: "Study",    icon: null,       section: "study" },
+    { id: "test",     label: "Test",     icon: null,       section: "test" },
+    { id: "progress", label: "Progress", icon: null,       section: "progress" },
   ];
 
   /* ── The destinations in the menu ────────────────────────────────────────
-     Study answers "what do I study now" and nothing else. These are the rest
-     of the app, one row each, named on the row exactly as they are titled on
-     the screen they open. Jobs is a page; the other four are sections of the
-     prep page. */
+     Named on the row exactly as they are titled on the screen they open.
+     Pages (plain:true) are real links; the rest are sections of the prep page. */
   const MENU_DESTS = [
-    { id: "jobs", label: "Jobs", icon: ICON.jobs, href: "/",
-      sub: "Openings tracked for this exam" },
-    { id: "feed", label: "Instinct", icon: ICON.spark, href: "/feed.html",
-      sub: "lessons, quizzes and job lists as they are sent" },
-    /* Professor is its own page (chat.html), not a section of the prep page —
-       plain:true keeps the drawer href rewrite and the in-page section switch
-       from ever treating it as one. */
-    { id: "professor", label: "Professor", icon: ICON.chat, href: "/chat.html",
-      plain: true, sub: "Ask the professor anything, explained simply" },
-    { id: "lessons", label: "All lessons", icon: ICON.book,
+    { id: "si-plan", label: "TS SI 47-day plan", icon: null, href: "/si.html", plain: true,
+      sub: "Today's tasks, the paper decoded, your mock scores" },
+    { id: "lessons", label: "All lessons", icon: null,
       sub: "Every subject, and every topic inside it" },
-    { id: "plan", label: "The run to the exam", icon: ICON.cal,
+    { id: "plan", label: "The run to the exam", icon: null,
       sub: "One day at a time, counted back from the exam" },
-    { id: "current-affairs", label: "Current affairs", icon: ICON.news,
+    { id: "current-affairs", label: "Current affairs", icon: null,
       sub: "What has been written in, and today's live feeds" },
-    { id: "syllabus", label: "Syllabus", icon: ICON.exam,
+    { id: "syllabus", label: "Syllabus", icon: null,
       sub: "Pattern, marking, time budget, exam-hall tactics" },
+    { id: "professor", label: "Professor", icon: null, href: "/chat.html", plain: true,
+      sub: "Ask anything, explained simply" },
+    { id: "feed", label: "Instinct", icon: null, href: "/feed.html", plain: true,
+      sub: "Lessons, quizzes and job lists as they are sent" },
   ];
+  /* Icons are attached here rather than inline so the lists above read as a
+     plain table of names. */
+  const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
+    "si-plan": "target", lessons: "book", plan: "cal", "current-affairs": "news",
+    syllabus: "exam", professor: "chat", feed: "spark" };
+  DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
-  /* Jobs and Instinct are their own pages; the rest are sections of the
-     prep page. */
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
   function learnHref(section) {
     return "/learn.html?exam=" + encodeURIComponent(currentKey) + (section ? "#" + section : "");
   }
+  /** Where Study goes. TS SI has an authored day-by-day plan; it is the study
+      screen for that exam. Every other exam keeps the prep page's Study. */
+  const studyHref = () => currentKey === "ts-si" ? "/si.html" : learnHref("study");
+  const studyIsPage = () => currentKey === "ts-si";
 
-  let activeId = IS_LEARN ? "study" : PAGE;
+  let activeId = IS_LEARN ? "study" : PAGE === "jobs" ? "home" : PAGE === "si" ? "study" : PAGE;
 
   /* ── Styles ──────────────────────────────────────────────────────────────
-     Own namespace (--nav-*) rather than the pages' variables: index.html has
-     never declared any, and a navigation that renders unstyled on one of the
-     two pages is worse than one that repeats six colour values. */
+     Every value comes from ui.css, with a fallback so a page that has not
+     loaded it yet still gets a usable bar. */
   (function injectCss() {
     const s = document.createElement("style");
     s.textContent = `
-:root{
-  --nav-bg:#f5f6f8; --nav-panel:#ffffff; --nav-line:#e4e7ec; --nav-accent:#4f46e5;
-  --nav-accent-soft:#4338ca; --nav-text:#0f172a; --nav-muted:#5b6b7a; --nav-dim:#8794a1;
-  --nav-bar-bg:#f5f6f8ef; --nav-scrim:#0f172a66; --nav-on-accent:#ffffff;
-  --nav-tint:#4f46e514; --nav-tint-2:#4f46e526; --nav-tint-line:#4f46e555;
-  --nav-h:60px;
-}
-/* The navigation follows the phone's setting, same as both pages do. Its own
-   namespace is redefined rather than reusing theirs, because index.html has
-   never declared page variables and a bar that renders unstyled on one of the
-   two pages is worse than one that repeats a dozen values. */
-@media (prefers-color-scheme: dark){
-  :root{
-    --nav-bg:#0b0f16; --nav-panel:#131a26; --nav-line:#212b3a; --nav-accent:#818cf8;
-    --nav-accent-soft:#a5b4fc; --nav-text:#e2e8f0; --nav-muted:#94a3b8; --nav-dim:#64748b;
-    --nav-bar-bg:#0b0f16f7; --nav-scrim:#020617b8; --nav-on-accent:#ffffff;
-    --nav-tint:#818cf81a; --nav-tint-2:#818cf833; --nav-tint-line:#818cf866;
-  }
-}
-html{ -webkit-text-size-adjust:100%; }
-body{ overflow-x:hidden; padding-bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom)); }
+body{ overflow-x:hidden; padding-bottom:calc(var(--bar-h, 64px) + 18px + env(safe-area-inset-bottom)); }
 
-/* Top bar — the menu, and the exam this whole screen is about. */
-.nav-bar{ display:flex; align-items:center; gap:10px; }
-.nav-burger{
-  flex:0 0 auto; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
-  background:transparent; border:1px solid var(--nav-line); border-radius:10px;
-  color:var(--nav-text); cursor:pointer; padding:0;
+/* App bar — the same on every page: menu, screen title, the exam under it. */
+body > header{
+  position:sticky; top:0; z-index:30; margin:0;
+  padding:calc(6px + env(safe-area-inset-top)) 10px 6px 6px;
+  background:var(--surface, #fff); border-bottom:1px solid var(--line, #e1e6ee);
+  -webkit-backdrop-filter:none; backdrop-filter:none; box-shadow:none;
 }
-.nav-burger:active{ background:var(--nav-line); }
-.nav-item:active, .nav-row:active, .pick-row:active{ filter:brightness(.88); }
+body > header.is-brand{ background:var(--brand, #0e2654); border-bottom-color:transparent; color:var(--on-brand, #fff); }
+.nav-bar{ display:flex; align-items:center; gap:6px; min-height:46px; }
+.nav-burger{
+  flex:0 0 auto; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+  background:transparent; border:0; border-radius:999px; color:inherit; cursor:pointer; padding:0;
+}
+.nav-burger:hover{ background:var(--surface-3, #edf0f5); }
+body > header.is-brand .nav-burger:hover{ background:rgba(255,255,255,.1); }
+.nav-burger .nav-ico{ width:23px; height:23px; }
 .nav-title{ flex:1 1 auto; min-width:0; }
-.nav-title h1{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-/* The exam name is on every screen, in the same place, so the question "which
-   exam is this for?" is answered before it is asked. */
-.nav-exam{
-  display:block; font-size:11.5px; line-height:1.35; color:var(--nav-accent-soft);
+.nav-title h1{
+  margin:0; font-size:18px; font-weight:750; letter-spacing:-.015em; line-height:1.2;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-.nav-exam .nav-when{ color:var(--nav-dim); }
+.nav-exam{
+  display:block; margin-top:1px; font-size:12.5px; line-height:1.35; color:var(--muted, #5b677a);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.nav-exam b{ color:var(--accent, #2353d3); font-weight:700; }
+body > header.is-brand .nav-exam{ color:var(--on-brand-2, #c3d1ee); }
+body > header.is-brand .nav-exam b{ color:var(--on-brand, #fff); }
+.nav-exam .nav-when{ color:inherit; }
 
-/* Bottom bar */
+/* Bottom bar — four destinations, the current one in a pill. */
 nav#nav-bottom{
-  position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex;
-  margin:0; padding:0 0 env(safe-area-inset-bottom); overflow:visible; max-width:none;
-  background:var(--nav-bar-bg); border-top:1px solid var(--nav-line);
-  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; justify-content:center;
+  margin:0; padding:0 4px env(safe-area-inset-bottom); max-width:none;
+  background:var(--surface, #fff); border-top:1px solid var(--line, #e1e6ee);
+  box-shadow:0 -4px 16px rgba(12,21,36,.05);
 }
 nav#nav-bottom .nav-item{
-  position:relative; flex:1 1 0; min-width:0; height:var(--nav-h);
+  position:relative; flex:1 1 0; max-width:140px; min-width:0; height:var(--bar-h, 64px);
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-  background:transparent; border:0; border-radius:0; padding:0 2px;
-  color:var(--nav-dim); text-decoration:none; cursor:pointer;
-  font-family:inherit; font-size:10.5px; font-weight:600; white-space:nowrap;
+  background:transparent; border:0; padding:0 2px; cursor:pointer;
+  color:var(--muted, #5b677a); text-decoration:none;
+  font-family:inherit; font-size:12px; font-weight:650; white-space:nowrap;
 }
+nav#nav-bottom .nav-pill{
+  width:60px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+  transition:background .15s ease;
+}
+nav#nav-bottom .nav-item .nav-ico{ width:23px; height:23px; }
 nav#nav-bottom .nav-item .nav-lbl{ max-width:100%; overflow:hidden; text-overflow:ellipsis; }
-nav#nav-bottom .nav-item .nav-ico{ width:21px; height:21px; }
-nav#nav-bottom .nav-item.is-on{ color:var(--nav-accent); }
-nav#nav-bottom .nav-item.is-on .nav-lbl{ font-weight:800; }
-nav#nav-bottom .nav-item.is-on::before{
-  content:""; position:absolute; top:0; left:50%; margin-left:-13px;
-  width:26px; height:3px; border-radius:0 0 3px 3px; background:var(--nav-accent);
-}
+nav#nav-bottom .nav-item.is-on{ color:var(--ink, #0c1524); font-weight:800; }
+nav#nav-bottom .nav-item.is-on .nav-pill{ background:var(--accent-soft, #eaf0fe); color:var(--accent, #2353d3); }
+nav#nav-bottom .nav-item:hover{ text-decoration:none; }
 
 /* Menu */
 #nav-scrim{
-  position:fixed; inset:0; z-index:70; background:#020617b8; opacity:0;
+  position:fixed; inset:0; z-index:70; background:rgba(4,10,22,.55); opacity:0;
   transition:opacity .18s ease; pointer-events:none;
 }
 #nav-scrim.is-open{ opacity:1; pointer-events:auto; }
 #nav-drawer{
-  position:fixed; top:0; bottom:0; left:0; z-index:80; width:min(304px, 86vw);
-  background:var(--nav-bg); border-right:1px solid var(--nav-line);
-  transform:translateX(-102%); transition:transform .2s ease;
+  position:fixed; top:0; bottom:0; left:0; z-index:80; width:min(320px, 88vw);
+  background:var(--surface, #fff); box-shadow:var(--shadow-3, 0 12px 32px rgba(0,0,0,.2));
+  transform:translateX(-104%); transition:transform .2s ease;
   display:flex; flex-direction:column; overflow-y:auto; overscroll-behavior:contain;
   padding-bottom:calc(20px + env(safe-area-inset-bottom));
 }
 #nav-drawer.is-open{ transform:translateX(0); }
 .nav-acct{
-  display:flex; align-items:center; gap:12px; padding:18px 16px 16px;
-  border-bottom:1px solid var(--nav-line); background:var(--nav-panel);
+  display:flex; align-items:center; gap:12px;
+  padding:calc(18px + env(safe-area-inset-top)) 14px 18px 16px;
+  background:var(--brand, #0e2654); color:var(--on-brand, #fff);
 }
 .nav-avatar{
-  flex:0 0 auto; width:42px; height:42px; border-radius:50%; background:var(--nav-tint);
-  border:1px solid var(--nav-tint-line); display:flex; align-items:center; justify-content:center;
+  flex:0 0 auto; width:44px; height:44px; border-radius:14px; background:rgba(255,255,255,.12);
+  display:flex; align-items:center; justify-content:center;
 }
-.nav-avatar .nav-ico{ width:22px; height:22px; color:var(--nav-accent); }
-.pick-mark .nav-ico{ width:26px; height:26px; color:var(--nav-accent); }
+.nav-avatar .nav-ico{ width:24px; height:24px; color:#fff; }
 .nav-acct-main{ min-width:0; flex:1; }
-.nav-acct-name{ font-size:14.5px; font-weight:700; color:var(--nav-text);
-                overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.nav-acct-sub{ font-size:11.5px; color:var(--nav-muted); margin-top:2px; line-height:1.4; }
+.nav-acct-name{ font-size:16px; font-weight:750; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nav-acct-sub{ font-size:12.5px; color:var(--on-brand-2, #c3d1ee); margin-top:2px; line-height:1.4; }
 .nav-drawer-close{
-  flex:0 0 auto; width:32px; height:32px; background:transparent; border:0; padding:0;
-  color:var(--nav-dim); cursor:pointer;
+  flex:0 0 auto; width:40px; height:40px; background:transparent; border:0; padding:0; border-radius:999px;
+  color:var(--on-brand-2, #c3d1ee); cursor:pointer; display:flex; align-items:center; justify-content:center;
 }
+.nav-drawer-close .nav-ico{ width:22px; height:22px; }
 .nav-group{
-  font-size:10px; text-transform:uppercase; letter-spacing:.7px; font-weight:700;
-  color:var(--nav-dim); padding:16px 16px 6px;
+  font-size:11px; text-transform:uppercase; letter-spacing:.08em; font-weight:750;
+  color:var(--faint, #8792a4); padding:18px 18px 6px;
 }
 .nav-row{
-  display:flex; align-items:center; gap:12px; width:100%; min-height:46px; text-align:left;
-  padding:11px 16px; background:transparent; border:0; color:var(--nav-text);
-  text-decoration:none; cursor:pointer; font-family:inherit; font-size:13.5px;
+  display:flex; align-items:center; gap:16px; width:100%; min-height:56px; text-align:left;
+  padding:12px 18px; background:transparent; border:0; color:var(--ink, #0c1524);
+  text-decoration:none; cursor:pointer; font-family:inherit; font-size:15px; font-weight:650; line-height:1.3;
 }
-.nav-row:active{ background:var(--nav-panel); }
-.nav-row .nav-ico{ flex:0 0 auto; width:19px; height:19px; color:var(--nav-muted); }
+.nav-row:hover{ background:var(--surface-2, #f6f8fb); text-decoration:none; }
+.nav-row .nav-ico{ flex:0 0 auto; width:22px; height:22px; color:var(--muted, #5b677a); }
 .nav-row-main{ display:block; flex:1; min-width:0; }
 .nav-row-main > span{ display:block; }
-.nav-row-sub{ font-size:11px; color:var(--nav-dim); margin-top:2px; line-height:1.4;
-              overflow:hidden; text-overflow:ellipsis; }
-.nav-row.is-on{ color:var(--nav-accent-soft); }
-.nav-row.is-on .nav-ico{ color:var(--nav-accent); }
-.nav-chip{
-  flex:0 0 auto; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
-  padding:3px 8px; border-radius:20px; background:var(--nav-tint-2); color:var(--nav-accent-soft);
+.nav-row-sub{ font-size:12.5px; font-weight:500; color:var(--muted, #5b677a); margin-top:3px; line-height:1.4; }
+.nav-row.is-on{ color:var(--accent, #2353d3); background:var(--accent-soft, #eaf0fe); }
+.nav-row.is-on .nav-ico{ color:var(--accent, #2353d3); }
+.nav-sep{ height:1px; background:var(--line, #e1e6ee); margin:10px 18px 0; }
+.nav-field{ padding:6px 18px 6px; }
+.nav-field label{ display:block; font-size:12.5px; font-weight:650; color:var(--muted, #5b677a); margin-bottom:6px; }
+.nav-field input[type="number"], .nav-field input[type="date"], .nav-field input[type="text"], .nav-field select{
+  width:100%; min-height:44px; background:var(--surface, #fff); color:var(--ink, #0c1524); font-family:inherit;
+  font-size:15px; padding:9px 12px; border:1px solid var(--line-2, #cfd6e1); border-radius:12px;
 }
-.nav-sep{ height:1px; background:var(--nav-line); margin:10px 16px 0; }
-.nav-field{ padding:6px 16px 4px; }
-.nav-field label{ display:block; font-size:11.5px; color:var(--nav-muted); margin-bottom:6px; }
-.nav-field input[type="number"]{
-  width:100%; background:var(--nav-panel); color:var(--nav-text); font-family:inherit;
-  font-size:14px; padding:9px 10px; border:1px solid var(--nav-line); border-radius:10px;
-}
-.nav-hint{ font-size:11px; color:var(--nav-muted); line-height:1.55; margin-top:6px; }
-.nav-hint strong{ color:var(--nav-text); }
+.nav-hint{ font-size:12px; color:var(--muted, #5b677a); line-height:1.5; margin-top:6px; }
+.nav-hint strong{ color:var(--ink, #0c1524); }
 .nav-conv{ margin-top:8px; }
-.nav-conv summary{ font-size:11.5px; color:var(--nav-accent-soft); cursor:pointer;
-                   font-weight:700; list-style:none; }
+.nav-conv summary{ font-size:12.5px; color:var(--accent, #2353d3); cursor:pointer; font-weight:700; list-style:none; }
 .nav-conv summary::-webkit-details-marker{ display:none; }
-.nav-field select{
-  width:100%; background:var(--nav-panel); color:var(--nav-text); font-family:inherit;
-  border:1px solid var(--nav-line); border-radius:9px; padding:9px 10px; font-size:13px;
-}
-.nav-danger{ color:#dc2626; }
-.nav-danger .nav-ico{ color:#dc2626; }
-.nav-foot{ margin-top:auto; padding:18px 16px 4px; font-size:10.5px; color:var(--nav-dim); line-height:1.5; }
+.nav-danger{ color:var(--bad, #c01c1c); }
+.nav-danger .nav-ico{ color:var(--bad, #c01c1c); }
+.nav-foot{ margin-top:auto; padding:18px 18px 4px; font-size:11.5px; color:var(--faint, #8792a4); line-height:1.5; }
 
 /* ── The exam screen ──────────────────────────────────────────────────────
-   One component, two jobs: the question asked on first open, and Change exam.
-   Same list and same control both times, so the second time you already know
-   how it works. It covers the app because with no exam chosen there is
-   nothing behind it that means anything. */
+   One component, two jobs: the question asked on first open, and Change exam. */
 #nav-picker{
-  position:fixed; inset:0; z-index:200; display:none; background:var(--nav-bg);
+  position:fixed; inset:0; z-index:200; display:none; background:var(--bg, #f2f4f8);
   overflow-y:auto; overscroll-behavior:contain;
   padding:calc(26px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));
 }
 #nav-picker.is-open{ display:block; }
-.pick-inner{ max-width:520px; margin:0 auto; }
+.pick-inner{ max-width:560px; margin:0 auto; }
 .pick-mark{
-  width:50px; height:50px; border-radius:15px; background:var(--nav-tint); border:1px solid var(--nav-tint-line);
-  display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:14px;
+  width:52px; height:52px; border-radius:16px; background:var(--brand, #0e2654);
+  display:flex; align-items:center; justify-content:center; margin-bottom:16px;
 }
-.pick-h{ font-size:21px; line-height:1.28; margin:0 0 8px; color:var(--nav-text); }
-.pick-p{ font-size:12.5px; line-height:1.55; color:var(--nav-muted); margin:0 0 18px; }
-.pick-group{
-  font-size:10px; text-transform:uppercase; letter-spacing:.8px; font-weight:700;
-  color:var(--nav-dim); margin:18px 0 8px;
-}
+.pick-mark .nav-ico{ width:26px; height:26px; color:#fff; }
+.pick-h{ font-size:24px; font-weight:800; letter-spacing:-.02em; line-height:1.25; margin:0 0 8px; color:var(--ink, #0c1524); }
+.pick-p{ font-size:14px; line-height:1.55; color:var(--muted, #5b677a); margin:0 0 18px; }
+.pick-group{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; font-weight:750; color:var(--faint, #8792a4); margin:18px 0 8px; }
 .pick-row{
   display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left;
-  margin-bottom:10px; cursor:pointer; background:var(--nav-panel);
-  border:1px solid var(--nav-line); border-radius:14px; padding:14px 15px;
-  color:var(--nav-text); font-family:inherit;
+  margin-bottom:10px; cursor:pointer; background:var(--surface, #fff);
+  border:1px solid var(--line, #e1e6ee); border-radius:16px; padding:15px 16px;
+  color:var(--ink, #0c1524); font-family:inherit; box-shadow:var(--shadow-1, none);
 }
-.pick-row[aria-checked="true"]{ border-color:var(--nav-accent); background:var(--nav-tint); }
+.pick-row[aria-checked="true"]{ border-color:var(--accent, #2353d3); box-shadow:0 0 0 2px var(--accent-line, #c6d5fb); }
 .pick-row[disabled]{ cursor:default; opacity:1; }
 .pick-dot{
-  flex:0 0 auto; width:20px; height:20px; border-radius:50%; margin-top:2px;
-  border:2px solid var(--nav-dim); display:flex; align-items:center; justify-content:center;
+  flex:0 0 auto; width:22px; height:22px; border-radius:50%; margin-top:1px;
+  border:2px solid var(--line-2, #cfd6e1); display:flex; align-items:center; justify-content:center;
 }
-.pick-row[aria-checked="true"] .pick-dot{ border-color:var(--nav-accent); }
-.pick-elig{ display:block; font-size:12px; font-weight:600; margin-top:6px; }
-.pick-elig-yes{ color:var(--nav-accent); }
-.pick-elig-no{ color:#dc2626; }
-.pick-elig-check{ color:var(--nav-muted); font-weight:500; }
-.pick-row[aria-checked="true"] .pick-dot::after{
-  content:""; width:10px; height:10px; border-radius:50%; background:var(--nav-accent);
-}
+.pick-row[aria-checked="true"] .pick-dot{ border-color:var(--accent, #2353d3); }
+.pick-row[aria-checked="true"] .pick-dot::after{ content:""; width:11px; height:11px; border-radius:50%; background:var(--accent, #2353d3); }
+.pick-elig{ display:block; font-size:12.5px; font-weight:650; margin-top:7px; }
+.pick-elig-yes{ color:var(--ok, #13793a); }
+.pick-elig-no{ color:var(--bad, #c01c1c); }
+.pick-elig-check{ color:var(--muted, #5b677a); font-weight:500; }
 .pick-body{ flex:1; min-width:0; }
-/* Block, not inline: these are spans so they can sit inside a <button>, and
-   without this the exam's name and its pattern run together on one line. */
-.pick-name{ display:block; font-size:15px; font-weight:700; line-height:1.3; }
-.pick-meta{ display:block; font-size:11.5px; color:var(--nav-muted); margin-top:5px; line-height:1.5; }
-.pick-when{ color:var(--nav-accent-soft); font-weight:600; }
-.pick-warn{ color:#dc2626; font-weight:600; }
-.pick-current{ border-color:var(--nav-tint-line); background:var(--nav-tint); }
-.pick-tick{ flex:0 0 auto; color:var(--nav-accent); font-size:17px; line-height:1; margin-top:2px; }
-.pick-foot{ font-size:11.5px; color:var(--nav-dim); line-height:1.55; margin-top:14px; }
-/* The commit button is pinned: on a small screen the third exam can push it
-   below the fold, and a button you have to hunt for is a button that gets
-   missed. */
+.pick-name{ display:block; font-size:16px; font-weight:750; line-height:1.3; }
+.pick-meta{ display:block; font-size:13px; color:var(--muted, #5b677a); margin-top:5px; line-height:1.5; }
+.pick-when{ color:var(--accent, #2353d3); font-weight:650; }
+.pick-warn{ color:var(--warn, #a85006); font-weight:650; }
+.pick-current{ border-color:var(--accent-line, #c6d5fb); background:var(--accent-soft, #eaf0fe); }
+.pick-tick{ flex:0 0 auto; color:var(--accent, #2353d3); font-size:18px; line-height:1; margin-top:2px; }
+.pick-foot{ font-size:12.5px; color:var(--faint, #8792a4); line-height:1.55; margin-top:14px; }
 .pick-bar{
   position:fixed; left:0; right:0; bottom:0; z-index:201;
   padding:12px 16px calc(12px + env(safe-area-inset-bottom));
-  background:var(--nav-bar-bg); border-top:1px solid var(--nav-line);
-  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  background:var(--surface, #fff); border-top:1px solid var(--line, #e1e6ee);
 }
 .pick-go{
-  display:block; width:100%; max-width:520px; margin:0 auto; min-height:48px;
-  border:0; border-radius:12px; font-family:inherit; font-size:15px; font-weight:800;
-  letter-spacing:.02em; background:var(--nav-accent); color:var(--nav-on-accent); cursor:pointer;
+  display:block; width:100%; max-width:560px; margin:0 auto; min-height:50px;
+  border:0; border-radius:14px; font-family:inherit; font-size:16px; font-weight:800;
+  background:var(--accent, #2353d3); color:var(--on-accent, #fff); cursor:pointer;
 }
-.pick-go[disabled]{ background:var(--nav-line); color:var(--nav-dim); cursor:default; }
+.pick-go[disabled]{ background:var(--surface-3, #edf0f5); color:var(--faint, #8792a4); cursor:default; }
 
-@media (min-width:820px){
-  nav#nav-bottom{ justify-content:center; }
-  nav#nav-bottom .nav-item{ flex:0 0 132px; }
-}
 @media (prefers-reduced-motion:reduce){
-  #nav-drawer, #nav-scrim{ transition:none; }
+  #nav-drawer, #nav-scrim, nav#nav-bottom .nav-pill{ transition:none; }
 }
 `;
     document.head.appendChild(s);
@@ -469,11 +444,15 @@ nav#nav-bottom .nav-item.is-on::before{
     return DESTS.map(d => {
       const on = d.id === activeId;
       const cls = "nav-item" + (on ? " is-on" : "");
-      const body = d.icon + '<span class="nav-lbl">' + esc(d.label) + "</span>";
+      const body = '<span class="nav-pill">' + d.icon + '</span><span class="nav-lbl">' + esc(d.label) + "</span>";
       const cur = on ? ' aria-current="page"' : "";
-      // On the prep page three of the four are sections of the page you are
-      // already on, so they switch rather than navigate — no reload, no losing
-      // your place in a lesson.
+      // Study for TS SI is its own page (the 47-day plan), so it is always a
+      // real link. Elsewhere on the prep page the three prep destinations are
+      // sections of the page you are on: they switch rather than navigate, so
+      // no reload and no losing your place in a lesson.
+      if (d.id === "study" && studyIsPage()) {
+        return '<a class="' + cls + '" data-tab="study" href="' + esc(studyHref()) + '"' + cur + ">" + body + "</a>";
+      }
       if (d.section && IS_LEARN) {
         return '<button type="button" class="' + cls + '" data-tab="' + d.id + '"' + cur + '>' + body + "</button>";
       }
@@ -513,7 +492,8 @@ nav#nav-bottom .nav-item.is-on::before{
         '<span class="nav-row-main"><span>Change exam</span>' +
         '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
 
-      MENU_DESTS.map(d =>
+      '<div class="nav-group">Go to</div>' +
+      MENU_DESTS.filter(d => !(d.id === "plan" && studyIsPage())).map(d =>
         '<a class="nav-row' + (activeId === d.id ? " is-on" : "") + '" data-goto="' + d.id + '"' +
           (d.plain ? ' data-plain="1"' : "") + ' href="' +
           esc(d.href || learnHref(d.id)) + '">' + d.icon +
@@ -521,7 +501,7 @@ nav#nav-bottom .nav-item.is-on::before{
           '<span class="nav-row-sub">' + esc(d.sub) + "</span></span></a>").join("") +
 
       '<div class="nav-sep"></div>' +
-      '<div class="nav-group">Settings</div>' +
+      '<div class="nav-group">About you</div>' +
       '<div class="nav-field">' +
         '<label for="qualSel">My qualification</label>' +
         '<select id="qualSel">' +
@@ -792,7 +772,7 @@ nav#nav-bottom .nav-item.is-on::before{
     // Jobs is a different page, not a section of the prep page — it must
     // navigate for real, never be caught as an in-page section switch. Plain
     // pages (data-plain) are the same: real links, no section to switch to.
-    if (row && IS_LEARN && row.getAttribute("data-goto") !== "jobs" && !row.hasAttribute("data-plain")) {
+    if (row && IS_LEARN && !row.hasAttribute("data-plain")) {
       e.preventDefault();
       closeAll();
       go(row.getAttribute("data-goto"));
@@ -906,7 +886,7 @@ nav#nav-bottom .nav-item.is-on::before{
     const line = document.getElementById("nav-exam");
     if (line) {
       line.innerHTML = ex
-        ? esc(ex.short) + ' <span class="nav-when">· ' + esc(when.short) + "</span>"
+        ? "<b>" + esc(ex.short) + '</b> <span class="nav-when">· ' + esc(when.short) + "</span>"
         : "No exam chosen";
     }
     const label = document.getElementById("exam-label");
@@ -921,7 +901,7 @@ nav#nav-bottom .nav-item.is-on::before{
       // Jobs always points at "/" — it is a different page, not a section of
       // the prep page, so it never takes the ?exam=…#section shape the others do.
       // Plain pages (data-plain, e.g. the Professor chat) keep their own href.
-      if (!IS_LEARN && goto !== "jobs" && !r.hasAttribute("data-plain"))
+      if (!IS_LEARN && !r.hasAttribute("data-plain"))
         r.setAttribute("href", learnHref(goto));
     });
 
@@ -968,5 +948,5 @@ nav#nav-bottom .nav-item.is-on::before{
      would render "No syllabus loaded." with its Continue button permanently
      disabled and no way to dismiss it — the whole page stuck behind a modal
      that can never be completed. */
-  if (!hasChosen && exams.some(activeExam)) openPicker("first");
+  if (IS_LEARN && !hasChosen && exams.some(activeExam)) openPicker("first");
 })();

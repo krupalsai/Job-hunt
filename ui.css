@@ -1,0 +1,375 @@
+/* ============================================================================
+   UI — one design system for every page.
+
+   The app had four stylesheets that each declared their own colours, their own
+   card, their own button and their own idea of spacing, and it looked like it:
+   a different app on every screen, with indigo chrome borrowed from a template.
+   This file is the single source of truth now. Pages keep only the layout that
+   is genuinely theirs, and every colour, radius, shadow and type size comes
+   from the tokens below.
+
+   Rules this file holds to:
+     · Tokens, never literals, in components — a literal is a colour that only
+       works in one scheme.
+     · Phone first: 16px gutters, 44px minimum tap targets, nothing that scrolls
+       sideways at 390px.
+     · Hierarchy by size and weight, not by colour. Colour carries meaning only:
+       blue = act, green = government / done, violet = private, amber = soon,
+       red = urgent or wrong.
+     · The system face only (see fonts/fonts.css) — nothing to download.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces */
+  --bg:        #f2f4f8;
+  --surface:   #ffffff;
+  --surface-2: #f6f8fb;
+  --surface-3: #edf0f5;
+  --line:      #e1e6ee;
+  --line-2:    #cfd6e1;
+
+  /* Text */
+  --ink:   #0c1524;
+  --ink-2: #2f3b4e;
+  --muted: #5b677a;
+  --faint: #8792a4;
+
+  /* Brand — deep navy for the chrome that frames the app */
+  --brand:     #0e2654;
+  --brand-2:   #17387a;
+  --brand-3:   #234b9a;
+  --on-brand:  #ffffff;
+  --on-brand-2:#c3d1ee;
+
+  /* Action */
+  --accent:      #2353d3;
+  --accent-2:    #1a43b0;
+  --accent-soft: #eaf0fe;
+  --accent-line: #c6d5fb;
+  --accent-ink:  #1a43b0;   /* accent used as TEXT on a light ground */
+  --on-accent:   #ffffff;
+
+  /* Meaning */
+  --gov:       #0a7457;  --gov-soft: #e3f3ed;  --gov-line: #bde2d4;
+  --pvt:       #6537c9;  --pvt-soft: #efe9fd;  --pvt-line: #d9ccf8;
+  --ok:        #13793a;  --ok-soft:  #e5f5ea;
+  --warn:      #a85006;  --warn-soft:#fdf1e1;  --warn-line:#f4d3a8;
+  --bad:       #c01c1c;  --bad-soft: #fdebeb;  --bad-line: #f5c4c4;
+
+  /* Subjects (TS SI plan) */
+  --s-reason: #2353d3;
+  --s-arith:  #0b7a8a;
+  --s-gs:     #6537c9;
+  --s-tm:     #b4530a;
+  --s-ca:     #0a7457;
+  --s-rev:    #5b677a;
+  --s-mock:   #c01c1c;
+
+  /* Shape */
+  --r-xs: 6px; --r-sm: 9px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(12,21,36,.06), 0 0 0 1px rgba(12,21,36,.02);
+  --shadow-2: 0 4px 14px rgba(12,21,36,.08), 0 1px 3px rgba(12,21,36,.06);
+  --shadow-3: 0 12px 32px rgba(12,21,36,.14);
+
+  /* Type */
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans",
+          "Noto Sans Telugu", "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: 12px; --fs-sm: 13.5px; --fs-md: 15px; --fs-lg: 17px; --fs-xl: 20px; --fs-2xl: 26px; --fs-3xl: 34px;
+
+  --gutter: 16px;
+  --appbar-h: 58px;
+  --bar-h: 64px;
+
+  /* Older page tokens, mapped onto the new ones so screens that still read
+     them (learn.html, chat.html, feed.html) re-theme without a rewrite. */
+  --panel: var(--surface);
+  --panel-border: var(--line);
+  --surface-2-border: var(--line);
+  --tint: var(--accent-soft);
+  --tint-2: var(--surface-2);
+  --header-bg: var(--surface);
+  --accent-tint: var(--accent-soft);
+  --accent-tint-2: var(--accent-line);
+  --link: var(--accent);
+  --text: var(--ink);
+  --dim: var(--faint);
+  --good: var(--ok);
+  --font-ui: var(--font);
+  --font-read: var(--font);
+  --font-display: var(--font);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:        #080d16;
+    --surface:   #101826;
+    --surface-2: #0d1420;
+    --surface-3: #18233a;
+    --line:      #1f2b40;
+    --line-2:    #2b3a55;
+
+    --ink:   #e8edf5;
+    --ink-2: #c7d0de;
+    --muted: #97a3b6;
+    --faint: #6d7a90;
+
+    --brand:     #0b1830;
+    --brand-2:   #12264a;
+    --brand-3:   #1b3567;
+    --on-brand:  #f4f7fc;
+    --on-brand-2:#9fb2d6;
+
+    --accent:      #6f9bff;
+    --accent-2:    #94b4ff;
+    --accent-soft: #15254a;
+    --accent-line: #29437e;
+    --accent-ink:  #9dbaff;
+    --on-accent:   #06101f;
+
+    --gov:  #45c79b;  --gov-soft: #0f2a22;  --gov-line: #1c4a3b;
+    --pvt:  #b195ff;  --pvt-soft: #211a3d;  --pvt-line: #3a2d6b;
+    --ok:   #4fcf7c;  --ok-soft:  #10291a;
+    --warn: #f0a24b;  --warn-soft:#2c1d0b;  --warn-line:#5a3a14;
+    --bad:  #ff7a7a;  --bad-soft: #2f1213;  --bad-line: #5c2224;
+
+    --s-reason: #6f9bff;
+    --s-arith:  #45c3d4;
+    --s-gs:     #b195ff;
+    --s-tm:     #f0a24b;
+    --s-ca:     #45c79b;
+    --s-rev:    #97a3b6;
+    --s-mock:   #ff7a7a;
+
+    --shadow-1: 0 1px 2px rgba(0,0,0,.5);
+    --shadow-2: 0 6px 18px rgba(0,0,0,.45);
+    --shadow-3: 0 14px 36px rgba(0,0,0,.6);
+  }
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img, svg { max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.25; letter-spacing: -0.01em; }
+p { margin: 0 0 10px; }
+.num { font-variant-numeric: tabular-nums; }
+.hidden { display: none !important; }
+/* The `hidden` attribute must win over any component's display rule — a
+   flex chip with [hidden] otherwise stays on screen (chat's empty
+   "Discussing:" bar was exactly that). */
+[hidden] { display: none !important; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ── App bar ────────────────────────────────────────────────────────────── */
+.appbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 10px;
+  min-height: var(--appbar-h);
+  padding: calc(8px + env(safe-area-inset-top)) 10px 8px 8px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.appbar.is-brand {
+  background: var(--brand); color: var(--on-brand);
+  border-bottom-color: transparent;
+}
+.appbar-title { flex: 1 1 auto; min-width: 0; }
+.appbar-title h1 {
+  font-size: var(--fs-lg); font-weight: 750; letter-spacing: -0.015em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.appbar-sub {
+  display: block; font-size: var(--fs-xs); color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;
+}
+.appbar.is-brand .appbar-sub { color: var(--on-brand-2); }
+
+.icon-btn {
+  flex: 0 0 auto; width: 42px; height: 42px; border-radius: var(--r-pill);
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 0; color: inherit; cursor: pointer; padding: 0;
+}
+.icon-btn:hover { background: var(--surface-3); }
+.appbar.is-brand .icon-btn:hover { background: rgba(255,255,255,.08); }
+.icon-btn svg { width: 22px; height: 22px; }
+
+/* ── Page layout ────────────────────────────────────────────────────────── */
+.page { max-width: 720px; margin: 0 auto; padding: 0 0 28px; }
+.sec { padding: 22px var(--gutter) 0; }
+.sec-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  margin-bottom: 4px;
+}
+.sec-head h2 { font-size: var(--fs-lg); font-weight: 750; }
+.sec-kicker {
+  font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 4px;
+}
+.sec-sub { font-size: var(--fs-sm); color: var(--muted); margin: 0 0 12px; line-height: 1.45; }
+.sec-link {
+  flex: 0 0 auto; font-size: var(--fs-sm); font-weight: 650; color: var(--accent);
+  background: none; border: 0; padding: 6px 0; cursor: pointer;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow-1);
+}
+.card + .card { margin-top: 10px; }
+.card-title { font-size: var(--fs-md); font-weight: 700; line-height: 1.3; }
+.card-sub { font-size: var(--fs-sm); color: var(--muted); margin-top: 2px; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.list {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-1); overflow: hidden;
+}
+.list > * + * { border-top: 1px solid var(--line); }
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 16px; border-radius: var(--r-md);
+  font-size: var(--fs-sm); font-weight: 700; line-height: 1.2; letter-spacing: .005em;
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.btn:hover { text-decoration: none; background: var(--surface-2); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled] { opacity: .5; cursor: default; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.btn-tonal { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+.btn-tonal:hover { background: var(--accent-line); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--accent); padding: 0 8px; }
+.btn-ghost:hover { background: var(--accent-soft); }
+.btn-sm { min-height: 36px; padding: 0 12px; font-size: 13px; border-radius: var(--r-sm); }
+.btn-block { display: flex; width: 100%; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ── Chips & badges ─────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 650; line-height: 1.35; white-space: nowrap;
+  background: var(--surface-3); color: var(--ink-2);
+}
+.chip-ok   { background: var(--ok-soft);   color: var(--ok); }
+.chip-warn { background: var(--warn-soft); color: var(--warn); }
+.chip-bad  { background: var(--bad-soft);  color: var(--bad); }
+.chip-info { background: var(--accent-soft); color: var(--accent); }
+.chip-gov  { background: var(--gov-soft);  color: var(--gov); }
+.chip-pvt  { background: var(--pvt-soft);  color: var(--pvt); }
+.chip-line { background: transparent; border: 1px solid var(--line-2); color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* A countdown: number over unit, sized to be read at a glance. */
+.cd {
+  flex: 0 0 auto; width: 54px; min-height: 54px; border-radius: var(--r-md);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--surface-3); color: var(--ink);
+}
+.cd b { font-size: 20px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.cd small { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-top: 3px; }
+.cd.is-urgent { background: var(--bad-soft); color: var(--bad); }
+.cd.is-urgent small { color: var(--bad); }
+.cd.is-soon { background: var(--warn-soft); color: var(--warn); }
+.cd.is-soon small { color: var(--warn); }
+.cd.is-none b { font-size: 13px; }
+
+/* ── Segmented control & tabs ───────────────────────────────────────────── */
+.seg {
+  display: flex; gap: 4px; padding: 4px; border-radius: var(--r-md);
+  background: var(--surface-3);
+}
+.seg > button {
+  flex: 1 1 0; min-height: 40px; border: 0; border-radius: var(--r-sm);
+  background: transparent; color: var(--muted); font-size: var(--fs-sm); font-weight: 700;
+  cursor: pointer; padding: 0 6px;
+}
+.seg > button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-1); }
+
+/* ── Progress ───────────────────────────────────────────────────────────── */
+.bar { height: 8px; border-radius: var(--r-pill); background: var(--surface-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.bar.is-ok > i { background: var(--ok); }
+
+/* ── Folds ──────────────────────────────────────────────────────────────── */
+details.fold {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+details.fold + details.fold { margin-top: 10px; }
+details.fold > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px; min-height: 52px; font-weight: 700; font-size: var(--fs-sm);
+}
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::after {
+  content: ""; margin-left: auto; width: 9px; height: 9px; flex: 0 0 auto;
+  border-right: 2px solid var(--faint); border-bottom: 2px solid var(--faint);
+  transform: rotate(45deg) translate(-2px, -2px); transition: transform .15s ease;
+}
+details.fold[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+details.fold > .fold-body { padding: 0 16px 14px; }
+
+/* ── Notices & empty states ─────────────────────────────────────────────── */
+.notice {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 14px; border-radius: var(--r-md);
+  background: var(--accent-soft); color: var(--ink-2); font-size: var(--fs-sm); line-height: 1.5;
+}
+.notice.is-warn { background: var(--warn-soft); }
+.notice.is-bad { background: var(--bad-soft); }
+.notice.is-ok { background: var(--ok-soft); }
+.notice b { color: var(--ink); }
+.empty {
+  text-align: center; color: var(--muted); padding: 28px 18px; font-size: var(--fs-sm); line-height: 1.6;
+}
+
+/* ── Forms ──────────────────────────────────────────────────────────────── */
+.field { display: block; margin-bottom: 12px; }
+.field > span { display: block; font-size: 12.5px; font-weight: 650; color: var(--muted); margin-bottom: 6px; }
+.input, select.input, textarea.input {
+  width: 100%; min-height: 44px; padding: 10px 12px; border-radius: var(--r-md);
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font-size: var(--fs-md);
+}
+textarea.input { min-height: 84px; resize: vertical; line-height: 1.45; }
+.input:focus { outline: 2px solid var(--accent-line); border-color: var(--accent); }
+
+/* ── Hero band (navy) ───────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brand-2) 100%);
+  color: var(--on-brand); padding: 4px var(--gutter) 22px;
+}
+.hero-kicker { font-size: 12.5px; color: var(--on-brand-2); font-weight: 600; }
+.hero-title { font-size: var(--fs-2xl); font-weight: 800; letter-spacing: -0.02em; margin: 2px 0 14px; }
+
+/* ── Small print ────────────────────────────────────────────────────────── */
+.fine { font-size: 12px; color: var(--faint); line-height: 1.5; }
+.muted { color: var(--muted); }
+.dot-sep::before { content: "·"; margin: 0 6px; color: var(--faint); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

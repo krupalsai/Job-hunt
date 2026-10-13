@@ -6,16 +6,18 @@
 <title>Prep · Job Tracker</title>
 <meta name="description" content="HAL Management/Design Trainee (CS) preparation — syllabus, 4-week plan, timed strategy and a 170-question practice bank with explanations and weak-area analysis." />
 <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <!-- Inline so there is no extra request and no 404 for a missing file. -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e2654'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E" />
 <!-- The bottom bar, the drawer and the exam switcher, shared with the job list.
      Deferred, so it runs after prep/exams.js at the foot of the body has
      defined EXAMS, and so its stylesheet lands after the one below. -->
 <script src="/nav.js" defer></script>
 <link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
 <style>
   /* Palette matched to index.html so the tracker and the prep read as one app.
      White ground, not the dark one this app started on: a light background
@@ -26,55 +28,6 @@
      look. Every colour below is a token for exactly this reason — a literal
      hex in a component is a colour that only works in one scheme, which is
      how the subject chips ended up black-on-black. */
-  :root{
-    color-scheme: light dark;
-    --bg:#f5f6f8;
-    --panel:#ffffff;
-    --panel-border:#e4e7ec;
-    --surface-2:#f1f3f6;        /* raised inside a card: chips, mode rows */
-    --surface-2-border:#e2e6eb;
-    --tint:#eef0fe;             /* accent wash behind a highlighted block */
-    --tint-2:#f4f5fb;
-    --header-bg:#f5f6f8ee;
-    --accent:#4f46e5;
-    --accent-soft:#4338ca;
-    --accent-tint:#4f46e514;
-    --accent-tint-2:#4f46e526;
-    --accent-line:#4f46e555;
-    --link:#4338ca;
-    --on-accent:#ffffff;
-    --text:#0f172a;
-    --muted:#5b6b7a;
-    --dim:#8794a1;
-    --good:#16a34a;
-    --bad:#dc2626;
-    --warn:#b45309;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0b0f16;
-      --panel:#131a26;
-      --panel-border:#212b3a;
-      --surface-2:#0f1622;
-      --surface-2-border:#233047;
-      --tint:#1b2140;
-      --tint-2:#161c30;
-      --header-bg:#0b0f16ee;
-      --accent:#818cf8;
-      --accent-soft:#a5b4fc;
-      --accent-tint:#818cf81a;
-      --accent-tint-2:#818cf833;
-      --accent-line:#818cf866;
-      --link:#a5b4fc;
-      --on-accent:#ffffff;
-      --text:#e2e8f0;
-      --muted:#94a3b8;
-      --dim:#64748b;
-      --good:#4ade80;
-      --bad:#f87171;
-      --warn:#f59e0b;
-    }
-  }
   *{ box-sizing:border-box; }
   body{
     margin:0; font-family:var(--font-ui);
@@ -103,7 +56,7 @@
   /* A tap should feel like it landed. One rule, every button in the app —
      quiz options, plan ticks, chips, CTAs — dims a touch on press. */
   button:active:not([disabled]){ filter:brightness(.92); }
-  .card h2{ margin-top:0; font-size:15px; color:var(--accent-soft); }
+  .card h2{ margin-top:0; font-size:15px; color:var(--accent-ink); }
   .card h3{ font-size:13.5px; color:var(--text); margin-bottom:6px; }
   table{ width:100%; border-collapse:collapse; font-size:13px; }
   th,td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--panel-border);
@@ -115,7 +68,7 @@
   .topic-sub{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:5px; }
   th{ color:var(--dim); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
   .pill{ display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
-  .p1{ background:var(--accent-tint); color:var(--accent-soft); }
+  .p1{ background:var(--accent-tint); color:var(--accent-ink); }
   .p2{ background:#2563eb1f; color:var(--link); }
   .p3{ background:#47556933; color:#94a3b8; }
   ul{ padding-left:18px; margin:6px 0; font-size:13.5px; line-height:1.65; }
@@ -130,7 +83,7 @@
   .fun-streak{
     display:flex; align-items:center; gap:8px; margin-bottom:10px; padding:9px 12px;
     background:linear-gradient(90deg,var(--tint),var(--tint-2)); border:1px solid var(--accent-line);
-    border-radius:20px; font-size:12.5px; font-weight:700; color:var(--accent-soft);
+    border-radius:20px; font-size:12.5px; font-weight:700; color:var(--accent-ink);
   }
   .fun-flame{ font-size:15px; }
   .fun-best{ margin-left:auto; font-size:11px; font-weight:700; color:var(--dim); }
@@ -168,7 +121,7 @@
      coverage rather than as a pile of facts. */
   .ca-top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .ca-topic{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.6px;
-             color:var(--accent-soft); background:var(--tint, var(--accent-tint));
+             color:var(--accent-ink); background:var(--tint, var(--accent-tint));
              border:1px solid var(--accent-line); border-radius:20px; padding:2px 8px; }
   .ca-date{ font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--dim); }
   /* The takeaway is labelled, because "why it matters" is the part that turns a
@@ -202,8 +155,8 @@
   .opt.wrong .opt-letter{ background:var(--bad); color:var(--on-accent); }
   /* A mock marks your choice without saying whether it was right — revealing
      that is what the results screen is for, once the paper is over. */
-  .opt.picked{ border-color:var(--accent-soft); background:var(--surface-2-border); }
-  .opt.picked .opt-letter{ background:var(--accent-soft); color:var(--on-accent); }
+  .opt.picked{ border-color:var(--accent-ink); background:var(--surface-2-border); }
+  .opt.picked .opt-letter{ background:var(--accent-ink); color:var(--on-accent); }
   .opt[disabled]{ cursor:default; }
   .quiz-actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
   button.primary{
@@ -241,13 +194,13 @@
   /* Explanation */
   .explain{ margin-top:14px; border-radius:10px; padding:14px 16px; background:var(--surface-2); border:1px solid var(--panel-border); }
   .explain .verdict{ font-weight:700; font-size:14px; margin-bottom:10px; }
-  .explain .lbl{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent-soft); font-weight:700; margin-bottom:3px; }
+  .explain .lbl{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent-ink); font-weight:700; margin-bottom:3px; }
   .explain .why{ font-size:13.5px; line-height:1.65; margin-bottom:12px; }
   .explain .trick-box{ border-left:3px solid var(--warn); padding:8px 0 8px 12px; background:#f59e0b12; border-radius:0 8px 8px 0; }
   .explain .trick-box .lbl{ color:var(--warn); }
   .explain .trick{ font-size:13.5px; line-height:1.55; }
-  .explain .why.again{ border-left:2px solid var(--accent-soft); padding-left:10px; }
-  .diagram{ margin:0; font-size:12px; line-height:1.5; color:var(--accent-soft); }
+  .explain .why.again{ border-left:2px solid var(--accent-ink); padding-left:10px; }
+  .diagram{ margin:0; font-size:12px; line-height:1.5; color:var(--accent-ink); }
   .explain-more{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
   button.ghost.small{ padding:7px 12px; font-size:12.5px; }
 
@@ -257,7 +210,7 @@
     font-size:12.5px; color:var(--muted); background:var(--surface-2);
     border:1px solid var(--panel-border); border-radius:9px; padding:8px 12px; margin-bottom:12px;
   }
-  .rotate-bar strong{ color:var(--accent-soft); font-variant-numeric:tabular-nums; }
+  .rotate-bar strong{ color:var(--accent-ink); font-variant-numeric:tabular-nums; }
   .rotate-bar.fresh{ border-color:var(--accent-line); background:var(--accent-tint); }
 
   /* Full mock */
@@ -268,7 +221,7 @@
   .mock-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px;
     font-size:13px; background:var(--surface-2); border:1px solid var(--panel-border);
     border-radius:9px; padding:9px 13px; margin-bottom:12px; }
-  .mock-bar .mb-time{ font-weight:700; font-variant-numeric:tabular-nums; color:var(--accent-soft); }
+  .mock-bar .mb-time{ font-weight:700; font-variant-numeric:tabular-nums; color:var(--accent-ink); }
   .mock-bar.is-low .mb-time{ color:var(--warn); }
   .mock-bar.is-critical .mb-time{ color:var(--bad); }
   .mock-bar .mb-section{ color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -279,7 +232,7 @@
   .mock-sections .ms-row{ display:flex; justify-content:space-between; gap:10px;
     padding:9px 0; border-bottom:1px solid var(--panel-border); font-size:13px; }
   .mock-sections .ms-row:last-child{ border-bottom:none; }
-  .mock-sections .ms-marks{ font-variant-numeric:tabular-nums; color:var(--accent-soft); font-weight:700; white-space:nowrap; }
+  .mock-sections .ms-marks{ font-variant-numeric:tabular-nums; color:var(--accent-ink); font-weight:700; white-space:nowrap; }
 
   /* Weak areas */
   .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
@@ -357,7 +310,7 @@
      bounded grammar list and an open-ended vocabulary one. */
   .ls-chapters{ margin-bottom:6px; }
   .ls-group{ font-size:10.5px; text-transform:uppercase; letter-spacing:.6px;
-             color:var(--accent-soft); font-weight:700; margin:16px 0 4px; }
+             color:var(--accent-ink); font-weight:700; margin:16px 0 4px; }
   .ls-group:first-of-type{ margin-top:4px; }
   /* Which chapter to open right now — computed from real performance where
      there is any, and from the intended learning sequence where there is
@@ -365,7 +318,7 @@
   .ls-recommend{ border-left:3px solid var(--accent); background:var(--accent-tint);
                  border-radius:0 9px 9px 0; padding:10px 13px; margin-top:12px;
                  font-size:13px; line-height:1.55; }
-  .ls-recommend strong{ color:var(--accent-soft); }
+  .ls-recommend strong{ color:var(--accent-ink); }
   .ls-recommend.is-weak{ border-left-color:var(--warn); background:#f59e0b14; }
   .ls-recommend.is-weak strong{ color:var(--warn); }
   .ls-recommend.is-done{ color:var(--muted); }
@@ -374,17 +327,17 @@
            border-bottom:1px solid var(--panel-border); cursor:pointer; }
   .ls-row:last-child{ border-bottom:none; }
   .ls-row.is-locked{ opacity:.45; cursor:default; }
-  .ls-row.is-recommended .ls-title{ color:var(--accent-soft); }
+  .ls-row.is-recommended .ls-title{ color:var(--accent-ink); }
   .ls-row-main{ flex:1; min-width:0; }
   .ls-title{ font-size:14px; font-weight:600; }
   .ls-why{ font-size:12px; color:var(--muted); margin-top:3px; line-height:1.45; }
   .ls-badge{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; }
-  .ls-badge.done{ background:var(--accent-tint-2); color:var(--accent-soft); }
+  .ls-badge.done{ background:var(--accent-tint-2); color:var(--accent-ink); }
   .ls-badge.open{ background:#2563eb1f; color:var(--link); }
   .ls-badge.lock{ background:#47556933; color:var(--dim); }
   .ls-meta{ font-size:11.5px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; margin-top:12px; }
   .ls-main{ font-size:19px; margin:4px 0 14px; color:var(--text); }
-  .ls-h{ font-size:14px; color:var(--accent-soft); margin:18px 0 6px; }
+  .ls-h{ font-size:14px; color:var(--accent-ink); margin:18px 0 6px; }
   .ls-p{ font-size:14px; line-height:1.7; margin:0 0 10px; }
   .ls-l{ font-size:14px; line-height:1.7; }
   .ls-c{ background:var(--surface-2); border:1px solid var(--panel-border); border-radius:8px;
@@ -438,7 +391,7 @@
   #focus-pill .fp-time{ font-variant-numeric:tabular-nums; color:var(--muted); }
   #focus-pill.settled{ border-color:var(--accent-line); }
   #focus-pill.settled .fp-dot{ background:var(--accent); }
-  #focus-pill.settled .fp-time{ color:var(--accent-soft); }
+  #focus-pill.settled .fp-time{ color:var(--accent-ink); }
 
   /* The focus watch — a warning, not a wall. Warm, not alarming. */
   #focus-warn{ border-color:#f59e0b66; background:#f59e0b14; }
@@ -465,7 +418,7 @@
   /* Today's test is the headline action for the last fortnight, not one row
      among six. */
   .mode-row.is-lead{ border-color:var(--accent); background:var(--tint, var(--accent-tint)); }
-  .mode-row.is-lead .mode-name{ color:var(--accent-soft); }
+  .mode-row.is-lead .mode-name{ color:var(--accent-ink); }
   .mode-row{
     display:flex; align-items:center; gap:12px; width:100%; text-align:left;
     background:var(--surface-2); border:1px solid var(--panel-border); border-radius:12px;
@@ -476,7 +429,7 @@
   .mode-main{ flex:1; min-width:0; }
   .mode-name{ display:block; font-size:14.5px; font-weight:700; }
   .mode-what{ display:block; font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.45; }
-  .mode-meta{ flex:0 0 auto; font-size:10.5px; font-weight:700; color:var(--accent-soft);
+  .mode-meta{ flex:0 0 auto; font-size:10.5px; font-weight:700; color:var(--accent-ink);
               text-align:right; max-width:34%; line-height:1.35; }
 
   /* Progress — the instruction, before the numbers */
@@ -488,7 +441,7 @@
   .nt-study span{ color:var(--dim); }
   .nt-why{ font-size:12.5px; color:var(--muted); margin-top:7px; line-height:1.5; }
   .nt-meta{ display:flex; gap:8px; margin-top:10px; }
-  .nt-meta span{ font-size:11px; font-weight:700; color:var(--accent-soft);
+  .nt-meta span{ font-size:11px; font-weight:700; color:var(--accent-ink);
                  background:var(--accent-tint); border:1px solid var(--accent-tint-2); border-radius:20px; padding:4px 10px; }
   .nt-stop{ font-size:11.5px; color:var(--dim); margin-top:8px; line-height:1.5; }
   .nt-go{ width:100%; margin-top:12px; }
@@ -514,6 +467,61 @@
   .plan-title{ font-size:14px; font-weight:600; margin-top:3px; line-height:1.45; }
   .plan-day.is-done .plan-title{ text-decoration:line-through; }
   .plan-go{ margin-top:10px; padding:7px 12px; font-size:12.5px; width:100%; text-align:center; }
+
+  /* ── Design system (ui.css) — the prep screens in the app's one look ─────
+     Appended last on purpose: these win over the older rules above without
+     touching them, so every id and class the scripts and tests rely on stays
+     exactly where it was. */
+  main{ max-width:720px; padding:14px 16px 40px; }
+  .card{ border-radius:var(--r-lg); padding:16px; border-color:var(--line); box-shadow:var(--shadow-1); margin-bottom:12px; }
+  .card h2{ font-size:17px; font-weight:800; letter-spacing:-.01em; color:var(--ink); margin-bottom:10px; }
+  .card h3{ font-size:15px; font-weight:750; }
+  .muted{ color:var(--muted); font-size:13.5px; }
+  ul{ font-size:14.5px; line-height:1.6; }
+  button.primary{ min-height:44px; padding:0 18px; border-radius:var(--r-md); font-size:14.5px; font-weight:750; }
+  button.primary:hover{ background:var(--accent-2); }
+  button.ghost{ min-height:44px; padding:0 16px; border-radius:var(--r-md); border-color:var(--line-2); font-weight:650; color:var(--ink); }
+  button.ghost.small{ min-height:36px; padding:0 12px; font-size:13px; }
+  .opt{ min-height:52px; padding:12px 14px; border-radius:var(--r-md); font-size:15px; border-color:var(--line-2); margin-bottom:10px; }
+  .opt-letter{ width:26px; height:26px; font-size:12px; background:var(--surface-3); color:var(--ink-2); }
+  .opt.correct{ background:var(--ok-soft); border-color:var(--ok); }
+  .opt.wrong{ background:var(--bad-soft); border-color:var(--bad); }
+  .opt.picked{ background:var(--accent-soft); border-color:var(--accent); }
+  .opt.picked .opt-letter{ background:var(--accent); }
+  .qtext{ font-size:17px; line-height:1.55; }
+  .tag{ min-height:34px; padding:0 12px; display:inline-flex; align-items:center; font-size:13px; font-weight:650;
+        border-color:var(--line-2); background:var(--surface); }
+  .tag.active{ background:var(--ink); color:var(--surface); }
+  .progress-bar{ height:8px; background:var(--surface-3); }
+  .explain{ border-radius:var(--r-md); background:var(--surface-2); border-color:var(--line); }
+  .explain .trick-box{ background:var(--warn-soft); }
+  .mode-row{ background:var(--surface); border-color:var(--line); border-radius:var(--r-md); min-height:60px; }
+  .mode-row:hover{ border-color:var(--line-2); }
+  .mode-row.is-lead{ border-color:var(--accent); background:var(--accent-soft); }
+  .mode-row.is-lead .mode-name{ color:var(--accent-ink); }
+  .subj-chip{ background:var(--surface); border-color:var(--line-2); border-radius:var(--r-md); min-height:44px; font-size:14px; }
+  .subj-chip.is-done{ background:var(--ok-soft); border-color:var(--ok); }
+  .next-task{ border-color:var(--accent-line); background:var(--accent-soft); }
+  .rotate-bar{ border-radius:var(--r-md); border-color:var(--line); }
+  .ls-recommend{ background:var(--accent-soft); }
+  .ls-recommend.is-weak{ background:var(--warn-soft); }
+  .ls-k{ background:var(--warn-soft); }
+  .ls-c{ border-radius:var(--r-md); border-color:var(--line); }
+  .ls-h{ font-size:15px; }
+  .ls-p, .ls-l{ font-size:15px; }
+  .ls-main{ font-size:20px; font-weight:800; letter-spacing:-.015em; }
+  table{ font-size:13.5px; }
+  th{ color:var(--faint); }
+  /* The TS SI plan sits above Study for that exam. */
+  .si-banner{ display:flex; gap:12px; align-items:center; text-decoration:none; color:var(--on-brand);
+              background:linear-gradient(135deg,var(--brand),var(--brand-3)); border-radius:var(--r-lg);
+              padding:16px; margin-bottom:12px; box-shadow:var(--shadow-2); }
+  .si-banner:hover{ text-decoration:none; }
+  .si-banner b{ display:block; font-size:17px; font-weight:800; }
+  .si-banner span{ font-size:13px; color:var(--on-brand-2); }
+  .si-banner .si-banner-sub{ display:block; margin-top:2px; }
+  .si-banner .go{ margin-left:auto; flex:0 0 auto; background:#fff; color:var(--brand); font-weight:800; font-size:13.5px;
+                  border-radius:var(--r-pill); padding:8px 14px; }
 </style>
 </head>
 <body data-page="learn">
@@ -647,6 +655,11 @@
        and Study is the one screen that should not ask the student to decide.
        All three are destinations in the ☰ menu now. -->
   <section id="study" class="tab-section">
+    <!-- TS SI has an authored day-by-day plan; it leads Study for that exam. -->
+    <a class="si-banner hidden" data-si-banner href="/si.html">
+      <span><b>Your 47-day plan</b><span class="si-banner-sub">Today's tasks, built from the 2018 and 2022 papers</span></span>
+      <span class="go">Open</span>
+    </a>
     <!-- SUBJECTS, first. Today's list below decides for you; this is for the
          times you already know what you want to open. Every subject the exam
          examines is here, all visible at once — a strip that scrolled off the
@@ -684,6 +697,10 @@
   <!-- THE RUN TO THE EXAM. Its length is the days actually left, not a fixed
        four weeks. -->
   <section id="plan" class="tab-section hidden">
+    <a class="si-banner hidden" data-si-banner href="/si.html">
+      <span><b>TS SI has its own 47-day plan</b><span class="si-banner-sub">Written day by day for a beginner — use it instead of the run below.</span></span>
+      <span class="go">Open</span>
+    </a>
     <!-- No heading: the header above already says which screen this is, and a
          card that repeats it costs a line of a phone screen for nothing. -->
     <div class="card">
@@ -877,5 +894,21 @@
      blocks, with minutes on them. Last, because it uses all of it. -->
 <script src="/prep/today.js"></script>
 
+<script>
+/* The TS SI plan banner: shown only when the prep page is on TS SI. */
+document.addEventListener('DOMContentLoaded', function () {
+  var nav = window.JobhuntNav;
+  if (!nav || nav.examKey !== 'ts-si') return;
+  var ex = nav.exam, start = ex && ex.plan ? new Date(ex.plan.start + 'T00:00:00') : null;
+  var t = new Date(); t.setHours(0, 0, 0, 0);
+  var n = start ? Math.round((t - start) / 864e5) + 1 : null;
+  document.querySelectorAll('[data-si-banner]').forEach(function (b) {
+    b.classList.remove('hidden');
+    var sub = b.querySelector('.si-banner-sub');
+    if (sub && n && n >= 1 && n <= ex.plan.days && b.closest('#study'))
+      sub.textContent = 'Day ' + n + ' of ' + ex.plan.days + ' — today\'s tasks are ready';
+  });
+});
+</script>
 </body>
 </html>

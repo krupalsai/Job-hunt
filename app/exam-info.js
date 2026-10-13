@@ -75,7 +75,7 @@ function renderExamInfo(){
   document.getElementById('ei-snapshot').innerHTML =
     `<tr><th>Format</th><td>${escHtml(exam.pattern)}</td></tr>` +
     `<tr><th>Negative marking</th><td>${exam.negative
-      ? '<strong style="color:var(--bad)">Yes — a wrong answer costs marks.</strong> A blank is safer than a blind guess.'
+      ? '<strong style="color:var(--bad)">Yes — a wrong answer costs marks.</strong> ' + escHtml(guessAdvice(exam))
       : 'None. A blank and a wrong answer both score zero, so never leave one blank.'}</td></tr>` +
     exam.sections.map(s=>
       `<tr><th>${escHtml(s.name)}</th><td>${s.questions || s.marks} questions · ${s.marks} marks</td></tr>`
@@ -95,7 +95,7 @@ function renderExamInfo(){
              `<td>${pace ? '~' + pace + ' sec/Q' : '—'}</td></tr>`;
     }).join('') +
     (buffer ? `<tr><td>Buffer</td><td>~${buffer} min</td><td>${
-      exam.negative ? 'Recheck what you marked' : 'Fill every remaining blank'}</td></tr>` : '');
+      guessValue(exam, 0) >= 0 ? 'Fill every remaining blank' : 'Recheck what you marked'}</td></tr>` : '');
 
   document.getElementById('ei-budget-note').textContent = exam.minutes
     ? `${exam.minutes} minutes for ${totalQs} questions is ${
@@ -176,10 +176,40 @@ function renderStages(exam){
     </div>`).join('');
 }
 
+/** The average marks a guess is worth on this paper, having ruled out
+    `eliminated` of the options. Positive means guessing beats a blank.
+
+    THIS IS THE NUMBER THE OLD ADVICE GOT BACKWARDS. "Rule out two options
+    before guessing" is right only when a wrong answer costs more than a third
+    of a right one. On TS SI (+1 / −0.20, four options) a blind guess is worth
+    +0.10; on SSC CGL (+2 / −0.50) it is worth +0.125. Both papers reward
+    attempting everything. */
+function guessValue(exam, eliminated){
+  const m = exam && exam.marking;
+  if(!m) return exam && exam.negative ? -Infinity : 0;
+  const options = exam.options || 4;
+  const left = Math.max(1, options - (eliminated || 0));
+  const p = 1 / left;
+  return p * m.correct + (1 - p) * (m.wrong || 0);
+}
+
+const fmtMarks = n => (n >= 0 ? '+' : '−') + String(Math.round(Math.abs(n) * 1000) / 1000);
+
+/** The guess-or-blank advice, worked out from the marking scheme. */
+function guessAdvice(exam){
+  const blind = guessValue(exam, 0);
+  if(!isFinite(blind)) return 'Check the marking scheme on your admit card before deciding whether to guess.';
+  const one = guessValue(exam, 1), two = guessValue(exam, 2);
+  if(blind >= 0){
+    return `Even so, a blind guess is worth ${fmtMarks(blind)} marks on average and a blank is worth 0 — ` +
+           `so never leave a blank. Rule out one option and a guess is worth ${fmtMarks(one)}; two, ${fmtMarks(two)}.`;
+  }
+  return `A blind guess loses ${fmtMarks(blind).slice(1)} marks on average here, so guess only after ruling out options ` +
+         `(one ruled out: ${fmtMarks(one)}; two: ${fmtMarks(two)}).`;
+}
+
 /** How this exam marks a wrong answer, in one sentence, for wherever the app
-    is about to advise on pace or on whether to attempt something. Speed advice
-    without the marking scheme is dangerous: "go faster" is correct for HAL,
-    where a guess is free, and expensive on a paper that charges for it. */
+    is about to advise on pace or on whether to attempt something. */
 function markingNote(){
   const exam = currentExamObj();
   if(!exam) return '';
@@ -188,14 +218,11 @@ function markingNote(){
   }
   const m = exam.marking;
   if(m){
-    // Spelled out in marks, because the decision it governs is arithmetic. At
-    // one in four a guess is worth 0.25 − 0.75 × 0.20 = +0.10 here; the point
-    // is not to never guess, it is to never guess blind.
     return `Correct ${m.correct > 0 ? '+' : ''}${m.correct} · wrong ${m.wrong} · unanswered ${m.unanswered}. ` +
-           `A wrong answer costs ${escHtml(exam.negativeText || 'marks')}, so rule out two options before guessing.`;
+           `A wrong answer costs ${escHtml(exam.negativeText || 'marks')}. ` + escHtml(guessAdvice(exam));
   }
   return 'A wrong answer costs ' + escHtml(exam.negativeText || 'marks') +
-         ' on this paper, so a blind guess is worse than a blank.';
+         ' on this paper — check the admit card for the exact deduction before deciding whether to guess.';
 }
 
 function escHtml(s){

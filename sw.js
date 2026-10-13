@@ -39,7 +39,13 @@
    note when there is none.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v16';
+/* v17 is the redesign: one design system (/ui.css) shared by every page, the
+   new home (news first, then Government / Private), and the TS SI 47-day plan
+   (/si.html, /app/si.js, /prep/si-plan.js) plus the ₹40 LPA+ list
+   (/data/top-pay.js). Every page changed, so every cached copy must go.
+
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v17';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -52,6 +58,14 @@ const PREP_ASSETS = [
   '/index.html',
   '/learn.html',
   '/nav.js',
+  /* The design system every page reads its colours, type and components from.
+     Without it offline, every screen opens unstyled. */
+  '/ui.css',
+  /* The TS SI 47-day plan: page, runtime and the plan itself. */
+  '/si.html',
+  '/app/si.js',
+  '/prep/si-plan.js',
+  '/data/top-pay.js',
   '/study-roadmap.js',
   '/study-lessons.js',
   /* The prep page's runtime, split out of what was one inline <script>.
@@ -127,6 +141,8 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
 
   const isPrep = url.pathname === '/learn.html'
+              || url.pathname === '/si.html'
+              || url.pathname === '/ui.css'
               || url.pathname === '/feed.html'
               || url.pathname === '/chat.html'
               || url.pathname === '/nav.js'

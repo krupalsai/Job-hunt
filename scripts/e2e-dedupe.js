@@ -217,9 +217,11 @@ const ROWS = [
     areas[5] === 'IT, software & data', areas[5]);
 
   console.log('\n── and the page still works ─────────────────────────────');
-  /* Folds render their rows on first open — open them, then count. */
-  for (const sel of await page.locator('details summary').all())
-    await sel.click().catch(() => {});
+  /* Folds render their rows on first open — open them, then count. Only the
+     ones on screen: the Private panel is hidden until it is chosen, and a
+     click on a hidden summary just waits out its timeout. */
+  for (const sel of await page.locator('details:visible > summary').all())
+    await sel.click({ timeout: 2000 }).catch(() => {});
   check('every surviving row is rendered', (await page.locator('.other-row, .card').count()) >= 3);
   check('no JavaScript errors', errors.length === 0, errors.slice(0, 2).join(' | '));
 

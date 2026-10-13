@@ -1,14 +1,93 @@
 # Job Tracker
 
-Two halves of the same job hunt:
+One app for the whole job hunt, government and private:
 
-- **`/`** — the exam you are preparing for, what is open for it, and the way
-  into every part of the prep. Below that, the other government and PSU job
-  notifications with honest deadlines. Static page on Vercel, data in Supabase
-  (`xbjgmudcgjiompbroayr`), refreshed by a cron that reads official sources.
-- **`/learn.html`** — preparation for the exams those notifications lead to.
+- **`/`** — the news first: the exams still ahead (with a countdown each),
+  the openings you can apply for now, and what is new. Then one choice —
+  **Government** or **Private** — and that track's exams, openings and study
+  material. Static page on Vercel, data in Supabase (`xbjgmudcgjiompbroayr`),
+  refreshed by a cron that reads official sources.
+- **`/si.html`** — the TS SI prelims 47-day plan (Tue 13 Oct → Sat 28 Nov
+  2026; paper Sun 29 Nov), written day by day for a beginner. For TS SI it is
+  what the **Study** tab opens.
+- **`/learn.html`** — lessons, practice, mocks and progress for the exam you
+  are preparing for.
 
 Live: https://krupal-job-tracker.vercel.app
+
+---
+
+# The redesign (October 2026)
+
+Reported: "the design is not good", "it's like a toy", "it shows exams that are
+already completed". The app was rebuilt around one design system and a home
+screen that answers the questions in the order they are asked.
+
+**One design system — `ui.css`.** Every page reads its colours, type sizes,
+radii, shadows and components (`.card`, `.btn`, `.chip`, `.seg`, `.list`,
+`.fold`, `.notice`, `.hero`…) from it, light and dark. The older pages keep
+their own layout but no longer declare colours; their old token names
+(`--panel`, `--text`, `--dim`…) are aliased onto the new ones. Colour carries
+meaning only: blue = act, green = government / done, violet = private,
+amber = soon, red = urgent or wrong. `--accent-soft` is now a light tint;
+text that used to use it reads `--accent-ink`.
+
+**The shell — `nav.js`.** Four destinations in the bar: **Home · Study · Test ·
+Progress** (Home used to be hidden in the menu). Study for TS SI goes to the
+47-day plan. The menu holds the rest: the SI plan, all lessons, current
+affairs, syllabus, the Professor, Instinct, and "About you" (qualification,
+category, marks, date of birth, state). The first-run exam question now only
+blocks the prep page — the home screen shows every exam in its news.
+
+**Home — `index.html`.** Coming up → Open now → New in the last 2 days →
+Government | Private. Government: prep tiles for each exam, openings tracked
+for your exams, every other government opening (best matches first, filter
+by area), then folds for "not for your qualification" and "closed". Private:
+the fresher IT feed (@careerwithshrestha), the **₹40 LPA+ off-campus roles**
+(`data/top-pay.js`) and a ticked **coding path** to them. The data logic —
+paging, de-duplication, eligibility from the printed qualification line, the
+role filter, the link rules — is unchanged; the guards in
+`scripts/e2e-integration.js` still read it.
+
+**Finished exams close themselves.** `isClosed()` gained a fourth signal,
+`cycleOver()`: a row whose exam has been sat, or whose application window has
+shut (`applyWindow` in `prep/exams.js`), is Closed with the reason said — the
+tracked HAL row, the SSC row after 14 Oct, and the 18 TGPRB 2026 vacancies
+whose window shut on 16 Sep. A row first seen after that date is a new cycle
+and is left alone.
+
+**The guessing advice was wrong, and is fixed.** SSC CGL and TS SI both told
+the candidate to leave blanks and guess only after ruling out two options.
+With four options, a blind guess is worth +0.125 marks on SSC CGL (+2 / −0.5)
+and +0.10 on TS SI (+1 / −0.20) — more than a blank. Both now say attempt
+everything; `app/exam-info.js` computes the advice from the marking scheme
+(`guessValue`) instead of hard-coding it.
+
+## The TS SI 47-day plan — `prep/si-plan.js`, `si.html`, `app/si.js`
+
+Written for a beginner aiming to **qualify** (30% OC, 25% BC, 20% SC/ST/Ex-
+servicemen — 2026 notification as reported). Built from a question-by-question
+reading of the 2018 and 7 Aug 2022 prelims: ~50 arithmetic, ~50 reasoning, and
+GS in blocks — Telangana Movement (17–25), current events (~16), history,
+geography, polity & economy, science & environment (10–19 each).
+
+- Every learning day: one reasoning type (75 min), one arithmetic topic
+  (70 min), one **GS slice** (35 min — GS is a daily habit, not a syllabus to
+  finish), Telangana Movement (every day), current affairs (newest months
+  first), revision. ★ marks the must-do part (~3 h) for short days.
+- Weekly tests on Days 6 and 13; full mocks on Days 20 (2018 paper), 27 (2022
+  paper), 31, 34, 37, 40, 43, each followed by an analysis task; Days 44–47
+  revise only.
+- Tasks link straight into lessons (`learn.html#lesson=<key>`), endless drills
+  (`#drill=<skill>`) and basics lessons (opened in a sheet on the plan).
+- **Paper** tab: pattern, the pass mark for your category, the guessing
+  arithmetic, a three-pass time plan, the past-paper analysis and links.
+  **Log** tab: mock scores (right − 0.2 × wrong, charted against the pass mark)
+  and a mistake notebook. Everything stays on the phone (`jobhunt_si_*`).
+
+Past papers are linked, not copied. `scripts/validate-si-plan.js` checks the
+calendar, the links, the mocks and the exam-hall advice; `scripts/e2e-si.js`
+drives the page with a fixed clock.
 
 ---
 
@@ -286,12 +365,18 @@ network. `scripts/e2e-integration.js` asserts that split.
 
 ## Tests
 
-    npm test                  # all four, in order
+    npm test                  # everything, in order
     npm run test:bank         # bank shape, duplicates, missing explanations,
                               # and that the selection engine stops repeating
-    npm run test:prep         # drives Chromium through real quizzes (75 checks)
-    npm run test:integration  # the two halves as one app (19 checks)
-    npm run test:nav          # the navigation at 390x844 (93 checks)
+    npm run test:plan         # the TS SI 47-day plan: data, then the page
+    npm run test:home         # the home screen at 390x844, and de-duplication
+    npm run test:prep         # drives Chromium through real quizzes
+    npm run test:integration  # the pages as one app
+    npm run test:nav          # the navigation at 390x844
+
+The browser suites that depend on which exams are "still ahead" pin the clock
+(`context.clock.install`, 13 Oct 2026), so they mean the same thing whenever
+they are run.
 
 `test:bank` fails on a question missing an explanation or a memory hook, on a
 duplicate, on an id collision, and on a selection engine that repeats within a

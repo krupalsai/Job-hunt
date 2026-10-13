@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>TS SI 47-day plan · Job Hunt</title>
+<meta name="description" content="A day-by-day plan to clear the TS SI prelims (29 Nov 2026) from a beginner's start: today's tasks, the paper decoded from the 2018 and 2022 papers, mock scores and a mistake notebook." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#0e2654" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  /* ============================================================================
+     TS SI — the 47-day plan. Layout only; every token comes from ui.css.
+     Four tabs, one question each:
+       Today   what do I do today, exactly — and is it done?
+       Plan    where am I in the 47 days?
+       Paper   what is this exam, and how do I qualify?
+       Log     how are my mocks going, and what keeps going wrong?
+     ========================================================================== */
+  .si-hero { padding-top: 6px; padding-bottom: 18px; }
+  .si-hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-top: 4px; }
+  .si-day { font-size: 34px; font-weight: 850; letter-spacing: -.03em; line-height: 1.05; }
+  .si-day span { font-size: 17px; font-weight: 700; color: var(--on-brand-2); letter-spacing: 0; }
+  .si-date { font-size: 14px; color: var(--on-brand-2); font-weight: 600; margin-top: 4px; }
+  .si-left { flex: 0 0 auto; text-align: center; min-width: 78px; padding: 10px 8px 9px; border-radius: 16px;
+             background: rgba(255,255,255,.1); }
+  .si-left b { display: block; font-size: 28px; font-weight: 850; line-height: 1; font-variant-numeric: tabular-nums; }
+  .si-left small { display: block; font-size: 10.5px; font-weight: 750; text-transform: uppercase; letter-spacing: .06em; margin-top: 4px; color: var(--on-brand-2); }
+  .si-phase { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--on-brand-2); }
+  .si-phase b { color: var(--on-brand); }
+  .si-prog { margin-top: 12px; }
+  .si-prog .bar { background: rgba(255,255,255,.15); }
+  .si-prog .bar > i { background: #7fe0b5; }
+  .si-prog-txt { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--on-brand-2); margin-top: 6px; }
+
+  /* Tabs, pinned under the app bar. */
+  .si-tabs { position: sticky; top: calc(58px + env(safe-area-inset-top)); z-index: 20; background: var(--bg);
+             padding: 10px var(--gutter) 8px; border-bottom: 1px solid var(--line); }
+
+  /* Day navigation */
+  .daynav { display: flex; align-items: center; gap: 8px; margin: 16px var(--gutter) 0; }
+  .daynav .btn { flex: 0 0 auto; }
+  .daynav-mid { flex: 1; min-width: 0; text-align: center; }
+  .daynav-mid b { display: block; font-size: 15px; }
+  .daynav-mid span { font-size: 12.5px; color: var(--muted); }
+  .day-head { margin: 14px var(--gutter) 0; }
+  .day-kind { display: inline-flex; }
+  .day-focus { font-size: 20px; font-weight: 800; letter-spacing: -.015em; line-height: 1.25; margin: 8px 0 4px; }
+  .day-meta { font-size: 13px; color: var(--muted); }
+  .busy { display: flex; align-items: center; gap: 10px; margin: 12px var(--gutter) 0; padding: 10px 12px;
+          border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; cursor: pointer; }
+  .busy input { width: 20px; height: 20px; accent-color: var(--accent); }
+
+  /* Task cards: a coloured edge per subject, the tick on the right. */
+  .tasks { display: flex; flex-direction: column; gap: 12px; padding: 14px var(--gutter) 0; }
+  .task { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+          box-shadow: var(--shadow-1); padding: 14px 14px 14px 18px; overflow: hidden; }
+  .task::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c, var(--accent)); }
+  .task[data-subj="reason"] { --c: var(--s-reason); }
+  .task[data-subj="arith"]  { --c: var(--s-arith); }
+  .task[data-subj="gs"]     { --c: var(--s-gs); }
+  .task[data-subj="tm"]     { --c: var(--s-tm); }
+  .task[data-subj="ca"]     { --c: var(--s-ca); }
+  .task[data-subj="rev"]    { --c: var(--s-rev); }
+  .task[data-subj="mock"]   { --c: var(--s-mock); }
+  .task.is-done { background: var(--surface-2); }
+  .task.is-done .task-title { color: var(--muted); text-decoration: line-through; }
+  .task-head { display: flex; align-items: center; gap: 8px; }
+  .subj { font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
+  .task-min { font-size: 12.5px; color: var(--muted); font-weight: 650; }
+  .task-star { color: var(--warn); font-weight: 800; font-size: 13px; }
+  .tick { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px;
+          border-radius: var(--r-pill); border: 1.5px solid var(--line-2); background: var(--surface);
+          font-size: 13px; font-weight: 750; color: var(--ink-2); cursor: pointer; user-select: none; }
+  .tick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .tick .box { width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--line-2); display: inline-flex;
+               align-items: center; justify-content: center; }
+  .tick.is-on { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .tick.is-on .box { background: var(--ok); border-color: var(--ok); }
+  .tick.is-on .box::after { content: ""; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px,-1px); }
+  .tick input:focus-visible + .box { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .task-title { font-size: 17px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; margin: 8px 0 8px; }
+  .task-steps { margin: 0; padding-left: 20px; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .task-steps li + li { margin-top: 6px; }
+  .task-pyq { margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .task-pyq b { color: var(--ink-2); }
+  .task-book { margin-top: 6px; font-size: 13px; color: var(--muted); }
+  .task-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .task-facts { margin: 10px 0 0; padding: 10px 12px 10px 28px; border-radius: var(--r-md); background: var(--surface-2);
+                font-size: 13.5px; line-height: 1.55; }
+  .task-facts li + li { margin-top: 4px; }
+  .day-foot { margin: 16px var(--gutter) 0; }
+
+  /* Plan */
+  .phase { padding: 18px var(--gutter) 0; }
+  .phase-h { display: flex; align-items: baseline; gap: 10px; }
+  .phase-h h2 { font-size: 17px; font-weight: 800; }
+  .phase-h span { font-size: 12.5px; color: var(--muted); }
+  .phase p { font-size: 13.5px; color: var(--muted); margin: 4px 0 10px; line-height: 1.5; }
+  .drow { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); width: 100%;
+          border: 0; text-align: left; cursor: pointer; font: inherit; color: var(--ink); }
+  .drow:hover { background: var(--surface-2); }
+  .drow.is-today { background: var(--accent-soft); }
+  .drow-n { flex: 0 0 auto; width: 44px; text-align: center; }
+  .drow-n b { display: block; font-size: 17px; font-weight: 800; line-height: 1.1; }
+  .drow-n small { display: block; font-size: 11px; color: var(--muted); font-weight: 650; }
+  .drow-main { flex: 1; min-width: 0; }
+  .drow-focus { font-size: 14px; font-weight: 700; line-height: 1.35; }
+  .drow-meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .ring { flex: 0 0 auto; width: 34px; height: 34px; }
+  .ring circle { fill: none; stroke-width: 4; }
+  .ring .bg { stroke: var(--surface-3); }
+  .ring .fg { stroke: var(--ok); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
+
+  /* Paper */
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .fact { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 10px; text-align: center; }
+  .fact b { display: block; font-size: 20px; font-weight: 850; letter-spacing: -.02em; }
+  .fact small { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  .cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 12px; }
+  .cats button { min-height: 38px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--line-2);
+                 background: var(--surface); font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; color: var(--ink-2); }
+  .cats button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+  .need { display: flex; gap: 10px; }
+  .need > div { flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px; }
+  .need b { display: block; font-size: 26px; font-weight: 850; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .need small { font-size: 12.5px; color: var(--muted); }
+  .need .is-target b { color: var(--ok); }
+  table.t { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--surface); }
+  table.t th, table.t td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  table.t th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--faint); font-weight: 750; border-top: 0; }
+  table.t td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; }
+  table.t tr.total td { font-weight: 800; }
+  .tbl { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-1); }
+  .bullets { margin: 6px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+  .bullets li + li { margin-top: 6px; }
+  .paper-link { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--surface); color: var(--ink); }
+  .paper-link:hover { text-decoration: none; background: var(--surface-2); }
+  .paper-link b { display: block; font-size: 14.5px; }
+  .paper-link small { color: var(--muted); font-size: 12.5px; }
+
+  /* Log */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .score-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); }
+  .score-row b { font-size: 20px; font-weight: 850; min-width: 64px; font-variant-numeric: tabular-nums; }
+  .score-row .muted { font-size: 12.5px; }
+  .score-row .x { margin-left: auto; }
+  .chart { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 10px; margin-bottom: 12px; }
+  .chart svg { display: block; width: 100%; height: auto; }
+  .mis { padding: 12px 14px; background: var(--surface); }
+  .mis-top { display: flex; align-items: center; gap: 8px; }
+  .mis-what { font-size: 14px; font-weight: 650; margin-top: 4px; }
+  .mis-fix { font-size: 13.5px; color: var(--ok); margin-top: 4px; }
+  .mis.is-fixed .mis-what { color: var(--muted); text-decoration: line-through; }
+
+  /* Lesson sheet (basics from study-lessons.js) */
+  .sheet-scrim { position: fixed; inset: 0; background: rgba(4,10,22,.55); z-index: 90; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 91; max-height: 86vh; overflow-y: auto;
+           background: var(--surface); border-radius: 22px 22px 0 0; box-shadow: var(--shadow-3);
+           padding: 10px 18px calc(22px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; }
+  .sheet-grab { width: 40px; height: 5px; border-radius: 5px; background: var(--line-2); margin: 4px auto 12px; }
+  .sheet h3 { font-size: 20px; font-weight: 800; letter-spacing: -.02em; margin: 4px 0 10px; }
+  .sheet h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 16px 0 6px; }
+  .sheet p { font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+  .sheet details { border-top: 1px solid var(--line); padding: 10px 0; }
+  .sheet summary { cursor: pointer; font-weight: 650; font-size: 14.5px; line-height: 1.45; }
+  .sheet summary span { display: block; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body data-page="si">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">TS SI · 47-day plan</h1>
+      <div class="nav-exam" id="siSub">Prelims · Sun 29 Nov 2026</div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero si-hero" aria-label="Where you are">
+    <div class="hero-kicker" id="heroKicker">TS SI Prelims</div>
+    <div class="si-hero-row">
+      <div>
+        <div class="si-day" id="heroDay">Day 1 <span>of 47</span></div>
+        <div class="si-date" id="heroDate"></div>
+      </div>
+      <div class="si-left"><b id="heroLeft">47</b><small>days left</small></div>
+    </div>
+    <div class="si-phase" id="heroPhase"></div>
+    <div class="si-prog">
+      <div class="bar"><i id="heroBar" style="width:0%"></i></div>
+      <div class="si-prog-txt"><span id="heroToday"></span><span id="heroAll"></span></div>
+    </div>
+  </section>
+
+  <div class="si-tabs">
+    <div class="seg" role="tablist" aria-label="Plan sections">
+      <button type="button" role="tab" id="t-today" data-tab="today" aria-controls="p-today" aria-selected="true">Today</button>
+      <button type="button" role="tab" id="t-plan" data-tab="plan" aria-controls="p-plan" aria-selected="false">Plan</button>
+      <button type="button" role="tab" id="t-paper" data-tab="paper" aria-controls="p-paper" aria-selected="false">Paper</button>
+      <button type="button" role="tab" id="t-log" data-tab="log" aria-controls="p-log" aria-selected="false">Log</button>
+    </div>
+  </div>
+
+  <section id="p-today" role="tabpanel" aria-labelledby="t-today"></section>
+  <section id="p-plan" role="tabpanel" aria-labelledby="t-plan" hidden></section>
+  <section id="p-paper" role="tabpanel" aria-labelledby="t-paper" hidden></section>
+  <section id="p-log" role="tabpanel" aria-labelledby="t-log" hidden></section>
+</main>
+
+<div id="sheetRoot"></div>
+
+<script src="/prep/exams.js"></script>
+<script src="/study-lessons.js"></script>
+<script src="/prep/si-plan.js"></script>
+<script src="/app/si.js"></script>
+</body>
+</html>

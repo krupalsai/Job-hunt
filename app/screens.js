@@ -323,6 +323,24 @@ document.addEventListener('click', e=>{
    taps made it look optional. */
 function openFromHash(h){
   h = String(h || '').replace(/^#/, '');
+  /* Deep links from the TS SI plan (si.html): a task names the exact lesson
+     or drill it means, so the link opens that and not the subject list. */
+  /* Opened on the next tick: this runs from DOMContentLoaded, and prep/sync.js
+     renders the lesson list from its own DOMContentLoaded handler AFTER this
+     one — opening the lesson synchronously had it painted over a moment later
+     by its own subject's list. */
+  const lesson = /^lesson=([a-z0-9-]+)$/i.exec(h);
+  if(lesson && typeof CURRICULUM !== 'undefined' && CURRICULUM.some(l => l.key === lesson[1])){
+    window.gotoSection('lessons');
+    setTimeout(()=>{ if(window.openLessonByKey) window.openLessonByKey(lesson[1]); window.scrollTo(0, 0); }, 0);
+    return;
+  }
+  const drill = /^drill=([a-z0-9-]+)$/i.exec(h);
+  if(drill && typeof openSkillDrill === 'function'){
+    window.gotoSection('test');
+    setTimeout(()=>openSkillDrill(drill[1]), 0);
+    return;
+  }
   if(h === 'mock'){
     window.gotoSection('test');
     if(typeof openMockIntro === 'function') openMockIntro();
@@ -350,6 +368,6 @@ window.addEventListener('load', ()=>window.scrollTo(0, 0));
    on #learn would move the address bar and nothing else. */
 window.addEventListener('hashchange', ()=>{
   const h = (location.hash || '').replace(/^#/, '');
-  if(h === 'mock' || routeOf(h)) openFromHash(h);
+  if(h === 'mock' || routeOf(h) || /^(lesson|drill)=/.test(h)) openFromHash(h);
 });
 

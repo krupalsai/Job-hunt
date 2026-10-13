@@ -180,6 +180,7 @@ const EXAMS = [
     key: "ssc-cgl",
     name: "SSC CGL Tier 1",
     short: "SSC CGL",
+    headline: "SSC CGL Tier 1",
     pattern: "100 questions · 200 marks · 60 minutes · −0.50 per wrong answer",
     // SSC CGL DOES have negative marking, unlike HAL. Getting that backwards
     // would teach exactly the wrong exam-hall behaviour, so it is stated on the
@@ -189,6 +190,8 @@ const EXAMS = [
     // wrong answer" above is the exact deduction, not a derived one. Both
     // numbers are already the ones this exam's own tactics text quotes.
     marking: { correct: 2, wrong: -0.5, unanswered: 0 },
+    // Four options a question. The guess-or-leave-it arithmetic needs it.
+    options: 4,
     minutes: 60,
     questions: 100,
     buffer: 5,
@@ -225,9 +228,17 @@ const EXAMS = [
       { name: "Quantitative Aptitude",            marks: 50, questions: 25, budget: 22, subjects: ["Quantitative Aptitude"] },
       { name: "English Comprehension",            marks: 50, questions: 25, budget: 12, subjects: ["English"] },
     ],
+    /* THE GUESSING ADVICE WAS WRONG, AND IT WAS WRONG ON THE SIDE THAT COSTS
+       MARKS. It said "do not guess blind" and "guess only once you have ruled
+       out two options". The arithmetic says the opposite: a blind guess among
+       four is right one time in four (+2) and wrong three times (−0.5), so it
+       is worth 0.25×2 − 0.75×0.5 = +0.125 marks on average. Ruling out one
+       option makes it +0.33, ruling out two +0.75. A blank is worth 0. On
+       this paper a guess is never worse than a blank on average — the only
+       real cost is the seconds it takes. */
     tactics: [
-      "A wrong answer costs 0.50 of the 2 marks on offer. A blank costs nothing — do not guess blind.",
-      "Guess only once you have ruled out two options. At one-in-two the odds beat the penalty; at one-in-four they do not.",
+      "Never leave a question blank. A blind guess among four is worth +0.125 marks on average (one in four right for +2, three in four wrong for −0.5); a blank is worth 0.",
+      "Ruling out options makes a guess much better: one ruled out is worth +0.33 on average, two ruled out +0.75. Spend your thinking on eliminating, not on agonising.",
       "Order: Reasoning, then English, then General Awareness, then Quant. The first three are the fastest marks and Quant will eat whatever time you leave it.",
       "Skip any Quant question needing more than 90 seconds of setup and come back only if time remains.",
       "Keep the last 5 minutes for checking answers you marked, not for filling blanks.",
@@ -252,6 +263,7 @@ const EXAMS = [
     key: "ts-si",
     name: "Telangana Sub-Inspector of Police (Civil)",
     short: "TS SI",
+    headline: "TS SI Prelims",
     // Two stages. `sections` describes the PRELIMINARY test, because that is
     // the one being prepared for right now and the one the rest of the app
     // reads; the full stage structure is in `stages` below.
@@ -269,7 +281,20 @@ const EXAMS = [
        not surprise the candidate. */
     examDateStart: "2026-11-29",
     dateTentative: true,
-    dateBasis: "TGPRB lists 29 November 2026 for the Preliminary Written Test, and labels it tentative.",
+    dateBasis: "TGPRB press note of 17 September 2026: Preliminary Written Test for SCT SI (Civil) and equivalent posts tentatively on Sunday 29 November 2026, forenoon, at the erstwhile 10 district headquarters.",
+    session: "Forenoon",
+    /* The application window, so a tracked TGPRB row stops presenting itself
+       as an opening once it has shut. Opened 19 August 2026; the last date
+       was extended from 9 to 16 September 2026 (5:00 PM). */
+    applyWindow: { start: "2026-08-19", end: "2026-09-16",
+      basis: "Applications ran 19 August – 16 September 2026 (last date extended from 9 September), as reported from the TGPRB schedule." },
+    /* The authored 47-day plan (prep/si-plan.js, si.html): Day 1 is
+       Tuesday 13 October 2026, Day 47 the Saturday before the paper. */
+    plan: { href: "/si.html", start: "2026-10-13", days: 47 },
+    /* 1,60,756 applications for SI (Civil) and equivalent posts — TGPRB press
+       note of 17 September 2026, as reported. Context for why a margin over
+       the qualifying mark matters, not a cut-off. */
+    applicants: 160756,
     // Exactly what the paper does with each response. Stated as numbers rather
     // than as a boolean because the guess-or-leave-it decision is arithmetic:
     // at one-in-four a guess is worth 0.25 − 0.75×0.20 = +0.10, and at
@@ -277,6 +302,18 @@ const EXAMS = [
     // difference between leaving forty marks on the table and throwing them
     // away.
     marking: { correct: 1, wrong: -0.20, unanswered: 0, negativePercent: 20 },
+    markingBasis: "0.20 marks deducted for each wrong answer; no marks for an unanswered question (2026 notification, as reported).",
+    options: 4,
+    /* The prelims are QUALIFYING: clear the bar and the marks are forgotten.
+       30 / 25 / 20 per cent is what the 2026 notification is reported to set
+       (careers360 and others, Aug 2026). One aggregator still prints the
+       older 40 / 35 / 30 from the 2022 notification, which the 2022
+       supplementary notification lowered to 30 / 25 / 20 — so the app shows
+       30 / 25 / 20 and says to confirm it on the hall ticket. */
+    qualifying: {
+      basis: "Minimum to qualify in the Preliminary Written Test: 30% OC (incl. EWS), 25% BC, 20% SC / ST / Ex-servicemen — 2026 notification as reported. Confirm on your hall ticket.",
+      byCategory: { "OC": 30, "EWS": 30, "BC": 25, "SC": 20, "ST": 20, "Ex-servicemen": 20 },
+    },
     questions: 200,
     // The notification gives ONE duration for ONE paper: three hours for the
     // preliminary test. It does NOT split that time between the two halves.
@@ -321,9 +358,17 @@ const EXAMS = [
         ],
       },
     ],
+    /* CORRECTED. The old lines told the candidate to leave blanks and to
+       guess only after ruling out two options — the exact opposite of what
+       the marking rewards. With four options and 0.20 off a wrong answer, a
+       blind guess is worth 0.25×1 − 0.75×0.20 = +0.10 marks on average, one
+       option ruled out +0.20, two ruled out +0.40. A blank is worth 0. The
+       comment on `marking` above already had this arithmetic; the advice
+       contradicted it. */
     tactics: [
-      "A wrong answer costs 20% of that question's marks. A blank costs nothing — this is not a paper where you fill everything in at the end.",
-      "Guess only after ruling out two options. At one-in-two the odds are worth the 20%; at one-in-four they are not.",
+      "Attempt all 200. A wrong answer costs only 0.20, so even a blind guess among four is worth +0.10 marks on average — a blank is worth 0. Over 100 guesses that is about +10 marks.",
+      "Every option you rule out makes the guess better: one ruled out is worth +0.20 on average, two ruled out +0.40. Eliminate first, then commit.",
+      "Bubble the OMR as you go, in blocks of ten. Leaving the bubbling for the last minutes is how answered questions end up blank.",
       "The prelims are a gate, not a score. Nothing you earn here carries into the final merit, so clear it and move on rather than chasing every last mark.",
       "Papers I and II are only qualifying. Passing them is compulsory, but an extra hour spent on English polish is an hour taken from Papers III and IV, which are what actually rank you.",
       "Telangana Movement is the section a candidate from outside the state cannot bluff and you can. Treat it as the cheapest marks on the paper, not as background reading.",

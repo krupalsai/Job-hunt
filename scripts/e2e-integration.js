@@ -40,6 +40,10 @@ function check(name, cond, detail){
     args: ['--no-sandbox'],
   });
   const ctx = await browser.newContext();
+  /* A fixed day, so which exams are "still ahead" does not depend on when the
+     suite runs: 13 Oct 2026 has SSC CGL (14 Oct) and TS SI (29 Nov) ahead,
+     HAL (5–6 Sep) behind. Time still flows from there; timers fire. */
+  await ctx.clock.install({ time: new Date('2026-10-13T10:00:00+05:30') });
   // A first-time visitor is asked which exam before anything else, and that
   // question covers the app until it is answered — see e2e-nav.js, which is
   // where that screen is tested. This suite is about the wiring BETWEEN the
@@ -55,14 +59,19 @@ function check(name, cond, detail){
   // The job list itself calls Supabase, which is unreachable from this test, so
   // only same-origin 404s matter here.
   check('no missing local files on the job list', notFound.length === 0, notFound.join(', '));
+  /* Chromium asks for the manifest after the page settles, and under load
+     that can land just after networkidle. Give it a moment rather than racing
+     it — the check is whether the file is served, not how fast. */
+  if (!requested.includes('/manifest.json'))
+    await page.waitForRequest(r => r.url().endsWith('/manifest.json'), { timeout: 8000 }).catch(() => {});
   check('manifest.json is served', requested.includes('/manifest.json'));
 
   console.log('\n── the job list reaches the prep ────────────────────────');
-  // Three destinations on the bottom bar; Jobs is a different page, reached
-  // from the ☰ menu rather than competing for a bar slot.
+  // Four destinations on the bottom bar: Home (the news and the openings),
+  // then the three prep destinations.
   const labels = await page.locator('nav#nav-bottom .nav-lbl').allTextContents();
-  check('the bottom bar is the three prep destinations',
-    labels.join('|') === 'Study|Test|Progress', labels.join('|'));
+  check('the bottom bar is Home and the three prep destinations',
+    labels.join('|') === 'Home|Study|Test|Progress', labels.join('|'));
   const link = page.locator('nav#nav-bottom [data-tab="study"]');
   check('the prep is one tap away from the job list', await link.count() === 1);
   const href = await link.getAttribute('href');
@@ -91,11 +100,9 @@ function check(name, cond, detail){
     await page.evaluate(()=>ALL.every(q => (q.skills||[]).every(k => !!SKILL_BY_KEY[k]))));
 
   console.log('\n── and the prep reaches back ────────────────────────────');
-  // Jobs is reached from the ☰ menu on the prep page, not the bottom bar.
-  await page.click('#nav-hamburger');
-  await page.waitForFunction(() => document.querySelector('#nav-drawer').classList.contains('is-open'));
-  const back = page.locator('#nav-drawer [data-goto="jobs"]');
-  check('the job list is reachable from the menu', await back.count() === 1);
+  // Home is one tap away on every page, in the bar — not buried in the menu.
+  const back = page.locator('nav#nav-bottom [data-tab="home"]');
+  check('the home screen is reachable from the prep page', await back.count() === 1);
   check('and it is a real link, not a history step',
     (await back.getAttribute('href')) === '/');
   await back.click();
@@ -605,7 +612,9 @@ function check(name, cond, detail){
   });
   check('the profile on the phone feeds the verdict (DOB, state, category read)',
     elig.dob === '2003-04-15' && elig.state === 'Telangana' && elig.cat === 'SC');
-  check('a B.Tech CSE 2025 graduate above the HAL bar can apply to HAL',
+  // HAL's paper is behind (Sep 2026) but its rules are still held: the
+  // verdict is about eligibility, not about whether the date has passed.
+  check('a B.Tech CSE 2025 graduate above the HAL bar meets HAL\'s rules',
     elig.hal.status === 'yes', JSON.stringify(elig.hal));
   check('every graduate can apply to SSC CGL',
     elig.ssc.status === 'yes', JSON.stringify(elig.ssc));
@@ -621,14 +630,22 @@ function check(name, cond, detail){
     noTech.status === 'no' && /B\.E\.\/B\.Tech|engineering degree/i.test(noTech.reason), JSON.stringify(noTech));
 
   console.log('\n── the picker badges follow the profile ─────────────────');
-  // The suite pins jobhunt_current_exam via addInitScript, so the first-run
-  // picker never shows; the "Change exam" picker renders the same rows.
+  // The picker offers the exams still ahead (SSC CGL and TS SI on the fixed
+  // day); HAL's paper is behind, so it is not offered at all.
   await page.evaluate(() => window.JobhuntNav.openChangeExam());
-  const badgeTexts = await page.$$eval('.pick-elig', els => els.map(e => e.textContent));
-  check('every picker row carries an eligibility line', badgeTexts.length >= 3);
-  check('HAL reads not eligible after the qualification change, the rest apply',
-    badgeTexts.some(t => /Not eligible/.test(t)) && (badgeTexts.filter(t => /can apply/.test(t)).length >= 2),
-    badgeTexts.join(' | '));
+  let badgeTexts = await page.$$eval('.pick-elig', els => els.map(e => e.textContent));
+  check('every picker row carries an eligibility line', badgeTexts.length >= 2, badgeTexts.join(' | '));
+  check('a Telangana graduate can apply to both exams still ahead',
+    badgeTexts.length >= 2 && badgeTexts.every(t => /can apply/i.test(t)), badgeTexts.join(' | '));
+  check('a paper already sat is not offered as a choice',
+    !/HAL/.test(await page.locator('#nav-picker').innerText()));
+  // Both need a degree: with Intermediate entered, both badges must turn.
+  await page.evaluate(() => localStorage.setItem('jobhunt_qualification', 'Intermediate'));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.evaluate(() => window.JobhuntNav.openChangeExam());
+  badgeTexts = await page.$$eval('.pick-elig', els => els.map(e => e.textContent));
+  check('the badges follow the profile: no degree, not eligible',
+    badgeTexts.length >= 2 && badgeTexts.every(t => /Not eligible/i.test(t)), badgeTexts.join(' | '));
 
   await browser.close();
   server.close();
