@@ -2103,7 +2103,20 @@ let shContent = {};
    data/apply-links.json — keyed by the post. */
 const SH_LINKS_URL = '/data/apply-links.json';
 let shLinks = {};
-function shApply(j) { return (j && shLinks[j.key]) || null; }
+/** The company's own apply link for this opening — checked on this post, or
+    on any repost of the same opening. The daily pull keeps the NEWEST post and
+    marks the older ones duplicate_of it, so a link verified on an older post
+    must still reach the one that is shown (Hevo Data's did not, once). */
+function shLinkRec(j) {
+  if (!j) return null;
+  if (shLinks[j.key]) return shLinks[j.key];
+  const repost = shJobs.find(x => x.duplicate_of === j.key && shLinks[x.key]);
+  return repost ? shLinks[repost.key] : null;
+}
+/** A live apply link, or null. A posting that has come down is not a link. */
+function shApply(j) { const r = shLinkRec(j); return r && !r.closed ? r : null; }
+/** Why the opening is closed on the company's own site, or null. */
+function shClosed(j) { const r = shLinkRec(j); return r && r.closed ? r.closed : null; }
 let shStatus = {};
 let shStudy = {};
 
@@ -2130,6 +2143,11 @@ function shFit(j) {
      be read, which is not the same as it saying something about freshers. */
   if (!j.company && (!j.role || /^(job )?type\s*:/i.test(j.role)))
     return { ok: false, reason: 'the post could not be read — no company or role in it' };
+  /* The company's own page outranks the caption: Amazon's SDE I says
+     "2025 and 2026 graduates" on amazon.jobs even where the post never wrote
+     "freshers". See data/apply-links.json `fresher`. */
+  const verified = shApply(j);
+  if (verified && verified.fresher) return { ok: true, reason: '' };
   const role = (j.role || '').toLowerCase();
   const blob = [j.role, j.qualification, j.experience, j.graduation_year, j.notes].join(' ').toLowerCase();
   if (/2027|2028/.test(blob)) return { ok: false, reason: 'for 2027/28 graduates — not 2025' };
@@ -2235,7 +2253,8 @@ function shCardHtml(j, idx) {
         <span class="sh-role">${escapeHtml(j.role || 'Opening')}</span>
         ${meta ? `<span class="sh-meta">${meta}</span>` : ''}
         <span class="sh-chips">${shChips(j)}</span>
-        ${fit.ok ? '' : `<span class="sh-fitreason">Not a fit — ${escapeHtml(fit.reason)}</span>`}
+        ${shClosed(j) ? `<span class="sh-fitreason">Closed — ${escapeHtml(shClosed(j))}</span>`
+          : fit.ok ? '' : `<span class="sh-fitreason">Not a fit — ${escapeHtml(fit.reason)}</span>`}
       </span>
       <span class="sh-caret" aria-hidden="true">▾</span>
     </button>
@@ -2420,8 +2439,9 @@ function renderShrestha() {
   // Each opening shows once (newest post wins); older reposts of the same
   // opening live under "Also shared" inside the detail view.
   const shown = shJobs.filter(j => !j.duplicate_of);
-  const live = shown.filter(j => j.status === 'live');
-  const done = shown.filter(j => j.status !== 'live');
+  // A posting taken down on the company's site is closed, whatever the post says.
+  const live = shown.filter(j => j.status === 'live' && !shClosed(j));
+  const done = shown.filter(j => j.status !== 'live' || shClosed(j));
   /* "I need really link": the list is the fresher openings that have an
      apply link on the company's own site (data/apply-links.json). A post
      whose only route is "comment on Instagram for a DM" is not something to
@@ -2459,7 +2479,7 @@ function renderShrestha() {
   if (nf) nf.innerHTML =
     fold('Shared only by DM — no public link found', dmOnly) +
     fold('Not a fit right now', notFit) +
-    fold('Expired or stale', done);
+    fold('Closed or expired', done);
   renderShStudy();
 }
 

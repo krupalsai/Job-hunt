@@ -258,6 +258,13 @@ async function noSideScroll(page, where) {
   }));
   check('the fresher list is only jobs with an apply link on the company\'s own site',
     shCards.length >= 1 && shCards.every(h => /^https:\/\//.test(h) && !/instagram\.com/.test(h)), shCards.join(' | '));
+  check('a link verified on an older repost still reaches the opening that is shown',
+    await page.evaluate(() => shJobs.filter(j => !j.duplicate_of && j.status === 'live' && shFit(j).ok &&
+      shJobs.some(x => x.duplicate_of === j.key && shLinks[x.key])).every(j => !!shApply(j))));
+  check('a posting taken down on the company\'s site is shown as closed, with no apply button',
+    await page.evaluate(() => shJobs.filter(j => !j.duplicate_of && shClosed(j)).every(j =>
+      !document.querySelector('#shresthaJobs').textContent.includes(j.role || '\u0000') || !shApply(j))) &&
+    !(await page.locator('#shresthaJobs').innerText()).includes('Thermo Fisher'));
   check('and the ones shared only by DM wait in a fold, not on the list',
     /Shared only by DM/.test(await page.locator('#shNotFit').innerText()));
   await page.goBack();
