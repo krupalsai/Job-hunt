@@ -251,14 +251,33 @@ async function noSideScroll(page, where) {
     (await page.locator('#pvtPreview .brief').first().evaluate(a => !a.getAttribute('href').startsWith('#'))));
   check('and a direct link goes to the company, not Instagram',
     (await page.locator('#pvtPreview a.brief[target="_blank"]').evaluateAll(as => as.every(a => !/instagram\.com/.test(a.href)))));
+  await page.locator('#pvtAll').click();
+  await page.waitForSelector('#shresthaJobs .sh-card, #shresthaJobs .empty');
+  const shCards = await page.locator('#shresthaJobs .sh-card').evaluateAll(cs => cs.map(c => {
+    const a = c.querySelector('.sh-apply a'); return a ? a.href : '';
+  }));
+  check('the fresher list is only jobs with an apply link on the company\'s own site',
+    shCards.length >= 1 && shCards.every(h => /^https:\/\//.test(h) && !/instagram\.com/.test(h)), shCards.join(' | '));
+  check('and the ones shared only by DM wait in a fold, not on the list',
+    /Shared only by DM/.test(await page.locator('#shNotFit').innerText()));
+  await page.goBack();
+  await page.waitForTimeout(150);
   const tpPrev = await page.locator('#tpPreview .brief').allInnerTexts();
   check('₹40 LPA+: the one open now for your batch comes first, one tap to apply',
     /Amazon/.test(tpPrev[0] || '') && /Open now/.test(tpPrev[0] || '') &&
     /amazon\.jobs\/en\/jobs\//.test(await page.locator('#tpPreview .brief').first().getAttribute('href')), (tpPrev[0] || '').slice(0, 80));
   await page.locator('#tpAll').click();
   await page.waitForTimeout(150);
-  const tp = await page.locator('#topPayList .tp-row').evaluateAll(els => els.map(e => ({ s: e.dataset.status, t: e.innerText })));
+  const tp = await page.locator('#topPayList .tp-row, #topPayClosed .tp-row').evaluateAll(els => els.map(e => ({ s: e.dataset.status, t: e.textContent })));
   check('the full list is its own screen, every role listed', await page.locator('.view[data-view="toppay"]').isVisible() && tp.length >= 10, String(tp.length));
+  check('only what a 2025 pass-out can apply to is on screen; the rest wait in one fold',
+    (await page.locator('#topPayList .tp-row').evaluateAll(els => els.length >= 1 && els.every(e => e.dataset.status === 'open'))) &&
+    (await page.locator('#tpClosedFold:not([open])').count()) === 1 &&
+    /Not for 2025 pass-outs right now \(\d+\)/.test(await page.locator('#tpClosedCount').innerText()));
+  check('Home shows only the roles open to you', (await page.evaluate(() =>
+    [...document.querySelectorAll('#tpPreview .brief')].every(a => /amazon\.jobs/.test(a.href)))));
+  check('no careers home page is offered as a link', (await page.locator('#topPayList a, #topPayClosed a').evaluateAll(as =>
+    as.every(a => !/\/careers\/?$|careers\.[a-z]+\.com\/?$|join-jane-street\/?$/.test(a.href)))));
   check('open ones first, then other batches, then the rest', tp[0].s === 'open' && tp.findIndex(r => r.s === 'none') > tp.findIndex(r => r.s === 'batch'));
   check('a role that is not open says so — instead of a careers home page dressed as a link',
     tp.filter(r => r.s === 'none').every(r => /Not open for freshers in India right now/.test(r.t)));

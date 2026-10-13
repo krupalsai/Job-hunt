@@ -357,7 +357,6 @@
                background: var(--surface-2); color: var(--ink-2); }
   .tp-status.is-open { background: var(--ok-soft); color: var(--ok); font-weight: 700; }
   .tp-status.is-batch { background: var(--warn-soft); color: var(--warn); }
-  .tp-small { font-size: 12.5px; }
 
   .sh-apply { padding: 0 16px 14px; margin-top: -4px; }
 
@@ -496,7 +495,7 @@
     <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>Fresher IT jobs</h2></div>
     <section class="sec" id="shresthaSec" aria-labelledby="shH">
       <div class="sec-head"><h2 id="shH">Fresher openings</h2><span class="chip chip-pvt num" id="shCount"></span></div>
-      <p class="sec-sub" id="shresthaSub">Newest first · pulled daily from @careerwithshrestha</p>
+      <p class="sec-sub" id="shresthaSub">Openings for freshers with an apply link on the company's own site. Found daily from @careerwithshrestha posts.</p>
       <div class="list" id="shresthaJobs"><div class="empty">Loading…</div></div>
       <div id="shNotFit"></div>
     </section>
@@ -516,6 +515,10 @@
       <h2 class="sr-only" id="tpH">₹40 LPA+ fresher roles — off-campus</h2>
       <p class="sec-sub" id="tpSub"></p>
       <div class="list" id="topPayList"></div>
+      <details class="fold" id="tpClosedFold" style="margin-top:10px">
+        <summary id="tpClosedCount">Not for 2025 pass-outs right now</summary>
+        <div class="list" id="topPayClosed" style="border:0;border-radius:0;box-shadow:none"></div>
+      </details>
       <details class="fold" id="stepFold" style="margin-top:10px">
         <summary>Nearer rungs on the ladder</summary>
         <div class="fold-body" id="stepBody"></div>
@@ -1283,30 +1286,38 @@ function renderTopPay() {
     if (r.status === 'none') return `<div class="tp-status">Not open for freshers in India right now${checked ? ' (checked ' + escapeHtml(checked) + ')' : ''}. ${escapeHtml(r.statusNote || '')} Usually opens ${escapeHtml(r.months.map(x => MONTHS[x - 1]).join(' & '))}.</div>`;
     return `<div class="tp-status">Usually opens ${escapeHtml(r.months.map(x => MONTHS[x - 1]).join(' & '))} — not checked yet.</div>`;
   };
+  /* Only a posting is a link. "Need link not web": a careers home page is
+     somewhere to search, not something to apply to, so a role with no live
+     posting gets no button at all — its status line says why. */
   const action = r => r.posting && r.status === 'open'
     ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(r.posting.url)}" target="_blank" rel="noopener">Apply now →</a>`
     : r.posting
       ? `<a class="btn btn-sm" href="${escapeHtml(r.posting.url)}" target="_blank" rel="noopener">See the posting →</a>`
-      : `<a class="tp-small" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">${escapeHtml(r.company)} careers site</a>`;
+      : '';
   const rowHtml = r => `<div class="tp-row" data-tp="${escapeHtml(r.company)}" data-status="${escapeHtml(r.status || '')}">
       <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
       <div class="tp-role">${escapeHtml(r.role)} · <span class="chip chip-pvt">${escapeHtml(r.kind)}</span></div>
       ${statusHtml(r)}
       <div class="tp-tests">${escapeHtml(r.tests)}</div>
-      <div class="btn-row">${action(r)}</div>
+      ${action(r) ? `<div class="btn-row">${action(r)}</div>` : ''}
     </div>`;
   /* 2025 pass-outs see only what they can apply to right now. Everything
-     else — other batches, not open, not checked yet — sits one tap away. */
+     else — other batches, not open — sits one tap away in one fold, so the
+     screen is the roles to act on, not twelve cards of "not open". */
   const eligible = rows.filter(r => r.status === 'open');
   const rest = rows.filter(r => r.status !== 'open');
-  list.innerHTML = (eligible.length
-      ? eligible.map(rowHtml).join('')
-      : `<div class="tp-status">Nothing open for 2025 pass-outs right now${checked ? ' (checked ' + escapeHtml(checked) + ')' : ''}.</div>`)
-    + (rest.length
-      ? `<details class="fold"><summary><span>Not for 2025 pass-outs right now</span><span class="cp-count">${rest.length}</span></summary><div class="fold-body">${rest.map(rowHtml).join('')}</div></details>`
-      : '');
+  list.innerHTML = eligible.length ? eligible.map(rowHtml).join('')
+    : `<div class="empty">Nothing open for 2025 pass-outs right now${checked ? ' (checked ' + escapeHtml(checked) + ')' : ''}. Each role below says when it usually opens.</div>`;
+  const closedList = document.getElementById('topPayClosed');
+  if (closedList) closedList.innerHTML = rest.map(rowHtml).join('');
+  const closedFold = document.getElementById('tpClosedFold');
+  if (closedFold) closedFold.classList.toggle('hidden', rest.length === 0);
+  const closedCount = document.getElementById('tpClosedCount');
+  if (closedCount) closedCount.textContent = `Not for 2025 pass-outs right now (${rest.length})`;
   const prev = document.getElementById('tpPreview');
-  if (prev) prev.innerHTML = rows.slice(0, PREVIEW).map(r => {
+  if (prev) prev.innerHTML = !eligible.length
+    ? `<div class="empty">Nothing open for 2025 pass-outs right now — See all for when each opens.</div>`
+    : eligible.slice(0, PREVIEW).map(r => {
     const href = r.posting && r.status === 'open' ? r.posting.url : '#toppay';
     const sub = r.status === 'open' ? 'Open now — tap to apply' : r.status === 'batch' ? 'Open for another batch'
       : r.status === 'none' ? 'Not open now · usually ' + r.months.map(x => MONTHS[x - 1]).join(' & ')
@@ -1325,7 +1336,7 @@ function renderTopPay() {
       <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
       <div class="tp-role">${escapeHtml(r.role)}</div>
       <div class="chips">${opensChip(r)}</div>
-      <div class="btn-row"><a class="btn btn-sm" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">Where to apply →</a></div>
+      ${r.portal ? `<div class="btn-row"><a class="btn btn-sm" href="${escapeHtml(r.portal.url)}" target="_blank" rel="noopener">${escapeHtml(r.portal.label)}</a></div>` : ''}
     </div>`).join('');
   document.getElementById('tpSources').innerHTML =
     `<b>Indicative pay, not a promise.</b> CTC includes stock and bonuses; monthly in-hand is much lower. Months are typical patterns, not announced dates. ${escapeHtml(T.safety)}<br>` +
@@ -2115,6 +2126,10 @@ function shSaveState() {
    knowledge is effectively zero; the app must never imply he is qualified
    for something he is not. */
 function shFit(j) {
+  /* "Type: Full-time" as the role and no company: the post's text could not
+     be read, which is not the same as it saying something about freshers. */
+  if (!j.company && (!j.role || /^(job )?type\s*:/i.test(j.role)))
+    return { ok: false, reason: 'the post could not be read — no company or role in it' };
   const role = (j.role || '').toLowerCase();
   const blob = [j.role, j.qualification, j.experience, j.graduation_year, j.notes].join(' ').toLowerCase();
   if (/2027|2028/.test(blob)) return { ok: false, reason: 'for 2027/28 graduates — not 2025' };
@@ -2407,42 +2422,44 @@ function renderShrestha() {
   const shown = shJobs.filter(j => !j.duplicate_of);
   const live = shown.filter(j => j.status === 'live');
   const done = shown.filter(j => j.status !== 'live');
-  /* A real fresher intake first. "Not a fit" stays one tap away, each with
-     its reason, so he can still try his luck with full information. */
-  /* A real link first — "I need a real link" — then newest. */
-  const fit = live.filter(j => shFit(j).ok).sort((a, b) => (shApply(b) ? 1 : 0) - (shApply(a) ? 1 : 0));
+  /* "I need really link": the list is the fresher openings that have an
+     apply link on the company's own site (data/apply-links.json). A post
+     whose only route is "comment on Instagram for a DM" is not something to
+     act on, so it waits in a fold — kept, never dropped — until a link is
+     found for it. "Not a fit" is one tap away too, each with its reason. */
+  const fit = live.filter(j => shFit(j).ok);
+  const linked = fit.filter(j => shApply(j));
+  const dmOnly = fit.filter(j => !shApply(j));
   const notFit = live.filter(j => !shFit(j).ok);
   const card = j => shCardHtml(j, shJobs.indexOf(j));
-  wrap.innerHTML = fit.length
-    ? fit.map(card).join('')
-    : '<div class="empty">No posting in the feed invites freshers right now. The rest are below, each with the reason it is not a fit.</div>';
+  wrap.innerHTML = linked.length
+    ? linked.map(card).join('')
+    : '<div class="empty">No fresher opening with a public apply link right now. The ones shared only by DM are below.</div>';
   const cnt = document.getElementById('shCount');
-  if (cnt) cnt.textContent = String(fit.length);
+  if (cnt) cnt.textContent = String(linked.length);
   const pm = document.getElementById('pvtMeta');
-  if (pm) pm.textContent = String(fit.length);
-  /* The summary: three, with a direct link first, each opening the company's
-     own page when there is one. */
+  if (pm) pm.textContent = String(linked.length);
+  /* The summary: three, each opening the company's own page. */
   const prev = document.getElementById('pvtPreview');
   if (prev) {
-    const ranked = fit.slice().sort((a, b) => (shApply(b) ? 1 : 0) - (shApply(a) ? 1 : 0));
-    prev.innerHTML = ranked.length ? ranked.slice(0, PREVIEW).map(j => {
+    prev.innerHTML = linked.length ? linked.slice(0, PREVIEW).map(j => {
       const link = shApply(j);
-      const href = link ? link.url : '#pvt';
-      return `<a class="brief" href="${escapeHtml(href)}"${link ? ' target="_blank" rel="noopener"' : ''}>
+      return `<a class="brief" href="${escapeHtml(link.url)}" target="_blank" rel="noopener">
         <div class="brief-main"><div class="brief-org">${escapeHtml(j.company || 'Company not named')}${j.location ? ' · ' + escapeHtml(j.location) : ''}</div>
           <div class="brief-title">${escapeHtml(j.role || 'Opening')}</div>
-          <div class="brief-meta${link ? ' ok-tag' : ''}">${link ? 'Apply on the company site' : 'Link only by DM — see details'}</div></div>
+          <div class="brief-meta ok-tag">Apply on the company site</div></div>
         <span class="brief-go" aria-hidden="true">›</span></a>`;
-    }).join('') : '<div class="empty">No fresher posting right now.</div>';
+    }).join('') : '<div class="empty">No fresher opening with a public apply link right now.</div>';
   }
   const pa = document.getElementById('pvtAll');
-  if (pa) pa.textContent = `See all ${fit.length}`;
+  if (pa) pa.textContent = `See all ${linked.length}`;
+  const fold = (title, rows) => rows.length ? `<details class="fold" style="margin-top:10px"><summary>${title} (${rows.length})</summary>
+      <div class="list" style="border:0;border-radius:0;box-shadow:none">${rows.map(card).join('')}</div></details>` : '';
   const nf = document.getElementById('shNotFit');
   if (nf) nf.innerHTML =
-    (notFit.length ? `<details class="fold" style="margin-top:10px"><summary>Not a fit right now (${notFit.length})</summary>
-      <div class="list" style="border:0;border-radius:0;box-shadow:none">${notFit.map(card).join('')}</div></details>` : '') +
-    (done.length ? `<details class="fold" style="margin-top:10px"><summary>Expired or stale (${done.length})</summary>
-      <div class="list" style="border:0;border-radius:0;box-shadow:none">${done.map(card).join('')}</div></details>` : '');
+    fold('Shared only by DM — no public link found', dmOnly) +
+    fold('Not a fit right now', notFit) +
+    fold('Expired or stale', done);
   renderShStudy();
 }
 
@@ -2507,7 +2524,7 @@ async function loadShrestha() {
       shJobs = Array.isArray(d.jobs) ? d.jobs : [];
       const upd = d.updated_at ? shDate(d.updated_at) : '';
       const sub = document.getElementById('shresthaSub');
-      if (sub) sub.textContent = `Newest first · pulled daily from @careerwithshrestha${upd ? ' · updated ' + upd : ''} · ${shJobs.length} postings`;
+      if (sub) sub.textContent = `Each one opens the company's own apply page. Found in @careerwithshrestha posts${upd ? ', updated ' + upd : ''}.`;
     }
     if (contentR.ok) shContent = await contentR.json();
   } catch (e) {
