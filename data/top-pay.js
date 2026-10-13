@@ -9,6 +9,9 @@
    ₹40 LPA or more. It is a watch-list with the month each company usually
    opens, not a feed of live openings: none of these firms publishes salary on
    a posting, so a "live 40 LPA opening" cannot be honestly scraped.
+   INDIA-ELIGIBLE ONLY. A company belongs here only if a 2025 India pass-out
+   can actually apply when it opens. US-only / no-India-fresher entries do not
+   belong here — they were removed on 2026-10-13 (Atlassian, Optiver).
 
    WHERE THE NUMBERS COME FROM — all secondary, all labelled as such on screen:
      [A] Let's Code, "India Off-Campus Hiring Calendar 2026" (27 Apr 2026):
@@ -53,9 +56,7 @@ window.TOP_PAY = {
     { company: "Jane Street", role: "Software Developer", low: 60, high: null, months: [10],
       apply: "https://www.janestreet.com/join-jane-street/",
       tests: "Puzzle-heavy coding and probability interviews.", kind: "Trading" , status: "unchecked" },
-    { company: "Optiver", role: "Graduate Software Engineer", low: 50, high: null, months: [10],
-      apply: "https://optiver.com/careers/",
-      tests: "Online coding test, then systems and C++/low-latency interviews.", kind: "Trading" , status: "none", statusNote: "Graduate roles are open in Amsterdam, Austin, Chicago and London; Mumbai's openings are for experienced hires." },
+
     { company: "Graviton Research Capital", role: "Software Engineer", low: 45, high: null, months: [10],
       apply: "https://www.gravitontrading.com/careers",
       tests: "Competitive-programming level DSA test, then technical rounds.", kind: "Trading" , status: "batch", posting: { url: "https://job-boards.greenhouse.io/gravitonresearchcapital/jobs/8764240002", label: "Software Engineer (2027 Graduate)" }, statusNote: "Open, but for 2027 graduates — and the form asks for a JEE Advanced rank." },
@@ -90,9 +91,7 @@ window.TOP_PAY = {
     { company: "Goldman Sachs", role: "Engineering Analyst", low: 25, high: 45, months: [1, 8],
       apply: "https://www.goldmansachs.com/careers/",
       tests: "HackerRank test (DSA, maths), then technical rounds.", kind: "Finance tech" , status: "unchecked" },
-    { company: "Atlassian", role: "Graduate Engineer", low: 28, high: 45, months: [11],
-      apply: "https://www.atlassian.com/company/careers",
-      tests: "Online coding test, then coding, design and values interviews.", kind: "Product" , status: "none", statusNote: "Its graduate roles open now are for 2027 graduates in the US and Canada." },
+
     { company: "Uber", role: "SDE-I", low: 22, high: 40, months: [11],
       apply: "https://www.uber.com/global/en/careers/",
       tests: "Online coding test, then DSA interviews.", kind: "Product" , status: "unchecked" },
