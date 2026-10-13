@@ -73,7 +73,11 @@ function bareEmoji(cap, emoji, label) {
   for (const line of cap.split('\n')) {
     const t = CLEAN(line);
     const m = new RegExp('^' + emoji + '\\s+(.+)$', 'u').exec(t);
-    if (m && !new RegExp(label + '\\s*:', 'i').test(m[1])) return CLEAN(m[1]);
+    if (!m) continue;
+    const v = CLEAN(m[1]);
+    if (new RegExp(label + '\\s*:', 'i').test(v)) continue;
+    if (/^[A-Za-z][A-Za-z ]{0,20}:\s/.test(v)) continue;  // "Type: Full-time" — a labeled field, not a bare value
+    return v;
   }
   return null;
 }
@@ -93,7 +97,17 @@ function canonCompany(s) {
   return c || s;
 }
 
+/* Last resort: her DM keyword is the company name in caps ("Comment
+   "MICROSOFT"" for the apply link). Only when it is clearly a name. */
+const KEYWORD_STOP = new Set(['LINK', 'JOB', 'JOBS', 'APPLY', 'INFO', 'DETAILS', 'DM', 'YES', 'HI']);
+function companyFromKeyword(kw) {
+  if (!kw || !/^[A-Z][A-Z& ]{1,30}$/.test(kw) || KEYWORD_STOP.has(kw)) return null;
+  return canonCompany(titleCase(kw.toLowerCase()));
+}
+
 function extractCompany(cap) {
+  const f = field(cap, ['Company', 'Company Name', 'Organisation', 'Organization']);
+  if (f) return canonCompany(f);
   let m = /(?:🚨|🍎)\s*([A-Z][A-Z .&'-]+?)\s+IS HIRING/u.exec(cap);
   if (m) return canonCompany(titleCase(m[1]));
   m = /([A-Z][A-Z .&'-]+?)\s+MASS HIRING/u.exec(cap);
@@ -107,26 +121,67 @@ function extractCompany(cap) {
   if (m) return canonCompany(CLEAN(m[1]));
   m = /it['’]s ([A-Z][A-Za-z]+)!/i.exec(cap);          // "and yes, it’s MICROSOFT!"
   if (m) return canonCompany(titleCase(m[1]));
+  // "🚨 Cisco Software Engineer Jobs for Freshers | Hybrid Work | India"
+  m = /🚨\s*([A-Z][A-Za-z]+)\s+(?:[A-Z][a-z]+\s+)?[Jj]obs?\b/u.exec(cap);
+  if (m && !/^(remote|new|latest|top|best)$/i.test(m[1])) return canonCompany(m[1]);
+  // "Hevo Data is hiring!" mid-caption.
+  m = /([A-Z][A-Za-z]+(?:\s+[A-Z][a-z]+)?)\s+is hiring!/i.exec(cap);
+  if (m) return canonCompany(m[1]);
   m = /^([A-Z][A-Za-z .&'-]+?)\s+is Mass Hiring/i.exec(cap);
   if (m) return canonCompany(CLEAN(m[1]));
   return null;
 }
 
 function extractRole(cap) {
-  const r = field(cap, ['Role']) || bareEmoji(cap, '💼', 'Role');
+  let r = field(cap, ['Role', 'Position', 'Job Role']) || bareEmoji(cap, '💼', 'Role');
+  if (r) {
+    r = r.replace(/^(Position|Job Type|Type)\s*:\s*/i, '').trim();
+    // Employment type is not the role — "Full-time | 0-2 years experience" must fall
+    // through to the prose patterns below instead of displaying as the role.
+    if (/^(full[\s-]?time|part[\s-]?time|internship|contract)\b/i.test(r)) r = null;
+  }
   if (r) return r;
+  // "🍎 Apple - Junior Software Development Engineer in Test (SDET)"
+  let m = /🍎\s*[A-Za-z][A-Za-z .&'-]*?\s+-\s*([^\n]{3,80})/u.exec(cap);
+  if (m) return CLEAN(m[1]);
+  // "an opening for a Junior SDET in Bengaluru"
+  m = /opening for an?\s+([A-Z][A-Za-z ()/\-]{2,60}?)\s+in\s+[A-Z]/i.exec(cap);
+  if (m) return CLEAN(m[1]);
+  // "Heizen is hiring Associate Software Engineers with 0-2 years…"
+  m = /\bis hiring\s+(?:for\s+an?\s+)?([A-Z][A-Za-z /&()'-]{2,60}?)(?=\s+with\b|\s+in\b|[.,!]|\s*$)/i.exec(cap);
+  if (m && !/[₹$]/.test(m[1]) && !/\bjob$/i.test(m[1].trim())) return CLEAN(m[1]);
   // "X is Mass Hiring" posts name no single role.
   if (/is Mass Hiring/i.test(cap)) return 'Mass Hiring (multiple fresher roles)';
   return null;
 }
 
+const WORK_MODEL_RE = /\b(hybrid|remote|on[\s-]?site|work from home|wfh|wfo)\b/i;
 function extractLocation(cap) {
-  return field(cap, ['Location', 'Job Location']) || bareEmoji(cap, '📍', 'Location');
+  let loc = field(cap, ['Location', 'Job Location', 'Locations']) || bareEmoji(cap, '📍', 'Location');
+  const wmField = field(cap, ['Work Mode', 'WorkMode']);
+  if (!loc) return { location: null, work_model: wmField ? CLEAN(wmField) : null };
+  loc = loc.replace(/^locations?\s*:\s*/i, '').trim();
+  // Split off the work model: "Hyderabad | Hybrid" → location "Hyderabad", model "Hybrid".
+  const parts = loc.split(/\s*[|/]\s*/).map(s => s.trim()).filter(Boolean);
+  const wm = [], lp = [];
+  for (const p of parts) {
+    const m = WORK_MODEL_RE.exec(p);
+    if (m && p.length <= m[0].length + 6) wm.push(m[1]);
+    else lp.push(p);
+  }
+  let joined = lp.join(', ');
+  let model = wm.join(', ') || (wmField ? CLEAN(wmField) : null);
+  const pm = /\(([^)]*(?:hybrid|remote|on[\s-]?site|wfh|wfo)[^)]*)\)/i.exec(joined);
+  if (pm) {
+    model = (model ? model + ', ' : '') + CLEAN(pm[1]);
+    joined = CLEAN(joined.replace(pm[0], '')).replace(/\s{2,}/g, ' ').replace(/\s*,\s*,/g, ',').trim();
+  }
+  return { location: joined || null, work_model: model };
 }
 
 function extractQualification(cap) {
-  const q = field(cap, ['Educational Qualification', 'Qualification', 'Eligible Fields']);
-  return q;
+  return field(cap, ['Educational Qualification', 'Qualification', 'Eligible Fields', 'Eligibility'])
+    || bareEmoji(cap, '🎓', 'Qualification');
 }
 
 function extractExperience(cap) {
@@ -144,6 +199,8 @@ function splitSkills(s) {
 function extractSkills(cap) {
   const s = field(cap, ['Core Skills', 'Primary Technologies', 'Skills']);
   if (s) return splitSkills(s);
+  const be = bareEmoji(cap, '🧑‍\u200d💻', 'Skills');
+  if (be) return splitSkills(be);
   // "🔑 Skills:" on its own line, values on the next line.
   const lines = cap.split('\n').map(CLEAN);
   for (let i = 0; i < lines.length - 1; i++) {
@@ -156,9 +213,15 @@ function extractSkills(cap) {
 }
 
 function extractPackage(cap) {
+  const f = field(cap, ['Package', 'Salary', 'CTC']);
+  if (f) return f;
   let m = /💰\s*package:\s*(.+)/i.exec(cap);
   if (m) return CLEAN(m[1]);
   m = /CTC of\s+([^\n]+)/i.exec(cap);
+  if (m) return CLEAN(m[1]);
+  m = /pays?\s+(₹[^\n]+)/i.exec(cap);
+  if (m) return CLEAN(m[1]);
+  m = /package of\s*([^\n]+)/i.exec(cap);
   if (m) return CLEAN(m[1]);
   return null;
 }
@@ -169,8 +232,21 @@ function extractDmKeyword(cap) {
 }
 
 function extractGraduationYear(cap) {
-  const m = /graduation year:\s*([^\n]+)/i.exec(cap);
-  return m ? CLEAN(m[1]) : null;
+  let m = /graduation years?:\s*([^\n]+)/i.exec(cap);
+  if (m) return CLEAN(m[1]);
+  m = /graduation year:\s*([^\n]+)/i.exec(cap);
+  if (m) return CLEAN(m[1]);
+  m = /((?:20\d\d\s*\/\s*)*20\d\d)\s*(?:pass[\s-]?outs?|graduates?)/i.exec(cap);
+  if (m) return CLEAN(m[1].replace(/\s/g, ''));
+  m = /batch of\s*(20\d\d)/i.exec(cap);
+  if (m) return m[1];
+  m = /\b(20\d\d)\s*batch\b/i.exec(cap);
+  if (m) return m[1];
+  m = /class of\s*(20\d\d)/i.exec(cap);
+  if (m) return m[1];
+  m = /graduat(?:ing|ion)(?:\s+in)?\s*(20\d\d)/i.exec(cap);
+  if (m) return m[1];
+  return null;
 }
 
 function extractDeadline(cap) {
@@ -186,7 +262,7 @@ function extractDeadline(cap) {
 function isJobPost(cap) {
   const t = cap.toLowerCase();
   // Skill contests, giveaways and pure announcements are not job postings.
-  if (/skill contest|young turks|prize pool|giveaway/.test(t)) return false;
+  if (/skill contest|young turks|prize pool|giveaway|codevita|coding contests?|contest duration|prize money/.test(t)) return false;
   return true;
 }
 
@@ -194,17 +270,18 @@ function extractJob(post) {
   const cap = cutHashtags(post.post_caption || '');
   if (!isJobPost(cap)) return { skipped: 'not a job post' };
   const { deadline, note } = extractDeadline(cap);
-  const company = extractCompany(cap);
-  const role = extractRole(cap);
   const dmKeyword = extractDmKeyword(cap);
+  const company = extractCompany(cap) || companyFromKeyword(dmKeyword);
+  const role = extractRole(cap);
+  const { location, work_model } = extractLocation(cap);
   if (!company && !role) return { skipped: 'no company or role found' };
   return {
     key: 'ig-' + post.post_id,
     post_id: String(post.post_id),
     post_url: `https://www.instagram.com/p/${post.post_id}/`,
     posted_at: (post.created_at || '').replace(' ', 'T'),
-    company, role,
-    location: extractLocation(cap),
+    company, role, location, work_model,
+    caption: cap,
     qualification: extractQualification(cap),
     experience: extractExperience(cap),
     skills: extractSkills(cap),
@@ -249,9 +326,9 @@ function merge(current, posts) {
 
   // Fields the extractor owns. Anything else on a job (status, notes,
   // first_seen_at) is hand- or app-managed and never overwritten here.
-  const MANAGED = ['company', 'role', 'location', 'qualification', 'experience',
+  const MANAGED = ['company', 'role', 'location', 'work_model', 'qualification', 'experience',
     'skills', 'package', 'graduation_year', 'dm_keyword', 'apply_hint',
-    'deadline', 'posted_at', 'post_url', 'duplicate_of', 'status'];
+    'deadline', 'posted_at', 'post_url', 'duplicate_of', 'status', 'caption'];
   const snap = j => MANAGED.map(k => JSON.stringify(j[k] ?? null)).join('|');
 
   for (const post of posts) {
