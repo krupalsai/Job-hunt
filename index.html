@@ -1288,13 +1288,23 @@ function renderTopPay() {
     : r.posting
       ? `<a class="btn btn-sm" href="${escapeHtml(r.posting.url)}" target="_blank" rel="noopener">See the posting →</a>`
       : `<a class="tp-small" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">${escapeHtml(r.company)} careers site</a>`;
-  list.innerHTML = rows.map(r => `<div class="tp-row" data-tp="${escapeHtml(r.company)}" data-status="${escapeHtml(r.status || '')}">
+  const rowHtml = r => `<div class="tp-row" data-tp="${escapeHtml(r.company)}" data-status="${escapeHtml(r.status || '')}">
       <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
       <div class="tp-role">${escapeHtml(r.role)} · <span class="chip chip-pvt">${escapeHtml(r.kind)}</span></div>
       ${statusHtml(r)}
       <div class="tp-tests">${escapeHtml(r.tests)}</div>
       <div class="btn-row">${action(r)}</div>
-    </div>`).join('');
+    </div>`;
+  /* 2025 pass-outs see only what they can apply to right now. Everything
+     else — other batches, not open, not checked yet — sits one tap away. */
+  const eligible = rows.filter(r => r.status === 'open');
+  const rest = rows.filter(r => r.status !== 'open');
+  list.innerHTML = (eligible.length
+      ? eligible.map(rowHtml).join('')
+      : `<div class="tp-status">Nothing open for 2025 pass-outs right now${checked ? ' (checked ' + escapeHtml(checked) + ')' : ''}.</div>`)
+    + (rest.length
+      ? `<details class="fold"><summary><span>Not for 2025 pass-outs right now</span><span class="cp-count">${rest.length}</span></summary><div class="fold-body">${rest.map(rowHtml).join('')}</div></details>`
+      : '');
   const prev = document.getElementById('tpPreview');
   if (prev) prev.innerHTML = rows.slice(0, PREVIEW).map(r => {
     const href = r.posting && r.status === 'open' ? r.posting.url : '#toppay';
