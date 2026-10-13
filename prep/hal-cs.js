@@ -776,168 +776,137 @@ const QUESTION_BANK = {
    skills:["odd-one-out-category"],
    why:"Apple, banana and mango are fruits; carrot is a root vegetable. The classification is botanical category, not colour or taste.",
    trick:"For odd-one-out, name the CATEGORY out loud before you look at the options. Three will share it."},
-
   {q:"If CAT is coded as 3120, how is DOG coded? (A=1 … Z=26)",
    opts:["4157","4715","41507","4 15 7"], correct:0,
    why:"C=3, A=1, T=20 gives 3-1-20 → '3120' concatenated. So D=4, O=15, G=7 → '4157'.",
    trick:"Work out the rule from the given example FIRST, then apply it. Never guess the rule from the options."},
-
   {q:"Complete the series: 2, 6, 12, 20, 30, ?",
    opts:["40","42","36","44"], correct:1,
    skills:["series-find-the-rule"],
    why:"Differences are 4, 6, 8, 10 — increasing by 2 — so the next difference is 12, giving 42. Equivalently each term is n(n+1): 1×2, 2×3, 3×4, 4×5, 5×6, 6×7 = 42.",
    deeper:"Write the gaps under the numbers: from 2 to 6 is 4, from 6 to 12 is 6, from 12 to 20 is 8, from 20 to 30 is 10. Those gaps go 4, 6, 8, 10 — climbing by 2 each time. So the next gap must be 12, and 30 + 12 = 42.",
    trick:"Always write the differences underneath first. If they are not obvious, try the differences of the differences."},
-
   {q:"Complete the series: 3, 8, 15, 24, 35, ?",
    opts:["46","48","44","50"], correct:1,
    skills:["series-find-the-rule"],
    why:"Each term is n² − 1: 4−1, 9−1, 16−1, 25−1, 36−1, then 49−1 = 48. The differences 5, 7, 9, 11, 13 confirm it.",
    trick:"Numbers just below perfect squares are a favourite. Memorise squares to 20² and these become instant."},
-
   {q:"Complete the series: 1, 1, 2, 3, 5, 8, ?",
    opts:["11","12","13","15"], correct:2,
    skills:["series-find-the-rule"],
    why:"Fibonacci — each term is the sum of the two before it. 5 + 8 = 13.",
    deeper:"Look at the numbers as pairs. 1+1 makes the 2. Then 1+2 makes the 3. Then 2+3 makes the 5, and 3+5 makes the 8. Every number is built from the two sitting immediately to its left, so the next one is 5+8 = 13. Nothing is multiplied or squared — it is only ever addition of the two most recent terms.",
    trick:"If differences go nowhere, test whether adding the previous two terms works. Fibonacci appears constantly."},
-
   {q:"If LOTUS is coded as MPUVT, how is ROSE coded?",
    opts:["SPTF","SPTE","RPTF","SQTF"], correct:0,
    skills:["letter-shift-coding"],
    why:"Every letter shifts forward by one: L→M, O→P, T→U, U→V, S→T. Applying +1 to ROSE: R→S, O→P, S→T, E→F = SPTF.",
    trick:"Write the alphabet with positions once at the start of the exam. Shift ciphers then take five seconds."},
-
   {q:"Pointing to a photo a man says, 'I have no brother or sister, but that man's father is my father's son.' Who is in the photo?",
    opts:["His father","His son","Himself","His nephew"], correct:1,
    skills:["blood-relations-levels"],
    why:"With no siblings, 'my father's son' can only be the speaker himself. So the man in the photo has the speaker as his father — the photo is of his son.",
    diagram:"my father\n\u2502\n\u2502  \"my father's son\" \u2014 and I have no brothers,\n\u2502  so that son can only be ME\n\u2502\nME  \u2190 so I am 'that man's father'\n\u2502\n\u2502\nthat man   \u2190 the man in the photo\n\nI am his father \u2192 he is my SON.",
    trick:"Solve blood relations from the INSIDE out. 'My father's son' with no brothers always resolves to the speaker."},
-
   {q:"A man walks 5 km north, turns right and walks 3 km, then turns right and walks 5 km. How far is he from the start?",
    opts:["3 km","5 km","8 km","13 km"], correct:0,
    skills:["direction-sense-cancelling"],
    why:"North 5, then east 3, then south 5. The two vertical legs cancel exactly, leaving him 3 km east of the start.",
    diagram:"START \u25cf\n      \u2502\n      \u2502 5 km north\n      \u2502\n      \u25cf\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25cf  3 km east (right turn)\n              \u2502\n              \u2502 5 km south (right again)\n              \u2502\n      \u25cf\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u25cf  END\n\nThe 5 north and the 5 south cancel exactly.\nOnly the 3 km east is left \u2192 3 km from the start.",
    trick:"Draw it. Opposite legs cancel; only the leftover legs count. If two remain, use Pythagoras."},
-
   {q:"All roses are flowers. Some flowers fade quickly. Which follows?",
    opts:["All roses fade quickly","Some roses fade quickly","No rose fades quickly","None of these follows"], correct:3,
    skills:["syllogism-some-proves-nothing"],
    why:"The 'some flowers' that fade may be entirely outside the roses. Nothing forces an overlap, so neither a positive nor a negative conclusion about roses is guaranteed.",
    trick:"In syllogisms, 'some' never guarantees an overlap with a specific subgroup. Draw the circles and try to make the conclusion FALSE — if you can, it does not follow."},
-
   {q:"Find the odd one out: Rectangle, Square, Circle, Triangle",
    opts:["Rectangle","Square","Circle","Triangle"], correct:2,
    skills:["odd-one-out-category"],
    why:"Rectangle, square and triangle are polygons bounded by straight sides with vertices. A circle has a single curved boundary and no vertices.",
    trick:"Ask what property THREE share. Straight sides here — the curve is the outsider."},
-
   {q:"If FRIEND is coded as HTKGPF, then CANDLE is coded as?",
    opts:["ECPFNG","ECPFNH","DBOEMF","ECQFNG"], correct:0,
    skills:["letter-shift-coding"],
    why:"Each letter moves forward by 2: F→H, R→T, I→K, E→G, N→P, D→F. Applying +2 to CANDLE: C→E, A→C, N→P, D→F, L→N, E→G = ECPFNG.",
    trick:"Find the shift from the FIRST letter, then verify with the second before applying it to the whole word."},
-
   {q:"Complete the series: 5, 10, 20, 40, ?",
    opts:["60","70","80","100"], correct:2,
    skills:["series-find-the-rule"],
    why:"Each term doubles, so 40 × 2 = 80. Differences (5, 10, 20) are not constant, which is the signal to test a ratio instead.",
    trick:"If differences grow fast, try DIVIDING consecutive terms. A constant ratio means a geometric series."},
-
   {q:"A is B's sister, C is B's mother, D is C's father. How is A related to D?",
    opts:["Daughter","Granddaughter","Grandmother","Sister"], correct:1,
    skills:["blood-relations-levels"],
    why:"A and B are siblings, so C is A's mother too. D is C's father, so D is A's grandfather — making A his granddaughter.",
    diagram:"D          \u2190 oldest generation\n\u2502          (C's father, so the grandfather)\n\u2502\nC          \u2190 middle generation\n\u2502          (mother of both A and B)\n\u2502\n\u250c\u2500\u2500\u2534\u2500\u2500\u2510\nA     B    \u2190 youngest generation\n           (A is B's sister, so same level)\n\nCount the steps from A up to D: two levels.\nTwo levels up = grandparent, so A is D's GRANDdaughter.",
    trick:"Draw the generations as levels on paper. Every 'father/mother of' moves you up one level; 'sister of' stays on the same level."},
-
   {q:"Which number is a prime?",
    opts:["91","87","97","93"], correct:2,
    skills:["divisibility-and-primes"],
    why:"91 = 7×13, 87 = 3×29, 93 = 3×31. 97 has no factor up to √97 ≈ 9.8, so it is prime.",
    trick:"Test divisibility only up to the square root. For two-digit numbers that means just 2, 3, 5 and 7."},
-
   {q:"Complete the series: 2, 3, 5, 7, 11, 13, ?",
    opts:["15","17","19","21"], correct:1,
    skills:["series-find-the-rule","divisibility-and-primes"],
    why:"These are consecutive primes; the next after 13 is 17 (15 = 3×5 is not prime).",
    trick:"When a series has no arithmetic pattern, check whether it is simply the primes. Know them to 100."},
-
   {q:"If BOOK is coded as DQQM, how is DESK coded?",
    opts:["FGUM","FGUN","EFTL","FHUM"], correct:0,
    skills:["letter-shift-coding"],
    why:"B→D is +2, and O→Q confirms it, so the rule is a forward shift of two. Applying it to DESK: D→F, E→G, S→U, K→M = FGUM.",
    trick:"Get the shift from the first letter, confirm it on the second, then apply. Two letters agreeing is the whole check."},
-
   {q:"P is the son of Q. R is the mother of Q. How is R related to P?",
    opts:["Mother","Sister","Grandmother","Aunt"], correct:2,
    skills:["blood-relations-levels"],
    why:"Q is one level above P, and R is one level above Q — two levels above P in total. Two levels up is a grandparent, and R is female, so R is P's grandmother.",
    trick:"Count the levels first, then apply the gender. Two levels up is always 'grand-'."},
-
   {q:"Find the odd one out: Copper, Iron, Silver, Plastic",
    opts:["Copper","Iron","Silver","Plastic"], correct:3,
    skills:["odd-one-out-category"],
    why:"Copper, iron and silver are metals; plastic is a synthetic non-metal. The category is what the material IS, not what it is used for — all four are used to make things.",
    trick:"Name what three of them share out loud before hunting for the outsider. Here it is 'metal'."},
-
   {q:"All pens are objects. Some objects are red. Which conclusion follows?",
    opts:["All pens are red","Some pens are red","No pen is red","None of these follows"], correct:3,
    skills:["syllogism-some-proves-nothing"],
    why:"The red objects could sit entirely outside the pens, so no positive conclusion is forced; but they could also include pens, so no negative one is forced either. 'Some' guarantees nothing about a particular subgroup.",
    trick:"Try to draw the circles so the conclusion is FALSE while every statement stays true. If you can, it does not follow."},
-
   {q:"All cats are animals. All animals need water. Which follows?",
    opts:["All cats need water","Some cats do not need water","All animals are cats","Nothing follows"], correct:0,
    skills:["syllogism-some-proves-nothing"],
    why:"Two universal statements chain: every cat is inside 'animals', and everything inside 'animals' needs water, so every cat needs water. This is the case that DOES follow — the contrast with 'some' is the whole point.",
    trick:"All-to-all travels. Some-to-anything does not. Check which word the chain rests on."},
-
   {q:"A man walks 4 km east, turns left and walks 3 km. How far is he from the starting point?",
    opts:["3 km","4 km","5 km","7 km"], correct:2,
    skills:["direction-sense-cancelling"],
    why:"Facing east, a left turn points north, so the two legs are at right angles and neither cancels the other. The distance is the hypotenuse: √(4² + 3²) = 5 km.",
    trick:"Nothing cancels means Pythagoras. Exams choose 3-4-5 and 6-8-10 so the answer comes out whole."},
-
   {q:"A boy walks 6 km south, turns left and walks 4 km, then turns left again and walks 6 km. How far is he from the start?",
    opts:["2 km","4 km","10 km","16 km"], correct:1,
    skills:["direction-sense-cancelling"],
    why:"Facing south, a left turn points east; facing east, a left turn points north. So the legs are 6 south, 4 east, 6 north — the two 6s cancel exactly and only the 4 km east is left.",
    trick:"Draw it and cancel opposite legs. Facing south, left is EAST — that is the step people get backwards."},
-
   {q:"Which of these numbers is divisible by 3?",
    opts:["1234","2345","3456","4567"], correct:2,
    skills:["divisibility-and-primes"],
    why:"Add the digits: 1+2+3+4 = 10, 2+3+4+5 = 14, 3+4+5+6 = 18, 4+5+6+7 = 22. Only 18 is a multiple of 3, so only 3456 is divisible by 3.",
    trick:"Divisible by 3 if the digits add to a multiple of 3; by 9 if they add to a multiple of 9."},
-
-  /* Four question TYPES the bank had nothing for, taken from IndiaBIX's
-     logical-reasoning index: analogy, position in a row, painted cubes and
-     letter series. The existing questions covered series, coding, blood
-     relations, odd-one-out, syllogisms and direction sense. */
-
   {q:"Doctor : Stethoscope :: Carpenter : ?",
    opts:["Wood","Chisel","House","Furniture"], correct:1,
    why:"The first pair is a worker and the tool they work with, so the answer must be a tool. Wood is the material, and a house or furniture is the product — only the chisel is the instrument.",
    trick:"Name the relation in words before looking at the options: 'X uses Y to work'. Then only one option can fit."},
-
   {q:"In a row of 40 children, Ravi is 11th from the left. What is his position from the right?",
    opts:["28th","29th","30th","31st"], correct:2,
    why:"Position from the right = total − position from the left + 1 = 40 − 11 + 1 = 30. The +1 is because Ravi is counted in both directions; leaving it out gives the classic wrong answer of 29.",
    trick:"Total minus position plus one. The +1 is the person themselves, and forgetting it is the whole trap."},
-
   {q:"A cube painted red on all faces is cut into 27 equal smaller cubes. How many small cubes have exactly two faces painted?",
    opts:["6","8","12","27"], correct:2,
    why:"A 3×3×3 cube has 8 corner cubes with three painted faces, 12 edge cubes with two, 6 face-centre cubes with one, and 1 hidden cube with none. 8+12+6+1 = 27, which checks the split.",
    trick:"Corners 3 faces, edges 2, face centres 1, the middle 0. A cube has 8 corners and 12 edges, always."},
-
   {q:"Complete the series: AZ, BY, CX, ?",
    opts:["DV","DW","EW","DX"], correct:1,
    why:"The first letter moves forward through the alphabet (A, B, C, D) while the second moves backward from the end (Z, Y, X, W). So the next pair is DW.",
    trick:"When a pair moves, check each position separately. One counting up and one counting down is the commonest pattern.",
-   skills:["series-find-the-rule"]},
+   skills:["series-find-the-rule"]}
 ],
 
 /* ──────────────────────────────── ENGLISH ──────────────────────────────── */
@@ -947,243 +916,196 @@ const QUESTION_BANK = {
    skills:["synonym-antonym-direction"],
    why:"Abundant means present in large quantity. Scarce, rare and limited are all antonyms — a classic trap where three options point the same wrong way.",
    trick:"When three options mean the same thing, the odd one out is usually the answer."},
-
   {q:"Identify the error: 'He don't like coffee.'",
    opts:["He","don't","like","coffee"], correct:1,
    skills:["subject-verb-agreement"],
    why:"'He' is third person singular and needs 'doesn't'. 'Don't' is used with I, you, we and they.",
    trick:"Third person singular takes the S — either on the verb (he likes) or on the auxiliary (he does not)."},
-
   {q:"Choose the antonym of 'Benevolent'",
    opts:["Generous","Kind","Malevolent","Charitable"], correct:2,
    skills:["synonym-antonym-direction","word-roots-and-affixes"],
    why:"Benevolent means well-meaning; malevolent means wishing harm. Generous, kind and charitable are all synonyms, so they cannot be the answer.",
    trick:"BENE = good (benefit, benign). MAL = bad (malice, malfunction). These two roots answer dozens of questions."},
-
   {q:"Choose the synonym for 'Meticulous'",
    opts:["Careless","Extremely careful about detail","Fast","Rude"], correct:1,
    skills:["synonym-antonym-direction"],
    why:"Meticulous means showing great attention to detail. Do not confuse it with 'ticklish' or 'mediocre' — the exam relies on lookalike words.",
    trick:"Meticulous = a METICULOUS person checks every detail twice. Its opposite is slapdash."},
-
   {q:"Choose the antonym of 'Transparent'",
    opts:["Clear","Opaque","Visible","Obvious"], correct:1,
    skills:["synonym-antonym-direction","word-roots-and-affixes"],
    why:"Transparent lets light through; opaque blocks it. Clear, visible and obvious are all synonyms — again three pointing one way.",
    trick:"Trans = through. Opaque = blocked. If light cannot pass, it is opaque."},
-
   {q:"One word for 'a speech made without preparation'",
    opts:["Eloquent","Extempore","Verbose","Monologue"], correct:1,
    skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Extempore (or impromptu) means done on the spur of the moment. Eloquent describes quality, verbose means wordy, and a monologue is a long speech by one person regardless of preparation.",
    trick:"EX-TEMPORE = out of TIME, i.e. no time to prepare."},
-
   {q:"One word for 'one who cannot read or write'",
    opts:["Ignorant","Illiterate","Innocent","Illegible"], correct:1,
    skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Illiterate describes the person. Illegible describes handwriting that cannot be READ — the trap option here. Ignorant means lacking knowledge generally.",
    trick:"IlliterATE = a person. IllegiBLE = the writing. The ending tells you which is which."},
-
   {q:"Identify the error: 'Each of the boys have finished their work.'",
    opts:["Each of","the boys","have","their work"], correct:2,
    skills:["subject-verb-agreement"],
    why:"'Each' is singular, so the verb must be 'has'. The plural noun in between ('boys') is a distraction — the verb agrees with 'each', not with the nearest noun.",
    trick:"Each, every, either, neither, none, everyone = ALWAYS singular. Ignore the phrase in between."},
-
   {q:"Identify the error: 'One of my friend is a doctor.'",
    opts:["One of","my friend","is","a doctor"], correct:1,
    skills:["one-of-plural-noun"],
    why:"'One of' must be followed by a plural noun — one of my friendS. The verb 'is' is correct, since the subject is 'one'.",
    trick:"'One of' takes a PLURAL noun but a SINGULAR verb. One of my friends is — both parts matter."},
-
   {q:"'To let the cat out of the bag' means?",
    opts:["To free an animal","To reveal a secret","To cause chaos","To make a mistake"], correct:1,
    skills:["idioms-are-not-literal"],
    why:"An idiom's meaning is conventional and cannot be worked out from the words — this one means to disclose something meant to be hidden.",
    trick:"Idioms must be memorised, not reasoned. If an option is the literal meaning, it is almost always wrong."},
-
   {q:"Identify the error: 'The list of items are on the desk.'",
    opts:["The list","of items","are","on the desk"], correct:2,
    skills:["subject-verb-agreement"],
    why:"The subject is 'the list', which is singular, so the verb must be 'is'. 'Of items' is a prepositional phrase — it describes the list and cannot change what the verb agrees with, however plural it looks.",
    trick:"Cross out everything between the subject and the verb, then read it again: 'The list ... is on the desk.'"},
-
   {q:"Identify the error: 'Neither of the answers were correct.'",
    opts:["Neither","of the answers","were","correct"], correct:2,
    skills:["subject-verb-agreement"],
    why:"'Neither' is singular — it means not one of them — so the verb must be 'was'. The plural 'answers' sits next to the verb purely to pull you the wrong way.",
    trick:"Each, every, either, neither, none: singular, always. The noun in between is a distraction."},
-
   {q:"Which sentence is correct?",
    opts:["One of my brother is an engineer.","One of my brothers is an engineer.","One of my brothers are an engineer.","One of my brother are an engineer."], correct:1,
    skills:["one-of-plural-noun"],
    why:"'One of' picks one out of a group, so the noun must be plural — brothers. But the subject of the sentence is 'one', which is singular, so the verb stays 'is'. Both halves are marked at once.",
    trick:"Plural noun, singular verb. Say 'one of my brothers is' as a single phrase and both halves come out right."},
-
   {q:"Identify the error: 'She is one of the best student in the class.'",
    opts:["She is","one of","the best student","in the class"], correct:2,
    skills:["one-of-plural-noun"],
    why:"'One of the best' must be followed by a plural noun — students — because she is being picked out of a group of them. There is no group of one to pick from.",
    trick:"'One of the best ___' is always plural. If the noun cannot go plural, 'one of' is the wrong phrase."},
-
   {q:"'To burn the midnight oil' means?",
    opts:["To waste fuel","To work late into the night","To sleep badly","To start an argument"], correct:1,
    skills:["idioms-are-not-literal"],
    why:"The phrase comes from working by oil lamp after dark, and it means studying or working late. 'To waste fuel' is the literal reading, which is the decoy in nearly every idiom question.",
    trick:"Cross out the literal option first. It is put there to be chosen."},
-
   {q:"'A blessing in disguise' means?",
    opts:["A secret prayer","A gift given anonymously","Something that seems bad but turns out to be good","An unexpected visitor"], correct:2,
    skills:["idioms-are-not-literal"],
    why:"It describes a misfortune that later proves to be an advantage. The options assembled from the separate words 'blessing' and 'disguise' are traps — an idiom's meaning is a convention, not a sum of its parts.",
    trick:"If an option is built out of the individual words, it is almost certainly wrong."},
-
   {q:"One word for 'one who eats everything'",
    opts:["Carnivorous","Herbivorous","Voracious","Omnivorous"], correct:3,
    skills:["one-word-substitution","word-roots-and-affixes"],
    why:"Omni means all, so omnivorous is eating everything. Carnivorous is flesh, herbivorous is plants, and voracious means eating a great deal — a question of quantity, not of range. That last one is the trap.",
    trick:"OMNI = all (omnipresent, omniscient). Voracious is about how much, not about what."},
-
-  /* Added so the grammar chapters in prep/skills.js each have a real drill.
-     Tenses/verb-forms had zero coverage before this — the exact gap named as
-     "I can answer it but can't say what it is, this is past tense V1 V2 V3". */
-
   {q:"Identify the error: 'He has went to the market.'",
    opts:["He has","went to","the market","No error"], correct:1,
    skills:["verb-tenses-forms"],
    why:"'Has' must be followed by the past participle (V3), not the simple past (V2). 'Went' is V2; the past participle of 'go' is 'gone'. The correct sentence is 'He has gone to the market.'",
    trick:"have/has/had always pairs with V3. 'Has went' is never correct — it is always 'has gone'."},
-
   {q:"Choose the correct sentence about yesterday.",
    opts:["She did not went to school yesterday.","She did not go to school yesterday.","She did not gone to school yesterday.","She does not went to school yesterday."], correct:1,
    skills:["verb-tenses-forms"],
    why:"'Did' already carries the past tense, so the verb after it returns to its base form (V1) — 'go', not 'went' or 'gone'. This is one of the most common errors in error-spotting questions: doubling up the past tense.",
    trick:"did + V1, always. 'Did went' is wrong; 'did go' is right — go is correct because 'did' already did the work of showing past tense."},
-
   {q:"Fill in the blank: 'I ___ in this city since 2015.'",
    opts:["live","lived","have lived","am living"], correct:2,
    skills:["verb-tenses-forms"],
    why:"'Since' points to a fixed starting point in time and pairs with the present perfect — has/have + V3 — because the action began then and continues now. 'For' would pair with a duration instead (for ten years).",
    trick:"SINCE a point (since 2015, since Monday). FOR a duration (for ten years, for a while). Both usually need 'have/has + V3'."},
-
   {q:"Identify the error: 'By the time we reached the station, the train has left.'",
    opts:["By the time","we reached","the train has left","No error"], correct:2,
    skills:["verb-tenses-forms"],
    why:"Two past actions, one finishing before the other, need the PAST perfect (had + V3) for the earlier one — not the present perfect (has + V3). The train's leaving happened before 'we reached', which is already simple past, so it must be 'had left'.",
    trick:"Two events in the past, one before the other: the EARLIER one takes 'had + V3'. 'By the time' is the classic signal for this."},
-
   {q:"Choose the correct passive form of: 'The manager writes the report every week.'",
    opts:["The report is written by the manager every week.","The report was written by the manager every week.","The report has written by the manager every week.","The report is writing by the manager every week."], correct:0,
    skills:["verb-tenses-forms","active-passive-voice"],
    why:"Passive voice is formed with BE + V3, matching the tense of the active sentence. The original is simple present ('writes'), so the passive is 'is written' — is (BE) + written (V3), keeping the same present tense.",
    trick:"Passive = a form of BE + V3. Match the tense of BE to the tense of the original sentence."},
-
   {q:"The passive of 'They are building a bridge' is?",
    opts:["A bridge is built by them.","A bridge is being built by them.","A bridge was being built by them.","A bridge has been built by them."], correct:1,
    skills:["active-passive-voice"],
    why:"The original is present continuous ('are building'), so the passive must also be present continuous: is/am/are + being + V3. 'Is built' drops the continuous meaning and 'was being built' shifts it to the past — both change the tense, which a passive conversion must never do.",
    trick:"Present continuous active → 'is/are being + V3' in passive. The 'being' is what preserves the continuous meaning."},
-
   {q:"Identify the error: 'The letter was wrote by Rahul.'",
    opts:["The letter","was wrote","by Rahul","No error"], correct:1,
    skills:["active-passive-voice","verb-tenses-forms"],
    why:"Passive voice always uses the past participle (V3), never the simple past (V2). 'Wrote' is V2; the correct passive form is 'was written' — was + V3.",
    trick:"Passive is always BE + V3. If you see BE + V2 ('was wrote', 'is went'), that is the error."},
-
   {q:"Convert to active voice: 'The cake was eaten by the children.'",
    opts:["The children eat the cake.","The children ate the cake.","The children have eaten the cake.","The children were eating the cake."], correct:1,
    skills:["active-passive-voice"],
    why:"'Was eaten' is simple past passive, so the active version is simple past too: 'ate'. Working backward from passive to active keeps the same rule — match the tense, then remove the BE + V3 structure and put the doer first.",
    trick:"Passive → active: find who is after 'by', put them first, and use the SAME tense the passive form implied."},
-
   {q:"Which sentence cannot normally be converted to the passive voice?",
    opts:["She kicked the ball.","He sleeps early.","They painted the wall.","I read the book."], correct:1,
    skills:["active-passive-voice"],
    why:"Passive voice needs a direct object to become the new subject. 'Sleeps' is intransitive here — there is nothing being acted upon, so there is nothing to move to the front of a passive sentence. The other three all have an object (the ball, the wall, the book) that can become the passive subject.",
    trick:"No object, no passive. Ask 'what is being [verb]ed?' — if there is no answer, the sentence cannot be passivised."},
-
   {q:"Choose the correct article: '___ European Union has 27 members.'",
    opts:["A","An","The","No article needed"], correct:2,
    skills:["articles-and-determiners"],
    why:"'European Union' names a specific, unique organisation, so it takes 'the' — the same reason we say 'the United Nations' or 'the Sun'. Note that 'European' alone would take 'a' (it sounds like 'yer-o-pee-an', a consonant sound) — but here the whole proper noun needs 'the'.",
    trick:"A specific, one-of-a-kind organisation or institution takes 'the': the UN, the EU, the Government."},
-
   {q:"Choose the correct article: 'She is ___ honest woman.'",
    opts:["a","an","the","no article"], correct:1,
    skills:["articles-and-determiners"],
    why:"'Honest' begins with a silent H, so it is pronounced starting with the vowel sound 'on-est'. The article follows the SOUND, not the spelling, so 'an' is correct even though the word is spelled with a consonant letter.",
    trick:"Silent-H words (honest, hour, heir) take 'an', because the sound that follows the article is a vowel, whatever the spelling says."},
-
   {q:"Identify the error: 'I saw an unicorn in my dream.'",
    opts:["I saw","an unicorn","in my","No error"], correct:1,
    skills:["articles-and-determiners"],
    why:"'Unicorn' is spelled with a vowel but is pronounced 'yoo-ni-corn' — the Y sound is a consonant sound. So it needs 'a', not 'an': 'a unicorn'. This is the mirror-image trap of silent-H words.",
    trick:"Words starting with a 'yoo' sound (university, unicorn, uniform, European) take 'a', despite the vowel spelling."},
-
   {q:"Choose the correct sentence about milk.",
    opts:["Milk is a healthy drink for children.","The milk is healthy drink for children.","Milk is healthy drink for children.","A milk is healthy drink for children."], correct:2,
    skills:["articles-and-determiners"],
    why:"'Milk' here is an uncountable noun used in a general statement, so it takes no article at all. 'The milk' would only be correct if a specific batch of milk were meant (the milk in this glass), and 'a milk' is wrong because uncountable nouns cannot take 'a'.",
    trick:"General statements about uncountable nouns (milk, honesty, water) take NO article. Add 'the' only when a specific instance is meant."},
-
-  /* Added after comparing against a reference grammar syllabus: Parts of
-     Speech and Direct/Indirect Speech were named chapters with zero coverage
-     here. Both are genuinely missing rules, not just missing formats. */
-
   {q:"In the sentence 'She runs fast', what part of speech is 'fast'?",
    opts:["Noun","Verb","Adjective","Adverb"], correct:3,
    skills:["parts-of-speech"],
    why:"'Fast' describes HOW she runs — it modifies the verb 'runs' — which makes it an adverb here. In 'a fast car', the same word describes the noun 'car' and is an adjective instead. The job the word does in the sentence decides its part of speech, not the word itself.",
    trick:"Ask what the word is doing: describing a NOUN = adjective, describing a VERB (how/when/where) = adverb. Same word, different job."},
-
   {q:"Identify the part of speech of the underlined word: 'He handed me the BOOK.'",
    opts:["Verb","Noun","Adjective","Preposition"], correct:1,
    skills:["parts-of-speech"],
    why:"Here 'book' names a thing — the object being handed — so it is a noun. In 'Please book the tickets', the same word names the action instead and is a verb. Same spelling, different job.",
    trick:"'Book' is a classic trap word: a noun when it names the object, a verb when it names the action."},
-
   {q:"Which word in 'The cat sat under the table' is a preposition?",
    opts:["cat","sat","under","table"], correct:2,
    skills:["parts-of-speech"],
    why:"'Under' shows the relationship in place between the cat and the table — that is exactly what a preposition does. Prepositions sit before a noun or pronoun and describe where, when, or how something relates to it.",
    trick:"Prepositions answer 'where/when/how in relation to what' — in, on, at, under, before, after, between."},
-
   {q:"Which underlined word is a conjunction: 'He was tired BUT he kept working.'",
    opts:["tired","but","kept","working"], correct:1,
    skills:["parts-of-speech"],
    why:"'But' joins the two clauses ('he was tired' and 'he kept working') while showing a contrast between them — that is what a conjunction does. And, but, or, because and although are the ones most often tested.",
    trick:"A conjunction JOINS. If removing the word would leave two separate, complete sentences, the word connecting them is a conjunction."},
-
   {q:"In 'They quickly finished the work', what part of speech is 'quickly'?",
    opts:["Adjective","Adverb","Noun","Pronoun"], correct:1,
    skills:["parts-of-speech"],
    why:"'Quickly' describes HOW they finished — it modifies the verb 'finished' — so it is an adverb. Most, not all, adverbs of manner end in -ly, which is a useful hint but not a rule (friendly, for instance, is an adjective).",
    trick:"Ending in -ly is a hint, not a rule. The real test: what is it describing — a noun (adjective) or a verb/adjective/adverb (adverb)?"},
-
   {q:"Convert to indirect speech: He said, 'I am reading a book.'",
    opts:["He said that he is reading a book.","He said that he was reading a book.","He said that he read a book.","He said that he has read a book."], correct:1,
    skills:["direct-indirect-speech"],
    why:"Present continuous ('am reading') moves one step back to past continuous ('was reading') in reported speech, and the pronoun 'I' becomes 'he' to match who is being reported. Only one option shifts both correctly.",
    trick:"Present continuous → past continuous: is/am/are + V-ing becomes was/were + V-ing."},
-
   {q:"Convert to indirect speech: She said, 'I will call you tomorrow.'",
    opts:["She said that she will call me tomorrow.","She said that she would call me the next day.","She said that she would call me tomorrow.","She said that she will call me the next day."], correct:1,
    skills:["direct-indirect-speech"],
    why:"'Will' moves back to 'would', and 'tomorrow' — a time word anchored to the moment of speaking — becomes 'the next day' once it is being reported later. Both have to change together; the other three options change only one.",
    trick:"'will' → 'would' AND 'tomorrow' → 'the next day'. The exam tests whether you remember BOTH shifts, not just one."},
-
   {q:"Identify the error: 'He said that he is tired yesterday.'",
    opts:["He said","that he is tired","yesterday","No error"], correct:1,
    skills:["direct-indirect-speech","verb-tenses-forms"],
    why:"'Is' should shift one step back to 'was' in reported speech — present tense inside a past reporting verb ('said') is the classic narration error. 'Yesterday' can stay, describing when the tiredness was felt, so the error is isolated to the tense.",
    trick:"'Said that he IS' is almost always wrong — a past reporting verb pulls the tense inside it back one step, to 'was'."},
-
   {q:"Convert to indirect speech: The teacher said to the students, 'Do your homework.'",
    opts:["The teacher told the students to do their homework.","The teacher said the students to do their homework.","The teacher told the students that do their homework.","The teacher said to the students doing their homework."], correct:0,
    skills:["direct-indirect-speech"],
    why:"A command in direct speech ('Do your homework') becomes an infinitive ('to do their homework') in indirect speech, and the reporting verb changes from 'said to' to 'told' — 'told' takes a direct object (the students) the way 'said to' cannot in reported form.",
    trick:"Commands drop the imperative and become 'to + verb'. 'Said to' becomes 'told' when reporting an order."},
-
   {q:"Convert to indirect speech: 'Where do you live?' she asked me.",
    opts:["She asked me where did I live.","She asked me where I lived.","She asked me where do I live.","She asked me where I live."], correct:1,
    skills:["direct-indirect-speech"],
@@ -1193,143 +1115,86 @@ const QUESTION_BANK = {
 
 /* ─────────────────────── GENERAL AWARENESS ─────────────────────── */
 "General Awareness": [
-  {q:"HAL (Hindustan Aeronautics Limited) is headquartered in?",
-   opts:["New Delhi","Bengaluru","Hyderabad","Nashik"], correct:1,
-   why:"HAL's corporate headquarters is in Bengaluru, Karnataka, where the company began. It operates divisions across Nashik, Koraput, Hyderabad, Lucknow, Kanpur and elsewhere.",
-   trick:"Bengaluru is India's aerospace capital — HAL, ISRO HQ, NAL and DRDO's aeronautics labs are all there."},
-
-  {q:"HAL functions under which Union ministry?",
-   opts:["Ministry of Civil Aviation","Ministry of Defence","Ministry of Heavy Industries","Ministry of Science and Technology"], correct:1,
-   why:"HAL is a defence public sector undertaking under the Department of Defence Production, Ministry of Defence — not Civil Aviation, which is the intuitive but wrong answer.",
-   trick:"HAL builds fighters, not airlines. Defence, not Civil Aviation."},
-
-  {q:"India's indigenous Light Combat Aircraft, built by HAL, is named?",
-   opts:["Tejas","Rudra","Arjun","Akash"], correct:0,
-   why:"Tejas is the LCA. Arjun is a main battle tank (DRDO/CVRDE), Akash is a surface-to-air missile, and Rudra is an armed version of the Dhruv helicopter.",
-   trick:"Group them by domain: Tejas and Dhruv fly, Arjun rolls, Akash and Agni are missiles."},
-
-  {q:"HAL's indigenous Advanced Light Helicopter is called?",
-   opts:["Chetak","Cheetah","Dhruv","Rudra"], correct:2,
-   why:"Dhruv is the indigenously designed ALH. Chetak and Cheetah are older licence-built Aérospatiale designs, and Rudra is the weaponised Dhruv variant.",
-   trick:"Dhruv is the original design; Rudra is Dhruv with weapons; Chetak and Cheetah are the imported ancestors."},
-
-  {q:"HAL was founded in which year?",
-   opts:["1932","1940","1947","1964"], correct:1,
-   why:"It was set up in 1940 in Bangalore as Hindustan Aircraft Limited by Walchand Hirachand, and later merged with Aeronautics India Limited in 1964 to become Hindustan Aeronautics Limited.",
-   trick:"1940 founded, 1964 renamed after the merger. Two dates, two events — exams ask for either."},
-
   {q:"Fundamental Rights are contained in which Part of the Indian Constitution?",
    opts:["Part II","Part III","Part IV","Part V"], correct:1,
    why:"Part III (Articles 12–35) holds the Fundamental Rights. Part IV holds the Directive Principles, and Part IVA the Fundamental Duties.",
    trick:"Rights are Part III, Duties are Part IVA, Directives are Part IV. Three, four, four-A in order."},
-
   {q:"The Right to Constitutional Remedies is guaranteed by which Article?",
    opts:["Article 14","Article 19","Article 21","Article 32"], correct:3,
    why:"Article 32 lets a citizen move the Supreme Court directly when a Fundamental Right is violated. Ambedkar called it 'the heart and soul of the Constitution'. Article 226 gives High Courts a wider equivalent power.",
    trick:"32 = the Supreme Court's door. 226 = the High Court's door, and it is wider."},
-
   {q:"ISRO is headquartered in?",
    opts:["Thiruvananthapuram","Bengaluru","Ahmedabad","Sriharikota"], correct:1,
    why:"ISRO's headquarters is in Bengaluru. VSSC is at Thiruvananthapuram, SAC at Ahmedabad, and Sriharikota hosts the launch centre (SDSC-SHAR).",
    trick:"HQ Bengaluru · launches Sriharikota · rockets Thiruvananthapuram · satellites-applications Ahmedabad."},
-
   {q:"DRDO stands for?",
    opts:["Defence Research and Development Organisation","Defence Regulatory and Development Office","Directorate of Research and Defence Operations","Defence Resource Development Organisation"], correct:0,
    why:"DRDO is the R&D wing of the Ministry of Defence, responsible for programmes such as Agni, Prithvi, Akash and the Arjun tank.",
    trick:"DRDO researches and develops; HAL and BEL manufacture. Different roles, same ministry."},
-
   {q:"The Preamble declares India to be a?",
    opts:["Sovereign Socialist Secular Democratic Republic","Sovereign Democratic Monarchy","Federal Socialist Union","Sovereign Communist Republic"], correct:0,
    why:"The words 'Socialist' and 'Secular' were inserted by the 42nd Amendment in 1976; the original Preamble read 'Sovereign Democratic Republic'.",
    trick:"Order: Sovereign, Socialist, Secular, Democratic, Republic. Socialist and Secular are the 1976 additions."},
-
-  /* ── Static GK beyond HAL and space ─────────────────────────────────────
-     The section is 20 marks on HAL and 25 on SSC CGL, and the ten questions
-     here were all HAL, ISRO and the Constitution — a candidate who had read
-     them was still walking into two thirds of the section cold. The spread
-     below follows the areas the big practice banks (IndiaBIX's GK index,
-     GfG's competitive-exam lists) actually drill: general science, polity,
-     geography, economy, world bodies, awards. Written here rather than
-     copied from either — their question text is theirs.
-
-     Static facts only. Current affairs are deliberately absent from this
-     bank: a hard-coded news question is wrong within months, and fifteen
-     minutes of daily reading covers those marks better than a stale list. */
-
   {q:"The SI unit of electrical resistance is the?",
    opts:["ampere","volt","ohm","coulomb"], correct:2,
    why:"Resistance is measured in ohms (Ω). Ampere is current, volt is potential difference and coulomb is charge — Ohm's law V = IR ties the first three together.",
    trick:"V = IR. Volts across it, amperes through it, ohms resisting it."},
-
   {q:"Which instrument is used to measure atmospheric pressure?",
    opts:["Hygrometer","Barometer","Anemometer","Seismograph"], correct:1,
    why:"A barometer measures atmospheric pressure, and a falling reading warns of a storm. A hygrometer measures humidity, an anemometer wind speed and a seismograph earth tremors.",
    trick:"Baro = weight of air. Hygro = water in air. Anemo = wind. Seismo = shaking."},
-
   {q:"The chemical symbol Au stands for which element?",
    opts:["Silver","Aluminium","Gold","Copper"], correct:2,
    why:"Au is gold, from the Latin aurum. Silver is Ag (argentum), aluminium is Al and copper is Cu (cuprum) — the symbols that look wrong are the ones taken from Latin.",
    trick:"Au aurum gold, Ag argentum silver, Fe ferrum iron, Pb plumbum lead. Latin, not English."},
-
   {q:"Which part of the human body produces insulin?",
    opts:["Liver","Pancreas","Kidney","Spleen"], correct:1,
    why:"Insulin is secreted by the beta cells of the islets of Langerhans in the pancreas, and it lowers blood glucose. The liver stores glucose as glycogen but does not make insulin.",
    trick:"Pancreas makes it, liver stores the sugar it acts on. Islets of Langerhans = insulin's address."},
-
   {q:"How many Schedules does the Constitution of India currently have?",
    opts:["8","10","12","14"], correct:2,
    why:"The Constitution began with eight Schedules and now has twelve, the last added by the 74th Amendment. Schedules list things like the states, official languages and the subject lists.",
    trick:"Started at 8, now 12. The Seventh is the one exams ask about — Union, State and Concurrent Lists."},
-
   {q:"How many Fundamental Duties are listed in the Constitution of India?",
    opts:["Nine","Ten","Eleven","Twelve"], correct:2,
    why:"There are eleven Fundamental Duties in Article 51A. Ten were added by the 42nd Amendment in 1976 and the eleventh, on education for children, by the 86th Amendment in 2002.",
    trick:"10 from 1976, +1 from 2002 = 11. They sit in Article 51A and, unlike rights, are not enforceable."},
-
   {q:"Who administers the oath of office to the President of India?",
    opts:["The Prime Minister","The Vice-President","The Chief Justice of India","The Speaker of the Lok Sabha"], correct:2,
    why:"Article 60 requires the President to be sworn in by the Chief Justice of India, or in their absence the senior-most available Supreme Court judge. The President in turn swears in the Prime Minister.",
    trick:"The judge swears in the President; the President swears in the government. Each is sworn by the branch it does not head."},
-
   {q:"Which mountain range separates the Indian subcontinent from the Tibetan Plateau?",
    opts:["Aravalli","Vindhya","Himalaya","Satpura"], correct:2,
    why:"The Himalaya runs along the northern edge of the subcontinent and separates it from the Tibetan Plateau. The Aravalli, Vindhya and Satpura are older, far lower ranges lying within peninsular India.",
    trick:"Himalaya is the northern wall. Aravalli, Vindhya and Satpura are inside the peninsula, not on its border."},
-
   {q:"Which two rivers of peninsular India flow westward into the Arabian Sea?",
    opts:["Godavari and Krishna","Narmada and Tapti","Mahanadi and Kaveri","Krishna and Kaveri"], correct:1,
    why:"The Narmada and Tapti run west through rift valleys into the Arabian Sea. Almost every other major peninsular river — Godavari, Krishna, Kaveri, Mahanadi — flows east into the Bay of Bengal.",
    trick:"Only Narmada and Tapti go west, and they run in rift valleys, so they build no deltas."},
-
   {q:"Which body replaced the Planning Commission of India?",
    opts:["Finance Commission","NITI Aayog","Economic Advisory Council","Reserve Bank of India"], correct:1,
    why:"NITI Aayog was set up on 1 January 2015 in place of the Planning Commission. It advises rather than allocates: the Finance Commission, a constitutional body, handles the division of tax revenue.",
    trick:"Planning Commission allocated money; NITI Aayog gives advice. The Finance Commission is the constitutional one and predates both."},
-
   {q:"In which year was the Reserve Bank of India nationalised?",
    opts:["1935","1947","1949","1969"], correct:2,
    why:"The RBI was established in 1935 and nationalised in 1949, passing into government ownership. 1969 is the year fourteen major commercial banks were nationalised — a different event exams often blur together.",
    trick:"1935 born, 1949 nationalised, 1969 the commercial banks. Three dates, three different things."},
-
   {q:"The headquarters of UNESCO is in?",
    opts:["Geneva","New York","Paris","Vienna"], correct:2,
    why:"UNESCO is headquartered in Paris. Geneva hosts WHO and WTO, New York hosts the UN's own headquarters, and Vienna hosts the IAEA and OPEC.",
    trick:"Paris UNESCO · Geneva WHO and WTO · Vienna IAEA and OPEC · New York the UN itself."},
-
   {q:"Which is the highest civilian award of India?",
    opts:["Padma Vibhushan","Bharat Ratna","Param Vir Chakra","Padma Bhushan"], correct:1,
    why:"Bharat Ratna is the highest civilian award, ahead of Padma Vibhushan, Padma Bhushan and Padma Shri in that order. Param Vir Chakra is the highest wartime gallantry award, which is military and not civilian.",
    trick:"Civilian order: Bharat Ratna, then Vibhushan, Bhushan, Shri. Param Vir Chakra is the military one — do not mix the two ladders."},
-
   {q:"India's first satellite, launched in 1975, was named?",
    opts:["Bhaskara","Rohini","Aryabhata","INSAT-1A"], correct:2,
    why:"Aryabhata was launched in 1975 with Soviet help. Rohini, in 1980, was the first satellite placed in orbit by an Indian launch vehicle, the SLV-3 — the two firsts are different and are regularly swapped in options.",
    trick:"Aryabhata 1975 = first satellite. Rohini 1980 = first launched by an Indian rocket."},
-
   {q:"The Indian National Congress was founded in which year?",
    opts:["1875","1885","1905","1919"], correct:1,
    why:"The Congress was founded in 1885, with A.O. Hume among its founders and W.C. Bonnerjee presiding over the first session in Bombay. 1905 was the partition of Bengal and 1919 Jallianwala Bagh.",
-   trick:"1885 Congress founded · 1905 Bengal partitioned · 1919 Jallianwala Bagh · 1942 Quit India."},
+   trick:"1885 Congress founded · 1905 Bengal partitioned · 1919 Jallianwala Bagh · 1942 Quit India."}
 ],
 
 /* ─────────────────── QUANTITATIVE APTITUDE (SSC CGL) ─────────────────── */
