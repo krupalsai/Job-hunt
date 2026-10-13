@@ -1,0 +1,14 @@
+{
+  "_about": "Direct application links for the @careerwithshrestha posts, found on each company's own site so the app does not send you to Instagram to comment for a DM. Keyed by the job key in shrestha-jobs.json. Only links checked on the company's site (or its official job board) are listed; a job missing here has no verified public link. 'kind': posting = the exact job; search = the company's job search for that role/ID; portal = the company's official fresher-hiring portal.",
+  "checked": "2026-10-13",
+  "links": {
+    "ig-18117027149081665": { "url": "https://jobs.lever.co/hevodata/993a3ed3-3014-432f-b0f4-28d300d58d9a", "label": "Hevo Data — Associate SDE", "kind": "posting" },
+    "ig-18443546758130717": { "url": "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition", "label": "Amazon — SDE I (2025 & 2026 graduates)", "kind": "posting" },
+    "ig-17910658281466911": { "url": "https://careers.wipro.com/job/Graduate-Engineer-Trainee/201955-en_US/", "label": "Wipro — Graduate Engineer Trainee (Job 201955)", "kind": "posting" },
+    "ig-18637664536017963": { "url": "https://www.heizen.work/careers", "label": "Heizen — its 0–2 year engineering roles", "kind": "search" },
+    "ig-17916795342430968": { "url": "https://careers.oracle.com/en/sites/jobsearch/job/342318", "label": "Oracle — Support Engineer 1 (Job 342318)", "kind": "posting" },
+    "ig-18064814318765442": { "url": "https://jobs.thermofisher.com/global/en/search-results?keywords=R-01363446", "label": "Thermo Fisher — Software Engineer I (R-01363446)", "kind": "search" },
+    "ig-17947084029071131": { "url": "https://careers.honeywell.com/en/sites/Honeywell/jobs?keyword=Software%20Engineer%20I&location=Bengaluru", "label": "Honeywell — Software Engineer I, Bengaluru", "kind": "search" },
+    "ig-17902741311665253": { "url": "https://nextstep.tcs.com/", "label": "TCS NextStep — TCS's fresher hiring portal", "kind": "portal" }
+  }
+}

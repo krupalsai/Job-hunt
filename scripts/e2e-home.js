@@ -14,6 +14,12 @@
  *   · An estimated date is not evidence that applications shut.
  *   · The choice of track sticks; the private side lists the ₹40 LPA+ roles
  *     and a path whose ticks persist.
+ *   · Home is a summary: three of each list, with "See all" opening a screen
+ *     of its own ("a long scrolling down until down there is also something
+ *     else"), and ‹ / the phone's back button returning to it.
+ *   · A link is real: a home page is never called a notification, another
+ *     state's local post is not "open for you", and a ₹40 LPA+ role is only
+ *     given an Apply button when a posting for your batch is open.
  *   · Offline says so; nothing scrolls sideways; no JavaScript errors.
  *
  * Fixed clock: Tuesday 13 October 2026, 10:00 IST.
@@ -84,6 +90,15 @@ const ROWS = [
     deadline: day(3), deadline_text: 'Last date ' + day(3).slice(0, 10), first_seen_at: new Date(NOW.getTime() - 3600e3).toISOString() },
   { ...base, id: 'n', organization: 'NTPC', post_name: 'Graduate Engineer Trainee – 150 Posts', eligibility: 'B.E./B.Tech',
     deadline: day(20), deadline_text: 'Last date ' + day(20).slice(0, 10), first_seen_at: new Date(NOW.getTime() - 3 * 3600e3).toISOString() },
+  /* "Wtf": the feed stored a state department's HOME PAGE as this walk-in's
+     notification — and it is a Nagaland post, which needs Nagaland residence. */
+  { ...base, id: 'o', organization: 'AHVS Nagaland', post_name: 'Inspector/Supervisor & Enumerator – 4 Posts', eligibility: 'Any Graduate',
+    deadline: day(2), deadline_text: 'Last date ' + day(2).slice(0, 10), notification_url: 'https://ipr.nagaland.gov.in',
+    source_url: 'https://www.freejobalert.com/articles/ahvs-nagaland-1' },
+  /* A central PSU, open to all of India, whose "notification" is also just a home page. */
+  { ...base, id: 'p', organization: 'BEML', post_name: 'Management Trainee – 25 Posts', eligibility: 'B.E./B.Tech',
+    deadline: day(15), deadline_text: 'Last date ' + day(15).slice(0, 10), notification_url: 'https://www.bemlindia.in/',
+    source_url: 'https://www.freejobalert.com/articles/beml-1' },
 ];
 
 async function noSideScroll(page, where) {
@@ -111,7 +126,7 @@ async function noSideScroll(page, where) {
   page.on('console', m => { if (m.type() === 'error' && !/net::ERR_|Failed to load resource/.test(m.text())) errors.push(m.text()); });
   const home = async () => { await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'networkidle' }); await page.waitForTimeout(150); };
 
-  console.log('\n── the news comes first ─────────────────────────────────');
+  console.log('\n── Home is a summary, one screen and a bit ──────────────');
   await home();
   check('no JavaScript errors on load', errors.length === 0, errors.join(' | '));
   const order = await page.evaluate(() => ['newsExams', 'openSec', 'trackSec', 'trackGov']
@@ -122,12 +137,14 @@ async function noSideScroll(page, where) {
   check('coming up: SSC CGL (tomorrow) and TS SI (29 Nov), soonest first', exams.join(',') === 'ssc-cgl,ts-si', exams.join(','));
   check('a paper already sat (HAL, Sep) is not shown as coming up', !/HAL/.test(await page.locator('#newsExams').innerText()));
   check('tomorrow\'s paper says Tomorrow', /Tomor/.test(await page.locator('[data-exam-card="ssc-cgl"] .xcount').innerText()));
-  check('and carries its exam-hall rule — attempt everything', /Never leave a question blank/.test(await page.locator('[data-exam-card="ssc-cgl"]').innerText()));
+  check('and carries its exam-hall rule, computed from the marking — attempt everything',
+    /Never leave a question blank/.test(await page.locator('[data-exam-card="ssc-cgl"]').innerText()) &&
+    /\+0\.125/.test(await page.locator('[data-exam-card="ssc-cgl"]').innerText()));
   const si = (await page.locator('[data-exam-card="ts-si"]').innerText()).replace(/\s+/g, ' ');
   check('TS SI shows the countdown, the tentative date and the forenoon session', /47/.test(si) && /tentative/.test(si) && /forenoon/i.test(si), si.slice(0, 160));
   check('says its applications have closed, and the pass marks', /Applications closed/.test(si) && /OC 30%/.test(si), si.slice(0, 260));
-  check('and opens on today\'s plan: Day 1 of 47', /Day 1 of 47/.test(si) &&
-    (await page.locator('[data-exam-card="ts-si"] a[href="/si.html"]').count()) === 1);
+  check('and the whole row opens today\'s plan: Day 1 of 47', /Day 1 of 47/.test(si) &&
+    (await page.locator('[data-exam-card="ts-si"][href="/si.html"]').count()) === 1);
 
   console.log('\n── open now: a confident match, or a question ───────────');
   check('with no qualification entered, it asks for one instead of guessing',
@@ -135,38 +152,75 @@ async function noSideScroll(page, where) {
   await page.locator('#openList [data-set-qual="B.Tech CSE"]').click();
   await page.waitForTimeout(150);
   check('one tap stores it', (await page.evaluate(() => localStorage.getItem('jobhunt_qualification'))) === 'B.Tech CSE');
-  const open = await page.locator('#openList .other-row').evaluateAll(els => els.map(e => e.innerText.replace(/\s+/g, ' ')));
-  // Public and private alike: the news is "what can I apply for", whoever is hiring.
-  check('then lists officer / engineer / trainee posts that name the qualification, soonest first',
-    open.length === 4 && /GACL/.test(open[0]) && /HDFC/.test(open[1]) && /ONGC/.test(open[2]) && /NTPC/.test(open[3]),
-    open.map(t => t.slice(0, 40)).join(' | '));
-  check('a post on the role list but not your grade of work stays out (Office Assistant)',
-    !open.some(t => /Office Assistant/.test(t)));
-  check('never a post asking for another qualification', !open.some(t => /Nurse|Research Fellow/.test(t)));
-  check('and never a FreeJobAlert article called a notification',
-    !(await page.locator('#openList a[href*="freejobalert.com/articles"]').allTextContents()).some(t => /Notification/.test(t)));
+  const open = await page.locator('#openList .brief').evaluateAll(els => els.map(e => e.innerText.replace(/\s+/g, ' ')));
+  check('Home shows three, soonest first: officer / engineer / trainee posts that name the qualification',
+    open.length === 3 && /GACL/.test(open[0]) && /HDFC/.test(open[1]) && /ONGC/.test(open[2]), open.map(t => t.slice(0, 40)).join(' | '));
+  check('"See all" says how many there are', /See all 5/.test(await page.locator('#openAll').innerText()),
+    await page.locator('#openAll').innerText());
+  check('each row is one tap to the real thing — the notice, never an article called a notification',
+    (await page.locator('#openList a.brief').evaluateAll(as => as.map(a => [a.href, a.innerText])))
+      .every(([h, t]) => /^https:/.test(h) && !(/freejobalert\.com\/articles/.test(h) && /Notification/.test(t))));
+  check('the Nagaland walk-in is not in "Open now" — it needs Nagaland residence',
+    !(await page.locator('#openList').innerText()).includes('Nagaland'));
+  check('Home is short: about a screen and a half, not a scroll to the bottom of every list',
+    (await page.evaluate(() => document.documentElement.scrollHeight)) < 1900,
+    String(await page.evaluate(() => document.documentElement.scrollHeight)));
+  check('"New in the last 2 days" is one line on Home', /2 new in the last 2 days/.test(await page.locator('#newLink').innerText()),
+    await page.locator('#newLink').innerText());
+
+  await page.locator('#openAll').click();
+  await page.waitForTimeout(150);
+  check('"See all" opens its own screen, and Home is out of the way',
+    await page.locator('.view[data-view="open"]').isVisible() && !(await page.locator('.view[data-view="home"]').isVisible()));
+  const all = await page.locator('#openAllList .other-row').evaluateAll(els => els.map(e => e.innerText.replace(/\s+/g, ' ')));
+  check('every confident match is there, soonest first',
+    all.length === 5 && /GACL/.test(all[0]) && /HDFC/.test(all[1]) && /ONGC/.test(all[2]) && /BEML/.test(all[3]) && /NTPC/.test(all[4]),
+    all.map(t => t.slice(0, 30)).join(' | '));
+  check('a post on the role list but not your grade of work stays out (Office Assistant)', !all.some(t => /Office Assistant/.test(t)));
+  check('never a post asking for another qualification', !all.some(t => /Nurse|Research Fellow/.test(t)));
+  const beml = (await page.locator('#openAllList .other-row', { hasText: 'BEML' }).innerText()).replace(/\s+/g, ' ');
+  check('a home page is not called a notification — the row offers the article instead',
+    !/Notification|Official notice/.test(beml) && /FreeJobAlert page/.test(beml), beml.slice(0, 200));
   const fresh = await page.locator('#newList .other-row').allInnerTexts();
   check('new in the last 2 days: only what was first seen in that time and matches you',
     fresh.length === 2 && fresh.some(t => /NTPC/.test(t)) && fresh.some(t => /Office Assistant/.test(t)), fresh.map(t => t.slice(0, 30)).join(' | '));
+  await page.locator('.view[data-view="open"] .view-back').click();
+  await page.waitForTimeout(150);
+  check('‹ goes back to Home', await page.locator('.view[data-view="home"]').isVisible());
 
   console.log('\n── the choice ───────────────────────────────────────────');
   check('Government is the default track', (await page.locator('#tabGov').getAttribute('aria-selected')) === 'true' &&
     await page.locator('#trackGov').isVisible() && !(await page.locator('#trackPvt').isVisible()));
-  check('both choices say what is inside them', /exams/.test(await page.locator('#govMeta').innerText()) &&
-    /fresher|LPA/.test(await page.locator('#pvtMeta').innerText()));
+  check('each choice carries its count', /^\d+$/.test((await page.locator('#govMeta').innerText()).trim()) &&
+    /^\d+$/.test((await page.locator('#pvtMeta').innerText()).trim()));
+  check('the study tiles lead to the plan, the papers and practice',
+    (await page.locator('#govStudy a[href="/si.html"]').count()) === 1 &&
+    (await page.locator('#govStudy a[href="/si.html#paper"]').count()) === 1 &&
+    (await page.locator('#govStudy a[href*="#test"]').count()) === 1);
+  check('Government summarises its list in one row instead of repeating "Open now"',
+    /All government openings · \d+/.test(await page.locator('#govPreview').innerText()) &&
+    /other states/.test(await page.locator('#govPreview').innerText()), await page.locator('#govPreview').innerText());
 
   console.log('\n── government: every opening, in exactly one place ───────');
+  await page.locator('#govPreview').click();
+  await page.waitForTimeout(150);
+  check('the government list is its own screen', await page.locator('.view[data-view="gov"]').isVisible());
   const tracked = await page.locator('#examJobs .card').count();
   check('tracked for your exams: SSC CGL (tomorrow) and the new TGPRB notification', tracked === 2,
     (await page.locator('#examJobs').innerText()).replace(/\s+/g, ' ').slice(0, 200));
   const n = id => page.evaluate(i => { const m = /\((\d+)\)/.exec(document.getElementById(i).textContent); return m ? +m[1] : 0; }, id);
   const govN = +(await page.locator('#otherCount').innerText());
-  const counts = { tracked, gov: govN, pvt: await n('privateCount'), notMine: await n('notMineCount'), closed: await n('closedCount') };
-  check('no opening is dropped: tracked + government + private + not-yours = every live row',
-    counts.tracked + counts.gov + counts.pvt + counts.notMine === 10, JSON.stringify(counts));
+  const counts = { tracked, gov: govN, states: await n('stateCount'), pvt: await n('privateCount'), notMine: await n('notMineCount'), closed: await n('closedCount') };
+  check('no opening is dropped: tracked + government + other states + private + not-yours = every live row',
+    counts.tracked + counts.gov + counts.states + counts.pvt + counts.notMine === 12, JSON.stringify(counts));
   check('five are closed', counts.closed === 5, JSON.stringify(counts));
   check('a private bank goes to the private list', counts.pvt === 1);
   check('a nursing post and an M.Tech fellowship are "not your qualification"', counts.notMine === 2);
+  check('the Nagaland walk-in sits under Other states', counts.states === 1, JSON.stringify(counts));
+  await page.locator('#stateFold summary').click();
+  const st = (await page.locator('#stateJobs').innerText()).replace(/\s+/g, ' ');
+  check('and its department home page is not called its notification',
+    /AHVS Nagaland/.test(st) && !/Notification|Official notice/.test(st), st.slice(0, 200));
   await page.locator('#closedFold summary').click();
   const closed = (await page.locator('#closedJobs').innerText()).replace(/\s+/g, ' ');
   check('closed: the HAL row, because its paper has been held', /Management\/Design Trainee/.test(closed) && /paper already held/.test(closed), closed.slice(0, 300));
@@ -175,37 +229,57 @@ async function noSideScroll(page, where) {
     /Design Trainee \(applications closed\)/.test(closed) && /Junior Assistant/.test(closed) && /Graduate Apprenticeship/.test(closed));
   const govText = (await page.locator('#otherJobs').innerText()).replace(/\s+/g, ' ');
   check('an estimated date that has passed is not treated as closed', /Agniveer/.test(govText));
-  check('and an opening for no exam in the app says so plainly', /no syllabus yet/.test(govText));
-  check('the best matches lead the list', /GACL|ONGC|NTPC/.test(govText.slice(0, 160)), govText.slice(0, 160));
+  check('rows carry no "no syllabus yet" noise', !/no syllabus yet/.test(govText));
+  check('the best matches lead the list', /GACL|ONGC|NTPC|BEML/.test(govText.slice(0, 160)), govText.slice(0, 160));
   const chips = await page.locator('#areaChips .fchip').allInnerTexts();
   check('the list can be narrowed by area', chips.length >= 2 && /^All/.test(chips[0]), chips.join(' | '));
   await page.locator('#areaChips .fchip').nth(1).click();
   const narrowed = await page.locator('#otherJobs .other-row').count();
   check('and a chip narrows it', narrowed >= 1 && narrowed < govN, `${narrowed} of ${govN}`);
   await page.locator('#areaChips [data-area="All"]').click();
-  check('the study tiles lead to the plan, the papers and practice',
-    (await page.locator('#govStudy a[href="/si.html"]').count()) === 1 &&
-    (await page.locator('#govStudy a[href="/si.html#paper"]').count()) === 1);
-  await noSideScroll(page, 'the government track');
+  await noSideScroll(page, 'the government list');
+  await page.goBack();
+  await page.waitForTimeout(150);
+  check('the phone\'s back button returns to Home', await page.locator('.view[data-view="home"]').isVisible());
 
   console.log('\n── private ──────────────────────────────────────────────');
   await page.locator('#tabPvt').click();
   check('Private shows its own panel and hides Government', await page.locator('#trackPvt').isVisible() && !(await page.locator('#trackGov').isVisible()));
-  await page.waitForSelector('#shresthaJobs .sh-card, #shresthaJobs .empty');
-  check('the fresher IT feed is there', (await page.locator('#shresthaJobs .sh-card, #shresthaJobs .empty').count()) >= 1);
-  const tp = await page.locator('#topPayList .tp-row').allInnerTexts();
-  check('the ₹40 LPA+ off-campus list is there', tp.length >= 10, String(tp.length));
-  check('the ones that usually open this month come first', /this month/.test(tp[0]), tp[0].slice(0, 120));
-  check('every role links to the company\'s own careers page',
-    (await page.locator('#topPayList a[target="_blank"]').evaluateAll(as => as.every(a => /^https:\/\//.test(a.href)))));
-  check('and the numbers are labelled indicative, with their sources', /Indicative pay/.test(await page.locator('#tpSources').innerText()) &&
+  await page.waitForSelector('#pvtPreview .brief, #pvtPreview .empty');
+  check('three fresher jobs on Home, the ones with a direct company link first',
+    (await page.locator('#pvtPreview .brief').count()) <= 3 &&
+    (await page.locator('#pvtPreview .brief').first().evaluate(a => !a.getAttribute('href').startsWith('#'))));
+  check('and a direct link goes to the company, not Instagram',
+    (await page.locator('#pvtPreview a.brief[target="_blank"]').evaluateAll(as => as.every(a => !/instagram\.com/.test(a.href)))));
+  const tpPrev = await page.locator('#tpPreview .brief').allInnerTexts();
+  check('₹40 LPA+: the one open now for your batch comes first, one tap to apply',
+    /Amazon/.test(tpPrev[0] || '') && /Open now/.test(tpPrev[0] || '') &&
+    /amazon\.jobs\/en\/jobs\//.test(await page.locator('#tpPreview .brief').first().getAttribute('href')), (tpPrev[0] || '').slice(0, 80));
+  await page.locator('#tpAll').click();
+  await page.waitForTimeout(150);
+  const tp = await page.locator('#topPayList .tp-row').evaluateAll(els => els.map(e => ({ s: e.dataset.status, t: e.innerText })));
+  check('the full list is its own screen, every role listed', await page.locator('.view[data-view="toppay"]').isVisible() && tp.length >= 10, String(tp.length));
+  check('open ones first, then other batches, then the rest', tp[0].s === 'open' && tp.findIndex(r => r.s === 'none') > tp.findIndex(r => r.s === 'batch'));
+  check('a role that is not open says so — instead of a careers home page dressed as a link',
+    tp.filter(r => r.s === 'none').every(r => /Not open for freshers in India right now/.test(r.t)));
+  check('and only an open role gets the Apply button',
+    (await page.locator('#topPayList .tp-row[data-status="open"] .btn-primary').count()) >= 1 &&
+    (await page.locator('#topPayList .tp-row:not([data-status="open"]) .btn-primary').count()) === 0);
+  check('the numbers are labelled indicative, with their sources', /Indicative pay/.test(await page.locator('#tpSources').innerText()) &&
     (await page.locator('#tpSources a').count()) >= 3);
+  await noSideScroll(page, 'the ₹40 LPA+ list');
+  await page.goBack();
+  await page.waitForTimeout(150);
+  await page.locator('#pathLink').click();
+  await page.waitForTimeout(150);
   const firstTick = page.locator('#codePath [data-cp]').first();
   await firstTick.check();
   check('a step of the coding path can be ticked', /^1\//.test(await page.locator('#pathCount').innerText()));
+  await page.goBack();
   await page.reload({ waitUntil: 'networkidle' });
   check('the choice of Private survives a reload', await page.locator('#trackPvt').isVisible());
-  check('and so does the tick', /^1\//.test(await page.locator('#pathCount').innerText()));
+  check('and so does the tick — Home says 1 step done', /1 of \d+ steps done/.test(await page.locator('#pathLink').innerText()),
+    await page.locator('#pathLink').innerText());
   await noSideScroll(page, 'the private track');
 
   console.log('\n── the bar ──────────────────────────────────────────────');
@@ -213,19 +287,20 @@ async function noSideScroll(page, where) {
   check('the bar is Home, Study, Test, Progress', labels.join('|') === 'Home|Study|Test|Progress', labels.join('|'));
   check('Home is lit', (await page.locator('nav#nav-bottom .nav-item.is-on').getAttribute('data-tab')) === 'home');
   check('for TS SI, Study is the 47-day plan', (await page.locator('nav#nav-bottom [data-tab="study"]').getAttribute('href')) === '/si.html');
-  const small = await page.locator('nav#nav-bottom .nav-item, .track-btn').evaluateAll(els =>
-    els.filter(e => { const r = e.getBoundingClientRect(); return r.height < 44 || r.width < 44; }).length);
-  check('every bar item and track card is a thumb-sized target', small === 0, String(small));
+  const small = await page.locator('nav#nav-bottom .nav-item, #trackSec [role="tab"], .xrow, .row-link').evaluateAll(els =>
+    els.filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.height < 44 || r.width < 44); })
+      .map(e => `${e.id || e.className} ${Math.round(e.getBoundingClientRect().width)}×${Math.round(e.getBoundingClientRect().height)}`));
+  check('every bar item, tab and row is a thumb-sized target', small.length === 0, small.join('; '));
 
   console.log('\n── offline ──────────────────────────────────────────────');
   offline = true;
   await page.locator('#tabGov').click();
   await home();
   check('it says the openings could not be reached — and that prep still works',
-    /Could not reach the openings/.test(await page.locator('#examJobs').innerText()) &&
-    /only this list needs a connection/.test(await page.locator('#openList').innerText()));
+    /only this list needs a connection/.test(await page.locator('#openList').innerText()) &&
+    /Could not load/.test(await page.locator('#govPreview').innerText()));
   check('and shows no counts from a load that did not happen',
-    await page.evaluate(() => ['closedFold', 'notMineFold', 'privateFold'].every(id => document.getElementById(id).classList.contains('hidden'))));
+    await page.evaluate(() => ['closedFold', 'notMineFold', 'privateFold', 'stateFold'].every(id => document.getElementById(id).classList.contains('hidden'))));
   check('the exams still show — they need no connection', (await page.locator('#newsExams [data-exam-card]').count()) === 2);
   offline = false;
 
@@ -234,6 +309,7 @@ async function noSideScroll(page, where) {
   await home();
   const after = await page.locator('#newsExams [data-exam-card]').evaluateAll(els => els.map(e => e.dataset.examCard));
   check('once SSC CGL has been sat it drops off by itself', after.join(',') === 'ts-si', after.join(','));
+  await page.goto(`http://localhost:${PORT}/#gov`, { waitUntil: 'networkidle' });
   await page.locator('#closedFold summary').click();
   check('and its tracked row moves to Closed, saying why', /SSC CGL 2026 Tier 1/.test(await page.locator('#closedJobs').innerText()) &&
     /paper already held/.test(await page.locator('#closedJobs').innerText()));

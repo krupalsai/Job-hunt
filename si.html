@@ -68,11 +68,11 @@
   .task[data-subj="mock"]   { --c: var(--s-mock); }
   .task.is-done { background: var(--surface-2); }
   .task.is-done .task-title { color: var(--muted); text-decoration: line-through; }
-  .task-head { display: flex; align-items: center; gap: 8px; }
+  .task-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; row-gap: 6px; }
   .subj { font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
   .task-min { font-size: 12.5px; color: var(--muted); font-weight: 650; }
   .task-star { color: var(--warn); font-weight: 800; font-size: 13px; }
-  .tick { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px;
+  .tick { margin-left: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px;
           border-radius: var(--r-pill); border: 1.5px solid var(--line-2); background: var(--surface);
           font-size: 13px; font-weight: 750; color: var(--ink-2); cursor: pointer; user-select: none; }
   .tick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -169,6 +169,22 @@
   .sheet details { border-top: 1px solid var(--line); padding: 10px 0; }
   .sheet summary { cursor: pointer; font-weight: 650; font-size: 14.5px; line-height: 1.45; }
   .sheet summary span { display: block; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+
+  /* One task open at a time (see app/si.js). */
+  .task-toggle { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 0; margin: 8px 0 0; border: 0;
+                 background: none; text-align: left; font: inherit; color: inherit; cursor: pointer; min-height: 40px; }
+  .task-toggle .task-title { flex: 1; margin: 0; }
+  .task-chev { flex: 0 0 auto; font-size: 18px; color: var(--faint); transition: transform .15s ease; line-height: 1.3; }
+  .task.is-open .task-chev { transform: rotate(180deg); }
+  .task:not(.is-open) .task-body { display: none; }
+  .task-body { margin-top: 6px; }
+  .fold-phase { padding: 0; margin: 14px var(--gutter) 0; }
+  .fold-phase > summary { list-style: none; cursor: pointer; padding: 12px 0 6px; }
+  .fold-phase > summary::-webkit-details-marker { display: none; }
+  .fold-phase > summary::after { content: "⌄"; margin-left: auto; color: var(--faint); }
+  .fold-phase[open] > summary::after { content: "⌃"; }
+  .fold-phase > summary h2 { font-size: 16px; }
+  .sec-fold > summary { font-size: 15.5px; font-weight: 800; }
 </style>
 </head>
 <body data-page="si">

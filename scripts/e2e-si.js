@@ -1,8 +1,10 @@
 /* The TS SI 47-day plan (si.html), driven on a 390x844 phone.
  *
  * What it has to get right: open on TODAY's day; every task is something you
- * can do and tick; ticks survive a reload; the ★ filter works; any day can be
- * opened from the Plan; the Paper tab's numbers are the exam's own arithmetic;
+ * can do and tick; one task is open at a time (the first unfinished), so a day
+ * is a short list of titles, not a long scroll; ticks survive a reload; the ★
+ * filter works; any day can be opened from the Plan, which opens on the phase
+ * you are in; the Paper tab's numbers are the exam's own arithmetic;
  * mock scores are scored the exam's way; the mistake notebook keeps what you
  * write; links into lessons and drills land on the lesson or drill; nothing
  * scrolls sideways; no JavaScript errors.
@@ -80,9 +82,27 @@ async function phone(browser, when, dark) {
     (await page.locator('nav#nav-bottom .nav-item.is-on').getAttribute('data-tab')) === 'study');
   await noSideScroll(page, 'Today');
 
+  console.log('\n── one task open at a time ──────────────────────────────');
+  const isOpen = loc => loc.evaluate(e => e.classList.contains('is-open'));
+  check('only the first task is open; the others show just their titles',
+    (await page.locator('#p-today .task.is-open').count()) === 1 && await isOpen(cards.first()) &&
+    (await page.locator('#p-today .task-body:visible').count()) === 1);
+  check('every title is still on screen, so the day reads as a list',
+    (await page.locator('#p-today .task-title:visible').count()) === 6);
+  check('the "missed a day" advice is folded away', (await page.locator('#p-today .day-foot details[open]').count()) === 0);
+  const todayH = await page.evaluate(() => document.documentElement.scrollHeight);
+  check('so Today is about two screens, not five', todayH < 844 * 3, `${todayH}px`);
+  await cards.nth(3).locator('.task-toggle').click();
+  check('tapping a title opens that task and closes the other',
+    await isOpen(cards.nth(3)) && (await page.locator('#p-today .task.is-open').count()) === 1);
+  check('and says so to a screen reader', (await cards.nth(3).locator('.task-toggle').getAttribute('aria-expanded')) === 'true' &&
+    (await cards.first().locator('.task-toggle').getAttribute('aria-expanded')) === 'false');
+  await cards.first().locator('.task-toggle').click();
+
   console.log('\n── ticking a task sticks ────────────────────────────────');
   await cards.first().locator('.tick').click();
   check('the tick turns the card done', await cards.first().evaluate(e => e.classList.contains('is-done')));
+  check('and the next task opens by itself', await isOpen(cards.nth(1)) && !(await isOpen(cards.first())));
   check('and the day\'s count moves', /1\/6 done/.test(await page.locator('.day-meta').innerText()), await page.locator('.day-meta').innerText());
   check('and the hero counts it too', /1 of 6 tasks done today/.test(await page.locator('#heroToday').innerText()));
   await page.reload({ waitUntil: 'networkidle' });
@@ -107,6 +127,10 @@ async function phone(browser, when, dark) {
   check('today is marked', (await page.locator('#p-plan .drow.is-today').count()) === 1 &&
     /^1\b/.test((await page.locator('#p-plan .drow.is-today').innerText()).trim()));
   check('mock days say so', (await page.locator('#p-plan .chip-bad').count()) === 7);
+  check('only the phase you are in is open', (await page.locator('#p-plan details.phase[open]').count()) === 1 &&
+    (await page.locator('#p-plan details.phase[open] .drow.is-today').count()) === 1);
+  await page.locator('#p-plan details.phase:has([data-go="20"]) > summary').click();
+  check('a later phase opens with a tap', await page.locator('#p-plan [data-go="20"]').isVisible());
   await page.locator('#p-plan [data-go="20"]').click();
   check('tapping a day opens it', /Day 20 ·/.test(await page.locator('.daynav-mid').innerText()));
   const day20 = (await page.locator('#p-today').innerText()).replace(/\s+/g, ' ');
@@ -117,6 +141,12 @@ async function phone(browser, when, dark) {
 
   console.log('\n── the paper, worked out ────────────────────────────────');
   await page.locator('#t-paper').click();
+  const openSecs = await page.locator('#p-paper details.sec-fold[open] > summary').allInnerTexts();
+  check('it opens on "Attempt all 200"; the long sections are folded', openSecs.length === 1 && /Attempt all 200/.test(openSecs[0]),
+    openSecs.join(' | '));
+  for (let n = 0; n < 8 && await page.locator('#p-paper details.sec-fold:not([open])').count(); n++)
+    await page.locator('#p-paper details.sec-fold:not([open]) > summary').first().click();
+  check('and each fold opens with a tap', (await page.locator('#p-paper details.sec-fold:not([open])').count()) === 0);
   const paper = (await page.locator('#p-paper').innerText()).replace(/\s+/g, ' ');
   check('it states the pattern: 200 questions, 3 hours, −0.20', /200/.test(paper) && /3 h/.test(paper) && /−0\.20/.test(paper));
   check('a blind guess is shown to be worth +0.10, a blank 0', /guess blind \(1 in 4\) \+0\.10/.test(paper), paper.slice(paper.indexOf('Attempt'), paper.indexOf('Attempt') + 260));
@@ -158,7 +188,9 @@ async function phone(browser, when, dark) {
   console.log('\n── material opens where it should ───────────────────────');
   await page.locator('#t-today').click();
   await page.locator('#p-today [data-go="1"]').first().click().catch(() => {});
-  await page.locator('#p-today [data-basics]').first().click();
+  const withBasics = page.locator('#p-today .task:has([data-basics])').first();
+  if (!(await isOpen(withBasics))) await withBasics.locator('.task-toggle').click();
+  await withBasics.locator('[data-basics]').first().click();
   check('a Basics button opens the lesson in a sheet', await page.locator('.sheet').isVisible());
   check('with a worked example and questions to try', (await page.locator('.sheet details').count()) >= 1);
   await page.locator('.sheet [data-close-sheet]').last().click();

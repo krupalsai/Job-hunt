@@ -22,10 +22,21 @@
    Months are the sources' "typical patterns", not announced dates. CTC
    includes stock and bonuses; monthly in-hand pay is much lower.
 
+   OPEN OR NOT — CHECKED BY HAND. "Need the link, not the website": a careers
+   home page is not an application. So every role also says whether a fresher
+   posting you can apply to is open right now, checked on the company's own
+   site on the date in `checked`:
+     open       a live posting your batch (2025) can apply to — linked directly
+     batch      a live posting, but for another graduating batch (e.g. 2027)
+     none       checked, and no fresher opening in India right now
+     unchecked  not checked yet; only the usual month is known
+   Re-check and edit `status` here when a month comes round.
+
    Update by editing this file. Nothing here is fetched at runtime.
    ========================================================================== */
 window.TOP_PAY = {
   asOf: "Reports dated Apr–Jun 2026, checked 13 Oct 2026",
+  checked: "2026-10-13",
   sources: [
     { label: "Let's Code — India off-campus hiring calendar 2026 (27 Apr 2026)",
       url: "https://www.lets-code.co.in/blogs/india-off-campus-hiring-calendar-2026/" },
@@ -41,53 +52,53 @@ window.TOP_PAY = {
   roles: [
     { company: "Jane Street", role: "Software Developer", low: 60, high: null, months: [10],
       apply: "https://www.janestreet.com/join-jane-street/",
-      tests: "Puzzle-heavy coding and probability interviews.", kind: "Trading" },
+      tests: "Puzzle-heavy coding and probability interviews.", kind: "Trading" , status: "unchecked" },
     { company: "Optiver", role: "Graduate Software Engineer", low: 50, high: null, months: [10],
       apply: "https://optiver.com/careers/",
-      tests: "Online coding test, then systems and C++/low-latency interviews.", kind: "Trading" },
+      tests: "Online coding test, then systems and C++/low-latency interviews.", kind: "Trading" , status: "none", statusNote: "Graduate roles are open in Amsterdam, Austin, Chicago and London; Mumbai's openings are for experienced hires." },
     { company: "Graviton Research Capital", role: "Software Engineer", low: 45, high: null, months: [10],
       apply: "https://www.gravitontrading.com/careers",
-      tests: "Competitive-programming level DSA test, then technical rounds.", kind: "Trading" },
+      tests: "Competitive-programming level DSA test, then technical rounds.", kind: "Trading" , status: "batch", posting: { url: "https://job-boards.greenhouse.io/gravitonresearchcapital/jobs/8764240002", label: "Software Engineer (2027 Graduate)" }, statusNote: "Open, but for 2027 graduates — and the form asks for a JEE Advanced rank." },
     { company: "D. E. Shaw India", role: "Software Engineer", low: 30, high: 50, months: [10],
       apply: "https://www.deshawindia.com/careers",
-      tests: "Online test (DSA, aptitude), then 3–4 technical interviews.", kind: "Finance tech" },
+      tests: "Online test (DSA, aptitude), then 3–4 technical interviews.", kind: "Finance tech" , status: "none", statusNote: "Its India openings right now are for experienced engineers." },
     { company: "Microsoft", role: "Software Engineer (university hire)", low: 30, high: 55, months: [7, 8],
       apply: "https://careers.microsoft.com/",
       tests: "Online coding test (DSA), then coding and CS-fundamentals interviews.",
-      note: "[B] reports ₹28–40 LPA for new-grad hires.", kind: "Big Tech" },
+      note: "[B] reports ₹28–40 LPA for new-grad hires.", kind: "Big Tech" , status: "none", statusNote: "India openings right now are Software Engineer II (experienced)." },
     { company: "Google", role: "Software Engineer (university graduate)", low: 25, high: 50, months: [7, 8],
       apply: "https://www.google.com/about/careers/applications/",
       tests: "Timed online assessment, then medium-to-hard DSA interviews.",
-      note: "[B] reports ₹30–45 LPA (base + stock) for strong new grads.", kind: "Big Tech" },
+      note: "[B] reports ₹30–45 LPA (base + stock) for strong new grads.", kind: "Big Tech" , status: "none", statusNote: "No university-graduate software opening in India right now." },
     { company: "Meta", role: "Software Engineer (university hire)", low: 35, high: 60, months: [8],
       apply: "https://www.metacareers.com/students-and-grads/",
       tests: "DSA interviews, including an AI-assisted coding round.",
-      note: "[B]: off-campus hiring at zero experience is the lowest-volume of the big four — treat as a later target.", kind: "Big Tech" },
+      note: "[B]: off-campus hiring at zero experience is the lowest-volume of the big four — treat as a later target.", kind: "Big Tech" , status: "unchecked" },
     { company: "NVIDIA", role: "System Software Engineer", low: 25, high: 50, months: [6],
       apply: "https://www.nvidia.com/en-in/about-nvidia/careers/",
-      tests: "C/C++, operating systems and DSA.", kind: "Big Tech" },
+      tests: "C/C++, operating systems and DSA.", kind: "Big Tech" , status: "batch", statusNote: "Its new-grad roles open now are for the 2027 batch." },
     { company: "Amazon", role: "SDE-I", low: 24, high: 45, months: [4],
       apply: "https://www.amazon.jobs/",
       tests: "Online assessment (coding, debugging), then DSA + Leadership Principles interviews.",
-      note: "[B] reports ₹28–42 LPA. Re-apply after 6 months if rejected.", kind: "Big Tech" },
+      note: "[B] reports ₹28–42 LPA. Re-apply after 6 months if rejected.", kind: "Big Tech" , status: "open", posting: { url: "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition", label: "SDE I — for 2025 and 2026 graduates" }, statusNote: "Open now — for 2025 and 2026 graduates, so your batch qualifies." },
     { company: "Adobe", role: "Member of Technical Staff", low: 25, high: 45, months: [5, 11],
       apply: "https://www.adobe.com/careers",
-      tests: "Coding test, then DSA and CS-fundamentals interviews.", kind: "Product" },
+      tests: "Coding test, then DSA and CS-fundamentals interviews.", kind: "Product" , status: "unchecked" },
     { company: "Intuit", role: "Software Engineer 1", low: 25, high: 45, months: [5],
       apply: "https://www.intuit.com/careers/",
-      tests: "Coding test, then problem-solving and design discussion.", kind: "Product" },
+      tests: "Coding test, then problem-solving and design discussion.", kind: "Product" , status: "unchecked" },
     { company: "Goldman Sachs", role: "Engineering Analyst", low: 25, high: 45, months: [1, 8],
       apply: "https://www.goldmansachs.com/careers/",
-      tests: "HackerRank test (DSA, maths), then technical rounds.", kind: "Finance tech" },
+      tests: "HackerRank test (DSA, maths), then technical rounds.", kind: "Finance tech" , status: "unchecked" },
     { company: "Atlassian", role: "Graduate Engineer", low: 28, high: 45, months: [11],
       apply: "https://www.atlassian.com/company/careers",
-      tests: "Online coding test, then coding, design and values interviews.", kind: "Product" },
+      tests: "Online coding test, then coding, design and values interviews.", kind: "Product" , status: "none", statusNote: "Its graduate roles open now are for 2027 graduates in the US and Canada." },
     { company: "Uber", role: "SDE-I", low: 22, high: 40, months: [11],
       apply: "https://www.uber.com/global/en/careers/",
-      tests: "Online coding test, then DSA interviews.", kind: "Product" },
+      tests: "Online coding test, then DSA interviews.", kind: "Product" , status: "unchecked" },
     { company: "Salesforce", role: "AMTS Software Engineer", low: 22, high: 40, months: [4, 11],
       apply: "https://www.salesforce.com/company/careers/",
-      tests: "Coding test, then DSA and OOP interviews.", kind: "Product" },
+      tests: "Coding test, then DSA and OOP interviews.", kind: "Product" , status: "unchecked" },
   ],
 
   /* Nearer targets: off-campus fresher routes a beginner can realistically

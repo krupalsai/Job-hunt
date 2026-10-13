@@ -141,11 +141,14 @@ const TEST_MODES = [
     size:10 },
   { id:'mock', name:'Mock exam',
     what:'The whole paper in one sitting, timed, scored the way the exam scores it.' },
-  { id:'drill', name:'Quick drill',
+  /* Kept callable (startMode still knows them) but no longer listed: seven
+     modes was a menu to read, not a choice to make. "It's like a toy" was
+     about exactly this kind of thing. */
+  { id:'drill', name:'Quick drill', hidden:true,
     what:'Five questions. For a queue, a bus, ten spare minutes.',
     size:5 },
-  { id:'fun', name:'Fun mode 🎮',
-    what:'Same questions, same pool. A streak counter and a burst on every answer — for revision that does not feel like the exam.',
+  { id:'fun', name:'Fun mode', hidden:true,
+    what:'Same questions, same pool, with a streak counter.',
     size:10, fun:true },
 ];
 
@@ -165,7 +168,7 @@ function renderTestModes(){
   renderDailyStrip(exam);
   const weakN = weakTopicSet().size;
   const missN = mistakePool().length;
-  box.innerHTML = TEST_MODES.map(m=>{
+  box.innerHTML = TEST_MODES.filter(m => !m.hidden).map(m=>{
     let avail = '';
     if(m.id === 'weak')     avail = weakN ? `${weakN} weak subject${weakN===1?'':'s'}` : 'nothing weak yet';
     if(m.id === 'mistakes') avail = missN ? `${missN} to fix` : 'none outstanding';

@@ -97,22 +97,32 @@
     return '<button type="button" class="btn btn-sm" data-basics="' + esc(ref) + '">Basics: ' + esc(data[0]) + "</button>";
   }
 
+  /* One task open at a time. A day is five or six tasks of four steps each;
+     shown all at once it was a long scroll to reach the last one. The first
+     unfinished task opens by itself; tap a title to open another. */
+  let openKey = null;
+  function defaultOpen(d, shown) {
+    const first = shown.find(([t, i]) => !ticks[tkey(d, t, i)]);
+    return first ? tkey(d, first[0], first[1]) : null;
+  }
   function taskHtml(d, t, i) {
-    const k = tkey(d, t, i), on = !!ticks[k];
+    const k = tkey(d, t, i), on = !!ticks[k], open = k === openKey;
     const mins = t.min >= 60 ? (t.min % 60 ? Math.floor(t.min / 60) + " h " + (t.min % 60) + " min" : (t.min / 60) + " h") : t.min + " min";
-    return '<article class="task' + (on ? " is-done" : "") + '" data-subj="' + esc(t.subj) + '">' +
+    return '<article class="task' + (on ? " is-done" : "") + (open ? " is-open" : "") + '" data-subj="' + esc(t.subj) + '" data-task="' + esc(k) + '">' +
       '<div class="task-head"><span class="subj">' + esc(SUBJ_LABEL[t.subj] || t.subj) + "</span>" +
         '<span class="task-min">' + esc(mins) + "</span>" + (t.star ? '<span class="task-star" title="Must-do">★</span>' : "") +
         '<label class="tick' + (on ? " is-on" : "") + '"><input type="checkbox" data-tick="' + esc(k) + '"' + (on ? " checked" : "") +
         ' aria-label="Mark done: ' + esc(t.title) + '"><span class="box" aria-hidden="true"></span>' + (on ? "Done" : "Mark done") + "</label></div>" +
-      '<h3 class="task-title">' + esc(t.title) + "</h3>" +
+      '<button type="button" class="task-toggle" data-open-task="' + esc(k) + '" aria-expanded="' + open + '">' +
+        '<span class="task-title">' + esc(t.title) + '</span><span class="task-chev" aria-hidden="true">⌄</span></button>' +
+      '<div class="task-body">' +
       '<ol class="task-steps">' + t.steps.map(s => "<li>" + esc(s) + "</li>").join("") + "</ol>" +
       (t.facts ? '<ol class="task-facts">' + t.facts.map(f => "<li>" + esc(f) + "</li>").join("") + "</ol>" : "") +
       (t.pyq ? '<div class="task-pyq"><b>In past papers:</b> ' + esc(t.pyq) + "</div>" : "") +
       (t.book ? '<div class="task-book">Book: ' + esc(t.book) + "</div>" : "") +
       ((t.links.length || t.basics.length) ? '<div class="task-links">' +
         t.links.map(([l, h]) => linkBtn(l, h)).join("") + t.basics.map(basicsBtn).join("") + "</div>" : "") +
-      "</article>";
+      "</div></article>";
   }
 
   function renderToday() {
@@ -122,6 +132,7 @@
     const mins = d.tasks.reduce((a, t) => a + t.min, 0), star = d.tasks.filter(t => t.star).reduce((a, t) => a + t.min, 0);
     const h = m => (Math.round(m / 6) / 10) + " h";
     const shown = d.tasks.map((t, i) => [t, i]).filter(([t]) => !busy || t.star);
+    if (!openKey || !shown.some(([t, i]) => tkey(d, t, i) === openKey)) openKey = defaultOpen(d, shown);
     root("p-today").innerHTML =
       '<div class="daynav">' +
         '<button type="button" class="btn btn-sm" data-go="' + (view - 1) + '"' + (view <= 1 ? " disabled" : "") + ' aria-label="Previous day">‹ Prev</button>' +
@@ -134,9 +145,9 @@
         '<div class="day-meta">About ' + h(mins) + " in all · ★ must-do about " + h(star) + " · " + doneIn(d) + "/" + d.tasks.length + " done</div></div>" +
       '<label class="busy"><input type="checkbox" id="busyToggle"' + (busy ? " checked" : "") + "><span>Short on time today? Show only the ★ must-do tasks.</span></label>" +
       '<div class="tasks">' + shown.map(([t, i]) => taskHtml(d, t, i)).join("") + "</div>" +
-      '<div class="day-foot"><div class="notice"><div><b>Missed a day?</b> Do not try to do two days at once. Do today\'s ★ tasks and add the missed topics to the next Sunday or practice day.<br>' +
-        '<b>Another exam today?</b> Do only the Telangana Movement task and current affairs.</div></div>' +
-        '<p class="fine" style="margin-top:10px">' + esc(P.hours) + "</p></div>";
+      '<div class="day-foot"><details class="fold"><summary>Missed a day, or another exam today?</summary><div class="fold-body">' +
+        '<p class="fine" style="margin:0"><b>Missed a day?</b> Do not try to do two days at once. Do today\'s ★ tasks and add the missed topics to the next Sunday or practice day.<br>' +
+        '<b>Another exam today?</b> Do only the Telangana Movement task and current affairs.<br>' + esc(P.hours) + "</p></div></details></div>";
   }
 
   /* ── Plan ────────────────────────────────────────────────────────────── */
@@ -147,8 +158,9 @@
   }
   function renderPlan() {
     const today = realToday();
+    const cur = phaseOf(today);
     root("p-plan").innerHTML = P.phases.map((ph, pi) =>
-      '<div class="phase"><div class="phase-h"><h2>Phase ' + (pi + 1) + " · " + esc(ph.name) + "</h2><span>Days " + ph.from + "–" + ph.to + "</span></div>" +
+      '<details class="phase fold-phase"' + (ph === cur ? " open" : "") + '><summary class="phase-h"><h2>Phase ' + (pi + 1) + " · " + esc(ph.name) + "</h2><span>Days " + ph.from + "–" + ph.to + "</span></summary>" +
       "<p>" + esc(ph.goal) + "</p>" +
       '<div class="list">' + P.days.slice(ph.from - 1, ph.to).map(d => {
         const done = doneIn(d);
@@ -158,7 +170,7 @@
           '<span class="drow-main"><span class="drow-focus">' + esc(d.focus) + badge + "</span>" +
           '<span class="drow-meta" style="display:block">' + esc(fmt(d.date, { weekday: "long" })) + " · " + done + "/" + d.tasks.length + " done" +
           (d.n === today && !beforeStart() ? " · today" : "") + "</span></span>" + ring(done, d.tasks.length) + "</button>";
-      }).join("") + "</div></div>").join("") + '<div style="height:8px"></div>';
+      }).join("") + "</div></details>").join("") + '<div style="height:8px"></div>';
   }
 
   /* ── Paper ───────────────────────────────────────────────────────────── */
@@ -191,7 +203,7 @@
         '<p class="fine" style="margin-top:10px">' + esc((EXAM.qualifying && EXAM.qualifying.basis) || "") +
         (EXAM.applicants ? " About " + EXAM.applicants.toLocaleString("en-IN") + " applied for these posts — the margin matters." : "") + "</p></section>" +
 
-      '<section class="sec"><div class="sec-head"><h2>Attempt all 200</h2></div>' +
+      '<section class="sec"><details class="fold sec-fold" open><summary>Attempt all 200 — why</summary><div class="fold-body">' +
         '<p class="sec-sub">A wrong answer costs only 0.20, so a guess is worth more than a blank — even a blind one. Average marks per question:</p>' +
         '<div class="tbl"><table class="t"><thead><tr><th>You…</th><th style="text-align:right">Worth on average</th></tr></thead><tbody>' +
           "<tr><td>leave it blank</td><td class=\"n\">0</td></tr>" +
@@ -200,18 +212,18 @@
           "<tr><td>rule out two options, then guess</td><td class=\"n\">" + sign(ev(2)) + "</td></tr>" +
           "<tr><td>know it</td><td class=\"n\">+1.00</td></tr>" +
         "</tbody></table></div>" +
-        '<p class="fine" style="margin-top:10px">Over 100 blind guesses that is about +10 marks on average. Guesses swing either way, so qualify on what you know — and let the guesses add the margin.</p></section>' +
+        '<p class="fine" style="margin-top:10px">Over 100 blind guesses that is about +10 marks on average. Guesses swing either way, so qualify on what you know — and let the guesses add the margin.</p></div></details></section>' +
 
-      '<section class="sec"><div class="sec-head"><h2>Three hours, three passes</h2></div>' +
+      '<section class="sec"><details class="fold sec-fold"><summary>Three hours, three passes</summary><div class="fold-body">' +
         '<p class="sec-sub">A suggested order — practise it in every mock so it is automatic on the day.</p>' +
         '<ol class="bullets">' +
           "<li><b>General Studies first (about 60 min).</b> You either know a GS answer or you don't — answer, or mark your best guess, and move on.</li>" +
           "<li><b>Reasoning (about 70 min).</b> The types you have drilled. Leave any puzzle set that is not falling into place after two minutes.</li>" +
           "<li><b>Arithmetic (about 40 min).</b> Only questions you can set up in 90 seconds.</li>" +
           "<li><b>Last 10 minutes:</b> every empty bubble gets your best guess. Bubble as you go, in blocks of ten — never all at the end.</li>" +
-        "</ol></section>" +
+        "</ol></div></details></section>" +
 
-      '<section class="sec"><div class="sec-head"><h2>What the past papers ask</h2></div>' +
+      '<section class="sec"><details class="fold sec-fold"><summary>What the past papers ask</summary><div class="fold-body">' +
         '<p class="sec-sub">Read question by question: the 2018 prelims and the 7 August 2022 prelims. Counts are approximate; the target is what this plan is built to reach by the last week.</p>' +
         '<div class="tbl"><table class="t"><thead><tr><th>Block</th><th style="text-align:right">2018</th><th style="text-align:right">2022</th><th style="text-align:right">Target</th></tr></thead><tbody>' +
           [["Arithmetic", "~50", "~50", 15], ["Reasoning (verbal & non-verbal)", "~50", "~50", 28],
@@ -228,17 +240,17 @@
           "<li><b>GS formats:</b> 'which statement is NOT correct', match the following, chronological order and assertion–reason — judge one statement at a time.</li>" +
           "<li><b>Telangana Movement:</b> dates, commissions, agreements, leaders, songs and poets, chronology of agitations.</li>" +
           "<li><b>Current events:</b> 2022's came from the four months before the paper — summits, appointments, court rulings, schemes, Telangana news.</li>" +
-        "</ul></div></section>" +
+        "</ul></div></div></details></section>" +
 
-      '<section class="sec"><div class="sec-head"><h2>Papers & notices</h2></div><div class="list">' +
+      '<section class="sec"><details class="fold sec-fold"><summary>Previous papers & notices</summary><div class="fold-body"><div class="list">' +
         P.papers.map(p => '<a class="paper-link" href="' + esc(p.url) + '" target="_blank" rel="noopener"><span><b>' + esc(p.name) + " →</b><small>" + esc(p.note) + "</small></span></a>").join("") +
-      "</div></section>" +
+      "</div></div></details></section>" +
 
-      '<section class="sec"><div class="sec-head"><h2>Syllabus (2026 notification, as reported)</h2></div><ul class="bullets">' +
+      '<section class="sec"><details class="fold sec-fold"><summary>Syllabus (2026 notification, as reported)</summary><div class="fold-body"><ul class="bullets">' +
         "<li><b>Arithmetic:</b> number system, simple and compound interest, ratio and proportion, average, percentage, profit and loss, time and work, work and wages, time and distance, clocks and calendars, partnership, mensuration.</li>" +
         "<li><b>Reasoning / mental ability:</b> verbal and non-verbal — analogies, similarities and differences, spatial visualisation and orientation, problem solving, analysis, judgement, decision making, visual memory.</li>" +
         "<li><b>General Studies:</b> general science (everyday and contemporary, environment), current events, history of India with the national movement, geography (principles and India), Indian polity and economy, Telangana Movement and state formation (1948–70, 1971–90, 1991–2014).</li>" +
-      "</ul></section><div style=\"height:8px\"></div>";
+      "</ul></div></details></section><div style=\"height:8px\"></div>";
   }
 
   /* ── Log ─────────────────────────────────────────────────────────────── */
@@ -348,6 +360,20 @@
       try { history.replaceState(null, "", view === realToday() ? "#today" : "#day-" + view); } catch (x) {}
       return;
     }
+    const ot = el.closest("[data-open-task]");
+    if (ot) {
+      const k = ot.getAttribute("data-open-task");
+      openKey = openKey === k ? null : k;
+      document.querySelectorAll(".task[data-task]").forEach(a => {
+        const on = a.getAttribute("data-task") === openKey;
+        a.classList.toggle("is-open", on);
+        const tg = a.querySelector(".task-toggle");
+        if (tg) tg.setAttribute("aria-expanded", String(on));
+      });
+      const card = openKey && document.querySelector('.task[data-task="' + openKey + '"]');
+      if (card && card.getBoundingClientRect().top < 120) card.scrollIntoView({ block: "start" });
+      return;
+    }
     const b = el.closest("[data-basics]");
     if (b) { openBasics(b.getAttribute("data-basics")); return; }
     if (el.closest("[data-close-sheet]")) { closeSheet(); return; }
@@ -371,6 +397,16 @@
       const lab = el.closest(".tick"), card = el.closest(".task");
       if (lab) { lab.classList.toggle("is-on", el.checked); lab.lastChild.textContent = el.checked ? "Done" : "Mark done"; }
       if (card) card.classList.toggle("is-done", el.checked);
+      if (el.checked && card && card.getAttribute("data-task") === openKey) {
+        const next = [...document.querySelectorAll(".task[data-task]")].find(a => !a.classList.contains("is-done"));
+        openKey = next ? next.getAttribute("data-task") : null;
+        document.querySelectorAll(".task[data-task]").forEach(a => {
+          const on = a.getAttribute("data-task") === openKey;
+          a.classList.toggle("is-open", on);
+          const tg = a.querySelector(".task-toggle");
+          if (tg) tg.setAttribute("aria-expanded", String(on));
+        });
+      }
       renderHero();
       const d = P.days[view - 1], meta = document.querySelector(".day-meta");
       if (meta) meta.textContent = meta.textContent.replace(/\d+\/\d+ done$/, doneIn(d) + "/" + d.tasks.length + " done");

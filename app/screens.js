@@ -323,6 +323,14 @@ document.addEventListener('click', e=>{
    taps made it look optional. */
 function openFromHash(h){
   h = String(h || '').replace(/^#/, '');
+  /* TS SI has an authored day-by-day plan (si.html). Its Study screen and the
+     old generated "run to the exam" were the same job done worse, so both
+     send you to the plan instead of showing a second version of today. */
+  const ex = typeof currentExamObj === 'function' ? currentExamObj() : null;
+  if(ex && ex.plan && (h === '' || h === 'study' || h === 'plan' || h === 'schedule')){
+    location.replace(ex.plan.href + (h === 'plan' || h === 'schedule' ? '#plan' : ''));
+    return;
+  }
   /* Deep links from the TS SI plan (si.html): a task names the exact lesson
      or drill it means, so the link opens that and not the subject list. */
   /* Opened on the next tick: this runs from DOMContentLoaded, and prep/sync.js

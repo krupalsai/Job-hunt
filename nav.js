@@ -13,11 +13,10 @@
 
    One name each, and the name in the menu is the title of the screen it opens:
 
-       Study · Test · Progress                 the bottom bar, always visible
-       ☰ → Change exam · Jobs · Instinct · All lessons
-           · The run to the exam
-           · Current affairs · Syllabus
-           · Settings                          everything else
+       Home · Study · Test · Progress          the bottom bar, always visible
+       ☰ → Change exam · All lessons · Current affairs · Syllabus
+           · Professor · Instinct · About you  everything else
+           (+ the TS SI 47-day plan, when Study is another exam's)
 
    There used to be five destinations, a drawer that repeated them, a row of
    home-screen tiles that repeated them again, and three of them carried a
@@ -156,7 +155,8 @@
         ? String(Number(e.examDateStart.slice(8, 10))) + " – " + fmtDay(e.examDateEnd)
         : fmtDay(e.examDateStart) + " – " + fmtDay(e.examDateEnd);
     if (n === null) return { text: window_, days: null, short: window_ };
-    if (n > 0)  return { text: window_ + " · " + n + " day" + (n === 1 ? "" : "s") + " to go", days: n, short: n + " days to go" };
+    if (n === 1) return { text: window_ + " · tomorrow", days: 1, short: "tomorrow" };
+    if (n > 0)  return { text: window_ + " · " + n + " days to go", days: n, short: n + " days to go" };
     if (n === 0) return { text: window_ + " · today", days: 0, short: "today" };
     return { text: window_ + " · date passed", days: n, short: "date passed" };
   }
@@ -221,8 +221,6 @@
       sub: "Today's tasks, the paper decoded, your mock scores" },
     { id: "lessons", label: "All lessons", icon: null,
       sub: "Every subject, and every topic inside it" },
-    { id: "plan", label: "The run to the exam", icon: null,
-      sub: "One day at a time, counted back from the exam" },
     { id: "current-affairs", label: "Current affairs", icon: null,
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: null,
@@ -353,6 +351,7 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
   padding:12px 18px; background:transparent; border:0; color:var(--ink, #0c1524);
   text-decoration:none; cursor:pointer; font-family:inherit; font-size:15px; font-weight:650; line-height:1.3;
 }
+.nav-row[hidden]{ display:none; }
 .nav-row:hover{ background:var(--surface-2, #f6f8fb); text-decoration:none; }
 .nav-row .nav-ico{ flex:0 0 auto; width:22px; height:22px; color:var(--muted, #5b677a); }
 .nav-row-main{ display:block; flex:1; min-width:0; }
@@ -493,7 +492,7 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
         '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
 
       '<div class="nav-group">Go to</div>' +
-      MENU_DESTS.filter(d => !(d.id === "plan" && studyIsPage())).map(d =>
+      MENU_DESTS.map(d =>
         '<a class="nav-row' + (activeId === d.id ? " is-on" : "") + '" data-goto="' + d.id + '"' +
           (d.plain ? ' data-plain="1"' : "") + ' href="' +
           esc(d.href || learnHref(d.id)) + '">' + d.icon +
@@ -898,6 +897,10 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
       const goto = r.getAttribute("data-goto");
       const on = goto === activeId;
       r.classList.toggle("is-on", on);
+      /* When TS SI is the exam, Study already IS the 47-day plan — a second
+         row for it would be the same screen under another name. Re-checked on
+         every refresh, so a switch of exam shows or hides it at once. */
+      if (goto === "si-plan") r.hidden = studyIsPage();
       // Jobs always points at "/" — it is a different page, not a section of
       // the prep page, so it never takes the ?exam=…#section shape the others do.
       // Plain pages (data-plain, e.g. the Professor chat) keep their own href.

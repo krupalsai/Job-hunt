@@ -58,16 +58,19 @@
   .xcard .btn-row .btn { flex: 1 1 auto; }
 
   /* Job rows. One row answers: how long, what, am I eligible, where to apply. */
-  .other-row { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--surface); }
+  .other-row { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; background: var(--surface); }
+  .other-row > .cd { width: 48px; min-height: 48px; }
   .other-main { flex: 1; min-width: 0; }
   .other-org { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .02em; }
   .other-vac { color: var(--accent); font-weight: 750; }
   .other-post { font-size: 15px; font-weight: 700; line-height: 1.35; margin-top: 2px; color: var(--ink); }
   .other-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
-  .other-elig { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
-  .other-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+  /* One line: the full list of degrees is on the notice itself. */
+  .other-elig { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.45;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .other-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; align-items: center; }
   .other-apply, .other-mark, .other-switch {
-    display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: var(--r-sm);
+    display: inline-flex; align-items: center; min-height: 36px; padding: 0 10px; border-radius: var(--r-sm);
     font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none;
     border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
   }
@@ -157,11 +160,10 @@
 
   /* Prompts that only show when they can change something. */
   .qual-pick { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .exam-over, .qual-prompt { display: none; width: calc(100% - 32px); margin: 14px 16px 0; text-align: left;
+  .exam-over { display: none; width: calc(100% - 32px); margin: 14px 16px 0; text-align: left;
     padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--warn-line); background: var(--warn-soft);
     color: var(--ink-2); font: inherit; font-size: 13.5px; line-height: 1.5; cursor: pointer; }
-  .exam-over.show, .qual-prompt.show { display: block; }
-  .qual-prompt { border-color: var(--accent-line); background: var(--accent-soft); }
+  .exam-over.show { display: block; }
 
   /* ₹40 LPA+ list. */
   .tp-row { padding: 14px 16px; background: var(--surface); }
@@ -288,6 +290,81 @@
   .install-banner { display: none; margin: 14px 16px 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
   .install-banner.show { display: block; }
   .retry { margin-top: 12px; }
+
+  /* ── Views: one screen at a time ─────────────────────────────────────── */
+  .view[hidden] { display: none !important; }
+  .view-head { position: sticky; top: calc(58px + env(safe-area-inset-top)); z-index: 15; display: flex; align-items: center;
+               gap: 6px; padding: 8px var(--gutter) 8px 6px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .view-head h2 { font-size: 17px; font-weight: 800; letter-spacing: -.01em; margin: 0; min-width: 0;
+                  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .view-back { flex: 0 0 auto; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
+               font-size: 30px; line-height: 1; color: var(--ink); border-radius: 50%; }
+  .view-back:hover { text-decoration: none; background: var(--surface-3); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ── Coming up: one row per exam ─────────────────────────────────────── */
+  .hero-tight { padding-bottom: 16px; }
+  .hero-tight .hero-h { font-size: 20px; margin: 0 0 10px; }
+  .xrows { display: flex; flex-direction: column; gap: 8px; }
+  .xrow { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: var(--r-lg);
+          background: var(--surface); color: var(--ink); box-shadow: var(--shadow-2); }
+  .xrow:hover { text-decoration: none; }
+  .xrow-main { flex: 1; min-width: 0; }
+  .xrow-name { font-size: 16px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
+  .xrow-when { font-size: 13px; color: var(--ink-2); font-weight: 600; margin-top: 2px; }
+  .xrow-sub { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.4;
+              display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .xrow-sub b { color: var(--ink); }
+  .xrow-sub2 { font-size: 12px; color: var(--faint); margin-top: 3px; line-height: 1.35; }
+  .xrow .xcount { min-width: 58px; padding: 8px 6px 7px; }
+  .xrow .xcount b { font-size: 22px; }
+  .xrow .xcount.is-now b { font-size: 14px; }
+
+  /* ── Compact rows: tap the row, it opens the real link ───────────────── */
+  .brief { display: flex; gap: 12px; align-items: center; padding: 12px 14px; background: var(--surface); color: var(--ink); min-height: 64px; }
+  .brief:hover { text-decoration: none; background: var(--surface-2); }
+  .brief .cd { flex: 0 0 auto; }
+  .brief-main { flex: 1; min-width: 0; }
+  .brief-org { font-size: 12px; font-weight: 700; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brief-title { font-size: 14.5px; font-weight: 700; line-height: 1.3; margin-top: 1px;
+                 display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .brief-meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .brief-go { flex: 0 0 auto; font-size: 22px; color: var(--faint); line-height: 1; }
+  .brief-pay { flex: 0 0 auto; font-size: 13px; font-weight: 800; color: var(--pvt); white-space: nowrap; }
+
+  /* ── Track switch, compact ───────────────────────────────────────────── */
+  .seg-track button { font-size: 14.5px; font-weight: 750; }
+  .seg-n { margin-left: 6px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  .seg-track button[aria-selected="true"] .seg-n { color: var(--accent); }
+  .sub-head { margin-top: 16px; }
+  .sub-head h3 { font-size: 15px; font-weight: 800; margin: 0; }
+  .tiles3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .tiles3 .tile { min-height: 0; padding: 12px 10px; gap: 2px; }
+  .tiles3 .tile-ico { width: 28px; height: 28px; margin-bottom: 4px; }
+  .tiles3 .tile-name { font-size: 13px; }
+  .tiles3 .tile-sub { font-size: 11.5px; }
+  .row-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px;
+              padding: 13px 14px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line);
+              box-shadow: var(--shadow-1); color: var(--ink); font-size: 14px; }
+  .row-link:hover { text-decoration: none; border-color: var(--line-2); }
+  .row-link b { display: block; font-size: 14.5px; }
+  .row-link small { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .row-link::after { content: "›"; font-size: 22px; color: var(--faint); }
+  .sec-link { font-size: 13.5px; font-weight: 750; white-space: nowrap; }
+
+  /* ₹40 LPA+: whether you can apply today, said first. */
+  .tp-status { margin-top: 8px; font-size: 13px; line-height: 1.45; padding: 8px 10px; border-radius: var(--r-sm);
+               background: var(--surface-2); color: var(--ink-2); }
+  .tp-status.is-open { background: var(--ok-soft); color: var(--ok); font-weight: 700; }
+  .tp-status.is-batch { background: var(--warn-soft); color: var(--warn); }
+  .tp-small { font-size: 12.5px; }
+
+  .sh-apply { padding: 0 16px 14px; margin-top: -4px; }
+
+  .card.tracked .post { margin-bottom: 4px; }
+  .tracked-meta { font-size: 13px; color: var(--muted); }
+  .card.tracked .btn-row { margin-top: 12px; flex-wrap: wrap; }
+  .tp-row .btn { white-space: normal; text-align: left; line-height: 1.3; }
 </style>
 </head>
 <body data-page="jobs">
@@ -310,71 +387,84 @@
 
 <main class="page">
 
-  <!-- 1. COMING UP — the exams, on the brand colour, before anything else. -->
-  <section class="hero" aria-labelledby="newsH">
-    <div class="hero-date" id="heroDate"></div>
-    <h2 class="hero-h" id="newsH">Coming up</h2>
-    <div class="xcards" id="newsExams"></div>
-  </section>
-
-  <button class="exam-over" id="examOver">
-    <b>That exam is behind you</b><br>
-    <span id="examOverWhen"></span> Tap to pick what you are preparing for next.
-  </button>
-
-  <!-- 2. OPEN NOW — confident matches only, closing soonest first. -->
-  <section class="sec" id="openSec" aria-labelledby="openH">
-    <div class="sec-head"><h2 id="openH">Open now — you can apply</h2><span class="chip chip-gov num" id="openCount"></span></div>
-    <p class="sec-sub" id="openSub">Officer, engineer and trainee posts whose printed qualification includes yours.</p>
-    <div class="list" id="openList"><div class="empty">Loading openings…</div></div>
-    <button class="sec-link hidden" id="openAll" type="button">See every government opening →</button>
-  </section>
-
-  <!-- 3. NEW — first seen in the last two days, that you are not ruled out of. -->
-  <section class="sec hidden" id="newSec" aria-labelledby="newH">
-    <div class="sec-head"><h2 id="newH">New in the last 2 days</h2><span class="chip num" id="newCount"></span></div>
-    <p class="sec-sub">Added by the nightly run and matching your qualification.</p>
-    <div class="list" id="newList"></div>
-  </section>
-
-  <!-- 4. THE CHOICE -->
-  <section class="sec" id="trackSec" aria-labelledby="trackH">
-    <div class="sec-head"><h2 id="trackH">Choose your track</h2></div>
-    <p class="sec-sub">Each shows its own exams, openings and study material.</p>
-    <div class="track-pick" role="tablist" aria-label="Government or private">
-      <button type="button" role="tab" class="track-btn is-gov" id="tabGov" data-track="gov"
-              aria-controls="trackGov" aria-selected="true">
-        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 20.5h17"/></svg></span>
-        <span class="track-name">Government</span>
-        <span class="track-meta" id="govMeta">Exams, notifications, prep</span>
-      </button>
-      <button type="button" role="tab" class="track-btn is-pvt" id="tabPvt" data-track="pvt"
-              aria-controls="trackPvt" aria-selected="false">
-        <span class="track-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5.5A2 2 0 0 1 10.5 3.5h3a2 2 0 0 1 2 2V7"/><path d="M3 12.5h18"/></svg></span>
-        <span class="track-name">Private</span>
-        <span class="track-meta" id="pvtMeta">Fresher IT jobs, ₹40 LPA+ path</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- ═══════════ GOVERNMENT ═══════════ -->
-  <div id="trackGov" role="tabpanel" aria-labelledby="tabGov">
-
-    <section class="sec" aria-labelledby="prepH">
-      <div class="panel-kicker">Government</div>
-      <div class="sec-head"><h2 id="prepH">Prepare for your exams</h2></div>
-      <p class="sec-sub">The plan, the paper and practice — for each exam you are sitting.</p>
-      <div class="tiles" id="govStudy"></div>
+  <!-- ═══════════ HOME — one screen of summary ═══════════════════════════
+       Every long list opens on its own screen (#open, #gov, #pvt, #toppay,
+       #path, #basics) instead of stacking under this one. The complaint was
+       "a long scrolling down until down there is also something else". -->
+  <div class="view" data-view="home">
+    <section class="hero hero-tight" aria-labelledby="newsH">
+      <div class="hero-date" id="heroDate"></div>
+      <h2 class="hero-h" id="newsH">Coming up</h2>
+      <div class="xrows" id="newsExams"></div>
     </section>
 
-    <!-- Openings that belong to one of your exams. -->
+    <button class="exam-over" id="examOver">
+      <b>That exam is behind you</b><br>
+      <span id="examOverWhen"></span> Tap to pick what you are preparing for next.
+    </button>
+
+    <!-- Confident matches only, closing soonest first. Three here; the rest on #open. -->
+    <section class="sec" id="openSec" aria-labelledby="openH">
+      <div class="sec-head"><h2 id="openH">Open now — you can apply</h2><a class="sec-link" id="openAll" href="#open">See all</a></div>
+      <div class="list" id="openList"><div class="empty">Loading openings…</div></div>
+      <a class="row-link hidden" id="newLink" href="#open"></a>
+    </section>
+
+    <section class="sec" id="trackSec" aria-label="Government or private">
+      <div class="seg seg-track" role="tablist" aria-label="Government or private">
+        <button type="button" role="tab" id="tabGov" data-track="gov" aria-controls="trackGov" aria-selected="true">Government<span class="seg-n" id="govMeta"></span></button>
+        <button type="button" role="tab" id="tabPvt" data-track="pvt" aria-controls="trackPvt" aria-selected="false">Private<span class="seg-n" id="pvtMeta"></span></button>
+      </div>
+
+      <div id="trackGov" role="tabpanel" aria-labelledby="tabGov">
+        <div class="tiles tiles3" id="govStudy"></div>
+        <a class="row-link" id="govPreview" href="#gov"><span><b>All government openings</b><small>Loading…</small></span></a>
+      </div>
+
+      <div id="trackPvt" role="tabpanel" aria-labelledby="tabPvt" hidden>
+        <div class="sec-head sub-head"><h3>Fresher IT jobs</h3><a class="sec-link" id="pvtAll" href="#pvt">See all</a></div>
+        <div class="list" id="pvtPreview"><div class="empty">Loading…</div></div>
+        <div class="sec-head sub-head"><h3>₹40 LPA+ · apply online</h3><a class="sec-link" id="tpAll" href="#toppay">See all</a></div>
+        <div class="list" id="tpPreview"></div>
+        <a class="row-link" id="pathLink" href="#path"></a>
+      </div>
+    </section>
+
+    <section class="sec">
+      <a class="row-link" id="basicsLink" href="#basics"></a>
+    </section>
+
+    <div class="data-foot">
+      <span class="sub" id="lastUpdated">Loading…</span>
+      <button class="btn btn-sm" type="button" onclick="load()">Refresh</button>
+    </div>
+    <div class="install-banner" id="installBanner">
+      Install it: your browser's menu → "Add to Home screen".
+    </div>
+  </div>
+
+  <!-- ═══════════ OPEN NOW — every confident match ═══════════ -->
+  <div class="view" data-view="open" hidden>
+    <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>Open now — you can apply</h2></div>
+    <section class="sec">
+      <p class="sec-sub">Officer, engineer and trainee posts whose printed qualification includes yours, closing soonest first. Posts that need another state's residence are left out — they are under Government → Other states.</p>
+      <div class="list" id="openAllList"></div>
+    </section>
+    <section class="sec hidden" id="newSec" aria-labelledby="newH">
+      <div class="sec-head"><h2 id="newH">New in the last 2 days</h2><span class="chip num" id="newCount"></span></div>
+      <div class="list" id="newList"></div>
+    </section>
+  </div>
+
+  <!-- ═══════════ GOVERNMENT — every opening ═══════════ -->
+  <div class="view" data-view="gov" hidden>
+    <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>Government openings</h2></div>
     <section class="sec" id="trackedSec" aria-labelledby="trackedH">
       <div class="sec-head"><h2 id="trackedH">Tracked for your exams</h2></div>
       <div class="stack" id="examJobs"><div class="empty">Loading…</div></div>
     </section>
-
     <section class="sec" id="govSec" aria-labelledby="govH">
-      <div class="sec-head"><h2 id="govH">Government openings</h2><span class="chip chip-gov num" id="otherCount"></span></div>
+      <div class="sec-head"><h2 id="govH">All you can apply for</h2><span class="chip chip-gov num" id="otherCount"></span></div>
       <p class="sec-sub" id="govSub">Best matches first, then the soonest to close. Filter by area.</p>
       <label class="marks-filter hidden" id="marksFilter">
         <input type="checkbox" id="marksFilterOn">
@@ -383,8 +473,12 @@
       <div class="fchips" id="areaChips" role="group" aria-label="Filter by area"></div>
       <div id="otherFold"><div class="list" id="otherJobs"></div></div>
       <button class="btn btn-block more-btn hidden" id="govMore" type="button">Show more</button>
-
       <div style="margin-top:14px">
+        <details class="fold hidden" id="stateFold">
+          <summary id="stateCount">Other states</summary>
+          <p class="fine" style="margin:0 0 8px">State and district posts outside Telangana usually need that state's residence or language.</p>
+          <div class="list" id="stateJobs"></div>
+        </details>
         <details class="fold hidden" id="notMineFold">
           <summary id="notMineCount">Not for your qualification</summary>
           <div class="list" id="notMineJobs"></div>
@@ -397,37 +491,16 @@
     </section>
   </div>
 
-  <!-- ═══════════ PRIVATE ═══════════ -->
-  <div id="trackPvt" role="tabpanel" aria-labelledby="tabPvt" hidden>
-
+  <!-- ═══════════ PRIVATE — fresher IT jobs ═══════════ -->
+  <div class="view" data-view="pvt" hidden>
+    <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>Fresher IT jobs</h2></div>
     <section class="sec" id="shresthaSec" aria-labelledby="shH">
-      <div class="panel-kicker">Private</div>
-      <div class="sec-head"><h2 id="shH">Fresher IT openings</h2><span class="chip chip-pvt num" id="shCount"></span></div>
+      <div class="sec-head"><h2 id="shH">Fresher openings</h2><span class="chip chip-pvt num" id="shCount"></span></div>
       <p class="sec-sub" id="shresthaSub">Newest first · pulled daily from @careerwithshrestha</p>
       <div class="list" id="shresthaJobs"><div class="empty">Loading…</div></div>
       <div id="shNotFit"></div>
     </section>
-
-    <section class="sec" id="topPaySec" aria-labelledby="tpH">
-      <div class="sec-head"><h2 id="tpH">₹40 LPA+ fresher roles — off-campus</h2></div>
-      <p class="sec-sub" id="tpSub"></p>
-      <div class="list" id="topPayList"></div>
-      <details class="fold" id="stepFold" style="margin-top:10px">
-        <summary>Nearer rungs on the ladder</summary>
-        <div class="fold-body" id="stepBody"></div>
-      </details>
-      <p class="fine tp-src" id="tpSources"></p>
-    </section>
-
-    <section class="sec" id="pathSec" aria-labelledby="pathH">
-      <div class="sec-head"><h2 id="pathH">Your path to those roles</h2><span class="chip chip-pvt num" id="pathCount"></span></div>
-      <p class="sec-sub">From zero coding to interview-ready, one stage at a time. Tick as you go — it stays on this phone.</p>
-      <div class="bar" style="margin-bottom:12px"><i id="pathBar" style="width:0%"></i></div>
-      <div id="codePath"></div>
-    </section>
-
-    <section class="sec" aria-labelledby="pvtMoreH">
-      <div class="sec-head"><h2 id="pvtMoreH">More private openings</h2></div>
+    <section class="sec">
       <details class="fold hidden" id="privateFold">
         <summary id="privateCount">From the job feed</summary>
         <div class="list" id="privateJobs"></div>
@@ -436,35 +509,51 @@
     </section>
   </div>
 
-  <!-- ═══════════ BASICS — both tracks ═══════════ -->
-  <section class="sec" aria-labelledby="roadmapTitle">
-    <div class="sec-head"><h2 id="roadmapTitle">Build your basics</h2></div>
-    <p class="sec-sub">Quant and reasoning from the ground up — the same skills every exam and every company aptitude test checks.</p>
-    <div class="study-roadmap">
-      <div class="roadmap-tracks" id="roadmapSummary" aria-live="polite"></div>
-      <details class="roadmap-fold" id="roadmapFold">
-        <summary>Open the lessons</summary>
-        <div class="roadmap-tabs" role="tablist" aria-label="Study track">
-          <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
-          <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
-        </div>
-        <div id="roadmapTopics" role="tabpanel" aria-labelledby="roadmapQuantTab"></div>
-        <p class="roadmap-footnote">Ticks are saved on this phone, offline too. They do not sync across devices.</p>
+  <!-- ═══════════ ₹40 LPA+ — open now, or when ═══════════ -->
+  <div class="view" data-view="toppay" hidden>
+    <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>₹40 LPA+ fresher roles</h2></div>
+    <section class="sec" id="topPaySec" aria-labelledby="tpH">
+      <h2 class="sr-only" id="tpH">₹40 LPA+ fresher roles — off-campus</h2>
+      <p class="sec-sub" id="tpSub"></p>
+      <div class="list" id="topPayList"></div>
+      <details class="fold" id="stepFold" style="margin-top:10px">
+        <summary>Nearer rungs on the ladder</summary>
+        <div class="fold-body" id="stepBody"></div>
       </details>
-    </div>
-  </section>
-
-  <button class="qual-prompt" id="qualPrompt">
-    <b>Tell the app what you studied</b><br>
-    and it can say which openings you are eligible for. Tap to set it.
-  </button>
-
-  <div class="data-foot">
-    <span class="sub" id="lastUpdated">Loading…</span>
-    <button class="btn btn-sm" type="button" onclick="load()">Refresh</button>
+      <p class="fine tp-src" id="tpSources"></p>
+    </section>
   </div>
-  <div class="install-banner" id="installBanner">
-    Install it: your browser's menu → "Add to Home screen".
+
+  <!-- ═══════════ CODING PATH ═══════════ -->
+  <div class="view" data-view="path" hidden>
+    <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>Your coding path</h2></div>
+    <section class="sec" id="pathSec" aria-labelledby="pathH">
+      <div class="sec-head"><h2 id="pathH">Zero to interview-ready</h2><span class="chip chip-pvt num" id="pathCount"></span></div>
+      <p class="sec-sub">One stage at a time. Tick as you go — it stays on this phone. The TS SI prelims come first; the full start is after 29 Nov.</p>
+      <div class="bar" style="margin-bottom:12px"><i id="pathBar" style="width:0%"></i></div>
+      <div id="codePath"></div>
+    </section>
+  </div>
+
+  <!-- ═══════════ BASICS ═══════════ -->
+  <div class="view" data-view="basics" hidden>
+    <div class="view-head"><a class="view-back" href="#home" aria-label="Back to Home">‹</a><h2>Basics: Quant & Reasoning</h2></div>
+    <section class="sec" aria-labelledby="roadmapTitle">
+      <h2 class="sr-only" id="roadmapTitle">Build your basics</h2>
+      <p class="sec-sub">From the ground up — the same skills every exam and every company aptitude test checks.</p>
+      <div class="study-roadmap">
+        <div class="roadmap-tracks" id="roadmapSummary" aria-live="polite"></div>
+        <details class="roadmap-fold" id="roadmapFold" open>
+          <summary>The lessons</summary>
+          <div class="roadmap-tabs" role="tablist" aria-label="Study track">
+            <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
+            <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
+          </div>
+          <div id="roadmapTopics" role="tabpanel" aria-labelledby="roadmapQuantTab"></div>
+          <p class="roadmap-footnote">Ticks are saved on this phone, offline too. They do not sync across devices.</p>
+        </details>
+      </div>
+    </section>
   </div>
 </main>
 
@@ -841,7 +930,7 @@ let track = 'gov';
 try { if (localStorage.getItem(TRACK_KEY) === 'pvt') track = 'pvt'; } catch (e) {}
 let govArea = 'All';
 let areasOpen = false;
-const GOV_PAGE = 20;
+const GOV_PAGE = 12;
 let govLimit = GOV_PAGE;
 const NEWS_MAX = 5;
 
@@ -900,6 +989,16 @@ const bySoonestJob = (a, b) => {
 };
 
 /* ── 1. Coming up ─────────────────────────────────────────────────────── */
+/** The one exam-hall rule worth seeing on Home: computed from the marking,
+    so it can never say "do not guess" on a paper where guessing gains. */
+function shortRule(e) {
+  const m = e.marking;
+  if (!m || !m.correct) return e.tactics && e.tactics[0] ? e.tactics[0].split('. ')[0] + '.' : '';
+  const ev = 0.25 * m.correct + 0.75 * (m.wrong || 0);
+  return ev > 0
+    ? `Never leave a question blank — a blind guess gains +${+ev.toFixed(3)} on average.`
+    : 'Guess only after ruling out options — a blind guess loses on average.';
+}
 function examCardHtml(e) {
   const n = daysTo(e.examDateStart);
   const count = n === 0 ? '<div class="xcount is-now"><b>Today</b></div>'
@@ -908,62 +1007,31 @@ function examCardHtml(e) {
   const when = fmtDay(e.examDateStart, true) +
     (e.session ? ' · ' + e.session.toLowerCase() : '') +
     (e.dateTentative ? ' · tentative' : '');
-  const mins = e.minutes ? (e.minutes % 60 === 0 && e.minutes >= 120 ? (e.minutes / 60) + ' hours' : e.minutes + ' min') : null;
-  const pat = [e.questions ? e.questions + ' questions' : null, mins,
-    e.marking && e.marking.wrong ? '−' + Math.abs(e.marking.wrong) + ' per wrong' : null].filter(Boolean).join(' · ');
-
   const today = todayISO();
-  const chips = [];
-  if (e.applyWindow) {
-    if (e.applyWindow.end < today) chips.push(`<span class="chip chip-line">Applications closed ${escapeHtml(fmtShort(e.applyWindow.end))}</span>`);
-    else if (e.applyWindow.start <= today) chips.push(`<span class="chip chip-warn">Apply by ${escapeHtml(fmtShort(e.applyWindow.end))}</span>`);
-  }
-  if (e.qualifying && e.qualifying.byCategory) {
-    const q = e.qualifying.byCategory;
-    chips.push(`<span class="chip chip-info">Pass mark: OC ${q.OC}% · BC ${q.BC}% · SC/ST ${q.SC}%</span>`);
-  }
-  if (!(e.applyWindow && e.applyWindow.end < today) &&
-      typeof examEligibility === 'function' && typeof candidateProfile === 'function') {
-    const v = examEligibility(e, candidateProfile());
-    if (v.status === 'yes') chips.push('<span class="chip chip-ok">You are eligible</span>');
-    else if (v.status === 'no') chips.push(`<span class="chip chip-bad">Not eligible — ${escapeHtml(v.reason)}</span>`);
-  }
-
-  // Three days out, the one rule that changes the score goes on the card.
-  const tip = n !== null && n <= 3 && e.tactics && e.tactics[0]
-    ? `<div class="notice is-warn" style="margin-top:12px"><div><b>Exam-hall rule.</b> ${escapeHtml(e.tactics[0])}</div></div>` : '';
-
-  let plan = '';
+  let sub = '';
   const day = planDay(e);
   if (day) {
-    const today_ = (window.SI_PLAN && SI_PLAN.days && SI_PLAN.days[day - 1]) || null;
-    plan = `<div class="xplan">
-      <div class="xplan-row">Day ${day} of ${e.plan.days} — today<span>${escapeHtml(today_ ? today_.focus : 'Today\'s tasks are ready')}</span></div>
-      <div class="bar"><i style="width:${Math.round(day / e.plan.days * 100)}%"></i></div>
-    </div>`;
+    const d = (window.SI_PLAN && SI_PLAN.days && SI_PLAN.days[day - 1]) || null;
+    sub = `<b>Day ${day} of ${e.plan.days} — today</b> · ${escapeHtml(d ? d.focus : 'today\'s tasks are ready')}`;
+  } else if (n !== null && n <= 3) {
+    sub = '<b>Rule:</b> ' + escapeHtml(shortRule(e));
   }
-
-  const learn = k => '/learn.html?exam=' + encodeURIComponent(e.key) + '#' + k;
-  const actions = e.plan
-    ? `<a class="btn btn-primary" href="${escapeHtml(e.plan.href)}">Today's plan</a>
-       <a class="btn" href="${escapeHtml(e.plan.href)}#paper">The paper</a>`
-    : `<a class="btn btn-primary" href="${learn('syllabus')}">Exam-day rules</a>
-       <a class="btn" href="${learn('test')}">Quick test</a>`;
-
-  return `<article class="xcard" data-exam-card="${escapeHtml(e.key)}">
-    <div class="xcard-top">
-      <div class="xcard-main">
-        <div class="xcard-kicker">${e.dateTentative ? 'Exam · date tentative' : 'Exam'}</div>
-        <div class="xcard-name">${escapeHtml(e.headline || e.name)}</div>
-        <div class="xcard-when">${escapeHtml(when)}</div>
-        ${pat ? `<div class="xcard-meta">${escapeHtml(pat)}</div>` : ''}
-      </div>
-      ${count}
+  const bits = [];
+  if (e.applyWindow && e.applyWindow.end < today) bits.push('Applications closed ' + fmtShort(e.applyWindow.end));
+  if (e.qualifying && e.qualifying.byCategory) {
+    const q = e.qualifying.byCategory;
+    bits.push(`Pass mark: OC ${q.OC}% · BC ${q.BC}% · SC/ST ${q.SC}%`);
+  }
+  const href = e.plan ? e.plan.href : '/learn.html?exam=' + encodeURIComponent(e.key) + '#syllabus';
+  return `<a class="xrow" href="${escapeHtml(href)}" data-exam-card="${escapeHtml(e.key)}">
+    <div class="xrow-main">
+      <div class="xrow-name">${escapeHtml(e.headline || e.name)}</div>
+      <div class="xrow-when">${escapeHtml(when)}</div>
+      ${sub ? `<div class="xrow-sub">${sub}</div>` : ''}
+      ${bits.length ? `<div class="xrow-sub2">${escapeHtml(bits.join(' · '))}</div>` : ''}
     </div>
-    ${chips.length ? `<div class="chips">${chips.join('')}</div>` : ''}
-    ${tip}${plan}
-    <div class="btn-row">${actions}</div>
-  </article>`;
+    ${count}
+  </a>`;
 }
 
 function renderComingUp() {
@@ -971,36 +1039,84 @@ function renderComingUp() {
   if (!box) return;
   const d = document.getElementById('heroDate');
   if (d) d.textContent = new Date().toLocaleDateString('en-IN',
-    { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    { weekday: 'long', day: 'numeric', month: 'long' });
   const list = upcomingExams();
   box.innerHTML = list.length
     ? list.map(examCardHtml).join('')
-    : '<div class="xcard"><div class="card-sub">No exam dates are in the app right now. When a notification sets one, it appears here.</div></div>';
+    : '<div class="xrow"><div class="xrow-main"><div class="xrow-sub">No exam dates are in the app right now. When a notification sets one, it appears here.</div></div></div>';
+}
+
+/* ── Links that are really links ──────────────────────────────────────────
+   "Wtf": a row's Notification button opened the Nagaland information
+   department's HOME PAGE. The ingestion had stored the department's site as
+   the notification. A link is a notice only when it opens a document or a
+   page deeper than a site's front door; otherwise the row says Details and
+   opens the article that carries the notice. */
+function isArticleUrl(u) { return /freejobalert\.com\/articles\//i.test(u || ''); }
+function isHomepage(u) {
+  if (!u) return true;
+  try {
+    const x = new URL(u);
+    return /^\/?((index|default|home)\.(html?|php|aspx?|jsp))?$/i.test(x.pathname) && !x.search;
+  } catch (e) { return true; }
+}
+function isNoticeUrl(u) { return !!u && !isArticleUrl(u) && !isHomepage(u); }
+/** The single best place to send someone who taps a row. */
+function bestLink(j) {
+  if (j.apply_url && isNoticeUrl(j.apply_url)) return { url: j.apply_url, label: 'Apply' };
+  if (isNoticeUrl(j.notification_url))
+    return { url: j.notification_url, label: /\.pdf(\?|$)/i.test(j.notification_url) ? 'Notification (PDF)' : 'Official notice' };
+  const art = j.source_url || (isArticleUrl(j.notification_url) ? j.notification_url : null);
+  return art ? { url: art, label: 'Details' } : null;
+}
+
+/* ── Other states' local posts ────────────────────────────────────────────
+   "Open now — you can apply" listed a Nagaland department's walk-in. State
+   and district posts outside Telangana usually need that state's residence
+   or language, so they leave the news and sit in their own fold. Central
+   bodies (IITs, NITs, AIIMS, PSUs, banks, railways, the forces) are open to
+   all of India whatever town they are in. A heuristic, read off the name. */
+const OTHER_STATE_RE = /\b(andhra|arunachal|assam|bihar|chhattisgarh|goa|gujarat|haryana|himachal|jharkhand|karnataka|kerala|madhya pradesh|maharashtra|manipur|meghalaya|mizoram|nagaland|odisha|orissa|punjab|rajasthan|sikkim|tamil ?nadu|tripura|uttar pradesh|uttarakhand|west bengal|jammu|kashmir|ladakh|andaman|puducherry|pondicherry|lakshadweep|dadra|daman|diu)\b/i;
+const STATE_BODY_RE = /\b(appsc|apsc|bpsc|bpssc|bssc|cgpsc|cgvyapam|gpsc|gsssb|hpsc|hssc|hppsc|hpsssb|jkpsc|jkssb|jpsc|jssc|kpsc|kea|mpsc|mppsc|mpesb|npsc|opsc|ossc|osssc|ppsc|psssb|rpsc|rsmssb|tnpsc|tnusrb|ukpsc|uksssc|uppsc|upsssc|wbpsc|wbssc|upessc|lahdc)\b/i;
+const LOCAL_BODY_RE = /\b(district|zila|zilla|collectorate|dcpu|panchayat|municipal|nhm|nam|dhs|dmho|anganwadi|wcd|icds|mact|dlsa|high court|state|govt\.? of|government of|department|directorate|ahvs)\b/i;
+const CENTRAL_RE = /\b(iit|nit|iiit|iiitd|iim|aiims|iisc|iiser|niper|nimhans|esic|ecil|drdo|isro|barc|csir|icmr|icar|npcil|ntpc|bhel|hal|bel|gail|ongc|iocl|bpcl|hpcl|sail|nmdc|coal india|rrb|rrc|railway|ssc|upsc|ibps|sbi|bank|army|navy|air force|itbp|crpf|bsf|cisf|ssb|kvs|nvs|epfo|lic|nabard|rbi|sebi|nhai|aai|bsnl|india post|central university|cu[a-z]|nabcons|exim|becil|grid india|mecon|railtel|fact|ministry|tmc)\b/i;
+/* All 33 districts, so a Telangana district post is never sent elsewhere. */
+const TELANGANA_RE = /\b(telangana|hyderabad|secunderabad|cyberabad|rachakonda|adilabad|bhadradri|kothagudem|hanumakonda|hanamkonda|jagtial|jagityal|jangaon|bhupalpally|gadwal|kamareddy|karimnagar|khammam|asifabad|mahabubabad|mahabubnagar|mancherial|medak|medchal|malkajgiri|mulugu|nagarkurnool|nalgonda|narayanpet|nirmal|nizamabad|peddapalli|sircilla|rangareddy|ranga reddy|sangareddy|siddipet|suryapet|vikarabad|wanaparthy|warangal|yadadri|bhuvanagiri|tgpsc|tspsc|tgprb|tslprb|sccl|singareni|tgsrtc|tsrtc|tsgenco|tgspdcl|tsnpdcl)\b/i;
+const DISTRICT_BODY_RE = /\b(district|zila|zilla|panchayat|collectorate|dcpu|nhm|nam|mact|wcd|dhs)\b/i;
+const GENERIC_WORDS = /\b(district|zila|zilla|panchayat|collector(ate)?|court|office|municipal|corporation|nhm|nam|dcpu|mact|wcd|dhs|health|society|the|of|and|for)\b/gi;
+function isOtherStateLocal(j) {
+  const org = j.organization || '';
+  const text = org + ' ' + (j.post_name || '') + ' ' + (j.location || '');
+  if (TELANGANA_RE.test(text)) return false;
+  if (CENTRAL_RE.test(org)) return false;
+  if (STATE_BODY_RE.test(org) || OTHER_STATE_RE.test(text)) return true;
+  /* A district body that names a place, and the place is not in Telangana.
+     A bare "District Court" names none — that is "I do not know", and it
+     stays in the main list. */
+  return DISTRICT_BODY_RE.test(org) && /[a-z]{3,}/i.test(org.replace(GENERIC_WORDS, ' ').replace(/[^a-z ]/gi, ' '));
 }
 
 /* ── 2. Open now, 3. New ──────────────────────────────────────────────── */
-/** A compact row for the news: countdown, what, and the one link that matters. */
+/** A compact row for the summary: tap anywhere and it opens the real link. */
 function briefHtml(j) {
   const left = daysLeft(j);
   const cls = left === null ? ' is-none' : left <= 3 ? ' is-urgent' : left <= 7 ? ' is-soon' : '';
   const cd = left === null ? '<b>—</b><small>no date</small>'
-    : left <= 0 ? '<b style="font-size:14px">Today</b><small>closes</small>'
+    : left <= 0 ? '<b style="font-size:13px">Today</b><small>closes</small>'
     : `<b>${left}</b><small>day${left === 1 ? '' : 's'}</small>`;
   const vac = vacanciesOf(j);
-  const isArticle = u => /freejobalert\.com\/articles\//i.test(u || '');
-  const notif = !isArticle(j.notification_url) ? j.notification_url : null;
-  const link = notif || j.source_url || (isArticle(j.notification_url) ? j.notification_url : null);
-  return `<div class="other-row">
-    <div class="cd${cls}">${cd}</div>
-    <div class="other-main">
-      <div class="other-org">${escapeHtml(j.organization)}${vac ? ` · <span class="other-vac">${escapeHtml(vac)} posts</span>` : ''}</div>
-      <div class="other-post">${escapeHtml(titleOf(j))}</div>
-      <div class="other-meta">${left === null ? escapeHtml(j.deadline_text || 'Closing date not published')
-        : 'Closes ' + escapeHtml(fmtShort(j.deadline))} · <span class="ok-tag">your qualification</span></div>
-      ${link ? `<div class="other-actions"><a class="other-apply${notif ? '' : ' is-secondhand'}" href="${escapeHtml(link)}" target="_blank" rel="noopener">${notif ? 'Notification →' : 'Details →'}</a>
-        <button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button></div>` : ''}
-    </div>
-  </div>`;
+  const link = bestLink(j);
+  const meta = (left === null ? (j.deadline_text || 'Closing date not published') : 'Closes ' + fmtShort(j.deadline)) +
+    (link ? ' · ' + link.label : '');
+  const inner = `<div class="cd${cls}">${cd}</div>
+    <div class="brief-main">
+      <div class="brief-org">${escapeHtml(j.organization)}${vac ? ' · ' + escapeHtml(vac) + (vac === '1' ? ' post' : ' posts') : ''}</div>
+      <div class="brief-title">${escapeHtml(titleOf(j))}</div>
+      <div class="brief-meta">${escapeHtml(meta)}</div>
+    </div><span class="brief-go" aria-hidden="true">›</span>`;
+  return link
+    ? `<a class="brief other-row" href="${escapeHtml(link.url)}" target="_blank" rel="noopener">${inner}</a>`
+    : `<div class="brief other-row">${inner}</div>`;
 }
 
 function qualPickerHtml() {
@@ -1013,40 +1129,53 @@ function qualPickerHtml() {
     </div></div></div>`;
 }
 
+const PREVIEW = 3;
+/** Confident matches on the role and the qualification, open to all of India
+    or in Telangana, closing soonest first. */
+function openNowRows(live) {
+  return live.filter(j => !applied[j.id] && eligibility(j) === true && onMyTrack(j) && !isOtherStateLocal(j))
+    .sort(bySoonestJob);
+}
 function renderOpenNow(live) {
   const box = document.getElementById('openList');
-  const count = document.getElementById('openCount');
   const all = document.getElementById('openAll');
+  const full = document.getElementById('openAllList');
   if (!box) return;
   if (!qualification) {
     box.innerHTML = qualPickerHtml();
-    if (count) count.textContent = '';
     if (all) all.classList.add('hidden');
+    if (full) full.innerHTML = qualPickerHtml();
     return;
   }
-  const rows = live.filter(j => !applied[j.id] && eligibility(j) === true && onMyTrack(j)).sort(bySoonestJob);
-  if (count) count.textContent = rows.length ? String(rows.length) : '';
+  const rows = openNowRows(live);
   box.innerHTML = rows.length
-    ? rows.slice(0, NEWS_MAX).map(briefHtml).join('')
-    : '<div class="empty">Nothing open right now asks for exactly your qualification on an officer, engineer or trainee post. The full lists below still show everything you are not ruled out of.</div>';
+    ? rows.slice(0, PREVIEW).map(briefHtml).join('')
+    : '<div class="empty">Nothing open right now asks for exactly your qualification on an officer, engineer or trainee post. Government → See all shows everything you are not ruled out of.</div>';
   if (all) {
-    all.classList.toggle('hidden', rows.length <= NEWS_MAX);
-    all.textContent = `See all ${rows.length} →`;
+    all.classList.toggle('hidden', rows.length <= PREVIEW);
+    all.textContent = `See all ${rows.length}`;
   }
+  if (full) full.innerHTML = rows.length ? rows.map(otherHtml).join('')
+    : '<div class="empty">Nothing open right now asks for exactly your qualification.</div>';
 }
 
 function renderNew(live) {
   const sec = document.getElementById('newSec');
+  const link = document.getElementById('newLink');
   if (!sec) return;
   const since = Date.now() - 2 * 864e5;
   const rows = qualification ? live.filter(j => {
     const t = new Date(j.first_seen_at || 0).getTime();
-    return t >= since && eligibility(j) === true;
+    return t >= since && eligibility(j) === true && !isOtherStateLocal(j);
   }).sort((a, b) => new Date(b.first_seen_at) - new Date(a.first_seen_at)) : [];
   sec.classList.toggle('hidden', rows.length === 0);
+  if (link) {
+    link.classList.toggle('hidden', rows.length === 0);
+    link.innerHTML = `<span><b>${rows.length} new in the last 2 days</b><small>Matching your qualification</small></span>`;
+  }
   if (!rows.length) return;
   document.getElementById('newCount').textContent = String(rows.length);
-  document.getElementById('newList').innerHTML = rows.slice(0, 4).map(briefHtml).join('');
+  document.getElementById('newList').innerHTML = rows.map(otherHtml).join('');
 }
 
 /* ── 4. The choice ────────────────────────────────────────────────────── */
@@ -1078,12 +1207,6 @@ document.addEventListener('click', e => {
     }
     return;
   }
-  if (e.target instanceof Element && e.target.closest('#openAll')) {
-    setTrack('gov', false);
-    const el = document.getElementById('govSec');
-    if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    return;
-  }
   const more = e.target instanceof Element ? e.target.closest('[data-areas-more]') : null;
   if (more) { areasOpen = more.getAttribute('data-areas-more') === '1'; render(); return; }
   const a = e.target instanceof Element ? e.target.closest('[data-area]') : null;
@@ -1109,27 +1232,18 @@ function tile(href, icon, name, sub, cls) {
 function renderGovStudy(exams) {
   const box = document.getElementById('govStudy');
   if (!box) return;
-  const cur = currentExam();
-  const curKey = cur ? cur.key : (exams[0] && exams[0].key) || 'ts-si';
+  const withPlan = exams.find(e => e.plan);
+  const key = withPlan ? withPlan.key : (exams[0] && exams[0].key) || 'ts-si';
   const html = [];
-  exams.forEach(e => {
-    const learn = k => '/learn.html?exam=' + encodeURIComponent(e.key) + '#' + k;
-    const day = planDay(e);
-    if (e.plan) {
-      html.push(tile(e.plan.href, 'plan', `${e.short} ${e.plan.days}-day plan`,
-        day ? `Day ${day} of ${e.plan.days} · today's tasks` : 'Day by day to the paper', 'is-gov is-wide'));
-      html.push(tile(e.plan.href + '#paper', 'paper', 'Previous papers', '2018 & 2022 decoded', 'is-gov'));
-      html.push(tile(learn('test'), 'test', 'Practice tests', 'Timed, with explanations', 'is-gov'));
-    } else {
-      const n = daysTo(e.examDateStart);
-      html.push(tile(learn('syllabus'), 'rules', `${e.short} exam-day rules`,
-        n === 1 ? 'Tomorrow · how to attempt' : 'Pattern, timing, attempting', 'is-gov'));
-      html.push(tile(learn('test'), 'test', `${e.short} quick test`, 'Ten questions, timed', 'is-gov'));
-    }
-  });
-  html.push(tile('/learn.html?exam=' + encodeURIComponent(curKey) + '#current-affairs', 'news', 'Current affairs', 'What to read today'));
-  html.push(tile('/learn.html?exam=' + encodeURIComponent(curKey) + '#lessons', 'book', 'All lessons', 'Every subject, every topic'));
-  html.push(tile('/chat.html', 'chat', 'Ask the Professor', 'Doubts, explained simply'));
+  if (withPlan) {
+    const day = planDay(withPlan);
+    html.push(tile(withPlan.plan.href, 'plan', `${withPlan.plan.days}-day plan`, day ? `Day ${day} today` : withPlan.short, 'is-gov'));
+    html.push(tile(withPlan.plan.href + '#paper', 'paper', 'Old papers', '2018 & 2022', 'is-gov'));
+  } else {
+    html.push(tile('/learn.html?exam=' + encodeURIComponent(key) + '#syllabus', 'rules', 'The paper', 'Pattern & rules', 'is-gov'));
+    html.push(tile('/learn.html?exam=' + encodeURIComponent(key) + '#lessons', 'book', 'Lessons', 'Every subject', 'is-gov'));
+  }
+  html.push(tile('/learn.html?exam=' + encodeURIComponent(key) + '#test', 'test', 'Practice', 'Timed tests', 'is-gov'));
   box.innerHTML = html.join('');
 }
 
@@ -1156,28 +1270,62 @@ function renderTopPay() {
   const T = window.TOP_PAY;
   const list = document.getElementById('topPayList');
   if (!T || !list) return;
-  document.getElementById('tpSub').textContent = T.context;
-  const rows = T.roles.slice().sort((a, b) => opensIn(a) - opensIn(b) || (b.high || b.low + 10) - (a.high || a.low + 10));
-  list.innerHTML = rows.map(r => `<div class="tp-row">
+  const checked = T.checked ? fmtShort(T.checked) : '';
+  document.getElementById('tpSub').textContent = T.context +
+    (checked ? ` Whether each is open was checked on its own careers site on ${checked}.` : '');
+  const ORDER = { open: 0, batch: 1, unchecked: 2, none: 3 };
+  const rows = T.roles.slice().sort((a, b) =>
+    (ORDER[a.status] ?? 2) - (ORDER[b.status] ?? 2) || opensIn(a) - opensIn(b) ||
+    (b.high || b.low + 10) - (a.high || a.low + 10));
+  const statusHtml = r => {
+    if (r.status === 'open') return `<div class="tp-status is-open">${escapeHtml(r.statusNote || 'Open now.')}</div>`;
+    if (r.status === 'batch') return `<div class="tp-status is-batch">${escapeHtml(r.statusNote || 'Open, but for another graduating batch.')}</div>`;
+    if (r.status === 'none') return `<div class="tp-status">Not open for freshers in India right now${checked ? ' (checked ' + escapeHtml(checked) + ')' : ''}. ${escapeHtml(r.statusNote || '')} Usually opens ${escapeHtml(r.months.map(x => MONTHS[x - 1]).join(' & '))}.</div>`;
+    return `<div class="tp-status">Usually opens ${escapeHtml(r.months.map(x => MONTHS[x - 1]).join(' & '))} — not checked yet.</div>`;
+  };
+  const action = r => r.posting && r.status === 'open'
+    ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(r.posting.url)}" target="_blank" rel="noopener">Apply now →</a>`
+    : r.posting
+      ? `<a class="btn btn-sm" href="${escapeHtml(r.posting.url)}" target="_blank" rel="noopener">See the posting →</a>`
+      : `<a class="tp-small" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">${escapeHtml(r.company)} careers site</a>`;
+  list.innerHTML = rows.map(r => `<div class="tp-row" data-tp="${escapeHtml(r.company)}" data-status="${escapeHtml(r.status || '')}">
       <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
-      <div class="tp-role">${escapeHtml(r.role)}</div>
-      <div class="chips">${opensChip(r)}<span class="chip chip-pvt">${escapeHtml(r.kind)}</span></div>
+      <div class="tp-role">${escapeHtml(r.role)} · <span class="chip chip-pvt">${escapeHtml(r.kind)}</span></div>
+      ${statusHtml(r)}
       <div class="tp-tests">${escapeHtml(r.tests)}</div>
-      ${r.note ? `<div class="tp-note">${escapeHtml(r.note)}</div>` : ''}
-      <div class="btn-row"><a class="btn btn-sm btn-tonal" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">Official careers page →</a></div>
+      <div class="btn-row">${action(r)}</div>
     </div>`).join('');
+  const prev = document.getElementById('tpPreview');
+  if (prev) prev.innerHTML = rows.slice(0, PREVIEW).map(r => {
+    const href = r.posting && r.status === 'open' ? r.posting.url : '#toppay';
+    const sub = r.status === 'open' ? 'Open now — tap to apply' : r.status === 'batch' ? 'Open for another batch'
+      : r.status === 'none' ? 'Not open now · usually ' + r.months.map(x => MONTHS[x - 1]).join(' & ')
+      : 'Usually opens ' + r.months.map(x => MONTHS[x - 1]).join(' & ');
+    return `<a class="brief" href="${escapeHtml(href)}"${href.charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"'}>
+      <div class="brief-main"><div class="brief-org">${escapeHtml(r.company)}</div>
+        <div class="brief-title">${escapeHtml(r.role)}</div>
+        <div class="brief-meta${r.status === 'open' ? ' ok-tag' : ''}">${escapeHtml(sub)}</div></div>
+      <span class="brief-pay">${escapeHtml(payText(r))}</span></a>`;
+  }).join('');
+  const tpAll = document.getElementById('tpAll');
+  if (tpAll) tpAll.textContent = `See all ${rows.length}`;
   document.getElementById('stepBody').innerHTML =
     '<p class="sec-sub" style="margin-top:0">Off-campus fresher routes you can reach sooner, while you build towards the list above.</p>' +
     T.steppingStones.map(r => `<div class="tp-row" style="padding:12px 0;border-top:1px solid var(--line)">
       <div class="tp-top"><div class="tp-co">${escapeHtml(r.company)}</div><div class="tp-pay">${escapeHtml(payText(r))}</div></div>
       <div class="tp-role">${escapeHtml(r.role)}</div>
       <div class="chips">${opensChip(r)}</div>
-      <div class="btn-row"><a class="btn btn-sm" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">Careers page →</a></div>
+      <div class="btn-row"><a class="btn btn-sm" href="${escapeHtml(r.apply)}" target="_blank" rel="noopener">Where to apply →</a></div>
     </div>`).join('');
   document.getElementById('tpSources').innerHTML =
     `<b>Indicative pay, not a promise.</b> CTC includes stock and bonuses; monthly in-hand is much lower. Months are typical patterns, not announced dates. ${escapeHtml(T.safety)}<br>` +
     `Sources (${escapeHtml(T.asOf)}):` +
-    T.sources.map(s => `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.label)}</a>`).join('');
+    T.sources.map(src => `<a href="${escapeHtml(src.url)}" target="_blank" rel="noopener">${escapeHtml(src.label)}</a>`).join('');
+}
+
+function pathLinkText(done, all) {
+  const link = document.getElementById('pathLink');
+  if (link) link.innerHTML = `<span><b>Your coding path to these roles</b><small>${done} of ${all} steps done · full start after 29 Nov</small></span>`;
 }
 
 function renderCodePath() {
@@ -1188,6 +1336,7 @@ function renderCodePath() {
   const done = T.path.reduce((n, s) => n + s.items.filter(([k]) => cpDone[k]).length, 0);
   document.getElementById('pathCount').textContent = `${done}/${all}`;
   document.getElementById('pathBar').style.width = Math.round(done / all * 100) + '%';
+  pathLinkText(done, all);
   const firstOpen = T.path.findIndex(s => s.items.some(([k]) => !cpDone[k]));
   box.innerHTML = T.path.map((s, i) => {
     const d = s.items.filter(([k]) => cpDone[k]).length;
@@ -1211,6 +1360,7 @@ document.addEventListener('change', e => {
   const done = T.path.reduce((n, s) => n + s.items.filter(([kk]) => cpDone[kk]).length, 0);
   document.getElementById('pathCount').textContent = `${done}/${all}`;
   document.getElementById('pathBar').style.width = Math.round(done / all * 100) + '%';
+  pathLinkText(done, all);
   const st = c.closest('.cp-stage');
   if (st) st.querySelector('.cp-count').textContent =
     st.querySelectorAll('[data-cp]:checked').length + '/' + st.querySelectorAll('[data-cp]').length;
@@ -1222,7 +1372,6 @@ function render() {
   /* Every render re-stashes every closed fold below, so tokens from the
      previous pass are dead weight. */
   pendingBodies.clear();
-  document.getElementById('qualPrompt').classList.toggle('show', !qualification);
   setTrack(track, false);
 
   const upcoming = upcomingExams();
@@ -1251,6 +1400,10 @@ function render() {
       '<br><button class="btn btn-sm btn-primary retry" onclick="load()">Try again</button></div>';
     list.innerHTML = msg;
     if (openList) openList.innerHTML = msg;
+    const oal = document.getElementById('openAllList'); if (oal) oal.innerHTML = msg;
+    const gpv = document.getElementById('govPreview');
+    if (gpv) gpv.innerHTML = '<span><b>All government openings</b><small>Could not load them — tap Refresh when you are online</small></span>';
+    document.getElementById('stateFold').classList.add('hidden');
     document.getElementById('otherJobs').innerHTML = '';
     document.getElementById('otherCount').textContent = '';
     document.getElementById('areaChips').innerHTML = '';
@@ -1303,7 +1456,11 @@ function render() {
      eligibility() is moved out; `null` (an unreadable line) stays, because
      "I do not know" is not grounds for hiding a job. */
   const canApply = j => eligibility(j) !== false;
-  const govt     = others.filter(j => sectorOf(j) === 'government' && canApply(j));
+  const govAll   = others.filter(j => sectorOf(j) === 'government' && canApply(j));
+  /* Another state's own posts get their own fold rather than leaving the
+     tracker — every live opening still lands in exactly one place. */
+  const stateLocal = govAll.filter(isOtherStateLocal);
+  const govt     = govAll.filter(j => !isOtherStateLocal(j));
   const private_ = others.filter(j => sectorOf(j) === 'private'    && canApply(j));
   const notMine  = others.filter(j => !canApply(j));
 
@@ -1319,7 +1476,7 @@ function render() {
   const chip = a => `<button type="button" class="fchip" data-area="${escapeHtml(a)}" aria-pressed="${govArea === a}">${escapeHtml(a)}<b>${areas[a]}</b></button>`;
   /* Five areas and "All" fit in two lines on a phone; the rest wait behind
      "More" rather than pushing the openings a screen further down. */
-  const firstFive = areaNames.slice(0, 5), rest = areaNames.slice(5);
+  const firstFive = areaNames.slice(0, 3), rest = areaNames.slice(3);
   const showAll = areasOpen || rest.indexOf(govArea) !== -1;
   document.getElementById('areaChips').innerHTML =
     `<button type="button" class="fchip" data-area="All" aria-pressed="${govArea === 'All'}">All<b>${govt.length}</b></button>` +
@@ -1335,8 +1492,17 @@ function render() {
   more.classList.toggle('hidden', shown.length <= govLimit);
   more.textContent = `Show more (${Math.max(0, shown.length - govLimit)} left)`;
 
-  document.getElementById('govMeta').textContent =
-    `${upcoming.length} exam${upcoming.length === 1 ? '' : 's'} · ${govt.length} openings`;
+  document.getElementById('govMeta').textContent = String(govt.length);
+  const gp = document.getElementById('govPreview');
+  if (gp) {
+    const nAreas = Object.keys(areas).length;
+    gp.innerHTML = `<span><b>All government openings · ${govt.length}</b><small>${
+      mine.length ? mine.length + ' for your exams · ' : ''}${nAreas} area${nAreas === 1 ? '' : 's'}${
+      stateLocal.length ? ' · ' + stateLocal.length + ' in other states' : ''}${
+      closed.length ? ' · ' + closed.length + ' closed' : ''}</small></span>`;
+  }
+  setFoldBody('stateFold', 'stateJobs', () => stateLocal.map(otherHtml).join(''),
+    `Other states (${stateLocal.length})`, stateLocal.length === 0);
 
   setFoldBody('privateFold', 'privateJobs', () => private_.map(otherHtml).join(''),
     `From the job feed (${private_.length})`, private_.length === 0);
@@ -1728,42 +1894,48 @@ function otherHtml(j) {
      and where neither has been resolved the row says it is going to
      FreeJobAlert instead of calling that a notification. */
   const isArticle = u => /freejobalert\.com\/articles\//i.test(u || '');
-  const notif = !isArticle(j.notification_url) ? j.notification_url : null;
-  const applyTo = (j.apply_url && j.apply_url !== notif && !isArticle(j.apply_url))
+  /* And a department's HOME PAGE is not a notification either — that is how
+     a Nagaland walk-in sent its "Notification" tap to the state information
+     department's front page. See isHomepage. */
+  const notif = (!isArticle(j.notification_url) && !isHomepage(j.notification_url)) ? j.notification_url : null;
+  const applyTo = (j.apply_url && j.apply_url !== notif && !isArticle(j.apply_url) && !isHomepage(j.apply_url))
     ? j.apply_url : null;
   const details = j.source_url || (isArticle(j.notification_url) ? j.notification_url : null);
+  const notifLabel = notif && /\.pdf(\?|$)/i.test(notif) ? 'Notification (PDF) →' : 'Official notice →';
 
   return `<div class="other-row">
     <div class="cd${urgency}">${countdown}</div>
     <div class="other-main">
       <div class="other-org">${escapeHtml(j.organization)}${
-        vac ? ` · <span class="other-vac">${escapeHtml(vac)} posts</span>` : ''}</div>
+        vac ? ` · <span class="other-vac">${escapeHtml(vac)} ${vac === '1' ? 'post' : 'posts'}</span>` : ''}</div>
       <div class="other-post">${escapeHtml(titleOf(j))}</div>
       <div class="other-meta">${
         left === null
           ? escapeHtml(j.deadline_text || 'closing date TBA')
           : `Closes ${escapeHtml(fmtShort(j.deadline))}`
       }${j.is_estimated ? ' <span class="est">estimate</span>' : ''}${
-        applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}</div>
-      ${j.eligibility ? `<div class="other-elig">${escapeHtml(j.eligibility)}${
-        elig === true ? ' · <span class="ok-tag">you qualify</span>'
-        : elig === false ? ' · <span class="no-tag">not your qualification</span>'
-        : ''}</div>` : ''}
+        applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}${
+        j.eligibility && elig === true ? ' · <span class="ok-tag">you qualify</span>'
+        : j.eligibility && elig === false ? ' · <span class="no-tag">not your qualification</span>'
+        : ''}</div>
+      ${j.eligibility ? `<div class="other-elig" title="${escapeHtml(j.eligibility)}">${escapeHtml(j.eligibility)}</div>` : ''}
       <div class="other-actions">
         ${notif
-          ? `<a class="other-apply" href="${escapeHtml(notif)}" target="_blank" rel="noopener">Open notification →</a>`
+          ? `<a class="other-apply" href="${escapeHtml(notif)}" target="_blank" rel="noopener">${notifLabel}</a>`
           : details
-            ? `<a class="other-apply is-secondhand" href="${escapeHtml(details)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>`
+            ? `<a class="other-apply is-secondhand" href="${escapeHtml(details)}" target="_blank" rel="noopener">${
+                isArticle(details) ? 'FreeJobAlert page →' : isHomepage(details) ? 'Official website →' : 'Details →'}</a>`
             : ''}
         ${applyTo ? `<a class="other-apply other-applylink" href="${escapeHtml(applyTo)}" target="_blank" rel="noopener">Apply →</a>` : ''}
         ${applied[j.id]
           ? `<button class="other-mark" data-unapply="${escapeHtml(j.id)}">Undo applied</button>`
           : `<button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button>`}
-        ${e
+        ${e && upcomingExams().some(x => x.key === e.key)
           ? `<button class="other-switch" data-switch-exam="${escapeHtml(e.key)}">Prepare: ${escapeHtml(e.short)} →</button>`
-          /* Said plainly, because the alternative is an opening that looks
-             as prepared-for as the others and is not. */
-          : `<span class="other-none">no syllabus yet</span>`}
+          /* Only for an exam still ahead. A new HAL opening once offered
+             "Prepare: HAL CS" weeks after that paper was sat — a button to a
+             retired syllabus, for a different post. */
+          : ''}
       </div>
     </div>
   </div>`;
@@ -1802,70 +1974,35 @@ function marksRowHtml(exam) {
   </div>`;
 }
 
-/** An opening that leads to one of your exams: the full card. */
+/** An opening that leads to one of your exams — compact: what it is, the
+    exam it leads to, whether you applied, and the two things to do. */
 function cardHtml(j) {
   const exam = examForJob(j) || currentExam();
   const when = exam && window.JobhuntNav ? window.JobhuntNav.examWhen(exam) : null;
-  const elig = eligibility(j);
   /* Same rule as the list row: an aggregator article is never labelled
-     "Notification". See the note above `isArticle` in otherHtml. */
+     "Notification", and neither is a board's home page. */
   const isArt = u => /freejobalert\.com\/articles\//i.test(u || '');
-  const cardNotif = !isArt(j.notification_url) ? j.notification_url : null;
-  const cardApply = (j.apply_url && j.apply_url !== cardNotif && !isArt(j.apply_url)) ? j.apply_url : null;
+  const cardNotif = (!isArt(j.notification_url) && !isHomepage(j.notification_url)) ? j.notification_url : null;
+  const cardApply = (j.apply_url && j.apply_url !== cardNotif && !isArt(j.apply_url) && !isHomepage(j.apply_url)) ? j.apply_url : null;
   const cardDetails = j.source_url || (isArt(j.notification_url) ? j.notification_url : null);
   const prep = exam ? (exam.plan ? exam.plan.href : '/learn.html?exam=' + encodeURIComponent(exam.key) + '#study') : examHref('study');
   return `
-    <div class="card">
-      <div class="card-top">
-        <div>
-          <div class="org">${escapeHtml(j.organization)}</div>
-          <div class="post">${escapeHtml(j.post_name)}</div>
-        </div>
-        <span class="badge ${escapeHtml(j.status)}">${escapeHtml(String(j.status || '').replace('_',' ').toLowerCase())}</span>
-      </div>
-
-      <div class="jrow">
-        <span class="jlab">Application</span>
-        <span class="jval">${applied[j.id]
-          ? `<span class="applied-tag">✓ Applied</span> <button class="btn-n" data-unapply="${escapeHtml(j.id)}">Undo</button>`
-          : `<button class="btn-y" data-apply="${escapeHtml(j.id)}">Mark as applied</button>`}</span>
-      </div>
-      <div class="jrow">
-        <span class="jlab">Closes</span>
-        <span class="jval">${escapeHtml(j.deadline_text || 'TBA')}${
-          j.is_estimated ? ' <span class="est">estimate</span>' : ''}</span>
-      </div>
-      ${exam ? `
-      <div class="jrow">
-        <span class="jlab">Exam</span>
-        <span class="jval">${escapeHtml(exam.name)}</span>
-      </div>
-      <div class="jrow">
-        <span class="jlab">Exam date</span>
-        <span class="jval">${escapeHtml(when ? when.text : 'not announced')}</span>
-      </div>
-      <div class="jrow">
-        <span class="jlab">Paper</span>
-        <span class="jval">${escapeHtml(exam.pattern)}</span>
-      </div>` : ''}
+    <div class="card tracked">
+      <div class="org">${escapeHtml(j.organization)}</div>
+      <div class="post">${escapeHtml(j.post_name)}</div>
+      <div class="tracked-meta">${exam ? escapeHtml(exam.short) + ' · ' + escapeHtml(when ? when.short : 'date not announced') : ''}${
+        applied[j.id] ? ' · <span class="ok-tag">applied</span>' : ''}</div>
       ${marksRowHtml(exam)}
-      ${j.eligibility ? `
-      <div class="jrow">
-        <span class="jlab">Eligibility</span>
-        <span class="jval">${escapeHtml(j.eligibility)}${
-          elig === null ? '' : elig
-            ? ' <span class="ok-tag">you qualify</span>'
-            : ' <span class="no-tag">asks for a qualification you have not entered</span>'}</span>
-      </div>` : ''}
-      ${j.location ? `<div class="jrow"><span class="jlab">Location</span><span class="jval">${escapeHtml(j.location)}</span></div>` : ''}
-      ${j.pay_scale ? `<div class="jrow"><span class="jlab">Pay</span><span class="jval">₹${escapeHtml(j.pay_scale)}</span></div>` : ''}
-
-      <div class="links">
-        ${cardNotif ? `<a href="${escapeHtml(cardNotif)}" target="_blank" rel="noopener">Notification →</a>` : ''}
-        ${cardApply ? `<a href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">Apply →</a>` : ''}
-        ${cardDetails ? `<a href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>` : ''}
+      <div class="btn-row">
+        <a class="btn btn-primary btn-sm" href="${escapeHtml(prep)}">Prepare →</a>
+        ${applied[j.id]
+          ? `<button class="btn btn-sm" data-unapply="${escapeHtml(j.id)}">Undo applied</button>`
+          : `<button class="btn btn-sm" data-apply="${escapeHtml(j.id)}">Mark applied</button>`}
+        ${cardApply ? `<a class="btn btn-sm" href="${escapeHtml(cardApply)}" target="_blank" rel="noopener">Apply →</a>` : ''}
+        ${cardNotif ? `<a class="btn btn-sm" href="${escapeHtml(cardNotif)}" target="_blank" rel="noopener">Notification →</a>` : ''}
+        ${!cardNotif && cardDetails ? `<a class="btn btn-sm" href="${escapeHtml(cardDetails)}" target="_blank" rel="noopener">${
+          isArt(cardDetails) ? 'FreeJobAlert page →' : isHomepage(cardDetails) ? 'Official website →' : 'Details →'}</a>` : ''}
       </div>
-      <a class="btn btn-primary btn-block study-now" href="${escapeHtml(prep)}">Prepare for it →</a>
     </div>
   `;
 }
@@ -1883,12 +2020,8 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* The qualification picker lives in the menu, with the other settings, so
-   there is one of it rather than one per page. nav.js writes it; this page
-   only has to re-render. */
-document.getElementById('qualPrompt').addEventListener('click', () => {
-  if (window.JobhuntNav) window.JobhuntNav.openDrawer();
-});
+/* The qualification is asked once, inline, where it matters — at the top of
+   "Open now" (qualPickerHtml). nav.js keeps the same setting in the menu. */
 document.getElementById('examOver').addEventListener('click', () => {
   if (window.JobhuntNav) window.JobhuntNav.openChangeExam();
 });
@@ -1944,6 +2077,12 @@ const SH_JOBS_URL = '/data/shrestha-jobs.json';
 const SH_CONTENT_URL = '/data/job-content.json';
 let shJobs = [];
 let shContent = {};
+/* "I need a real link": the posts say "comment Link and I'll DM you". The
+   company's own application page, where one was found and checked, is in
+   data/apply-links.json — keyed by the post. */
+const SH_LINKS_URL = '/data/apply-links.json';
+let shLinks = {};
+function shApply(j) { return (j && shLinks[j.key]) || null; }
 let shStatus = {};
 let shStudy = {};
 
@@ -2075,6 +2214,7 @@ function shCardHtml(j, idx) {
       </span>
       <span class="sh-caret" aria-hidden="true">▾</span>
     </button>
+    ${shApply(j) ? `<div class="sh-apply"><a class="btn btn-primary btn-sm" href="${escapeHtml(shApply(j).url)}" target="_blank" rel="noopener">Apply on ${escapeHtml(j.company || 'the company site')} →</a></div>` : ''}
     <div class="sh-detail" id="sh-detail-${idx}" hidden></div>
   </article>`;
 }
@@ -2100,10 +2240,13 @@ function shFactsHtml(j) {
     ${row('Experience', j.experience)}
     ${row('Package', j.package)}
     ${row('Posted', shDate(j.posted_at))}
-    ${row('How to apply', j.apply_hint || 'Apply link is shared by DM on the Instagram post')}
+    ${shApply(j)
+      ? row('How to apply', 'On the company\'s own site: ' + shApply(j).label)
+      : row('How to apply', 'No public link found on the company\'s site — the post sends it by DM')}
     ${dupeRow}
     <div class="sh-actions">
-      <a class="btn-stage" href="${escapeHtml(j.post_url)}" target="_blank" rel="noopener">Open Instagram post</a>
+      ${shApply(j) ? `<a class="btn-approve" href="${escapeHtml(shApply(j).url)}" target="_blank" rel="noopener">Apply on ${escapeHtml(j.company || 'the company site')} →</a>` : ''}
+      <a class="btn-stage" href="${escapeHtml(j.post_url)}" target="_blank" rel="noopener">Instagram post</a>
     </div>`;
 }
 
@@ -2256,7 +2399,8 @@ function renderShrestha() {
   const done = shown.filter(j => j.status !== 'live');
   /* A real fresher intake first. "Not a fit" stays one tap away, each with
      its reason, so he can still try his luck with full information. */
-  const fit = live.filter(j => shFit(j).ok);
+  /* A real link first — "I need a real link" — then newest. */
+  const fit = live.filter(j => shFit(j).ok).sort((a, b) => (shApply(b) ? 1 : 0) - (shApply(a) ? 1 : 0));
   const notFit = live.filter(j => !shFit(j).ok);
   const card = j => shCardHtml(j, shJobs.indexOf(j));
   wrap.innerHTML = fit.length
@@ -2265,7 +2409,24 @@ function renderShrestha() {
   const cnt = document.getElementById('shCount');
   if (cnt) cnt.textContent = String(fit.length);
   const pm = document.getElementById('pvtMeta');
-  if (pm) pm.textContent = `${fit.length} fresher job${fit.length === 1 ? '' : 's'} · ₹40 LPA+ path`;
+  if (pm) pm.textContent = String(fit.length);
+  /* The summary: three, with a direct link first, each opening the company's
+     own page when there is one. */
+  const prev = document.getElementById('pvtPreview');
+  if (prev) {
+    const ranked = fit.slice().sort((a, b) => (shApply(b) ? 1 : 0) - (shApply(a) ? 1 : 0));
+    prev.innerHTML = ranked.length ? ranked.slice(0, PREVIEW).map(j => {
+      const link = shApply(j);
+      const href = link ? link.url : '#pvt';
+      return `<a class="brief" href="${escapeHtml(href)}"${link ? ' target="_blank" rel="noopener"' : ''}>
+        <div class="brief-main"><div class="brief-org">${escapeHtml(j.company || 'Company not named')}${j.location ? ' · ' + escapeHtml(j.location) : ''}</div>
+          <div class="brief-title">${escapeHtml(j.role || 'Opening')}</div>
+          <div class="brief-meta${link ? ' ok-tag' : ''}">${link ? 'Apply on the company site' : 'Link only by DM — see details'}</div></div>
+        <span class="brief-go" aria-hidden="true">›</span></a>`;
+    }).join('') : '<div class="empty">No fresher posting right now.</div>';
+  }
+  const pa = document.getElementById('pvtAll');
+  if (pa) pa.textContent = `See all ${fit.length}`;
   const nf = document.getElementById('shNotFit');
   if (nf) nf.innerHTML =
     (notFit.length ? `<details class="fold" style="margin-top:10px"><summary>Not a fit right now (${notFit.length})</summary>
@@ -2325,10 +2486,12 @@ async function loadShrestha() {
   const wrap = document.getElementById('shresthaJobs');
   if (!wrap) return;
   try {
-    const [jobsR, contentR] = await Promise.all([
+    const [jobsR, contentR, linksR] = await Promise.all([
       fetch(SH_JOBS_URL, { cache: 'no-store' }),
       fetch(SH_CONTENT_URL, { cache: 'no-store' }),
+      fetch(SH_LINKS_URL, { cache: 'no-store' }).catch(() => null),
     ]);
+    if (linksR && linksR.ok) { try { shLinks = (await linksR.json()).links || {}; } catch (e) { shLinks = {}; } }
     if (jobsR.ok) {
       const d = await jobsR.json();
       shJobs = Array.isArray(d.jobs) ? d.jobs : [];
@@ -2374,10 +2537,54 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
 
+/* ── One screen at a time ────────────────────────────────────────────────
+   Home is a summary; every long list is its own screen, reached by its hash
+   (#open, #gov, #pvt, #toppay, #path, #basics). The phone's back button walks
+   back through them, and so does the ‹ in each screen's header. */
+const VIEWS = ['home', 'open', 'gov', 'pvt', 'toppay', 'path', 'basics'];
+let enteredFromHome = false;
+function showView(v) {
+  if (VIEWS.indexOf(v) === -1) v = 'home';
+  document.querySelectorAll('.view').forEach(el => { el.hidden = el.getAttribute('data-view') !== v; });
+  document.body.setAttribute('data-view', v);
+  if (v === 'pvt' || v === 'toppay' || v === 'path') setTrack('pvt', false);
+  if (v === 'gov') setTrack('gov', false);
+  window.scrollTo(0, 0);
+}
+const viewFromHash = () => (location.hash || '').replace(/^#/, '') || 'home';
+window.addEventListener('hashchange', e => {
+  let was = 'home';
+  try { was = (new URL(e.oldURL).hash || '').replace(/^#/, '') || 'home'; } catch (err) {}
+  const v = viewFromHash();
+  enteredFromHome = v !== 'home' && was === 'home';
+  showView(v);
+});
+document.addEventListener('click', e => {
+  const b = e.target instanceof Element ? e.target.closest('.view-back') : null;
+  if (!b) return;
+  e.preventDefault();
+  if (enteredFromHome) { history.back(); return; }
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (err) {}
+  showView('home');
+});
+
+function renderBasicsLink() {
+  const el = document.getElementById('basicsLink');
+  if (!el) return;
+  let n = 0;
+  try {
+    const d = JSON.parse(localStorage.getItem('jobhunt_study_roadmap_v1') || '{}');
+    n = Object.keys(d).filter(k => d[k] === true).length;
+  } catch (e) {}
+  el.innerHTML = `<span><b>Basics: Quant & Reasoning</b><small>Short lessons from zero${n ? ' · ' + n + ' topics ticked' : ' · for every exam and aptitude test'}</small></span>`;
+}
+
+showView(viewFromHash());
 load();
 loadShrestha();
 renderTopPay();
 renderCodePath();
+renderBasicsLink();
 </script>
 </body>
 </html>

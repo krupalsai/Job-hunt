@@ -480,7 +480,7 @@ function check(name, cond, detail){
   const rowBody = bodyOf('function otherHtml(j) {');
   const cardBody = bodyOf('function cardHtml(j) {');
   check('the list row never labels a FreeJobAlert article "Open notification"',
-    rowBody.length > 200 && /isArticle/.test(rowBody) && /Details on FreeJobAlert/.test(rowBody),
+    rowBody.length > 200 && /isArticle/.test(rowBody) && /FreeJobAlert page/.test(rowBody),
     'otherHtml may still call the article a notification');
   check('and the job card applies the same rule',
     cardBody.length > 200 && /cardNotif/.test(cardBody) && /isArt\(/.test(cardBody),

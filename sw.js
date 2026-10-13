@@ -45,7 +45,14 @@
    (/data/top-pay.js). Every page changed, so every cached copy must go.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v17';
+/* v18 reorganises Home into one short screen — a summary row per list, each
+   list on a screen of its own — swaps Instagram "comment for the link" for the
+   company's own apply link (/data/apply-links.json, network-only like all job
+   data), says whether each ₹40 LPA+ role is open now, and folds the TS SI day
+   into one open task at a time.
+
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v18';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
