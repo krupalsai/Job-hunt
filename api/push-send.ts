@@ -8,6 +8,9 @@
  * VAPID keys come from VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY env vars
  * (VAPID_SUBJECT optional). Dead subscriptions (410/404 from the push service)
  * are pruned automatically.
+ *
+ * NOTE: after adding or changing these env vars on Vercel, redeploy — the
+ * functions read them at deploy time.
  */
 
 import { createClient } from "@supabase/supabase-js";
