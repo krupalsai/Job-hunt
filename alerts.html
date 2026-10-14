@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Job alerts — Job Hunt</title>
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icon-192.svg" />
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0b1120; color: #e8edf7;
+         margin: 0; padding: 24px 20px; max-width: 520px; margin-inline: auto; line-height: 1.6; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  p { color: #9aa7c2; font-size: 14px; }
+  .card { background: #131c33; border: 1px solid #22304f; border-radius: 14px; padding: 20px; margin-top: 18px; }
+  button { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 12px;
+           font-size: 15px; font-weight: 700; cursor: pointer; border: 1px solid #2c3d63;
+           background: #1b2745; color: #fff; }
+  button:disabled { opacity: .6; cursor: default; }
+  #note { font-size: 13px; color: #9aa7c2; margin-top: 12px; }
+  a.home { display: inline-block; margin-top: 22px; color: #7ea4f8; font-size: 14px; }
+</style>
+</head>
+<body>
+  <h1>🔔 Job alerts</h1>
+  <p>Get a phone notification the moment a new <strong>verified</strong> fresher opening appears in the Job Hunt app — only openings checked on the company's own site, never rumours.</p>
+  <div class="card">
+    <button id="pushBtn">Enable job alerts</button>
+    <div id="note">One tap. Works even when the app is closed.</div>
+  </div>
+  <a class="home" href="/">← Back to Job Hunt</a>
+
+<script>
+const VAPID_PUBLIC_KEY = 'BJhyxctYPAj1j3fSL5d1CJqxxcAND5ojllFs5nWRS-mIAJUVsPq-XDqbyCQ-Xnbhv70jhv6SPv6qgEoRNEW8VO4';
+function b64ToU8(s) {
+  const pad = '='.repeat((4 - (s.length % 4)) % 4);
+  const b64 = (s + pad).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(b64);
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+(async function () {
+  const btn = document.getElementById('pushBtn');
+  const note = document.getElementById('note');
+  if (!('serviceWorker' in navigator && 'PushManager' in window)) {
+    note.textContent = 'This browser does not support push notifications.';
+    btn.disabled = true;
+    return;
+  }
+  let reg;
+  try {
+    await navigator.serviceWorker.register('/sw.js');
+    reg = await navigator.serviceWorker.ready;
+  } catch (e) {
+    note.textContent = 'Could not start the background worker. Check your connection and reload.';
+    btn.disabled = true;
+    return;
+  }
+  async function refresh() {
+    try {
+      if (await reg.pushManager.getSubscription()) {
+        btn.disabled = true;
+        btn.textContent = '✓ Job alerts on';
+        note.textContent = 'This phone will be notified when a new verified opening appears.';
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+  if (await refresh()) return;
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') {
+        note.textContent = 'Notifications are blocked — allow them in your browser settings, then tap again.';
+        btn.disabled = false;
+        return;
+      }
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: b64ToU8(VAPID_PUBLIC_KEY)
+      });
+      const r = await fetch('/api/push-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subscription: sub.toJSON() })
+      });
+      if (!r.ok) throw new Error('save failed');
+      await refresh();
+    } catch (e) {
+      btn.disabled = false;
+      note.textContent = 'Could not enable alerts. Check your connection and try again.';
+    }
+  });
+})();
+</script>
+</body>
+</html>
