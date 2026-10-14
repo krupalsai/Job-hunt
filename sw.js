@@ -52,7 +52,11 @@
    into one open task at a time.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v18';
+/* v19: job-alert push notifications. Adds a 'push' handler that shows the
+   notification and a 'notificationclick' handler that opens the app.
+   THE BUMP IS LOAD-BEARING — a phone holding v18 would keep the old worker
+   without the push handlers, so the cache name must change. */
+const CACHE = 'jobhunt-v19';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -186,5 +190,45 @@ self.addEventListener('fetch', event => {
         return res;
       })
       .catch(() => caches.match(req))
+  );
+});
+
+/* ── Job-alert push notifications (2026-10-14) ────────────────────────────
+ * The daily pull verifies new postings on the official portal and POSTs to
+ * /api/push-send, which fans out to every stored subscription. This worker
+ * shows the notification and opens the app when it is tapped. Payload shape:
+ * { title, body, url }.
+ */
+self.addEventListener('push', event => {
+  let title = 'New verified job opening';
+  let body = 'A new fresher opening with an apply link is in the Job Hunt app. Tap to see it.';
+  let url = '/';
+  try {
+    const d = event.data ? event.data.json() : {};
+    if (d.title) title = String(d.title).slice(0, 120);
+    if (d.body) body = String(d.body).slice(0, 300);
+    if (d.url) url = String(d.url).slice(0, 500);
+  } catch (e) { /* fall back to the defaults above */ }
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: '/icon-192.svg',
+      badge: '/icon-192.svg',
+      data: { url },
+      tag: 'job-alert'
+    })
+  );
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      for (const c of list) {
+        if ('focus' in c) { c.focus(); return c; }
+      }
+      return self.clients.openWindow(url);
+    })
   );
 });
