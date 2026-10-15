@@ -56,7 +56,12 @@
    notification and a 'notificationclick' handler that opens the app.
    THE BUMP IS LOAD-BEARING — a phone holding v18 would keep the old worker
    without the push handlers, so the cache name must change. */
-const CACHE = 'jobhunt-v19';
+/* v20: refetch /data/top-pay.js — the Amazon SDE-I card was corrected
+   (posting 10453457 re-verified live 15 Oct 2026). top-pay.js is precached,
+   so without a new cache name phones keep serving the stale card.
+
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v20';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
