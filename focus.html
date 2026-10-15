@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Focus · Job Hunt</title>
+<meta name="description" content="Learning time vs scrolling time, side by side — on your honest taps." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b0f16" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='white'/%3E%3C/svg%3E" />
+<style>
+  /* Same tokens as chat.html, so Focus reads as the same app. */
+  :root{
+    color-scheme: light dark;
+    --bg:#f5f6f8; --panel:#ffffff; --panel-border:#e4e7ec;
+    --surface-2:#f1f3f6; --surface-2-border:#e2e6eb;
+    --tint:#eef0fe; --header-bg:#f5f6f8ee;
+    --accent:#4f46e5; --accent-soft:#4338ca;
+    --accent-tint:#4f46e514; --accent-line:#4f46e555;
+    --text:#0f172a; --muted:#5b6b7a; --dim:#8794a1;
+    --bad:#dc2626; --on-accent:#ffffff;
+    --good:#16a34a; --good-tint:#16a34a14; --good-line:#16a34a55;
+    --warn:#b45309; --warn-tint:#b4530914; --warn-line:#b4530955;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b0f16; --panel:#131a26; --panel-border:#212b3a;
+      --surface-2:#0f1622; --surface-2-border:#233047;
+      --tint:#1b2140; --header-bg:#0b0f16ee;
+      --accent:#818cf8; --accent-soft:#a5b4fc;
+      --accent-tint:#818cf81a; --accent-line:#818cf866;
+      --text:#e2e8f0; --muted:#94a3b8; --dim:#64748b;
+      --bad:#f87171;
+      --good:#4ade80; --good-tint:#4ade8014; --good-line:#4ade8055;
+      --warn:#f59e0b; --warn-tint:#f59e0b14; --warn-line:#f59e0b55;
+    }
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; font-family:var(--font-ui);
+    background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + 66px + env(safe-area-inset-bottom));
+  }
+  header{
+    padding:10px 12px; position:sticky; top:0;
+    background:var(--header-bg); backdrop-filter:blur(8px); z-index:10;
+    border-bottom:1px solid var(--panel-border);
+  }
+  h1{ font-size:17px; margin:0; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 8px; }
+  .lede{ font-size:13px; line-height:1.6; color:var(--muted); margin:2px 2px 12px; }
+  .lede strong{ color:var(--text); }
+
+  /* The duel: learning vs scrolling, side by side. */
+  .duel{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .card{
+    background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:14px; padding:12px 10px;
+    display:flex; flex-direction:column; gap:8px; min-width:0;
+  }
+  .card.learn{ border-top:3px solid var(--good); }
+  .card.scroll{ border-top:3px solid var(--bad); }
+  .card-kicker{
+    font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  }
+  .card.learn .card-kicker{ color:var(--good); }
+  .card.scroll .card-kicker{ color:var(--bad); }
+  .timer{
+    font-size:30px; font-weight:800; letter-spacing:.02em;
+    font-variant-numeric:tabular-nums; line-height:1.1;
+  }
+  .card.learn .timer{ color:var(--good); }
+  .card.scroll .timer{ color:var(--bad); }
+  .fld-label{ font-size:11px; font-weight:700; color:var(--muted); }
+  .fld{
+    width:100%; font-family:inherit; font-size:13px; color:var(--text);
+    background:var(--surface-2); border:1px solid var(--surface-2-border);
+    border-radius:10px; padding:9px 8px; min-height:42px;
+  }
+  .btn-row{ display:flex; gap:8px; }
+  .btn-row .btn{ flex:1 1 auto; }
+  .btn{
+    display:inline-block; min-height:44px; padding:10px 14px; border:0; border-radius:10px;
+    background:var(--accent); color:var(--on-accent); cursor:pointer;
+    font-family:inherit; font-size:14px; font-weight:700;
+  }
+  .btn:active:not([disabled]){ filter:brightness(.92); }
+  .btn[disabled]{ opacity:.45; cursor:default; }
+  .btn-learn{ background:var(--good); }
+  .btn-scroll{ background:var(--bad); }
+  .btn-ghost{
+    background:transparent; color:var(--muted); border:1px solid var(--panel-border);
+    font-size:13px; min-height:44px;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    border:1px solid var(--warn-line); background:var(--warn-tint); color:var(--text);
+    border-radius:999px; padding:8px 10px; font-family:inherit; font-size:12.5px; font-weight:700;
+    cursor:pointer; min-height:38px;
+  }
+  .chip:active{ filter:brightness(.94); }
+  .card-note{ font-size:11.5px; color:var(--dim); line-height:1.5; min-height:34px; }
+
+  /* Daily summary */
+  .summary{
+    background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:14px; padding:14px 12px;
+  }
+  .summary h2{ font-size:15px; margin:0 0 10px; }
+  .summary h3{ font-size:13px; margin:14px 0 8px; color:var(--muted); }
+  .totals{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+  .total{
+    background:var(--surface-2); border:1px solid var(--surface-2-border);
+    border-radius:10px; padding:10px; text-align:center;
+  }
+  .total .t-num{ display:block; font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .total .t-lbl{ font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .total.learn .t-num{ color:var(--good); }
+  .total.scroll .t-num{ color:var(--bad); }
+  .ratio{
+    display:flex; height:14px; border-radius:999px; overflow:hidden;
+    background:var(--surface-2); border:1px solid var(--surface-2-border);
+  }
+  .ratio-learn{ background:var(--good); transition:width .3s ease; }
+  .ratio-scroll{ background:var(--bad); transition:width .3s ease; }
+  .ratio-lbl{ font-size:12px; color:var(--muted); margin-top:6px; text-align:center; }
+  .topics{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .topics li{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:13px; padding:8px 10px; border-radius:8px;
+    background:var(--surface-2); border:1px solid var(--surface-2-border);
+  }
+  .topics .tt{ font-weight:600; }
+  .topics .tv{ font-variant-numeric:tabular-nums; color:var(--muted); font-weight:700; }
+  .topics .empty{ color:var(--dim); }
+  @media (prefers-reduced-motion:reduce){ .ratio-learn,.ratio-scroll{ transition:none; } }
+</style>
+</head>
+<body data-page="focus">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">Focus</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <p class="lede">Two timers, side by side. <strong>Be honest</strong> — this app can't see your
+    other apps; it only knows what you tap. Tap honestly and the numbers will tell you the truth.</p>
+
+  <div class="duel">
+    <section class="card learn" aria-label="Learning timer">
+      <div class="card-kicker">Learning</div>
+      <div class="timer" id="learnTime" aria-live="off">00:00:00</div>
+      <label class="fld-label" for="topicSel">Topic</label>
+      <select id="topicSel" class="fld" aria-label="Learning topic"></select>
+      <div class="btn-row">
+        <button id="learnToggle" class="btn btn-learn" type="button">Start</button>
+        <button id="learnStop" class="btn btn-ghost" type="button" disabled>Stop</button>
+      </div>
+      <div class="card-note" id="learnNote">Not timing. Start when you start studying.</div>
+    </section>
+
+    <section class="card scroll" aria-label="Doomscrolling timer">
+      <div class="card-kicker">Doomscrolling</div>
+      <div class="timer" id="scrollTime" aria-live="off">00:00:00</div>
+      <div class="chips" role="group" aria-label="Quick log scrolling time">
+        <button class="chip" type="button" data-min="5">+5m</button>
+        <button class="chip" type="button" data-min="15">+15m</button>
+        <button class="chip" type="button" data-min="30">+30m</button>
+        <button class="chip" type="button" data-min="60">+1h</button>
+      </div>
+      <div class="btn-row">
+        <button id="scrollToggle" class="btn btn-scroll" type="button">Start timer</button>
+      </div>
+      <div class="card-note" id="scrollNote">Caught yourself mid-scroll? Time it — or just log it above.</div>
+    </section>
+  </div>
+
+  <section class="summary" aria-label="Today's summary">
+    <h2>Today</h2>
+    <div class="totals">
+      <div class="total learn"><span class="t-num" id="totLearn">0m</span><span class="t-lbl">learning</span></div>
+      <div class="total scroll"><span class="t-num" id="totScroll">0m</span><span class="t-lbl">scrolling</span></div>
+    </div>
+    <div class="ratio" role="img" id="ratioBar" aria-label="Learning versus scrolling">
+      <div class="ratio-learn" id="ratioLearn" style="width:50%"></div>
+      <div class="ratio-scroll" id="ratioScroll" style="width:50%"></div>
+    </div>
+    <div class="ratio-lbl" id="ratioLbl">No time logged yet today.</div>
+    <h3>Learning by topic</h3>
+    <ul class="topics" id="topicList"></ul>
+  </section>
+</main>
+
+<script src="/prep/exams.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* Storage — device-local only. A web page cannot see other apps, so every
+     second here comes from an honest tap. Shape:
+       { days: { "YYYY-MM-DD": { learn: {Topic: secs}, scroll: secs } },
+         active: null | { kind:"learn"|"scroll", topic, startedAt, acc } } */
+  var KEY = "jobhunt_focus_v1";
+  var TOPICS = ["Quant", "Reasoning", "English", "GA & Current Affairs",
+                "Coding/Python", "TS SI Law/Polity", "Other"];
+
+  var ls = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+
+  function blank() { return { days: {}, active: null }; }
+  function load() {
+    try {
+      var s = JSON.parse(ls.get(KEY) || "{}");
+      if (!s || typeof s !== "object") return blank();
+      if (!s.days || typeof s.days !== "object") s.days = {};
+      return s;
+    } catch (e) { return blank(); }
+  }
+  var store = load();
+  function save() { ls.set(KEY, JSON.stringify(store)); }
+
+  function dayStr(d) {
+    return d.getFullYear() + "-" +
+      ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
+      ("0" + d.getDate()).slice(-2);
+  }
+  function bucket() {
+    var t = dayStr(new Date());
+    if (!store.days[t]) store.days[t] = { learn: {}, scroll: 0 };
+    var b = store.days[t];
+    if (!b.learn || typeof b.learn !== "object") b.learn = {};
+    if (typeof b.scroll !== "number") b.scroll = 0;
+    return b;
+  }
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function fmtClock(sec) {
+    sec = Math.max(0, Math.floor(sec));
+    return pad(Math.floor(sec / 3600)) + ":" + pad(Math.floor(sec % 3600 / 60)) + ":" + pad(sec % 60);
+  }
+  function fmtShort(sec) {
+    sec = Math.max(0, Math.round(sec));
+    var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60);
+    if (h) return h + "h " + m + "m";
+    if (m) return m + "m";
+    return sec + "s";
+  }
+
+  /* ── Elements ───────────────────────────────────────────────────────── */
+  var learnTime = document.getElementById("learnTime");
+  var scrollTime = document.getElementById("scrollTime");
+  var topicSel = document.getElementById("topicSel");
+  var learnToggle = document.getElementById("learnToggle");
+  var learnStop = document.getElementById("learnStop");
+  var learnNote = document.getElementById("learnNote");
+  var scrollToggle = document.getElementById("scrollToggle");
+  var scrollNote = document.getElementById("scrollNote");
+  var totLearn = document.getElementById("totLearn");
+  var totScroll = document.getElementById("totScroll");
+  var ratioLearn = document.getElementById("ratioLearn");
+  var ratioScroll = document.getElementById("ratioScroll");
+  var ratioLbl = document.getElementById("ratioLbl");
+  var ratioBar = document.getElementById("ratioBar");
+  var topicList = document.getElementById("topicList");
+
+  TOPICS.forEach(function (t) {
+    var o = document.createElement("option");
+    o.value = t; o.textContent = t;
+    topicSel.appendChild(o);
+  });
+
+  /* ── Timer engine ─────────────────────────────────────────────────────
+     One timer at a time: starting one checkpoints and stops the other.
+     checkpoint() banks elapsed seconds into today's bucket; a 60s rolling
+     checkpoint keeps reloads and midnight honest. */
+  function active() { return store.active; }
+
+  function checkpoint() {
+    var a = store.active;
+    if (!a || !a.startedAt) return;
+    var elapsed = Math.floor((Date.now() - a.startedAt) / 1000);
+    if (elapsed > 0) {
+      var b = bucket();
+      if (a.kind === "learn") {
+        b.learn[a.topic] = (b.learn[a.topic] || 0) + elapsed;
+      } else {
+        b.scroll = b.scroll + elapsed;
+      }
+      a.acc = (a.acc || 0) + elapsed;
+    }
+    a.startedAt = null;
+    save();
+  }
+
+  function stopActive() {
+    if (!store.active) return;
+    checkpoint();
+    store.active = null;
+    save();
+  }
+
+  function startLearn() {
+    stopActive();
+    store.active = { kind: "learn", topic: topicSel.value, startedAt: Date.now(), acc: 0 };
+    save();
+    render();
+  }
+  function pauseLearn() {
+    var a = store.active;
+    if (!a || a.kind !== "learn" || !a.startedAt) return;
+    checkpoint();
+    render();
+  }
+  function resumeLearn() {
+    var a = store.active;
+    if (!a || a.kind !== "learn" || a.startedAt) return;
+    a.startedAt = Date.now();
+    save();
+    render();
+  }
+  function stopLearn() {
+    stopActive();
+    render();
+  }
+
+  function startScroll() {
+    stopActive();
+    store.active = { kind: "scroll", topic: null, startedAt: Date.now(), acc: 0 };
+    save();
+    render();
+  }
+  function stopScroll() {
+    stopActive();
+    render();
+  }
+
+  function quickLog(min) {
+    var b = bucket();
+    b.scroll = b.scroll + min * 60;
+    save();
+    render();
+  }
+
+  topicSel.addEventListener("change", function () {
+    var a = store.active;
+    if (a && a.kind === "learn") {
+      // Bank time under the old topic before switching.
+      checkpoint();
+      a.topic = topicSel.value;
+      if (a.startedAt) { /* keep running */ } else { a.startedAt = Date.now(); }
+      save();
+      render();
+    }
+  });
+
+  learnToggle.addEventListener("click", function () {
+    var a = store.active;
+    if (!a || a.kind !== "learn") startLearn();
+    else if (a.startedAt) pauseLearn();
+    else resumeLearn();
+  });
+  learnStop.addEventListener("click", stopLearn);
+  scrollToggle.addEventListener("click", function () {
+    var a = store.active;
+    if (a && a.kind === "scroll") stopScroll();
+    else startScroll();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (c) {
+    c.addEventListener("click", function () {
+      quickLog(parseInt(c.getAttribute("data-min"), 10) || 0);
+    });
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) checkpoint();
+    else {
+      var a = store.active;
+      if (a && !a.startedAt && a.kind) { /* paused learn stays paused */ }
+      else if (a && !a.startedAt) { a.startedAt = Date.now(); save(); }
+      render();
+    }
+  });
+
+  /* ── Render ─────────────────────────────────────────────────────────── */
+  function currentElapsed(a) {
+    if (!a) return 0;
+    var base = a.acc || 0;
+    if (a.startedAt) base += (Date.now() - a.startedAt) / 1000;
+    return base;
+  }
+
+  function renderTimers() {
+    var a = store.active;
+    var le = (a && a.kind === "learn") ? currentElapsed(a) : 0;
+    var se = (a && a.kind === "scroll") ? currentElapsed(a) : 0;
+    learnTime.textContent = fmtClock(le);
+    scrollTime.textContent = fmtClock(se);
+
+    var learnRunning = !!(a && a.kind === "learn" && a.startedAt);
+    var learnPaused = !!(a && a.kind === "learn" && !a.startedAt);
+    var scrollRunning = !!(a && a.kind === "scroll" && a.startedAt);
+    learnToggle.textContent = learnRunning ? "Pause" : (learnPaused ? "Resume" : "Start");
+    learnStop.disabled = !(a && a.kind === "learn");
+    scrollToggle.textContent = scrollRunning ? "Stop" : "Start timer";
+    learnNote.textContent = learnRunning ? ("Timing " + a.topic + " — stay with it.") :
+      learnPaused ? ("Paused at " + fmtShort(a.acc || 0) + " on " + a.topic + ".") :
+      "Not timing. Start when you start studying.";
+    scrollNote.textContent = scrollRunning ? "Timer running — stop it when you put the phone down." :
+      "Caught yourself mid-scroll? Time it — or just log it above.";
+    if (a && a.kind === "learn" && topicSel.value !== a.topic) topicSel.value = a.topic;
+  }
+
+  function renderSummary() {
+    var b = bucket();
+    var learnTotal = 0;
+    Object.keys(b.learn).forEach(function (t) { learnTotal += b.learn[t]; });
+    var scrollTotal = b.scroll;
+
+    // Include the live session so "today" is never behind the timers.
+    var a = store.active;
+    if (a && a.startedAt) {
+      var el = Math.floor((Date.now() - a.startedAt) / 1000);
+      if (a.kind === "learn") learnTotal += el;
+      else scrollTotal += el;
+    }
+
+    totLearn.textContent = fmtShort(learnTotal);
+    totScroll.textContent = fmtShort(scrollTotal);
+
+    var tot = learnTotal + scrollTotal;
+    if (tot <= 0) {
+      ratioLearn.style.width = "50%";
+      ratioScroll.style.width = "50%";
+      ratioLbl.textContent = "No time logged yet today.";
+      ratioBar.setAttribute("aria-label", "No time logged yet today");
+    } else {
+      var lp = Math.round(learnTotal / tot * 100);
+      ratioLearn.style.width = lp + "%";
+      ratioScroll.style.width = (100 - lp) + "%";
+      ratioLbl.textContent = learnTotal >= scrollTotal
+        ? "Learning is winning today — " + lp + "% of your logged time."
+        : "Scrolling is winning today — only " + lp + "% went to learning.";
+      ratioBar.setAttribute("aria-label",
+        fmtShort(learnTotal) + " learning versus " + fmtShort(scrollTotal) + " scrolling");
+    }
+
+    var rows = Object.keys(b.learn)
+      .map(function (t) { return { t: t, s: b.learn[t] }; })
+      .filter(function (r) { return r.s > 0; })
+      .sort(function (x, y) { return y.s - x.s; });
+    topicList.innerHTML = "";
+    if (!rows.length) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="tt empty">Nothing logged yet — start the green timer.</span>';
+      topicList.appendChild(li);
+      return;
+    }
+    // Merge the live learning session into its topic row.
+    if (a && a.kind === "learn" && a.startedAt) {
+      var el2 = Math.floor((Date.now() - a.startedAt) / 1000);
+      var found = false;
+      rows.forEach(function (r) { if (r.t === a.topic) { r.s += el2; found = true; } });
+      if (!found && el2 > 0) rows.push({ t: a.topic, s: el2 });
+      rows.sort(function (x, y) { return y.s - x.s; });
+    }
+    rows.forEach(function (r) {
+      var li2 = document.createElement("li");
+      var name = document.createElement("span");
+      name.className = "tt";
+      name.textContent = r.t;
+      var val = document.createElement("span");
+      val.className = "tv";
+      val.textContent = fmtShort(r.s);
+      li2.appendChild(name);
+      li2.appendChild(val);
+      topicList.appendChild(li2);
+    });
+  }
+
+  function render() { renderTimers(); renderSummary(); }
+
+  /* Tick: repaint every second; bank to the bucket every 60s so a reload or
+     a midnight rollover never loses more than a minute. */
+  setInterval(function () {
+    var a = store.active;
+    if (a && a.startedAt) {
+      if (Date.now() - a.startedAt >= 60000) {
+        checkpoint();
+        a.startedAt = Date.now();
+        save();
+      }
+      render();
+    }
+  }, 1000);
+
+  /* ── Init: resume a timer that was running across a reload ──────────── */
+  render();
+})();
+</script>
+</body>
+</html>
