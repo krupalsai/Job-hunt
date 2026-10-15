@@ -955,29 +955,40 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
      would render "No syllabus loaded." with its Continue button permanently
      disabled and no way to dismiss it — the whole page stuck behind a modal
      that can never be completed. */
-  /* ── Alex floating voice button ──────────────────────────────────────────
+  /* ── Alex floating voice button + in-place overlay ─────────────────────────
      The voice assistant lives on the screen, not in the menu: a floating mic
-     button on every page, draggable anywhere, always on top. Tap it to talk
-     to Alex. Skipped on voice.html itself. The phone remembers its spot. */
+     button on every page, draggable anywhere, always on top. Tapping it opens
+     Alex IN PLACE — a full-screen overlay on the current page, never a
+     navigation away. The overlay hosts voice.html in a same-origin iframe
+     (precached, works offline). Skipped on voice.html itself. The phone
+     remembers the button's spot. */
   (function alexFab() {
     if (location.pathname === "/voice.html") return;
     var POS_KEY = "jobhunt_alex_fab_pos";
-    var fab = document.createElement("a");
+    var fab = document.createElement("button");
+    fab.type = "button";
     fab.id = "alexFab";
-    fab.href = "/voice.html";
     fab.setAttribute("aria-label", "Talk to Alex — voice tutor");
     fab.innerHTML = svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>')
       .replace('class="nav-ico"', 'class="fab-ico"');
     var css =
-      "#alexFab{position:fixed;z-index:9999;width:60px;height:60px;border-radius:50%;"
+      "#alexFab{position:fixed;z-index:9999;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;"
       + "background:var(--accent,#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;"
-      + "text-decoration:none;box-shadow:0 6px 20px rgba(15,23,42,.35);touch-action:none;"
+      + "box-shadow:0 6px 20px rgba(15,23,42,.35);touch-action:none;font-family:inherit;"
       + "right:16px;bottom:96px;}"
       + "#alexFab .fab-ico{width:28px;height:28px;}"
       + "#alexFab::after{content:\"\";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;"
       + "border:2px solid var(--accent,#1d4ed8);opacity:.6;animation:fabring 2.4s infinite;}"
       + "@keyframes fabring{0%{transform:scale(.85);opacity:.7;}70%{transform:scale(1.18);opacity:0;}100%{transform:scale(1.18);opacity:0;}}"
-      + "@media (prefers-reduced-motion:reduce){#alexFab::after{animation:none;}}";
+      + "@media (prefers-reduced-motion:reduce){#alexFab::after{animation:none;}}"
+      + "#alexOverlay{position:fixed;inset:0;z-index:10000;background:var(--bg,#fff);"
+      + "display:flex;flex-direction:column;}"
+      + "#alexOverlay .alex-ov-head{display:flex;align-items:center;justify-content:space-between;"
+      + "padding:10px 14px;border-bottom:1px solid var(--panel-border,#e5e7eb);"
+      + "font-weight:700;font-size:16px;color:var(--text,#0f172a);}"
+      + "#alexOvClose{width:42px;height:42px;border-radius:12px;cursor:pointer;font-size:24px;line-height:1;"
+      + "border:1px solid var(--panel-border,#e5e7eb);background:var(--panel,#f8fafc);color:inherit;font-family:inherit;}"
+      + "#alexOverlay iframe{flex:1;border:0;width:100%;min-height:0;}";
     var st = document.createElement("style");
     st.textContent = css;
     document.head.appendChild(st);
@@ -985,6 +996,26 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
       var saved = JSON.parse(localStorage.getItem(POS_KEY) || "null");
       if (saved && saved.r && saved.b) { fab.style.right = saved.r; fab.style.bottom = saved.b; }
     } catch (e) {}
+    var overlay = null;
+    function openAlex() {
+      if (overlay) return;
+      overlay = document.createElement("div");
+      overlay.id = "alexOverlay";
+      overlay.innerHTML =
+        '<div class="alex-ov-head"><span>Alex</span>'
+        + '<button type="button" id="alexOvClose" aria-label="Close Alex">&times;</button></div>'
+        + '<iframe src="/voice.html?embed=1" allow="microphone; autoplay" title="Alex voice tutor"></iframe>';
+      document.body.appendChild(overlay);
+      document.getElementById("alexOvClose").addEventListener("click", closeAlex);
+    }
+    function closeAlex() {
+      if (!overlay) return;
+      overlay.parentNode.removeChild(overlay);
+      overlay = null;
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeAlex();
+    });
     var dragging = false, moved = 0, sx = 0, sy = 0, sr = 0, sb = 0;
     function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
     fab.addEventListener("pointerdown", function (e) {
@@ -1012,9 +1043,10 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
     }
     fab.addEventListener("pointerup", endDrag);
     fab.addEventListener("pointercancel", function () { dragging = false; moved = 0; });
-    fab.addEventListener("click", function (e) {
-      if (moved > 10) { e.preventDefault(); e.stopPropagation(); }
+    fab.addEventListener("click", function () {
+      if (moved > 10) { moved = 0; return; } // it was a drag, not a tap
       moved = 0;
+      openAlex();
     });
     document.body.appendChild(fab);
   })();
