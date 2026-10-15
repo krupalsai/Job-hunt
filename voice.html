@@ -107,6 +107,17 @@
   }
   .ts{ font-size:10px; color:var(--dim); margin-top:3px; }
 
+  /* Embedded video — the keyless YouTube search player, 16:9 under Alex's
+     message, plus a tappable "Watch on YouTube" button. */
+  .video-wrap{ align-self:flex-start; display:flex; flex-direction:column; gap:8px;
+    max-width:88%; margin:2px 0 4px; }
+  .video-wrap iframe{ width:100%; aspect-ratio:16/9; border:0; border-radius:12px;
+    background:#000; }
+  .video-open{ align-self:flex-start; font-size:13px; font-weight:600;
+    color:var(--text); border:1px solid var(--panel-border); background:var(--panel);
+    border-radius:999px; padding:8px 14px; text-decoration:none; }
+  .bubble a{ color:var(--accent-ink); }
+
   /* "Alex is thinking" indicator */
   .thinking{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); }
   .thinking .dots{ display:inline-flex; gap:3px; }
@@ -174,6 +185,19 @@
     del: function (k) { try { localStorage.removeItem(k); } catch (e) {} },
   };
 
+  /* ── In-app destinations ──────────────────────────────────────────────
+     Alex performs tasks INSIDE the app only. The exam key is the same one
+     the shared nav uses, so links always open the right exam's pages. */
+  function examKey() {
+    return ls.get("jobhunt_current_exam") || "ts-si";
+  }
+  function learnUrl(section) {
+    return "/learn.html?exam=" + encodeURIComponent(examKey()) + "#" + section;
+  }
+  function todayStudyUrl() {
+    return examKey() === "ts-si" ? "/si.html" : learnUrl("study");
+  }
+
   var esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -219,6 +243,12 @@
      is restored. AI output is never inserted as raw HTML. */
   function renderMd(text) {
     var h = esc(text);
+    // Auto-link URLs into real tappable anchors (escape first, so the href
+    // is safe; entities in the attribute decode correctly in the browser).
+    h = h.replace(/(https?:\/\/[^\s<>"']+)/g, function (u) {
+      var shown = u.length > 48 ? u.slice(0, 45) + "…" : u;
+      return '<a href="' + u + '" target="_blank" rel="noopener">' + shown + "</a>";
+    });
     h = h.replace(/`([^`\n]+)`/g, "<code>$1</code>");
     h = h.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
     h = h.split("\n").map(function (line) {
@@ -280,6 +310,76 @@
   function hideThinking() {
     if (thinkingEl && thinkingEl.parentNode) thinkingEl.parentNode.removeChild(thinkingEl);
     thinkingEl = null;
+  }
+
+  /* ── Embedded video ───────────────────────────────────────────────────
+     The server strips [[VIDEO]]<query>[[/VIDEO]] and returns {video}. We
+     embed YouTube's keyless search player (plays the top result, no API
+     key) as 16:9 under Alex's message, with a tappable Watch button. */
+  var ytApiReady = false, ytApiLoading = false;
+  function ensureYtApi() {
+    if (ytApiReady || ytApiLoading) return;
+    ytApiLoading = true;
+    try {
+      var tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    } catch (e) { ytApiLoading = false; }
+  }
+  window.onYouTubeIframeAPIReady = function () { ytApiReady = true; ytApiLoading = false; };
+  var lastPlayerEl = null, lastPlayer = null;
+
+  function renderVideo(query) {
+    var q = encodeURIComponent(query);
+    var wrap = document.createElement("div");
+    wrap.className = "video-wrap";
+    var frame = document.createElement("iframe");
+    // enablejsapi=1 so "play the video" can drive it via the IFrame API.
+    frame.src = "https://www.youtube.com/embed?listType=search&list=" + q + "&enablejsapi=1";
+    frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; picture-in-picture");
+    frame.setAttribute("allowfullscreen", "");
+    frame.setAttribute("title", "Recommended video");
+    frame.setAttribute("loading", "lazy");
+    wrap.appendChild(frame);
+    var btn = document.createElement("a");
+    btn.className = "video-open";
+    btn.href = "https://www.youtube.com/results?search_query=" + q;
+    btn.target = "_blank";
+    btn.rel = "noopener";
+    btn.textContent = "Watch on YouTube";
+    wrap.appendChild(btn);
+    messagesEl.appendChild(wrap);
+    lastPlayerEl = frame;
+    lastPlayer = null;
+    ensureYtApi();
+    scrollBottom();
+  }
+
+  function playLastVideo() {
+    if (!lastPlayerEl || !lastPlayerEl.parentNode) {
+      addMessage("assistant",
+        "There's no video on screen yet — ask me to teach something first.", Date.now());
+      setStatus(IDLE_STATUS);
+      return;
+    }
+    var said = false;
+    function needTap() {
+      if (said) return; said = true;
+      addMessage("assistant", "Tap play on the video.", Date.now());
+      setStatus(IDLE_STATUS);
+    }
+    try {
+      if (ytApiReady && window.YT && window.YT.Player) {
+        if (!lastPlayer) lastPlayer = new window.YT.Player(lastPlayerEl);
+        var r = lastPlayer.playVideo();
+        // Browsers may block unmuted autoplay without a fresh tap: if the
+        // play attempt rejects, say so in one line — never stay silent.
+        if (r && typeof r.then === "function") r.then(function () {}, needTap);
+        else setTimeout(function () { if (!said) setStatus(IDLE_STATUS); }, 500);
+      } else {
+        needTap();
+      }
+    } catch (e) { needTap(); }
   }
 
   /* ── Speech output — reads Alex's replies aloud ─────────────────────── */
@@ -370,7 +470,11 @@
       clearTimeout(timer);
       return res.json().catch(function () { return {}; }).then(function (data) {
         if (res.ok && data && typeof data.reply === "string" && data.reply.trim()) {
-          return data.reply.trim();
+          // The server strips [[ACTION]] / [[VIDEO]] blocks and returns them
+          // separately. video is a YouTube search query or null.
+          var v = (data && typeof data.video === "string" && data.video.trim())
+            ? data.video.trim().slice(0, 120) : null;
+          return { reply: data.reply.trim(), action: data.action || null, video: v };
         }
         throw { status: res.status, message: (data && data.error) || "" };
       });
@@ -469,23 +573,159 @@
   /* ── The conversation ───────────────────────────────────────────────── */
   var busy = false;
 
-  function ask(text) {
-    text = String(text || "").trim();
-    if (!text || busy) return;
+  /* ── In-app actions: Alex DOES things, not just answers ────────────────
+     Deterministic client-side intent parser — runs first, so commands work
+     even if the model misbehaves. Returns {confirm, href} or null. */
+  function focusTopicFor(t) {
+    if (/\bquant\b/.test(t)) return "Quant";
+    if (/\breasoning\b/.test(t)) return "Reasoning";
+    if (/\benglish\b/.test(t)) return "English";
+    if (/\bcurrent\s+affairs\b|\bcurrentaffairs\b/.test(t)) return "GA & Current Affairs";
+    if (/\bcoding\b|\bpython\b/.test(t)) return "Coding/Python";
+    if (/\blaw\b|\bpolity\b/.test(t)) return "TS SI Law/Polity";
+    return null;
+  }
+  function parseCommand(text) {
+    var t = " " + String(text || "").toLowerCase().trim() + " ";
+    // 1. Timers — "start a 25 minute quant timer", "25-minute timer for reasoning"
+    var mMin = t.match(/(\d{1,3})\s*-?\s*minutes?\b/);
+    if (/\btimer\b/.test(t) && (/\bstart\b|\bbegin\b|\bset\b|\bopen\b/.test(t) || mMin)) {
+      var mins = mMin ? Math.min(180, Math.max(1, parseInt(mMin[1], 10))) : 0;
+      var mode = /\bdoomscroll\b|\bscrolling\b/.test(t) ? "doomscroll" : "learning";
+      var topic = mode === "learning" ? focusTopicFor(t) : null;
+      var href = "/focus.html?start=" + mode +
+        (topic ? "&topic=" + encodeURIComponent(topic) : "") +
+        (mins ? "&minutes=" + mins : "");
+      var what = mins ? mins + "-minute " + (topic || "learning") + " timer"
+                      : (mode === "doomscroll" ? "doomscroll timer" : "learning timer");
+      return { confirm: "Starting your " + what + ".", href: href };
+    }
+    // 2. Quiz — "quiz me on BODMAS", "test me on reasoning"
+    var mQuiz = t.match(/\bquiz\s+me\s+on\s+([a-z0-9][a-z0-9 &+\-\/]*?)\s*$/) ||
+                t.match(/\btest\s+me\s+on\s+([a-z0-9][a-z0-9 &+\-\/]*?)\s*$/);
+    if (mQuiz && mQuiz[1].trim().length >= 2) {
+      var qt = mQuiz[1].trim();
+      return { confirm: "Starting a quiz on " + qt + ".",
+               href: "/learn.html?exam=" + encodeURIComponent(examKey()) +
+                     "&quiz=" + encodeURIComponent(qt) + "#test" };
+    }
+    // 2b. Video — "play the video", "play it"
+    if (/\bplay\s+(the\s+)?video\b|\bplay\s+it\b/.test(t))
+      return { playVideo: true };
+    // 3. Navigation
+    if (/\btoday'?s?\s+study\b|\bstart\s+studying\b/.test(t))
+      return { confirm: "Taking you to today's study.", href: todayStudyUrl() };
+    if (/\bfocus\s+tracker\b|\bopen\s+focus\b/.test(t))
+      return { confirm: "Opening your focus tracker.", href: "/focus.html" };
+    if (/\bprogress\b/.test(t))
+      return { confirm: "Opening your progress.", href: learnUrl("progress") };
+    if (/\bcurrent\s+affairs\b/.test(t))
+      return { confirm: "Opening current affairs.", href: learnUrl("current-affairs") };
+    if (/\blessons?\b/.test(t))
+      return { confirm: "Opening your lessons.", href: learnUrl("study") };
+    if (/\bmock\b|\btest\b|\bpractice\b|\bdrill\b/.test(t))
+      return { confirm: "Opening the test section.", href: learnUrl("test") };
+    if (/\bstudy\b/.test(t))
+      return { confirm: "Taking you to today's study.", href: todayStudyUrl() };
+    if (/\bhome\b/.test(t))
+      return { confirm: "Going home.", href: "/" };
+    return null;
+  }
+
+  /* Validate + build a URL for a server-sent action. Anything not on the
+     in-app allowlist is ignored — Alex never leaves the app. */
+  function actionHref(a) {
+    if (!a || typeof a.type !== "string" || !a.args) return null;
+    if (a.type === "navigate") {
+      var h = a.args.href;
+      if (typeof h !== "string" || h.charAt(0) !== "/") return null;
+      if (h !== "/" && !/^\/(si|learn|focus|feed|voice)\.html([?#].*)?$/.test(h)) return null;
+      if (/^\/learn\.html/.test(h) && h.indexOf("exam=") === -1) {
+        h = "/learn.html?exam=" + encodeURIComponent(examKey()) + h.slice(11);
+      }
+      return h;
+    }
+    if (a.type === "focus_timer") {
+      var mode = a.args.mode === "doomscroll" ? "doomscroll" : "learning";
+      var topic = typeof a.args.topic === "string" ? a.args.topic.slice(0, 60) : "";
+      var mins = parseInt(a.args.minutes, 10);
+      return "/focus.html?start=" + mode +
+        (topic ? "&topic=" + encodeURIComponent(topic) : "") +
+        (mins >= 1 && mins <= 180 ? "&minutes=" + mins : "");
+    }
+    if (a.type === "quiz") {
+      var qt = typeof a.args.topic === "string" ? a.args.topic.trim().slice(0, 80) : "";
+      return "/learn.html?exam=" + encodeURIComponent(examKey()) +
+        (qt ? "&quiz=" + encodeURIComponent(qt) : "") + "#test";
+    }
+    return null;
+  }
+
+  var pendingNav = null;
+  /* Speak a confirmation, then go — used for client-parsed commands and for
+     server-sent actions alike. A tap mid-speech cancels the navigation. */
+  function speakThenGo(confirmText, href) {
+    var rm = { role: "assistant", content: confirmText, ts: Date.now() };
+    history.push(rm);
+    if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
+    saveHistory();
+    addMessage("assistant", confirmText, rm.ts);
+    var willSpeak = speakOn() && ("speechSynthesis" in window);
+    if (willSpeak) setStatus("Alex is answering…", true);
+    speechOnEnd = null; // hands-free must not restart the mic: we are leaving
+    if (willSpeak) {
+      pendingNav = href;
+      speechOnEnd = function () {
+        var h = pendingNav; pendingNav = null;
+        if (h) location.href = h;
+      };
+    } else {
+      setTimeout(function () { location.href = href; }, 600);
+    }
+    speakReply(confirmText);
+  }
+
+  function pushUser(text) {
     var um = { role: "user", content: text, ts: Date.now() };
     history.push(um);
     if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
     saveHistory();
     addMessage("user", text, um.ts);
+  }
+
+  function ask(text) {
+    text = String(text || "").trim();
+    if (!text || busy) return;
+    // Client-side first: deterministic commands never reach the model.
+    var cmd = parseCommand(text);
+    pushUser(text);
+    if (cmd) {
+      if (cmd.playVideo) { playLastVideo(); return; }
+      speakThenGo(cmd.confirm, cmd.href); return;
+    }
 
     busy = true;
     showThinking();
     setStatus("Alex is thinking…", true);
 
-    postToServer().then(function (reply) {
+    postToServer().then(function (out) {
       hideThinking();
       busy = false;
+      // Defense in depth: strip any fenced block the server missed, so raw
+      // [[ACTION]] / [[VIDEO]] markup is never displayed or spoken.
+      var reply = String(out.reply || "")
+        .replace(/\[\[ACTION\]\][\s\S]*?\[\[\/ACTION\]\]/g, "")
+        .replace(/\[\[VIDEO\]\][\s\S]*?\[\[\/VIDEO\]\]/g, "").trim();
+      var action = out.action;
+      // Server-sent action, only if the client parser didn't handle it.
+      var href = actionHref(action);
+      if (href) { speakThenGo(reply, href); return; }
       var rm = { role: "assistant", content: reply, ts: Date.now() };
+      history.push(rm);
+      if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
+      saveHistory();
+      addMessage("assistant", reply, rm.ts);
+      if (out.video) renderVideo(out.video);
       history.push(rm);
       if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
       saveHistory();
