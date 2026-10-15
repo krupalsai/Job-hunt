@@ -34,13 +34,29 @@ const TUTOR_SYSTEM = [
   "  for his answer. Never stack two or more questions in one reply.",
   "- When he answers: say right or wrong in the first line, explain a mistake",
   "  in one line, then teach the next small step.",
-  "- Keep every reply short enough to be read aloud (about 120 words max,",
-  "  unless he asks for more detail).",
-  "- Recommend a YouTube video when it would genuinely help, as a search link",
-  "  like https://www.youtube.com/results?search_query=<topic>. NEVER invent",
-  "  specific video URLs, titles, or channel names — search links only.",
+  "- HARD LIMIT: 120 words max per reply, no exceptions unless he explicitly",
+  "  asks for more detail. If you catch yourself writing more, cut it before",
+  "  sending. Short replies keep the voice from dragging.",
+  "- When a YouTube video would genuinely help, end your reply with a video",
+  "  block on its own lines: [[VIDEO]]<short search query>[[/VIDEO]] (e.g.",
+  "  [[VIDEO]]BODMAS rule explained with examples[[/VIDEO]]). Say 'I've put",
+  "  the video below' in the reply words — never read out a URL. NEVER invent",
+  "  specific video URLs, titles, or channel names — a search query only.",
   "- NEVER invent facts: exam dates, fees, vacancies, cutoffs, application",
   "  links, notifications. If you are not sure, say so in one line and move on.",
+  "- You can also DO things inside the app — not just answer. When he asks",
+  "  you to do something in the app (open a page, start a timer, start a",
+  "  quiz, take him somewhere), confirm in plain words what you are doing",
+  "  ('Opening your focus tracker…'), then end the reply with an action block",
+  "  on its own lines: [[ACTION]]{...}[[/ACTION]]. Types: navigate",
+  "  (args.href — one of /si.html, /learn.html, /focus.html, /feed.html, / ;",
+  "  may include ?exam= and #section), focus_timer (args.mode learning or",
+  "  doomscroll, args.topic, args.minutes 1-180), quiz (args.topic). Never",
+  "  emit any other type.",
+  "- HARD BOUNDARY: you work INSIDE this app only. You cannot apply for jobs,",
+  "  send messages or emails, open other websites, or touch anything outside",
+  "  the app. If he asks for that, say in one plain line: 'That's a job for",
+  "  Muse in your chat — I only work inside this app.' No action block.",
   "- Be warm and encouraging, like a patient teacher. No fluff, no lectures.",
 ].join("\n");
 
@@ -118,16 +134,42 @@ export default async function handler(req: any, res: any) {
       .json({ error: "The tutor returned something unreadable. Try again." });
   }
 
-  const reply =
-    data &&
-    data.choices &&
-    data.choices[0] &&
-    data.choices[0].message &&
-    data.choices[0].message.content;
-  if (!reply || !String(reply).trim()) {
+  let reply = String(
+    (data &&
+      data.choices &&
+      data.choices[0] &&
+      data.choices[0].message &&
+      data.choices[0].message.content) || ""
+  ).trim();
+  if (!reply) {
     return res
       .status(502)
       .json({ error: "The tutor came back empty. Try asking again." });
   }
-  return res.status(200).json({ reply: String(reply).trim().slice(0, 6000) });
+  // Strip fenced blocks the model may append. [[ACTION]] becomes the
+  // machine-readable action; [[VIDEO]] becomes the video search query.
+  // Neither is ever spoken or displayed raw.
+  let action: any = null;
+  const am = reply.match(/\[\[ACTION\]\]([\s\S]*?)\[\[\/ACTION\]\]/);
+  if (am) {
+    reply = (reply.slice(0, am.index) + reply.slice(am.index + am[0].length)).trim();
+    try {
+      const parsed = JSON.parse(am[1]);
+      if (
+        parsed && typeof parsed.type === "string" &&
+        (parsed.type === "navigate" || parsed.type === "focus_timer" || parsed.type === "quiz") &&
+        parsed.args && typeof parsed.args === "object"
+      ) {
+        action = { type: parsed.type, args: parsed.args };
+      }
+    } catch (e) { /* malformed block: keep the words, drop the block */ }
+  }
+  let video: string | null = null;
+  const vm = reply.match(/\[\[VIDEO\]\]([\s\S]*?)\[\[\/VIDEO\]\]/);
+  if (vm) {
+    const q = vm[1].trim().slice(0, 120);
+    if (q) video = q;
+    reply = (reply.slice(0, vm.index) + reply.slice(vm.index + vm[0].length)).trim();
+  }
+  return res.status(200).json({ reply: reply.slice(0, 6000), action, video });
 }
