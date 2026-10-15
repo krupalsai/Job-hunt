@@ -191,10 +191,11 @@
     cal:   svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3"/>'),
     news:  svg('<path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/>'),
     spark: svg('<path d="M13 2.5L4.8 13.4h6L9.3 21.5l8.7-11.4h-6.2L13 2.5z"/>'),
-    /* A speech bubble: the Professor chat. New in Sep 2026 with chat.html —
+    /* A mic: the Alex voice page. New in Oct 2026 with voice.html —
        plain page links (plain:true) in MENU_DESTS are real pages, never
        prep-page sections, and are left alone by the href rewriting below. */
     chat:  svg('<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'),
+    mic:   svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     timer: svg('<circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9.5 2h5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
@@ -226,9 +227,9 @@
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: null,
       sub: "Pattern, marking, time budget, exam-hall tactics" },
-    { id: "professor", label: "Professor", icon: null, href: "/chat.html", plain: true,
-      sub: "Ask anything, explained simply" },
-    /* Focus is its own page (focus.html), like the Professor — plain:true
+    { id: "voice", label: "Alex", icon: null, href: "/voice.html", plain: true,
+      sub: "Hands-free voice tutor \u2014 tap and talk" },
+    /* Focus is its own page (focus.html), like Alex (voice.html) — plain:true
        keeps it a real page link, never a prep-page section. */
     { id: "focus", label: "Focus", icon: null, href: "/focus.html", plain: true,
       sub: "Learning time vs scrolling time, side by side" },
@@ -239,7 +240,7 @@
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
     "si-plan": "target", lessons: "book", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", professor: "chat", feed: "spark", focus: "timer" };
+    syllabus: "exam", voice: "mic", feed: "spark", focus: "timer" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
