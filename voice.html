@@ -677,10 +677,10 @@
       pendingNav = href;
       speechOnEnd = function () {
         var h = pendingNav; pendingNav = null;
-        if (h) goHref(h);
+        if (h) { stayFlag(); goHref(h); }
       };
     } else {
-      setTimeout(function () { goHref(href); }, 600);
+      setTimeout(function () { stayFlag(); goHref(href); }, 600);
     }
     speakReply(confirmText);
   }
@@ -877,11 +877,23 @@
     var backLink = document.querySelector(".back");
     if (backLink) backLink.style.display = "none";
   }
+  /* autostart=1: the overlay reopened itself after a voice navigation and
+     hands-free is on — start listening at once, no tap needed. The mic
+     permission is per-origin, so the earlier grant still holds. */
+  var autoStart = false;
+  try {
+    autoStart = inEmbed && new URLSearchParams(location.search).get("autostart") === "1";
+  } catch (e) {}
   function goHref(h) {
     try {
       if (inEmbed && window.top && window.top !== window.self) window.top.location.href = h;
       else location.href = h;
     } catch (e) { location.href = h; }
+  }
+  /* Stay with him: mark that a voice navigation is about to happen, so the
+     new page reopens the Alex overlay by itself (nav.js reads this flag). */
+  function stayFlag() {
+    try { sessionStorage.setItem("jobhunt_alex_stay", "1"); } catch (e) {}
   }
 
   /* ── Topic deep-link (?topic=<name>&weak=1) ────────────────────────────
@@ -907,6 +919,13 @@
   renderAll();
   setStatus(IDLE_STATUS);
   if (topicAsk) ask(topicAsk);
+  else if (autoStart && SR && handsFreeOn() && !busy) {
+    // Reopened after a voice navigation: keep the conversation going with
+    // zero taps. If the mic refuses, the normal error note explains it.
+    userGestured = true;
+    emptyTurns = 0;
+    startRecog();
+  }
 })();
 </script>
 </body>
