@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Alex · Job Hunt</title>
+<meta name="description" content="Alex — the hands-free voice tutor. Tap the mic and talk: it explains simply, quizzes you out loud, and keeps listening." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e2654'/%3E%3Crect x='12' y='6' width='8' height='13' rx='4' fill='none' stroke='white' stroke-width='2.6'/%3E%3Cpath d='M8 15a8 8 0 0 0 16 0' fill='none' stroke='white' stroke-width='2.6'/%3E%3Cpath d='M16 23v4' stroke='white' stroke-width='2.6'/%3E%3C/svg%3E" />
+<style>
+  /* Same tokens as focus.html, so Alex reads as the same app. */
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; font-family:var(--font-ui);
+    background:var(--bg); color:var(--text);
+    /* Only the shared bottom bar sits below the content — no composer here. */
+    padding-bottom:calc(66px + env(safe-area-inset-bottom));
+  }
+  header{
+    padding:10px 12px; position:sticky; top:0;
+    background:var(--header-bg); backdrop-filter:blur(8px); z-index:10;
+    border-bottom:1px solid var(--panel-border);
+  }
+  .head-row{ display:flex; align-items:center; gap:10px; max-width:720px; margin:0 auto; }
+  .back{
+    flex:0 0 auto; width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+    border-radius:12px; color:var(--text); text-decoration:none;
+    border:1px solid var(--panel-border); background:var(--panel);
+  }
+  .back svg{ width:20px; height:20px; }
+  .title{ flex:1 1 auto; min-width:0; }
+  .title h1{ font-size:17px; margin:0; }
+  .title .sub{ font-size:11.5px; color:var(--muted); margin-top:1px; }
+  .head-actions{ display:flex; gap:8px; flex:0 0 auto; }
+  .hbtn{
+    width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+    border-radius:12px; border:1px solid var(--panel-border); background:var(--panel);
+    color:var(--text); cursor:pointer; font-family:inherit; line-height:1;
+  }
+  .hbtn svg{ width:21px; height:21px; }
+  .hbtn[aria-pressed="false"]{ opacity:.5; }
+  .hbtn[hidden]{ display:none; }
+
+  main{ max-width:720px; margin:0 auto; padding:14px 16px 8px; }
+
+  /* Status line — one short sentence about what Alex is doing right now. */
+  #status{
+    text-align:center; font-size:13.5px; color:var(--muted);
+    min-height:22px; margin:2px 0 14px; line-height:1.5;
+  }
+  #status.is-live{ color:var(--accent-ink); font-weight:600; }
+
+  /* The one big mic button. */
+  .mic-wrap{ display:flex; justify-content:center; margin:6px 0 18px; }
+  #micBtn{
+    width:96px; height:96px; border-radius:50%; border:0; cursor:pointer;
+    background:var(--accent); color:var(--on-accent);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px rgba(15,23,42,.18);
+    font-family:inherit; line-height:1;
+  }
+  #micBtn svg{ width:40px; height:40px; }
+  #micBtn:active{ filter:brightness(.92); }
+  #micBtn.is-recording{
+    background:var(--bad);
+    animation:micpulse 1.1s infinite;
+  }
+  #micBtn[hidden]{ display:none; }
+  @keyframes micpulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.72; transform:scale(1.05); } }
+  @media (prefers-reduced-motion:reduce){ #micBtn.is-recording{ animation:none; } }
+
+  .empty-note{
+    text-align:center; color:var(--dim); font-size:13px; line-height:1.6; padding:18px 16px;
+  }
+
+  /* Transcript — same bubbles as the rest of the app. */
+  #messages{ display:flex; flex-direction:column; gap:10px; }
+  .msg{ display:flex; flex-direction:column; max-width:88%; }
+  .msg.user{ align-self:flex-end; align-items:flex-end; }
+  .msg.assistant{ align-self:flex-start; align-items:flex-start; }
+  .bubble{
+    padding:10px 13px; border-radius:16px; font-size:14px; line-height:1.6;
+    overflow-wrap:break-word; word-break:break-word;
+  }
+  .msg.user .bubble{
+    background:var(--accent); color:var(--on-accent);
+    border-bottom-right-radius:6px;
+  }
+  .msg.assistant .bubble{
+    background:var(--panel); border:1px solid var(--panel-border); color:var(--text);
+    border-bottom-left-radius:6px;
+  }
+  .msg.assistant.is-error .bubble{
+    border-color:var(--bad); background:var(--panel);
+  }
+  .bubble strong{ font-weight:700; }
+  .bubble code{
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12.5px;
+    background:var(--accent-tint); border-radius:4px; padding:1px 5px;
+  }
+  .ts{ font-size:10px; color:var(--dim); margin-top:3px; }
+
+  /* "Alex is thinking" indicator */
+  .thinking{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); }
+  .thinking .dots{ display:inline-flex; gap:3px; }
+  .thinking .dots i{
+    width:6px; height:6px; border-radius:50%; background:var(--dim);
+    animation:blink 1.2s infinite;
+  }
+  .thinking .dots i:nth-child(2){ animation-delay:.2s; }
+  .thinking .dots i:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink{ 0%,60%,100%{ opacity:.25; } 30%{ opacity:1; } }
+  @media (prefers-reduced-motion:reduce){ .thinking .dots i{ animation:none; } }
+</style>
+</head>
+<body data-page="voice">
+<header>
+  <div class="head-row">
+    <a class="back" href="/" aria-label="Back to home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="title">
+      <h1>Alex</h1>
+      <div class="sub">Hands-free voice tutor</div>
+    </div>
+    <div class="head-actions">
+      <button class="hbtn" id="handsFreeBtn" type="button" aria-label="Hands-free talk" title="Hands-free talk" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="13" width="4" height="7" rx="2"/><rect x="17.5" y="13" width="4" height="7" rx="2"/><path d="M20 20a4 4 0 0 1-4 3"/></svg>
+      </button>
+      <button class="hbtn" id="speakBtn" type="button" aria-label="Read replies aloud" title="Read replies aloud" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <p id="status" role="status">Tap the mic and ask</p>
+  <div class="mic-wrap">
+    <button id="micBtn" type="button" aria-label="Ask Alex — tap and speak" title="Ask Alex — tap and speak">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
+    </button>
+  </div>
+  <div id="noMic" class="empty-note" hidden>Voice input needs Chrome on your phone.</div>
+  <div id="messages" aria-live="polite"></div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Storage — everything is device-local. Nothing here is ever sent anywhere
+     except the transcript to /api/ask, whose key lives on the server. */
+  var CHAT_KEY  = "jobhunt_alex_chat_v1";
+  var SPEAK_KEY = "jobhunt_alex_speak";
+  var HANDSFREE_KEY = "jobhunt_alex_handsfree";
+  var MAX_STORED = 100;   // messages kept on the phone, to bound storage
+  var MAX_SENT   = 20;    // messages sent with each request, to bound tokens
+
+  var ls = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    del: function (k) { try { localStorage.removeItem(k); } catch (e) {} },
+  };
+
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
+
+  /* ── Elements ───────────────────────────────────────────────────────── */
+  var messagesEl = document.getElementById("messages");
+  var statusEl = document.getElementById("status");
+  var micBtn = document.getElementById("micBtn");
+  var noMic = document.getElementById("noMic");
+  var speakBtn = document.getElementById("speakBtn");
+  var handsFreeBtn = document.getElementById("handsFreeBtn");
+
+  /* ── Status line ────────────────────────────────────────────────────── */
+  function setStatus(t, live) {
+    statusEl.textContent = t;
+    statusEl.classList.toggle("is-live", !!live);
+  }
+  var IDLE_STATUS = "Tap the mic and ask";
+
+  /* ── History ────────────────────────────────────────────────────────── */
+  var history = [];
+  try {
+    var parsed = JSON.parse(ls.get(CHAT_KEY) || "[]");
+    if (Array.isArray(parsed)) history = parsed.filter(function (m) {
+      return m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string";
+    });
+  } catch (e) { history = []; }
+  if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
+
+  function saveHistory() {
+    ls.set(CHAT_KEY, JSON.stringify(history.slice(-MAX_STORED)));
+  }
+
+  function fmtTime(ts) {
+    try {
+      return new Date(ts).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    } catch (e) { return ""; }
+  }
+
+  /* A tiny, safe formatter: the text is escaped first, then a little markdown
+     is restored. AI output is never inserted as raw HTML. */
+  function renderMd(text) {
+    var h = esc(text);
+    h = h.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+    h = h.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    h = h.split("\n").map(function (line) {
+      var t = line.replace(/^\s*[-*]\s+/, "• ").replace(/^\s*#{1,4}\s*/, "");
+      return t;
+    }).join("\n");
+    return h.replace(/\n/g, "<br>");
+  }
+
+  function scrollBottom() {
+    requestAnimationFrame(function () {
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    });
+  }
+
+  function addMessage(role, content, ts, opts) {
+    var wrap = document.createElement("div");
+    wrap.className = "msg " + role + ((opts && opts.error) ? " is-error" : "");
+    var bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerHTML = renderMd(content);
+    var time = document.createElement("div");
+    time.className = "ts";
+    time.textContent = fmtTime(ts);
+    wrap.appendChild(bubble);
+    wrap.appendChild(time);
+    messagesEl.appendChild(wrap);
+    scrollBottom();
+    return wrap;
+  }
+
+  var GREETING = "Hi, I'm Alex. Tap the mic and ask me anything — I'll explain simply and quiz you out loud.";
+
+  function renderAll() {
+    messagesEl.innerHTML = "";
+    if (!history.length) {
+      // The greeting is spoken-word only in the sense of text: it is shown,
+      // never stored, and never read aloud before the user taps anything.
+      addMessage("assistant", GREETING, Date.now());
+      return;
+    }
+    history.forEach(function (m) { addMessage(m.role, m.content, m.ts); });
+    scrollBottom();
+  }
+
+  var thinkingEl = null;
+  function showThinking() {
+    hideThinking();
+    var wrap = document.createElement("div");
+    wrap.className = "msg assistant";
+    var bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerHTML = '<span class="thinking">Alex is thinking <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></span>';
+    wrap.appendChild(bubble);
+    messagesEl.appendChild(wrap);
+    thinkingEl = wrap;
+    scrollBottom();
+  }
+  function hideThinking() {
+    if (thinkingEl && thinkingEl.parentNode) thinkingEl.parentNode.removeChild(thinkingEl);
+    thinkingEl = null;
+  }
+
+  /* ── Speech output — reads Alex's replies aloud ─────────────────────── */
+  function speakOn() { return ls.get(SPEAK_KEY) !== "0"; }          // default on
+  function handsFreeOn() { return ls.get(HANDSFREE_KEY) !== "0"; }  // default on
+
+  function stripForSpeech(text) {
+    return String(text || "")
+      .replace(/https?:\/\/\S+/g, "link")
+      .replace(/[*_`#]/g, "")
+      .replace(/\s+/g, " ").trim().slice(0, 600);
+  }
+  /* speechSeq guards the onend chain: any stopSpeaking() invalidates a
+     pending utterance, so a cancelled reply never restarts the mic. */
+  var speechSeq = 0;
+  var speechOnEnd = null;
+  function stopSpeaking() {
+    speechSeq++;
+    try { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } catch (e) {}
+  }
+  function speakReply(text) {
+    if (!speakOn()) return;
+    if (!("speechSynthesis" in window)) return;
+    var my = ++speechSeq;
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    try {
+      var spoken = stripForSpeech(text);
+      var u = new SpeechSynthesisUtterance(spoken);
+      u.lang = "en-IN";
+      u.rate = 1;
+      var done = false;
+      var finish = function () {
+        if (done) return; done = true;
+        if (my !== speechSeq) return;
+        var cb = speechOnEnd; speechOnEnd = null;
+        if (cb) cb();
+        else setStatus(IDLE_STATUS);
+      };
+      u.onend = finish;
+      u.onerror = finish;
+      window.speechSynthesis.speak(u);
+      /* Safety net: Chrome on Android sometimes never fires onend for long
+         utterances, which stalls the hands-free loop ("blocked"). If it has
+         not fired within the estimated speaking time, continue anyway. */
+      var estMs = Math.min(90000, spoken.length * 90 + 4000);
+      setTimeout(function () { if (!done && my === speechSeq) finish(); }, estMs);
+    } catch (e) { /* speech is best-effort */ }
+  }
+
+  var SPEAKER_ON_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"' +
+    ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/>' +
+    '<path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+  var SPEAKER_OFF_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"' +
+    ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/>' +
+    '<path d="M16 9l6 6M22 9l-6 6"/></svg>';
+
+  function refreshSpeakBtn() {
+    if (!speakBtn) return;
+    var on = speakOn();
+    speakBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    speakBtn.setAttribute("aria-label", on ? "Mute Alex's voice" : "Read replies aloud");
+    speakBtn.title = on ? "Mute Alex's voice" : "Read replies aloud";
+    speakBtn.innerHTML = on ? SPEAKER_ON_SVG : SPEAKER_OFF_SVG;
+  }
+
+  /* ── Tutor server ─────────────────────────────────────────────────────
+     POST /api/ask, whose key lives on the server — the phone needs no key
+     at all. Zero setup, as the page promises. */
+  function tutorMessages() {
+    return history.slice(-MAX_SENT).map(function (m) {
+      return { role: m.role, content: m.content };
+    });
+  }
+
+  function postToServer() {
+    // 60s abort: without it a hung network leaves `busy` true forever and the
+    // mic refuses to work — the app looks "blocked".
+    var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 60000);
+    return fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "tutor", messages: tutorMessages() }),
+      signal: ctrl ? ctrl.signal : undefined,
+    }).then(function (res) {
+      clearTimeout(timer);
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (res.ok && data && typeof data.reply === "string" && data.reply.trim()) {
+          return data.reply.trim();
+        }
+        throw { status: res.status, message: (data && data.error) || "" };
+      });
+    }).catch(function (err) {
+      clearTimeout(timer);
+      if (err && err.name === "AbortError") {
+        throw { status: 0, message: "That took too long — check your connection and try again." };
+      }
+      throw err;
+    });
+  }
+
+  /* ── Voice input — tap the mic, talk, Alex answers ──────────────────── */
+  var recog = null, recognizing = false, emptyTurns = 0;
+  /* userGestured: browsers only let a page use the mic after a tap. The
+     hands-free chain never starts before the first tap on this page. */
+  var userGestured = false;
+  var SR = (typeof window !== "undefined") &&
+    (window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  function setMicUI() {
+    if (!micBtn) return;
+    micBtn.classList.toggle("is-recording", recognizing);
+    micBtn.setAttribute("aria-label", recognizing ? "Stop listening" : "Ask Alex — tap and speak");
+    micBtn.title = recognizing ? "Stop listening" : "Ask Alex — tap and speak";
+  }
+  function stopRecog() {
+    recognizing = false;
+    try { if (recog) recog.stop(); } catch (e) {}
+    setMicUI();
+  }
+  function startRecog() {
+    if (!SR || busy || recognizing) return false;
+    try {
+      recog = new SR();
+      recog.lang = "en-IN";
+      recog.interimResults = true;
+      recog.maxAlternatives = 1;
+      recognizing = true;
+      var errored = false;
+      setMicUI();
+      setStatus("Listening…", true);
+      var finalText = "";
+      recog.onresult = function (ev) {
+        var interim = "", finals = "";
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          var tr = ev.results[i][0].transcript;
+          if (ev.results[i].isFinal) finals += tr; else interim += tr;
+        }
+        if (finals) finalText = (finalText + " " + finals).trim();
+        var live = (finalText + " " + interim).trim();
+        if (live) setStatus("\u201C" + live.slice(0, 80) + (live.length > 80 ? "…" : "") + "\u201D", true);
+      };
+      recog.onerror = function () {
+        errored = true;
+        stopRecog();
+        // Recognition errors NEVER auto-restart: stop hands-free and say so plainly.
+        setHandsFree(false);
+        addMessage("assistant",
+          "The mic ran into trouble, so I turned hands-free off. Tap the mic to try again.",
+          Date.now());
+        setStatus(IDLE_STATUS);
+      };
+      recog.onend = function () {
+        if (errored) return;
+        var text = finalText;
+        stopRecog();
+        if (text) {
+          emptyTurns = 0;
+          ask(text);
+          return;
+        }
+        if (handsFreeOn()) {
+          emptyTurns++;
+          if (emptyTurns >= 3) {
+            setHandsFree(false);
+            addMessage("assistant",
+              "I didn't catch anything a few times, so I turned hands-free off. Tap the mic when you're ready.",
+              Date.now());
+            setStatus(IDLE_STATUS);
+          } else {
+            setStatus("I didn't catch that — listening again…", true);
+            setTimeout(function () {
+              if (handsFreeOn() && userGestured && !busy && document.visibilityState === "visible") startRecog();
+            }, 800);
+          }
+        } else {
+          setStatus("I didn't catch that — tap the mic and try again.");
+        }
+      };
+      recog.start();
+      return true;
+    } catch (e) { stopRecog(); setStatus(IDLE_STATUS); return false; }
+  }
+
+  /* ── The conversation ───────────────────────────────────────────────── */
+  var busy = false;
+
+  function ask(text) {
+    text = String(text || "").trim();
+    if (!text || busy) return;
+    var um = { role: "user", content: text, ts: Date.now() };
+    history.push(um);
+    if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
+    saveHistory();
+    addMessage("user", text, um.ts);
+
+    busy = true;
+    showThinking();
+    setStatus("Alex is thinking…", true);
+
+    postToServer().then(function (reply) {
+      hideThinking();
+      busy = false;
+      var rm = { role: "assistant", content: reply, ts: Date.now() };
+      history.push(rm);
+      if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
+      saveHistory();
+      addMessage("assistant", reply, rm.ts);
+      var willSpeak = speakOn() && ("speechSynthesis" in window);
+      if (willSpeak) setStatus("Alex is answering…", true);
+      if (handsFreeOn()) {
+        // Zero taps between turns: when the reply finishes being read aloud,
+        // the mic restarts itself. If the voice is off, restart right away.
+        if (willSpeak) speechOnEnd = maybeHandsFreeNext;
+        else setTimeout(maybeHandsFreeNext, 400);
+      } else if (!willSpeak) {
+        setStatus(IDLE_STATUS);
+      }
+      speakReply(reply);
+    }).catch(function (err) {
+      hideThinking();
+      busy = false;
+      var msg = (err && err.message)
+        ? err.message
+        : "Alex had a problem. Try again in a bit.";
+      addMessage("assistant", msg, Date.now(), { error: true });
+      setStatus(IDLE_STATUS);
+    });
+  }
+
+  /* ── Hands-free talk — zero taps between turns ──────────────────────── */
+  function refreshHandsFreeBtn() {
+    if (!handsFreeBtn) return;
+    var on = handsFreeOn();
+    handsFreeBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    handsFreeBtn.setAttribute("aria-label", "Hands-free talk (currently " + (on ? "on" : "off") + ")");
+    handsFreeBtn.title = "Hands-free talk (currently " + (on ? "on" : "off") + ")";
+  }
+  function setHandsFree(on) {
+    ls.set(HANDSFREE_KEY, on ? "1" : "0");
+    if (!on) {
+      stopSpeaking();
+      speechOnEnd = null;
+      if (recognizing) stopRecog();
+      setStatus(IDLE_STATUS);
+    }
+    refreshHandsFreeBtn();
+  }
+  function maybeHandsFreeNext() {
+    if (!handsFreeOn()) return;
+    if (!userGestured) return;
+    if (document.visibilityState !== "visible") return;
+    if (busy) return;
+    startRecog();
+  }
+
+  /* ── Wiring ─────────────────────────────────────────────────────────── */
+  if (speakBtn) {
+    if (!("speechSynthesis" in window)) {
+      speakBtn.hidden = true; // no voice output here — the transcript still works
+    } else {
+      refreshSpeakBtn();
+      speakBtn.addEventListener("click", function () {
+        var on = !speakOn();
+        ls.set(SPEAK_KEY, on ? "1" : "0");
+        if (!on) stopSpeaking();
+        refreshSpeakBtn();
+      });
+    }
+  }
+
+  if (handsFreeBtn) {
+    if (!SR) {
+      handsFreeBtn.hidden = true; // no mic here — the toggle would do nothing
+    } else {
+      refreshHandsFreeBtn();
+      handsFreeBtn.addEventListener("click", function () {
+        if (!handsFreeOn()) {
+          ls.set(HANDSFREE_KEY, "1");
+          refreshHandsFreeBtn();
+          // Turning it on mid-conversation resumes listening at once;
+          // on a fresh page it waits for the first mic tap (browser rule).
+          if (userGestured && !busy && !recognizing && document.visibilityState === "visible") {
+            startRecog();
+          } else {
+            setStatus(IDLE_STATUS);
+          }
+        } else {
+          setHandsFree(false);
+        }
+      });
+    }
+  }
+
+  if (micBtn) {
+    if (!SR) {
+      micBtn.hidden = true;
+      noMic.hidden = false; // plain note, no key-setup UI anywhere
+    } else {
+      micBtn.addEventListener("click", function () {
+        if (busy) return;
+        userGestured = true;
+        if (recognizing) {
+          // A manual stop also ends hands-free mode.
+          if (handsFreeOn()) setHandsFree(false);
+          stopRecog();
+          setStatus(IDLE_STATUS);
+          return;
+        }
+        try {
+          if (window.speechSynthesis && window.speechSynthesis.speaking) {
+            // Tapping the mic mid-reply stops Alex's voice (and hands-free).
+            if (handsFreeOn()) setHandsFree(false);
+            stopSpeaking();
+            setStatus(IDLE_STATUS);
+            return;
+          }
+        } catch (e) {}
+        emptyTurns = 0;
+        if (!startRecog()) setStatus(IDLE_STATUS);
+      });
+    }
+  }
+
+  /* Auto-pause listening when the page is hidden; on return the user gets a
+     note (not the mic) — browsers won't let a page grab the mic untapped. */
+  var pausedByHide = false;
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") {
+      if (recognizing) stopRecog();
+      stopSpeaking();
+      speechOnEnd = null;
+      if (handsFreeOn()) pausedByHide = true;
+      setStatus(IDLE_STATUS);
+    } else if (pausedByHide) {
+      pausedByHide = false;
+      if (handsFreeOn()) {
+        addMessage("assistant",
+          "Paused while the app was hidden — tap the mic to keep talking.",
+          Date.now());
+        setStatus(IDLE_STATUS);
+      }
+    }
+  });
+
+  /* ── Topic deep-link (?topic=<name>&weak=1) ────────────────────────────
+     Study pages link here with a topic; Alex starts teaching it at once.
+     The name is capped, and rendering always escapes HTML. */
+  var topicAsk = null;
+  try {
+    var qp = new URLSearchParams(location.search);
+    var rawTopic = (qp.get("topic") || "").trim();
+    if (rawTopic) {
+      var decoded = rawTopic;
+      try { decoded = decodeURIComponent(rawTopic); } catch (e2) { /* keep raw */ }
+      decoded = decoded.slice(0, 120).trim();
+      if (decoded) {
+        topicAsk = (qp.get("weak") === "1")
+          ? "I'm weak at " + decoded + " — teach me from zero"
+          : "Teach me " + decoded + " from scratch";
+      }
+    }
+  } catch (e) { topicAsk = null; }
+
+  /* ── Go ─────────────────────────────────────────────────────────────── */
+  renderAll();
+  setStatus(IDLE_STATUS);
+  if (topicAsk) ask(topicAsk);
+})();
+</script>
+</body>
+</html>
