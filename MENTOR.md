@@ -25,6 +25,8 @@ Written Test first**; Mains come later. SSC CGL is not part of the plan.
   exam status. The sections also carry the memory card and answer key.
 - The hourly prompt it replaced is kept at `mentor/previous-hourly-prompt.md`,
   so the change can be reversed.
+- Runs push to `claude/three-folds-layout-byopmv`, not to `main`. Vercel deploys
+  from `main`, so production does not change until that branch is merged.
 
 The rules below still apply to every run. Current affairs and exam dates are
 the two places a wrong fact is most likely, so each needs a source URL that was
