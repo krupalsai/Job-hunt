@@ -320,7 +320,7 @@
       '<div class="sec-kicker">Basics · ' + (track === "quant" ? "Arithmetic" : "Reasoning") + "</div><h3>" + esc(title) + "</h3>" +
       "<p>" + esc(concept) + "</p><h4>Worked example</h4><p>" + esc(worked) + "</p><h4>Try it</h4>" +
       questions.map(([q, a, r], i) => "<details><summary>" + (i + 1) + ". " + esc(q) + "<span>Show answer</span></summary><p><b>" + esc(a) + "</b> · " + esc(r) + "</p></details>").join("") +
-      '<div class="btn-row" style="margin-top:14px"><a class="btn btn-tonal" href="/chat.html?topic=' + encodeURIComponent(id) + "&track=" + encodeURIComponent(track) + '">Ask the Professor</a>' +
+      '<div class="btn-row" style="margin-top:14px"><a class="btn btn-tonal" href="/voice.html?topic=' + encodeURIComponent(id) + "&track=" + encodeURIComponent(track) + '">Ask Alex</a>' +
       '<button type="button" class="btn btn-primary" data-close-sheet>Done</button></div></div>';
     document.body.style.overflow = "hidden";
   }
