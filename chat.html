@@ -138,6 +138,22 @@
   #sendBtn:active:not([disabled]){ filter:brightness(.92); }
   #sendBtn[disabled]{ opacity:.55; cursor:default; }
 
+  /* Voice (tutor mode): mic in the composer, speaker + hands-free toggles in the header. */
+  #micBtn{
+    flex:0 0 auto; min-height:46px; min-width:52px; padding:10px 12px;
+    border:1px solid var(--panel-border); border-radius:14px; background:var(--panel);
+    color:var(--text); font-family:inherit; cursor:pointer; line-height:1;
+  }
+  #micBtn svg{ width:22px; height:22px; display:block; margin:0 auto; }
+  #micBtn:active{ filter:brightness(.94); }
+  #micBtn.is-recording{
+    background:var(--bad); border-color:var(--bad); color:#fff;
+    animation:micpulse 1.1s infinite;
+  }
+  #micBtn[hidden]{ display:none; }
+  @keyframes micpulse{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+  @media (prefers-reduced-motion:reduce){ #micBtn.is-recording{ animation:none; } }
+
   /* Settings sheet */
   #settingsScrim{
     position:fixed; inset:0; z-index:90; background:#020617b8;
@@ -191,6 +207,14 @@
       <div class="nav-exam" id="nav-exam"></div>
     </div>
     <div class="chat-actions">
+      <button class="nav-burger" id="speakBtn" aria-label="Read replies aloud" title="Read replies aloud" aria-pressed="true">
+        <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+      </button>
+      <button class="nav-burger" id="handsFreeBtn" aria-label="Hands-free talk" title="Hands-free talk" aria-pressed="false">
+        <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="13" width="4" height="7" rx="2"/><rect x="17.5" y="13" width="4" height="7" rx="2"/><path d="M20 20a4 4 0 0 1-4 3"/></svg>
+      </button>
       <button class="nav-burger" id="clearBtn" aria-label="Clear chat" title="Clear chat">
         <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/></svg>
@@ -210,13 +234,14 @@
   </div>
 
   <div id="setupCard" class="setup" hidden>
-    <h2>Set up the Professor</h2>
-    <p>The Professor answers using <strong>your own OpenAI API key</strong>. The key is saved
-       <strong>only on this phone</strong> (in this browser's storage) — never in the app's code,
-       and it is sent only to the API address you set below.</p>
-    <p>No key yet? Get one at
-       <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>
-       — it takes a minute.</p>
+    <h2>Meet your voice tutor</h2>
+    <p>Tap the <strong>mic</strong> and ask out loud &mdash; e.g. &ldquo;teach me BODMAS&rdquo;. The tutor explains
+       simply, asks you one question at a time, and reads every reply aloud. The speaker
+       (top right) mutes the voice; <strong>Hands-free talk</strong> keeps the conversation
+       going with no taps between turns.</p>
+    <p>No setup needed &mdash; the built-in tutor answers with no key, straight from the app.</p>
+    <p>Backup option: add your own API key in Settings and the app uses it if the
+       built-in tutor is ever down.</p>
     <button type="button" class="btn" id="openSettingsBtn">Add my key</button>
   </div>
 
@@ -227,6 +252,10 @@
   <div class="composer-row">
     <textarea id="input" rows="1" enterkeyhint="send" autocomplete="off"
               placeholder="Ask the Professor anything…" aria-label="Your question"></textarea>
+    <button id="micBtn" type="button" aria-label="Speak your question" title="Speak your question">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
+    </button>
     <button id="sendBtn" type="button">Send</button>
   </div>
 </div>
@@ -505,6 +534,7 @@
   document.getElementById("clearBtn").addEventListener("click", function () {
     if (!history.length) return;
     if (!confirm("Delete this whole conversation from this phone? This cannot be undone.")) return;
+    stopSpeaking();
     history = [];
     ls.del(CHAT_KEY);
     renderAll();
@@ -526,6 +556,270 @@
       topicChip.hidden = true;
     });
   }
+
+
+  /* ── Tutor server + voice (Alexa-like mode) ───────────────────────────
+     Primary path: POST /api/ask, whose key lives on the server — the phone
+     needs no key at all. When the server reports its key is not set up, we
+     fall back to the on-device key flow in sendLegacy() below. */
+  var SPEAK_KEY = "jobhunt_prof_speak";
+  var HANDSFREE_KEY = "jobhunt_prof_handsfree";
+
+  function tutorMessages() {
+    return history.slice(-MAX_SENT).map(function (m) {
+      return { role: m.role, content: m.content };
+    });
+  }
+
+  function postToServer() {
+    return fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "tutor", messages: tutorMessages() }),
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (res.ok && data && typeof data.reply === "string" && data.reply.trim()) {
+          return data.reply.trim();
+        }
+        var err = { status: res.status, message: (data && data.error) || "" };
+        if (res.status === 500 && data && data.code === "NO_SERVER_KEY") err.noKey = true;
+        throw err;
+      });
+    });
+  }
+
+  /* Voice output — reads the Professor's replies aloud, Alexa-style. */
+  function speakOn() { return ls.get(SPEAK_KEY) !== "0"; }
+  function handsFreeOn() { return ls.get(HANDSFREE_KEY) === "1"; }
+  function stripForSpeech(text) {
+    return String(text || "")
+      .replace(/https?:\/\/\S+/g, "link")
+      .replace(/[*_`#]/g, "")
+      .replace(/\s+/g, " ").trim().slice(0, 600);
+  }
+  /* speechSeq guards the onend chain: any stopSpeaking() invalidates a
+     pending utterance, so a cancelled reply never restarts the mic. */
+  var speechSeq = 0;
+  var speechOnEnd = null;
+  function stopSpeaking() {
+    speechSeq++;
+    try { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } catch (e) {}
+  }
+  function speakReply(text) {
+    if (!speakOn()) return;
+    if (!("speechSynthesis" in window)) return;
+    var my = ++speechSeq;
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    try {
+      var u = new SpeechSynthesisUtterance(stripForSpeech(text));
+      u.lang = "en-IN";
+      u.rate = 1;
+      u.onend = function () {
+        if (my !== speechSeq) return;
+        var cb = speechOnEnd; speechOnEnd = null;
+        if (cb) cb();
+      };
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* speech is best-effort */ }
+  }
+
+  var SPEAKER_ON_SVG =
+    '<svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"' +
+    ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/>' +
+    '<path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+  var SPEAKER_OFF_SVG =
+    '<svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"' +
+    ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/>' +
+    '<path d="M16 9l6 6M22 9l-6 6"/></svg>';
+
+  var speakBtn = document.getElementById("speakBtn");
+  function refreshSpeakBtn() {
+    if (!speakBtn) return;
+    var on = speakOn();
+    speakBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    speakBtn.setAttribute("aria-label", on ? "Mute voice replies" : "Read replies aloud");
+    speakBtn.title = on ? "Mute voice replies" : "Read replies aloud";
+    speakBtn.innerHTML = on ? SPEAKER_ON_SVG : SPEAKER_OFF_SVG;
+    speakBtn.style.opacity = on ? "1" : ".55";
+  }
+  if (speakBtn) {
+    if (!("speechSynthesis" in window)) {
+      speakBtn.hidden = true; // no voice output here — chat still works
+    } else {
+      refreshSpeakBtn();
+      speakBtn.addEventListener("click", function () {
+        var on = !speakOn();
+        ls.set(SPEAK_KEY, on ? "1" : "0");
+        if (!on) stopSpeaking();
+        refreshSpeakBtn();
+      });
+    }
+  }
+
+  /* Voice input — tap the mic, talk, the words land in the box and send. */
+  var micBtn = document.getElementById("micBtn");
+  var recog = null, recognizing = false, emptyTurns = 0;
+  var SR = (typeof window !== "undefined") &&
+    (window.SpeechRecognition || window.webkitSpeechRecognition);
+  function setMicUI() {
+    if (!micBtn) return;
+    micBtn.classList.toggle("is-recording", recognizing);
+    micBtn.setAttribute("aria-label", recognizing ? "Stop listening" : "Speak your question");
+    micBtn.title = recognizing ? "Stop listening" : "Speak your question";
+  }
+  function stopRecog() {
+    recognizing = false;
+    try { if (recog) recog.stop(); } catch (e) {}
+    setMicUI();
+  }
+  function startRecog(auto) {
+    if (!SR || busy || recognizing) return false;
+    try {
+      recog = new SR();
+      recog.lang = "en-IN";
+      recog.interimResults = true;
+      recog.maxAlternatives = 1;
+      recognizing = true;
+      setMicUI();
+      var finalText = "";
+      var wasAuto = !!auto;
+      recog.onresult = function (ev) {
+        var interim = "", finals = "";
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          var tr = ev.results[i][0].transcript;
+          if (ev.results[i].isFinal) finals += tr; else interim += tr;
+        }
+        if (finals) finalText = (finalText + " " + finals).trim();
+        inputEl.value = (finalText + " " + interim).trim();
+        autoGrow();
+      };
+      recog.onerror = function () {
+        var autoNow = wasAuto;
+        stopRecog();
+        if (autoNow && handsFreeOn()) {
+          // Recognition errors never auto-restart: stop and say so plainly.
+          setHandsFree(false);
+          addMessage("assistant",
+            "The mic ran into trouble, so I stopped hands-free talk. Tap the mic to try again.",
+            Date.now());
+        }
+      };
+      recog.onend = function () {
+        var text = finalText;
+        var autoNow = wasAuto && recognizing;
+        stopRecog();
+        if (!autoNow) return;
+        if (text) {
+          emptyTurns = 0;
+          inputEl.value = text;
+          autoGrow();
+          send();
+        } else if (handsFreeOn()) {
+          emptyTurns++;
+          if (emptyTurns >= 3) {
+            setHandsFree(false);
+            addMessage("assistant",
+              "I didn't catch anything a few times, so I stopped hands-free talk. Tap the mic when you're ready.",
+              Date.now());
+          } else {
+            setTimeout(function () {
+              if (handsFreeOn() && !busy && document.visibilityState === "visible") startRecog(true);
+            }, 800);
+          }
+        }
+      };
+      recog.start();
+      return true;
+    } catch (e) { stopRecog(); return false; }
+  }
+  if (micBtn) {
+    if (!SR) {
+      micBtn.hidden = true; // voice input unsupported here — typing still works
+    } else {
+      micBtn.addEventListener("click", function () {
+        if (busy) return;
+        if (recognizing) {
+          // A manual stop also ends hands-free mode.
+          if (handsFreeOn()) setHandsFree(false);
+          stopRecog();
+          return;
+        }
+        try {
+          if (window.speechSynthesis && window.speechSynthesis.speaking) {
+            // Tapping the mic mid-reply stops the voice (and hands-free).
+            if (handsFreeOn()) setHandsFree(false);
+            stopSpeaking();
+            return;
+          }
+        } catch (e) {}
+        startRecog(false);
+      });
+    }
+  }
+
+  /* Hands-free talk — zero taps between turns. When on, the mic restarts
+     itself every time a reply finishes being read aloud, until the user taps
+     the mic/stop button or toggles it off. No wake word: a web page cannot
+     listen while closed or locked, so none is offered. */
+  var handsFreeBtn = document.getElementById("handsFreeBtn");
+  function refreshHandsFreeBtn() {
+    if (!handsFreeBtn) return;
+    var on = handsFreeOn();
+    handsFreeBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    handsFreeBtn.setAttribute("aria-label", "Hands-free talk (currently " + (on ? "on" : "off") + ")");
+    handsFreeBtn.style.opacity = on ? "1" : ".55";
+  }
+  function setHandsFree(on) {
+    ls.set(HANDSFREE_KEY, on ? "1" : "0");
+    if (!on) { stopSpeaking(); speechOnEnd = null; if (recognizing) stopRecog(); }
+    refreshHandsFreeBtn();
+  }
+  function maybeHandsFreeNext() {
+    if (!handsFreeOn()) return;
+    if (document.visibilityState !== "visible") return;
+    if (busy) return;
+    startRecog(true);
+  }
+  if (handsFreeBtn) {
+    if (!SR) {
+      handsFreeBtn.hidden = true; // no mic here — the toggle would do nothing
+    } else {
+      refreshHandsFreeBtn();
+      handsFreeBtn.addEventListener("click", function () {
+        if (!handsFreeOn()) {
+          if (!startRecog(true)) {
+            addMessage("assistant",
+              "Hands-free talk needs the microphone, which this browser didn't allow. Typing still works.",
+              Date.now());
+            return;
+          }
+          ls.set(HANDSFREE_KEY, "1");
+          refreshHandsFreeBtn();
+        } else {
+          setHandsFree(false);
+        }
+      });
+    }
+  }
+
+  /* Auto-pause listening when the page is hidden; on return the user gets a
+     note (not the mic) — browsers won't let a page grab the mic untapped. */
+  var pausedByHide = false;
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") {
+      if (recognizing) stopRecog();
+      stopSpeaking();
+      speechOnEnd = null;
+      if (handsFreeOn()) pausedByHide = true;
+    } else if (pausedByHide) {
+      pausedByHide = false;
+      if (handsFreeOn()) {
+        addMessage("assistant",
+          "Paused while the app was hidden — tap the mic to keep talking hands-free.",
+          Date.now());
+      }
+    }
+  });
 
   /* ── Sending ────────────────────────────────────────────────────────── */
   var busy = false;
@@ -549,14 +843,9 @@
     addMessage(role, content, m.ts);
   }
 
-  function send() {
-    var text = inputEl.value.trim();
-    if (!text || busy) return;
-
-    push("user", text);
-    inputEl.value = "";
-    autoGrow();
-
+  /* Legacy path: the on-device API key from Settings. Used when /api/ask
+     reports no server key (or the phone is offline). */
+  function sendLegacy(text) {
     if (!getKey()) {
       var reply = { role: "assistant", content:
         "I need an API key before I can answer. Tap the gear icon (top right), add your own OpenAI key — it stays on this phone — and ask me again.",
@@ -565,6 +854,14 @@
       if (history.length > MAX_STORED) history = history.slice(-MAX_STORED);
       saveHistory();
       addMessage("assistant", reply.content, reply.ts);
+      if (handsFreeOn()) {
+        if (speakOn() && ("speechSynthesis" in window)) {
+          speechOnEnd = maybeHandsFreeNext;
+        } else {
+          setTimeout(maybeHandsFreeNext, 400);
+        }
+      }
+      speakReply(reply.content);
       return;
     }
 
@@ -606,7 +903,18 @@
         data.choices[0].message.content;
       if (!text) throw { status: 0, message: "The API returned an empty answer." };
       hideThinking();
-      push("assistant", String(text).trim());
+      var replyText = String(text).trim();
+      push("assistant", replyText);
+      busy = false;
+      sendBtn.disabled = false;
+      if (handsFreeOn()) {
+        if (speakOn() && ("speechSynthesis" in window)) {
+          speechOnEnd = maybeHandsFreeNext;
+        } else {
+          setTimeout(maybeHandsFreeNext, 400);
+        }
+      }
+      speakReply(replyText);
     }).catch(function (err) {
       clearTimeout(timer);
       hideThinking();
@@ -629,6 +937,56 @@
     }).finally(function () {
       busy = false;
       sendBtn.disabled = false;
+      inputEl.focus();
+    });
+  }
+
+
+  /* Primary path: the tutor server (/api/ask). Keyless — the phone needs
+     nothing saved. Falls back to sendLegacy() (the on-device key) when the
+     server reports no key or the phone is offline. */
+  function send() {
+    var text = inputEl.value.trim();
+    if (!text || busy) return;
+
+    push("user", text);
+    inputEl.value = "";
+    autoGrow();
+    stopSpeaking();
+    if (recognizing) stopRecog();
+
+    busy = true;
+    sendBtn.disabled = true;
+    showThinking();
+
+    postToServer().then(function (reply) {
+      hideThinking();
+      busy = false;
+      sendBtn.disabled = false;
+      push("assistant", reply);
+      if (handsFreeOn()) {
+        if (speakOn() && ("speechSynthesis" in window)) {
+          speechOnEnd = maybeHandsFreeNext;
+        } else {
+          setTimeout(maybeHandsFreeNext, 400);
+        }
+      }
+      speakReply(reply);
+      inputEl.focus();
+    }).catch(function (err) {
+      hideThinking();
+      busy = false;
+      sendBtn.disabled = false;
+      if ((err && err.noKey) || !navigator.onLine || getKey()) {
+        // Built-in tutor down but the phone has its own key: use it as backup.
+        // (With no key either, sendLegacy just explains the key setup.)
+        sendLegacy(text);
+        return;
+      }
+      var msg = (err && err.message)
+        ? err.message
+        : "The tutor had a problem. Try again in a bit.";
+      addMessage("assistant", msg, Date.now(), { error: true });
       inputEl.focus();
     });
   }
