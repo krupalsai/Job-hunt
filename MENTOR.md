@@ -13,6 +13,23 @@ you use the app  →  /api/progress  →  Supabase
                  →  the app has adapted before you next open it
 ```
 
+## Current focus (from 15 October 2026)
+
+The run is now a **daily session at 08:00 Asia/Kolkata** (02:30 UTC), not an
+hourly weekday check. Its one goal is to **qualify the Telangana SI Preliminary
+Written Test first**; Mains come later. SSC CGL is not part of the plan.
+
+- The brief the run works from is `mentor/TS_SI_MASTER_PROMPT.md`.
+- Each day's output is `mentor/sessions/YYYY-MM-DD.md`, with sections A to E in
+  order: today's target, one learning unit, spaced repetition, current affairs,
+  exam status. The sections also carry the memory card and answer key.
+- The hourly prompt it replaced is kept at `mentor/previous-hourly-prompt.md`,
+  so the change can be reversed.
+
+The rules below still apply to every run. Current affairs and exam dates are
+the two places a wrong fact is most likely, so each needs a source URL that was
+actually opened, and anything unverified is listed as excluded, not shipped.
+
 ## What the run may change
 
 - `prep/skills.js` — the basics underneath the topics. Add a skill when the

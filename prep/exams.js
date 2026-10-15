@@ -230,14 +230,16 @@ const EXAMS = [
     // a boolean — the whole guess-or-leave-it calculation depends on it.
     negativeText: "20% of the marks for that question",
 
-    /* SOURCE: the Telangana Police Recruitment Board lists 29 November 2026 as
-       the Preliminary Written Test date and labels it TENTATIVE. It is carried
-       with that word attached rather than quietly presented as settled — the
-       plan counts back from it, and a date that moves should move the plan,
-       not surprise the candidate. */
+    /* NOT VERIFIED. The 29 November 2026 date came from a secondary report, not
+       from tgprb.in. On 15 October 2026 no source found showed a preliminary
+       test date: the notification is dated 29 July 2026, and tgprb.in returned
+       only its title when fetched. Kept so the countdown is visible, but
+       labelled as unverified everywhere it is shown. Replace it with the
+       board's own date as soon as one is published. */
     examDateStart: "2026-11-29",
     dateTentative: true,
-    dateBasis: "TGPRB lists 29 November 2026 for the Preliminary Written Test, and labels it tentative.",
+    dateUnverified: true,
+    dateBasis: "NOT VERIFIED. A secondary report gave 29 November 2026 as a tentative date. tgprb.in did not confirm it on 15 October 2026. The notification was published 29 July 2026.",
     // Exactly what the paper does with each response. Stated as numbers rather
     // than as a boolean because the guess-or-leave-it decision is arithmetic:
     // at one-in-four a guess is worth 0.25 − 0.75×0.20 = +0.10, and at

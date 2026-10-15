@@ -1017,7 +1017,7 @@ function shortlistRows() {
       // and printing both reads as a stutter.
       days, name: (e.name && e.name.indexOf(e.short) === 0) ? e.name
                 : (e.short + ' — ' + (e.name || '')),
-      why: e.dateTentative ? 'Exam date is tentative' : 'Exam',
+      why: e.dateUnverified ? 'Exam date not verified' : (e.dateTentative ? 'Exam date is tentative' : 'Exam'),
       status: days === 0 ? 'Today' : days + (days === 1 ? ' day' : ' days'),
       applied: false, exam: e.key,
     });
