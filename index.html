@@ -33,6 +33,32 @@
   .hero-date { font-size: 13px; font-weight: 650; color: var(--on-brand-2); }
   .hero-h { font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin: 2px 0 14px; color: var(--on-brand); }
 
+  /* ── Today: the study home. White card on the navy hero, first thing on Home.
+     Answers: what now, how long, what's next, am I improving. Jobs content
+     below is untouched. */
+  .today-sec { background: var(--surface); color: var(--ink); border-radius: var(--r-lg);
+               padding: 18px 16px; box-shadow: var(--shadow-2); margin: 0 0 18px; }
+  .today-kicker { font-size: 12.5px; font-weight: 700; color: var(--brand-2); margin-bottom: 4px; }
+  .today-kicker b { color: var(--ink); }
+  .today-sec h2 { font-size: 20px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 2px; color: var(--ink); }
+  .today-meta { font-size: 13px; color: var(--ink-2); margin: 0 0 12px; }
+  .today-cta { display: block; width: 100%; text-align: center; font-size: 17px; font-weight: 800;
+               padding: 14px; margin: 0 0 12px; }
+  .today-tasks { list-style: none; margin: 0 0 4px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .today-task { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px;
+                background: var(--surface-2); border-radius: var(--r-md); }
+  .today-task.is-done { opacity: .55; }
+  .today-task.is-done .today-task-t { text-decoration: line-through; }
+  .today-task-main { flex: 1; min-width: 0; }
+  .today-task-t { font-size: 14px; font-weight: 650; display: block; color: var(--ink); }
+  .today-task-m { font-size: 12px; color: var(--ink-2); }
+  .today-task .chip { flex: none; align-self: flex-start; font-size: 11px; }
+  .today-rev, .today-prog { font-size: 13px; color: var(--ink-2); margin-top: 10px; }
+  .today-rev b, .today-prog b { color: var(--ink); }
+  .today-bar { height: 8px; border-radius: 999px; background: var(--surface-3); margin: 8px 0 4px; overflow: hidden; }
+  .today-bar i { display: block; height: 100%; background: var(--brand-2); border-radius: 999px; }
+  .today-note { font-size: 12.5px; color: var(--ink-2); margin-top: 10px; }
+
   /* Exam cards — white on navy. */
   .xcards { display: flex; flex-direction: column; gap: 10px; }
   .xcard { background: var(--surface); color: var(--ink); border-radius: var(--r-lg);
@@ -395,6 +421,18 @@
       <div class="hero-date" id="heroDate"></div>
       <h2 class="hero-h" id="newsH">Coming up</h2>
       <div class="xrows" id="newsExams"></div>
+    </section>
+
+    <!-- ── TODAY: the study home. What to study now, how long, what's next,
+         am I improving — answered here, before any jobs content. ── -->
+    <section class="sec today-sec" id="todaySec" aria-labelledby="todayH" hidden>
+      <div class="today-kicker" id="todayKicker"></div>
+      <h2 id="todayH">Today's study</h2>
+      <p class="today-meta" id="todayMeta"></p>
+      <a class="btn btn-primary today-cta" id="todayCta" href="/si.html">Start today's study</a>
+      <ol class="today-tasks" id="todayTasks"></ol>
+      <div class="today-rev" id="todayRev"></div>
+      <div class="today-prog" id="todayProg"></div>
     </section>
 
     <button class="exam-over" id="examOver">
@@ -1049,6 +1087,112 @@ function renderComingUp() {
     : '<div class="xrow"><div class="xrow-main"><div class="xrow-sub">No exam dates are in the app right now. When a notification sets one, it appears here.</div></div></div>';
 }
 
+/* ── Today: the study home ──────────────────────────────────────────────
+   One card answering: what now, how long, what's next, am I improving.
+   Reads the 47-day plan (window.SI_PLAN), today's ticks, and quiz accuracy —
+   all local, no network. It reuses the plan's own signals, not invented ones:
+   ★ = must-learn, current affairs = MCQ-only, the rest = if time. Jobs
+   content below is untouched. */
+function renderTodayHero() {
+  const sec = document.getElementById('todaySec');
+  if (!sec) return;
+  const P = window.SI_PLAN;
+  const exam = (typeof EXAMS !== 'undefined' ? EXAMS : []).find(e => e.key === 'ts-si');
+  if (!P || !P.days || !P.days.length || !exam || !exam.plan) { sec.hidden = true; return; }
+
+  const left = daysTo(exam.examDateStart);
+  if (left === null || left < 0) { sec.hidden = true; return; } // exam over: the examOver button speaks
+  const day = planDay(exam);
+
+  const when = fmtDay(exam.examDateStart, true) + (exam.dateTentative ? ' (tentative)' : '');
+  document.getElementById('todayKicker').innerHTML = 'TS SI Prelims · ' + escapeHtml(when) + ' · <b>' +
+    (left === 0 ? 'today' : left === 1 ? 'tomorrow' : left + ' days left') + '</b>';
+
+  if (!day) {
+    const startsIn = daysTo(exam.plan.start);
+    document.getElementById('todayH').textContent = "Today's study";
+    document.getElementById('todayMeta').textContent = (startsIn !== null && startsIn > 0)
+      ? 'The 47-day plan starts ' + fmtDay(exam.plan.start, true) + '. ' + (P.hours || '')
+      : 'The 47 days are done — revise your mistake notebook, the formula sheet and Telangana Movement facts.';
+    document.getElementById('todayCta').textContent = 'Open the 47-day plan';
+    document.getElementById('todayTasks').innerHTML = '';
+    document.getElementById('todayRev').innerHTML = '';
+    document.getElementById('todayProg').innerHTML =
+      '<div class="today-note">Your progress, weakest topics and revision will appear here once the plan starts.</div>';
+    sec.hidden = false;
+    return;
+  }
+
+  const d = P.days[day - 1];
+  let ticks = {};
+  try { ticks = JSON.parse(localStorage.getItem('jobhunt_si_ticks_v1')) || {}; } catch (e) {}
+  const tkey = (t, i) => 'd' + d.n + ':' + t.subj + ':' + i;
+  const doneCount = d.tasks.filter((t, i) => ticks[tkey(t, i)]).length;
+
+  const mins = d.tasks.reduce((a, t) => a + t.min, 0);
+  const starMins = d.tasks.filter(t => t.star).reduce((a, t) => a + t.min, 0);
+  const h = m => m >= 60 ? (Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '')) : m + ' min';
+  document.getElementById('todayH').textContent =
+    new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+  document.getElementById('todayMeta').textContent =
+    'Day ' + d.n + ' of ' + P.days.length + ' · ' + d.focus +
+    ' · about ' + h(mins) + ' in all (★ must-do about ' + h(starMins) + ')';
+
+  // 3–5 prioritised tasks: ★ must-learn first, then the rest.
+  const ordered = d.tasks.map((t, i) => [t, i]).sort((a, b) => ((b[0].star ? 1 : 0) - (a[0].star ? 1 : 0)));
+  const shown = ordered.slice(0, 5);
+  const tagFor = t =>
+    t.star ? '<span class="chip chip-ok">Must learn</span>' :
+    t.subj === 'ca' ? '<span class="chip chip-info">MCQ-only</span>' :
+    '<span class="chip chip-line">If time</span>';
+  document.getElementById('todayTasks').innerHTML = shown.map(([t, i]) => {
+    const on = !!ticks[tkey(t, i)];
+    return '<li class="today-task' + (on ? ' is-done' : '') + '">' + tagFor(t) +
+      '<span class="today-task-main"><span class="today-task-t">' + escapeHtml(t.title) + '</span>' +
+      '<span class="today-task-m">' + h(t.min) + (on ? ' · done' : '') + '</span></span></li>';
+  }).join('') + (ordered.length > 5
+    ? '<li class="today-task"><span class="today-task-main"><span class="today-task-m">+' +
+      (ordered.length - 5) + ' more in the plan — open it to see all.</span></span></li>' : '');
+
+  // Revision due: today's revision task, plus weakest quiz topics.
+  let quiz = null;
+  try { quiz = JSON.parse(localStorage.getItem('jobhunt_prep_hal_cs_v1')) || null; } catch (e) {}
+  const weak = [];
+  if (quiz && quiz.topics) {
+    Object.keys(quiz.topics).forEach(t => {
+      const s = quiz.topics[t] || {};
+      if (s.asked >= 4 && s.correct / s.asked < 0.6)
+        weak.push({ t, pct: Math.round(s.correct / s.asked * 100) });
+    });
+    weak.sort((a, b) => a.pct - b.pct);
+  }
+  const revTask = d.tasks.find(t => t.subj === 'rev');
+  let revHtml = '';
+  if (revTask) revHtml += '<b>Revision due:</b> ' + escapeHtml(revTask.title) + '. ';
+  if (weak.length) revHtml += '<b>Weakest:</b> ' +
+    weak.slice(0, 3).map(w => escapeHtml(w.t) + ' (' + w.pct + '%)').join(', ') + '.';
+  else if (!revTask) revHtml = 'No revision due — everything practised is holding.';
+  document.getElementById('todayRev').innerHTML = revHtml;
+
+  // Progress + next action.
+  const allTasks = P.days.reduce((n, dd) => n + dd.tasks.length, 0);
+  let allDone = 0;
+  P.days.forEach(dd => dd.tasks.forEach((t, i) => {
+    if (ticks['d' + dd.n + ':' + t.subj + ':' + i]) allDone++;
+  }));
+  const pct = allTasks ? Math.round(allDone / allTasks * 100) : 0;
+  const next = ordered.find(([t, i]) => !ticks[tkey(t, i)]);
+  document.getElementById('todayProg').innerHTML =
+    '<div class="today-bar" role="img" aria-label="' + pct + '% of the plan done"><i style="width:' + pct + '%"></i></div>' +
+    '<b>' + doneCount + '/' + d.tasks.length + '</b> tasks done today · <b>' + pct + '%</b> of the plan' +
+    (next ? '<br>Next: <b>' + escapeHtml(next[0].title) + '</b>' : '<br>Today is fully done.');
+  const cta = document.getElementById('todayCta');
+  cta.textContent = doneCount >= d.tasks.length ? "Review today's plan" : "Start today's study";
+  cta.href = '/si.html';
+
+  sec.hidden = false;
+}
+
 /* ── Links that are really links ──────────────────────────────────────────
    "Wtf": a row's Notification button opened the Nagaland information
    department's HOME PAGE. The ingestion had stored the department's site as
@@ -1397,6 +1541,7 @@ function render() {
 
   const upcoming = upcomingExams();
   renderComingUp();
+  renderTodayHero();
   renderGovStudy(upcoming);
 
   /* The selected exam is the root context of the prep pages. When its date
