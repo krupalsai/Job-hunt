@@ -14,8 +14,9 @@
    One name each, and the name in the menu is the title of the screen it opens:
 
        Home · Study · Test · Progress          the bottom bar, always visible
-       ☰ → Change exam · All lessons · Current affairs · Syllabus
-           · Professor · Instinct · About you  everything else
+       ☰ → Change exam · 47-day plan · All lessons · Current affairs
+           · Syllabus · Focus · Instinct · About you  everything else
+       + Alex, the floating voice button on every screen
            (+ the TS SI 47-day plan, when Study is another exam's)
 
    There used to be five destinations, a drawer that repeated them, a row of
@@ -191,11 +192,10 @@
     cal:   svg('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3"/>'),
     news:  svg('<path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M17 9h3v8.5a1.5 1.5 0 0 1-3 0z"/><path d="M7 9h7M7 12.5h7M7 16h4"/>'),
     spark: svg('<path d="M13 2.5L4.8 13.4h6L9.3 21.5l8.7-11.4h-6.2L13 2.5z"/>'),
-    /* A mic: the Alex voice page. New in Oct 2026 with voice.html —
-       plain page links (plain:true) in MENU_DESTS are real pages, never
-       prep-page sections, and are left alone by the href rewriting below. */
+    /* A speech bubble. Plain page links (plain:true) in MENU_DESTS are real
+       pages, never prep-page sections, and are left alone by the href
+       rewriting below. */
     chat:  svg('<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'),
-    mic:   svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
     timer: svg('<circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9.5 2h5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
@@ -227,10 +227,8 @@
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: null,
       sub: "Pattern, marking, time budget, exam-hall tactics" },
-    { id: "voice", label: "Alex", icon: null, href: "/voice.html", plain: true,
-      sub: "Hands-free voice tutor \u2014 tap and talk" },
-    /* Focus is its own page (focus.html), like Alex (voice.html) — plain:true
-       keeps it a real page link, never a prep-page section. */
+    /* Focus is its own page (focus.html) — plain:true keeps it a real page
+       link, never a prep-page section. */
     { id: "focus", label: "Focus", icon: null, href: "/focus.html", plain: true,
       sub: "Learning time vs scrolling time, side by side" },
     { id: "feed", label: "Instinct", icon: null, href: "/feed.html", plain: true,
@@ -240,7 +238,7 @@
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
     "si-plan": "target", lessons: "book", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", voice: "mic", feed: "spark", focus: "timer" };
+    syllabus: "exam", feed: "spark", focus: "timer" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
@@ -957,5 +955,69 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
      would render "No syllabus loaded." with its Continue button permanently
      disabled and no way to dismiss it — the whole page stuck behind a modal
      that can never be completed. */
+  /* ── Alex floating voice button ──────────────────────────────────────────
+     The voice assistant lives on the screen, not in the menu: a floating mic
+     button on every page, draggable anywhere, always on top. Tap it to talk
+     to Alex. Skipped on voice.html itself. The phone remembers its spot. */
+  (function alexFab() {
+    if (location.pathname === "/voice.html") return;
+    var POS_KEY = "jobhunt_alex_fab_pos";
+    var fab = document.createElement("a");
+    fab.id = "alexFab";
+    fab.href = "/voice.html";
+    fab.setAttribute("aria-label", "Talk to Alex — voice tutor");
+    fab.innerHTML = svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>')
+      .replace('class="nav-ico"', 'class="fab-ico"');
+    var css =
+      "#alexFab{position:fixed;z-index:9999;width:60px;height:60px;border-radius:50%;"
+      + "background:var(--accent,#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;"
+      + "text-decoration:none;box-shadow:0 6px 20px rgba(15,23,42,.35);touch-action:none;"
+      + "right:16px;bottom:96px;}"
+      + "#alexFab .fab-ico{width:28px;height:28px;}"
+      + "#alexFab::after{content:\"\";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;"
+      + "border:2px solid var(--accent,#1d4ed8);opacity:.6;animation:fabring 2.4s infinite;}"
+      + "@keyframes fabring{0%{transform:scale(.85);opacity:.7;}70%{transform:scale(1.18);opacity:0;}100%{transform:scale(1.18);opacity:0;}}"
+      + "@media (prefers-reduced-motion:reduce){#alexFab::after{animation:none;}}";
+    var st = document.createElement("style");
+    st.textContent = css;
+    document.head.appendChild(st);
+    try {
+      var saved = JSON.parse(localStorage.getItem(POS_KEY) || "null");
+      if (saved && saved.r && saved.b) { fab.style.right = saved.r; fab.style.bottom = saved.b; }
+    } catch (e) {}
+    var dragging = false, moved = 0, sx = 0, sy = 0, sr = 0, sb = 0;
+    function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+    fab.addEventListener("pointerdown", function (e) {
+      dragging = true; moved = 0; sx = e.clientX; sy = e.clientY;
+      var r = fab.getBoundingClientRect();
+      sr = window.innerWidth - r.right; sb = window.innerHeight - r.bottom;
+      try { fab.setPointerCapture(e.pointerId); } catch (e2) {}
+    });
+    fab.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy;
+      moved = Math.max(moved, Math.abs(dx) + Math.abs(dy));
+      if (moved > 10) {
+        fab.style.right = clamp(sr - dx, 8, window.innerWidth - 68) + "px";
+        fab.style.bottom = clamp(sb - dy, 8, window.innerHeight - 68) + "px";
+      }
+    });
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      if (moved > 10) {
+        try { localStorage.setItem(POS_KEY, JSON.stringify({ r: fab.style.right, b: fab.style.bottom })); }
+        catch (e) {}
+      }
+    }
+    fab.addEventListener("pointerup", endDrag);
+    fab.addEventListener("pointercancel", function () { dragging = false; moved = 0; });
+    fab.addEventListener("click", function (e) {
+      if (moved > 10) { e.preventDefault(); e.stopPropagation(); }
+      moved = 0;
+    });
+    document.body.appendChild(fab);
+  })();
+
   if (IS_LEARN && !hasChosen && exams.some(activeExam)) openPicker("first");
 })();
