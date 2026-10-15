@@ -1110,10 +1110,11 @@ function renderTodayHero() {
 
   if (!day) {
     const startsIn = daysTo(exam.plan.start);
+    const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
     document.getElementById('todayH').textContent = "Today's study";
-    document.getElementById('todayMeta').textContent = (startsIn !== null && startsIn > 0)
+    document.getElementById('todayMeta').textContent = dateStr + ' · ' + ((startsIn !== null && startsIn > 0)
       ? 'The 47-day plan starts ' + fmtDay(exam.plan.start, true) + '. ' + (P.hours || '')
-      : 'The 47 days are done — revise your mistake notebook, the formula sheet and Telangana Movement facts.';
+      : 'The 47 days are done — revise your mistake notebook, the formula sheet and Telangana Movement facts.');
     document.getElementById('todayCta').textContent = 'Open the 47-day plan';
     document.getElementById('todayTasks').innerHTML = '';
     document.getElementById('todayRev').innerHTML = '';
@@ -1132,10 +1133,10 @@ function renderTodayHero() {
   const mins = d.tasks.reduce((a, t) => a + t.min, 0);
   const starMins = d.tasks.filter(t => t.star).reduce((a, t) => a + t.min, 0);
   const h = m => m >= 60 ? (Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '')) : m + ' min';
-  document.getElementById('todayH').textContent =
-    new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
-  document.getElementById('todayMeta').textContent =
-    'Day ' + d.n + ' of ' + P.days.length + ' · ' + d.focus +
+  const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+  document.getElementById('todayH').textContent = "Today's study";
+  document.getElementById('todayMeta').textContent = dateStr +
+    ' · Day ' + d.n + ' of ' + P.days.length + ' · ' + d.focus +
     ' · about ' + h(mins) + ' in all (★ must-do about ' + h(starMins) + ')';
 
   // 3–5 prioritised tasks: ★ must-learn first, then the rest.
