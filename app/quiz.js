@@ -40,6 +40,8 @@ EXAM_SUBJECTS.forEach(topic=>{
   tagRow.appendChild(tag);
 });
 
+
+
 /* ── Fresh questions ──────────────────────────────────────────────────────
    The bank held three syllogism questions, so the third drill was a memory
    test. prep/generate.js builds them instead, and every generated question is
@@ -48,6 +50,49 @@ EXAM_SUBJECTS.forEach(topic=>{
    say so rather than implying every topic is. */
 const GEN_KEYS = (typeof generatedSkillKeys === 'function')
   ? new Set(generatedSkillKeys()) : new Set();
+/* ── Voice deep-link: ?quiz=<topic> ──────────────────────────────────────
+   Alex links here with a topic ("quiz me on BODMAS"). First tries an exam
+   subject match (pre-selects the subject, starts a normal quiz); then a
+   generated-skill match (starts a fresh drill on that skill, like the
+   lesson drill buttons do). No match → the Test section opens normally and
+   Krupal picks the topic himself. Runs once, at load. */
+(function () {
+  try {
+    var qp = new URLSearchParams(location.search);
+    var q = (qp.get("quiz") || "").trim().toLowerCase();
+    if (!q || q.length < 2) return;
+    var i, s, sl;
+    for (i = 0; i < EXAM_SUBJECTS.length; i++) {
+      s = EXAM_SUBJECTS[i]; sl = s.toLowerCase();
+      if (sl === q || sl.indexOf(q) === 0 || q.indexOf(sl) === 0) {
+        selectedTopics.clear();
+        selectedTopics.add(s);
+        var tags = tagRow.children;
+        for (var j = 0; j < tags.length && j < EXAM_SUBJECTS.length; j++) {
+          tags[j].classList.toggle("active", EXAM_SUBJECTS[j] === s);
+        }
+        var btn = document.getElementById("start-quiz");
+        if (btn) btn.click();
+        return;
+      }
+    }
+    if (typeof GEN_KEYS !== "undefined" && GEN_KEYS.size) {
+      var hitKey = null;
+      GEN_KEYS.forEach(function (key) {
+        if (hitKey) return;
+        var kl = String(key).toLowerCase();
+        if (kl === q || kl.indexOf(q) === 0 || (q.length >= 4 && q.indexOf(kl) === 0)) hitKey = key;
+      });
+      if (hitKey && typeof topicForSkill === "function") {
+        var host = topicForSkill(hitKey);
+        if (host && typeof POOL !== "undefined" && typeof beginQuiz === "function") {
+          beginQuiz(POOL.filter(function (x) { return x.topic === host; }),
+            { size: 8, genSkills: [hitKey] });
+        }
+      }
+    }
+  } catch (e) { /* voice deep-link is best-effort */ }
+})();
 function hasGenerator(key){ return GEN_KEYS.has(key); }
 
 /** Which subject a skill is examined under HERE. A basic can sit under
