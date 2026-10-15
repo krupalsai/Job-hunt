@@ -572,11 +572,17 @@
   }
 
   function postToServer() {
+    // 60s abort: without it a hung network leaves `busy` true forever and the
+    // mic + send buttons refuse to work — the app looks "blocked".
+    var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 60000);
     return fetch("/api/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mode: "tutor", messages: tutorMessages() }),
+      signal: ctrl ? ctrl.signal : undefined,
     }).then(function (res) {
+      clearTimeout(timer);
       return res.json().catch(function () { return {}; }).then(function (data) {
         if (res.ok && data && typeof data.reply === "string" && data.reply.trim()) {
           return data.reply.trim();
@@ -585,6 +591,12 @@
         if (res.status === 500 && data && data.code === "NO_SERVER_KEY") err.noKey = true;
         throw err;
       });
+    }).catch(function (err) {
+      clearTimeout(timer);
+      if (err && err.name === "AbortError") {
+        throw { status: 0, message: "That took too long — check your connection and try again." };
+      }
+      throw err;
     });
   }
 
@@ -611,15 +623,25 @@
     var my = ++speechSeq;
     try { window.speechSynthesis.cancel(); } catch (e) {}
     try {
-      var u = new SpeechSynthesisUtterance(stripForSpeech(text));
+      var spoken = stripForSpeech(text);
+      var u = new SpeechSynthesisUtterance(spoken);
       u.lang = "en-IN";
       u.rate = 1;
-      u.onend = function () {
+      var done = false;
+      var finish = function () {
+        if (done) return; done = true;
         if (my !== speechSeq) return;
         var cb = speechOnEnd; speechOnEnd = null;
         if (cb) cb();
       };
+      u.onend = finish;
+      u.onerror = finish;
       window.speechSynthesis.speak(u);
+      /* Safety net: Chrome on Android sometimes never fires onend for long
+         utterances, which stalls the hands-free loop ("blocked"). If it has
+         not fired within the estimated speaking time, continue anyway. */
+      var estMs = Math.min(90000, spoken.length * 90 + 4000);
+      setTimeout(function () { if (!done && my === speechSeq) finish(); }, estMs);
     } catch (e) { /* speech is best-effort */ }
   }
 
