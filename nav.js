@@ -997,14 +997,18 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
       if (saved && saved.r && saved.b) { fab.style.right = saved.r; fab.style.bottom = saved.b; }
     } catch (e) {}
     var overlay = null;
-    function openAlex() {
+    /* auto=1: the overlay reopened itself after a voice navigation (see the
+       stay flag below) — with hands-free on, the mic starts listening at
+       once so he never has to tap between pages. */
+    function openAlex(auto) {
       if (overlay) return;
       overlay = document.createElement("div");
       overlay.id = "alexOverlay";
       overlay.innerHTML =
         '<div class="alex-ov-head"><span>Alex</span>'
         + '<button type="button" id="alexOvClose" aria-label="Close Alex">&times;</button></div>'
-        + '<iframe src="/voice.html?embed=1" allow="microphone; autoplay" title="Alex voice tutor"></iframe>';
+        + '<iframe src="/voice.html?embed=1' + (auto ? '&autostart=1' : '')
+        + '" allow="microphone; autoplay" title="Alex voice tutor"></iframe>';
       document.body.appendChild(overlay);
       document.getElementById("alexOvClose").addEventListener("click", closeAlex);
     }
@@ -1013,6 +1017,16 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
       overlay.parentNode.removeChild(overlay);
       overlay = null;
     }
+    /* Stay with him: a voice navigation sets jobhunt_alex_stay; the new page
+       reopens the overlay by itself, so Alex never vanishes mid-task. */
+    try {
+      if (sessionStorage.getItem("jobhunt_alex_stay") === "1") {
+        sessionStorage.removeItem("jobhunt_alex_stay");
+        var hfStay = null;
+        try { hfStay = localStorage.getItem("jobhunt_alex_handsfree"); } catch (e2) {}
+        openAlex(hfStay !== "0");
+      }
+    } catch (e) {}
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeAlex();
     });
