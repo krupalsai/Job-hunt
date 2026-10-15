@@ -196,6 +196,7 @@
        prep-page sections, and are left alone by the href rewriting below. */
     chat:  svg('<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'),
     swap:  svg('<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>'),
+    timer: svg('<circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9.5 2h5"/>'),
     close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     trash: svg('<path d="M4 7h16M9.5 7V4.8h5V7M7 7l1 13h8l1-13"/>'),
   };
@@ -227,6 +228,10 @@
       sub: "Pattern, marking, time budget, exam-hall tactics" },
     { id: "professor", label: "Professor", icon: null, href: "/chat.html", plain: true,
       sub: "Ask anything, explained simply" },
+    /* Focus is its own page (focus.html), like the Professor — plain:true
+       keeps it a real page link, never a prep-page section. */
+    { id: "focus", label: "Focus", icon: null, href: "/focus.html", plain: true,
+      sub: "Learning time vs scrolling time, side by side" },
     { id: "feed", label: "Instinct", icon: null, href: "/feed.html", plain: true,
       sub: "Lessons, quizzes and job lists as they are sent" },
   ];
@@ -234,7 +239,7 @@
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
     "si-plan": "target", lessons: "book", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", professor: "chat", feed: "spark" };
+    syllabus: "exam", professor: "chat", feed: "spark", focus: "timer" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
