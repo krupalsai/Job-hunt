@@ -497,7 +497,15 @@
 
   /* Tick: repaint every second; bank to the bucket every 60s so a reload or
      a midnight rollover never loses more than a minute. */
+  var voiceTargetUntil = 0, voiceTargetMins = 0;
   setInterval(function () {
+    if (voiceTargetUntil && Date.now() >= voiceTargetUntil) {
+      voiceTargetUntil = 0;
+      stopActive();
+      if (learnNote) learnNote.textContent = voiceTargetMins + "-minute target done — nice work.";
+      render();
+      return;
+    }
     var a = store.active;
     if (a && a.startedAt) {
       if (Date.now() - a.startedAt >= 60000) {
@@ -508,6 +516,41 @@
       render();
     }
   }, 1000);
+
+  /* ── Voice deep-link: ?start=learning|doomscroll&topic=<name>&minutes=<n>
+     Lets Alex start a timer by voice. The topic is matched case-insensitively
+     against TOPICS; an unknown topic keeps the current selection. minutes
+     (1–180) sets a target: when it elapses the timer stops with a note.
+     The target is session-only — a reload keeps the timer, not the target. */
+  (function () {
+    try {
+      var qp = new URLSearchParams(location.search);
+      var start = (qp.get("start") || "").toLowerCase();
+      if (start !== "learning" && start !== "doomscroll") return;
+      var t = (qp.get("topic") || "").trim().toLowerCase();
+      if (t) {
+        for (var i = 0; i < TOPICS.length; i++) {
+          var tl = TOPICS[i].toLowerCase();
+          if (tl === t || tl.indexOf(t) === 0 || t.indexOf(tl) === 0) {
+            topicSel.value = TOPICS[i];
+            break;
+          }
+        }
+      }
+      var mins = parseInt(qp.get("minutes") || "", 10);
+      if (start === "learning") {
+        startLearn();
+        if (mins >= 1 && mins <= 180) {
+          voiceTargetUntil = Date.now() + mins * 60000;
+          voiceTargetMins = mins;
+          if (learnNote) learnNote.textContent =
+            "Voice target: " + mins + " minutes of " + topicSel.value + ".";
+        }
+      } else {
+        startScroll();
+      }
+    } catch (e) { /* voice deep-link is best-effort */ }
+  })();
 
   /* ── Init: resume a timer that was running across a reload ──────────── */
   render();
