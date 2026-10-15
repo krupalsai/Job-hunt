@@ -1075,7 +1075,9 @@
        <div class="bar-note">${nDone} of ${days.length} days done</div>
        <div class="bar-note">${left === null
          ? "No exam date announced, so this run is the lesson path plus a revision tail."
-         : `${days.length} days, counted back from the earliest day of the exam window.`}</div>
+         : plan.exam && plan.exam.dateUnverified
+           ? `${days.length} days, counted back from a date that is NOT VERIFIED. The run changes when the board confirms one.`
+           : `${days.length} days, counted back from the earliest day of the exam window.`}</div>
        ${strategyHtml(exam, plan.unplaced)}`;
 
     let week = 0;

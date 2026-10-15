@@ -130,6 +130,11 @@
       : sameMonth
         ? String(Number(e.examDateStart.slice(8, 10))) + " – " + fmtDay(e.examDateEnd)
         : fmtDay(e.examDateStart) + " – " + fmtDay(e.examDateEnd);
+    /* An unverified date is printed with its label and never counted down: a
+       number of days to a date nobody has confirmed is the claim this app must
+       not make. The window itself stays, so the candidate can see what is
+       assumed. */
+    if (e.dateUnverified) return { text: window_ + " · not verified", days: null, short: "date not verified" };
     if (n === null) return { text: window_, days: null, short: window_ };
     if (n > 0)  return { text: window_ + " · " + n + " day" + (n === 1 ? "" : "s") + " to go", days: n, short: n + " days to go" };
     if (n === 0) return { text: window_ + " · today", days: 0, short: "today" };

@@ -4,7 +4,7 @@
   "private": true,
   "description": "Government job notification tracker with automated ingestion from official sources, plus HAL MT/DT (CS) exam preparation",
   "scripts": {
-    "test": "node scripts/validate-prep.js && node scripts/validate-generated.js && node scripts/e2e-prep.js && node scripts/e2e-integration.js && node scripts/e2e-nav.js && node scripts/e2e-dedupe.js",
+    "test": "node scripts/validate-prep.js && node scripts/validate-generated.js && node scripts/e2e-prep.js && node scripts/e2e-integration.js && node scripts/e2e-nav.js && node scripts/e2e-dedupe.js && node scripts/e2e-resume.js && node scripts/e2e-resume-ui.js && node scripts/e2e-countdown.js",
     "test:bank": "node scripts/validate-prep.js",
     "test:generated": "node scripts/validate-generated.js",
     "test:prep": "node scripts/e2e-prep.js",

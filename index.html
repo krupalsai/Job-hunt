@@ -374,6 +374,7 @@
 </div>
 
 <script src="/prep/exams.js"></script>
+<script src="/app/resume.js"></script>
 <script>
 const SUPABASE_URL = "https://xbjgmudcgjiompbroayr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiamdtdWRjZ2ppb21wYnJvYXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODc1MjgsImV4cCI6MjEwMTg2MzUyOH0.fdcA5b87PZwaDg7jdOMol4Dnf9k9pylSiO38aMl1VLQ";
@@ -623,6 +624,9 @@ async function load() {
     loadFailed = true;
     allJobs = [];
   }
+  // Every listing gets a draft score on render; the ones not seen before are
+  // marked NEW. The first visit marks nothing, so the list is not all NEW.
+  if (window.Resume && !loadFailed) Resume.noteListings(allJobs);
   stampAge();
   render();
 }
@@ -1018,7 +1022,8 @@ function shortlistRows() {
       days, name: (e.name && e.name.indexOf(e.short) === 0) ? e.name
                 : (e.short + ' — ' + (e.name || '')),
       why: e.dateUnverified ? 'Exam date not verified' : (e.dateTentative ? 'Exam date is tentative' : 'Exam'),
-      status: days === 0 ? 'Today' : days + (days === 1 ? ' day' : ' days'),
+      // An unverified date is never turned into a day count on screen.
+      status: e.dateUnverified ? 'Not verified' : (days === 0 ? 'Today' : days + (days === 1 ? ' day' : ' days')),
       applied: false, exam: e.key,
     });
   });
@@ -1218,6 +1223,7 @@ function otherHtml(j) {
             ? `<a class="other-apply is-secondhand" href="${escapeHtml(details)}" target="_blank" rel="noopener">Details on FreeJobAlert →</a>`
             : ''}
         ${applyTo ? `<a class="other-apply other-applylink" href="${escapeHtml(applyTo)}" target="_blank" rel="noopener">Apply →</a>` : ''}
+        ${window.Resume ? Resume.rowLine(j) : ''}
         ${applied[j.id]
           ? `<button class="other-mark" data-unapply="${escapeHtml(j.id)}">Undo</button>`
           : `<button class="other-mark" data-apply="${escapeHtml(j.id)}">Mark applied</button>`}
@@ -1292,6 +1298,7 @@ function cardHtml(j) {
           ? `<span class="applied-tag">✓ Applied</span> <button class="btn-n" data-unapply="${escapeHtml(j.id)}">Undo</button>`
           : `<button class="btn-y" data-apply="${escapeHtml(j.id)}">Mark as applied</button>`}</span>
       </div>
+      ${window.Resume ? Resume.cardLine(j) : ''}
       <div class="jrow">
         <span class="jlab">Closes</span>
         <span class="jval">${escapeHtml(j.deadline_text || 'TBA')}${
@@ -1339,6 +1346,16 @@ document.addEventListener('click', (e) => {
   const n = e.target.closest && e.target.closest('[data-unapply]');
   if (n) { setApplied(n.getAttribute('data-unapply'), false); }
 });
+
+/* Resume drafts: open the one for this listing, and re-draw the cards when the
+   candidate's details change, since every score depends on them. */
+document.addEventListener('click', (e) => {
+  const r = e.target.closest && e.target.closest('[data-resume]');
+  if (!r || !window.Resume) return;
+  const job = allJobs.find(j => String(j.id) === r.getAttribute('data-resume'));
+  if (job) Resume.openDraft(job);
+});
+document.addEventListener('resume:changed', () => render());
 
 function escapeHtml(s) {
   if (!s) return '';

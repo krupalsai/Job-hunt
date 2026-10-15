@@ -571,6 +571,8 @@
     const dated = plan.exams.map(e => {
       const u = urgencyOf(e);
       const when = examDateLabel(e);
+      // Unverified: the date is shown as a claim, never as a countdown.
+      if (e.dateUnverified) return esc(e.short) + ": " + esc(when) + " · not verified";
       return esc(e.short) + ": " + esc(when) +
         (u.days === null ? "" : " · " + esc(u.note));
     }).join(" · ");

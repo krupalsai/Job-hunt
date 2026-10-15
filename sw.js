@@ -50,6 +50,7 @@ const PREP_ASSETS = [
   '/app/verdict.js',
   '/app/skills.js',
   '/app/progress.js',
+  '/app/resume.js',
   '/prep/exams.js',
   '/prep/skills.js',
   '/prep/hal-cs.js',

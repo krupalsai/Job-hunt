@@ -48,7 +48,8 @@ const dailyToday = () => new Date().toISOString().slice(0, 10);
 /** Days until the exam, counted from the earliest day of the window — the
     same rule the run to the exam uses, for the same reason. */
 function daysToExam(exam){
-  if(!exam || !exam.examDateStart) return null;
+  // An unverified date gives no countdown (see examWhen in nav.js).
+  if(!exam || !exam.examDateStart || exam.dateUnverified) return null;
   const d = new Date(exam.examDateStart + 'T00:00:00');
   if(isNaN(d.getTime())) return null;
   const t = new Date(); t.setHours(0,0,0,0);
