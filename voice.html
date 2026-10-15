@@ -677,10 +677,10 @@
       pendingNav = href;
       speechOnEnd = function () {
         var h = pendingNav; pendingNav = null;
-        if (h) location.href = h;
+        if (h) goHref(h);
       };
     } else {
-      setTimeout(function () { location.href = href; }, 600);
+      setTimeout(function () { goHref(href); }, 600);
     }
     speakReply(confirmText);
   }
@@ -866,6 +866,23 @@
       }
     }
   });
+
+  /* ── Embed mode (?embed=1) ──────────────────────────────────────────────
+     The floating mic opens Alex in an overlay iframe on the current page.
+     Navigation commands must steer the TOP page, not the frame. The back
+     button is hidden — the overlay has its own close button. */
+  var inEmbed = false;
+  try { inEmbed = new URLSearchParams(location.search).get("embed") === "1"; } catch (e) {}
+  if (inEmbed) {
+    var backLink = document.querySelector(".back");
+    if (backLink) backLink.style.display = "none";
+  }
+  function goHref(h) {
+    try {
+      if (inEmbed && window.top && window.top !== window.self) window.top.location.href = h;
+      else location.href = h;
+    } catch (e) { location.href = h; }
+  }
 
   /* ── Topic deep-link (?topic=<name>&weak=1) ────────────────────────────
      Study pages link here with a topic; Alex starts teaching it at once.
