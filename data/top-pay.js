@@ -82,7 +82,7 @@ window.TOP_PAY = {
     { company: "Amazon", role: "SDE-I", low: 24, high: 45, months: [4],
       apply: "https://www.amazon.jobs/",
       tests: "Online assessment (coding, debugging), then DSA + Leadership Principles interviews.",
-      note: "[B] reports ₹28–42 LPA. Re-apply after 6 months if rejected.", kind: "Big Tech" , status: "open", posting: { url: "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition", label: "SDE I — for 2025 and 2026 graduates" }, statusNote: "Open now — for 2025 and 2026 graduates, so your batch qualifies." },
+      note: "[B] reports ₹28–42 LPA. Re-apply after 6 months if rejected.", kind: "Big Tech" , status: "none", statusNote: "Re-checked 15 Oct 2026: the 2025/2026-graduate SDE-I posting has closed — no fresher SDE-I intake in India right now; the two live SDE-I postings need 1+ years of experience." },
     { company: "Adobe", role: "Member of Technical Staff", low: 25, high: 45, months: [5, 11],
       apply: "https://www.adobe.com/careers",
       tests: "Coding test, then DSA and CS-fundamentals interviews.", kind: "Product" , status: "none", statusNote: "Its posting for 2026 graduates (Member of Technical Staff) has been filled; the graduate roles open now are in the US." },
