@@ -61,7 +61,7 @@
    so without a new cache name phones keep serving the stale card.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v20';
+const CACHE = 'jobhunt-v21';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -121,6 +121,9 @@ const PREP_ASSETS = [
      page itself is static and safe to serve offline, where it shows a
      plain-English offline note instead of the chat working. */
   '/chat.html',
+  /* The Focus tracker's shell. Timers run client-side; the page is static and
+     safe to serve offline, where it keeps counting from localStorage. */
+  '/focus.html',
   /* Typography is the phone's own face now — nothing to cache, and nothing to
      download before first paint. fonts.css holds only the token aliases. */
   '/fonts/fonts.css',
