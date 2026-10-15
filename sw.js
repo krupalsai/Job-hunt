@@ -61,7 +61,7 @@
    so without a new cache name phones keep serving the stale card.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v24';
+const CACHE = 'jobhunt-v25';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
