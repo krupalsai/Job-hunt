@@ -1,6 +1,6 @@
 {
   "_about": "Direct application links for the @careerwithshrestha posts, found on each company's own site so the app does not send you to Instagram to comment for a DM. Keyed by the job key in shrestha-jobs.json. Only links checked on the company's site (or its official job board) are listed; a job missing here has no verified public link. 'kind': posting = the exact job; search = the company's job search for that role/ID; portal = the company's official fresher-hiring portal. 'fresher': set only when the company's own page shows the opening is for freshers (the evidence, in words) — it counts even when the Instagram caption did not say so. 'closed': the posting has come down on the company's site — the opening is then shown as closed, with no apply button.",
-  "checked": "2026-10-13",
+  "checked": "2026-10-16",
   "links": {
     "ig-18117027149081665": {
       "url": "https://jobs.lever.co/hevodata/993a3ed3-3014-432f-b0f4-28d300d58d9a",
@@ -39,6 +39,12 @@
       "url": "https://nextstep.tcs.com/",
       "label": "TCS NextStep — TCS's fresher hiring portal",
       "kind": "portal"
+    },
+    "ig-18116768981281211": {
+      "url": "https://discoverdollar.keka.com/careers/jobdetails/164757",
+      "label": "Discover Dollar — AI Engineer Intern",
+      "kind": "posting",
+      "fresher": "0-1 yrs, AI Engineering, Bengaluru — apply form open, verified 2026-10-16"
     }
   }
 }
