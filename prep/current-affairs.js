@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-15",
+  updated: "2026-10-16",
 
   items: [
     /* {
@@ -48,6 +48,102 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-16",
+      topic: "Defence",
+      headline: "Navy commissions 'Samarthak', the first of four Multi-Purpose Vessels, at Karwar",
+      why: "Ship-name + builder + base is the standard triple. Built by Larsen & Toubro under Make in India, Samarthak is the first of four Multi-Purpose Vessels — mainly for maritime surveillance and patrol, doubling as a mothership for unmanned/autonomous systems and for HADR. The second vessel, Utkarsh, is already in sea trials.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-14-october-2026-10464",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Defence",
+      headline: "Defence Ministry signs ₹4,106 crore deals: GSAT-7C satellite for the IAF and Varunastra torpedoes for the Navy",
+      why: "Two contracts, two numbers, two makers — askable as a matched pair. ₹2,563 crore to New Space India Limited (NSIL), Bengaluru, for the GSAT-7C secure communication satellite for the Air Force; ₹1,543 crore to Bharat Dynamics Limited (BDL), Hyderabad, for Varunastra heavyweight torpedoes — a ship-launched anti-submarine torpedo developed by NSTL. Both flagged under Aatmanirbhar Bharat.",
+      source: "India TV News",
+      url: "https://www.indiatvnews.com/news/india/mod-signs-rs-4106-crore-defence-deals-for-air-force-satellite-and-navy-s-varunastra-torpedoes-2026-10-15-1057064",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Schemes",
+      headline: "Centre sanctions ₹379.29 crore for Telangana's government medical colleges as PG seats rise by 465",
+      why: "Centre–state number splitting is exactly how state papers frame this. The Union Health Ministry cleared ₹379.29 crore under a Centrally Sponsored Scheme — ₹81.57 lakh per additional PG seat across 26 government medical colleges — with the state adding ₹253 crore (total ₹632 crore). Separately, the NMC approved 110 new MBBS seats at RIMS Adilabad and the GMCs at Nizamabad, Mahabubnagar and Siddipet.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/telangana/centre-approves-379-crore-for-government-medical-colleges-in-telangana-as-pg-seats-rise-by-465/article71589020.ece",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Polity",
+      headline: "Osmania University implements revised DA under GOs 128 and 130, payable on 1 November",
+      why: "GO numbers are asked in state papers. The revised dearness allowance applies retrospectively from 1 January 2024 and 1 July 2024; arrears for up to 33 months go largely into GPF accounts, and the enhanced DA reflects in October salaries paid on 1 November.",
+      source: "Newsmeter",
+      url: "https://newsmeter.in/education/good-news-for-ou-staff-revised-da-and-arrears-to-be-paid-on-november-1-777500",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Economy",
+      headline: "Invest Telangana Global Summit 2026 set for 7–9 December at Bharat Future City, Hyderabad; 200-acre drone park announced",
+      why: "Summit dates and venues are direct-ask facts. Announced at the Chennai roadshow by minister D. Sridhar Babu: the summit runs 7–9 December 2026 at Bharat Future City, Hyderabad, and Telangana will build a 200-acre exclusive drone park, with a state drone policy coming soon.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/tamil-nadu/telangana-invites-tamil-nadu-businesses-to-join-its-growth-journey/article71589458.ece",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Polity",
+      headline: "Telangana holds special voter-enrolment camps on 15 and 16 October at every polling station",
+      why: "Voter-roll drives are asked in state polity sections. CEO Telangana ordered booth-level officers present on both days; first-time electors and citizens missing from the draft rolls apply with Form 6.",
+      source: "Hindustan Times",
+      url: "https://www.hindustantimes.com/india-news/telangana-to-hold-special-camps-on-oct-15-16-for-voter-enrolment-in-draft-rolls-101791896687171.html",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Sports",
+      headline: "Punam Raut announces retirement from international cricket",
+      why: "Retirement announcements are asked as name-to-sport one-liners. The right-handed India batter announced her retirement from all formats of international cricket on 15 October 2026.",
+      source: "The Economic Times",
+      url: "https://m.economictimes.com/news/newsblogs/breaking-news-updates-cjp-protest-today-delhi-jantar-mantar-cp-protest-ankita-bhandari-rahul-gandhi-pm-modi-abhijeet-dipke-trump-tariffs-news-weather-updates-delhi-traffic-congress-news-protest-india-bloc-bjp/amp_liveblog/134955359.cms",
+    },
+    {
+      date: "2026-10-14",
+      topic: "Schemes",
+      headline: "Telangana plans ₹24,000 crore Young India Integrated Residential Schools for 2.7 lakh students",
+      why: "Scheme name plus scale is the askable shape. Each campus holds 2,560 students from Classes 5 to 12, serving SC, ST, BC, minority and special-needs children; a Young India Police School is proposed for police personnel's children. Discussed on 14 October at a Hyderabad workshop under NITI Aayog's State Support Mission.",
+      source: "Jagran Josh",
+      url: "https://www.jagranjosh.com/news/telangana-plans-27-lakh-student-residential-school-network-with-rs-4000-crore-investment-188406",
+    },
+    {
+      date: "2026-10-14",
+      topic: "Schemes",
+      headline: "Telangana says ₹1.64 lakh crore transferred through welfare schemes; Indiramma Life Insurance launches 19 November",
+      why: "Concrete dates and scheme names are the facts here. Deputy CM Bhatti Vikramarka said ₹1,64,431 crore went directly to beneficiaries over three years — including Rajiv Aarogyasri cover up to ₹10 lakh and Rythu Bharosa for 71.4 lakh farmers — and announced the Indiramma Life Insurance Scheme launches on 19 November, Indira Gandhi's birth anniversary.",
+      source: "Siasat",
+      url: "https://www.siasat.com/rs-1-64-lakh-crore-paid-to-people-in-3-years-telangana-dy-cm-3558269/",
+    },
+    {
+      date: "2026-10-14",
+      topic: "Defence",
+      headline: "First ASEAN–India Defence Think Tank Forum opens in New Delhi",
+      why: "First-edition events get asked. Held on 14–15 October and opened by the Raksha Mantri, following the announcement at the ASEAN–India Defence Ministers' meeting in Kuala Lumpur (Oct 2025); 2026 is the ASEAN–India Year of Maritime Cooperation.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-15-october-2026-10465",
+    },
+    {
+      date: "2026-10-10",
+      topic: "Science",
+      headline: "10th India Mobile Congress (7–10 Oct) spotlights AI-native networks",
+      why: "Event edition + venue + theme is the triple. Held 7–10 October at Yashobhoomi, New Delhi, the 10th IMC focused on AI-native, programmable and secure communication networks; Reliance Jio proposed a Sovereign Satellite Connectivity initiative.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-14-october-2026-10464",
+    },
+    {
+      date: "2026-10-06",
+      topic: "Science",
+      headline: "DRDO's High Altitude Platform System airship reaches ~21 km",
+      why: "Altitude + developer is the askable pair. The HAPS airship developed by ADRDE, Agra, reached about 21 km on 6 October and held 20 km for over 30 minutes — a milestone for stratospheric pseudo-satellite capability.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-14-october-2026-10464",
+    },
     {
       date: "2026-10-13",
       topic: "Economy",
