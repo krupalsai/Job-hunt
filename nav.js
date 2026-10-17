@@ -224,7 +224,7 @@
     { id: "lessons", label: "All lessons", icon: null,
       sub: "Every subject, and every topic inside it" },
     { id: "topics", label: "Topics", icon: null, href: "/topics.html", plain: true,
-      sub: "30 exam topics as 2-minute briefs, ranked by PYQ weight" },
+      sub: "GS topics as 2-minute briefs — history, polity, geography, economy, science" },
     { id: "current-affairs", label: "Current affairs", icon: null,
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: null,
