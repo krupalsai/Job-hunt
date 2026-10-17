@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-16",
+  updated: "2026-10-17",
 
   items: [
     /* {
@@ -48,6 +48,102 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-16",
+      topic: "Economy",
+      headline: "CM Revanth Reddy pitches Hyderabad to Hyundai as a car-manufacturing destination",
+      why: "Name + place + numbers is the askable triple. A Hyundai Motors India Engineering delegation led by MD Changyeon Cho met the CM at the Bodhi Pavilion; he pitched Hyderabad for a full car-making unit alongside the ₹8,528 crore HMIE Integrated Global R&D facility at NIMZ Zaheerabad (678 acres, 4,276 jobs), tied to the PURE spatial framework and the Invest Telangana Global Summit 2026 (7–9 December, Bharat Future City).",
+      source: "Newsmeter",
+      url: "https://newsmeter.in/top-stories/cm-revanths-pitch-to-hyundai-make-hyderabad-your-next-car-manufacturing-destination-777569",
+    },
+    {
+      date: "2026-10-16",
+      topic: "Defence",
+      headline: "INS Tarkash takes part in IBSAMAR IX, the India–Brazil–South Africa maritime exercise",
+      why: "Exercise name + edition + participants + venue is the standard quartet. IBSAMAR (India–Brazil–South Africa Maritime Exercise) is in its ninth edition, held in South Africa, with INS Tarkash representing the Indian Navy.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-16-october-2026-10466",
+    },
+    {
+      date: "2026-10-16",
+      topic: "Sports",
+      headline: "India–West Indies T20I series goes to a Bengaluru decider",
+      why: "Scoreline cricket facts are direct asks. With the series level 2–2 after West Indies' 24-run win at Hyderabad on 14 October (Shai Hope 102*, Keemo Paul 5/41), the fifth and final T20I is on 17 October at the M. Chinnaswamy Stadium, Bengaluru. India won the three-match ODI series 2–1.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-16-october-2026-10466",
+    },
+    {
+      date: "2026-10-16",
+      topic: "Environment",
+      headline: "India's Ramsar list crosses 103 wetlands: Sukhna Wetland and Sauj Jheel added",
+      why: "Ramsar additions are asked as name-to-state pairs. Sukhna Wetland in Chandigarh and Sauj Jheel in Uttar Pradesh are the latest additions, taking India's tally of wetlands of international importance past 103.",
+      source: "Jagran Josh",
+      url: "https://www.jagranjosh.com/articles/school-assembly-news-headlines-october-16-2026-tesla-roadster-navjot-kaur-sidhu-national-international-sports-business-education-news-1800017919-1",
+    },
+    {
+      date: "2026-10-16",
+      topic: "Polity",
+      headline: "Supreme Court: a convert cannot automatically claim backward-class quota benefits",
+      why: "Constitutional rulings are asked as the holding, not the case name. The Court held that a person cannot automatically claim backward-class reservation benefits as a member of a new religion after conversion.",
+      source: "Jagran Josh",
+      url: "https://www.jagranjosh.com/articles/school-assembly-news-headlines-october-16-2026-tesla-roadster-navjot-kaur-sidhu-national-international-sports-business-education-news-1800017919-1",
+    },
+    {
+      date: "2026-10-16",
+      topic: "Schemes",
+      headline: "PM inaugurates five projects worth ₹3,350 crore in Ladakh",
+      why: "PM launches in border UTs are asked as place + value + sector. Narendra Modi inaugurated five development projects worth ₹3,350 crore in Ladakh through video conferencing, with the focus on roads, power and connectivity for the region.",
+      source: "Jagran Josh",
+      url: "https://www.jagranjosh.com/articles/school-assembly-news-headlines-october-16-2026-tesla-roadster-navjot-kaur-sidhu-national-international-sports-business-education-news-1800017919-1",
+    },
+    {
+      date: "2026-10-16",
+      topic: "Economy",
+      headline: "National Strategic Trade Command Centre opened at Vanijya Bhawan, New Delhi",
+      why: "New institution + place + minister is the askable triple. Commerce and Industry Minister Piyush Goyal opened the National Strategic Trade Command Centre at Vanijya Bhawan to improve monitoring of trade data.",
+      source: "Jagran Josh",
+      url: "https://www.jagranjosh.com/articles/school-assembly-news-headlines-october-16-2026-tesla-roadster-navjot-kaur-sidhu-national-international-sports-business-education-news-1800017919-1",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Schemes",
+      headline: "Supreme Court rejects plea against Shaadi Mubarak and Kalyana Lakshmi schemes",
+      why: "Scheme name + court status is the askable pair. A bench of CJI Surya Kant and Justice Joymala Bagchi dismissed the SLP against the Telangana High Court order that lets the two marriage-assistance welfare schemes continue; the pending PIL will be heard by an HC division bench, preferably headed by the Chief Justice.",
+      source: "Siasat",
+      url: "https://www.siasat.com/sc-rejects-plea-against-shaadi-mubarak-kalyana-lakshmi-schemes-3559067/",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Polity",
+      headline: "Telangana suspends Yadadri thermal plant chief engineer, deputes five IAS officers",
+      why: "Action + reason + names is the shape. The state government suspended YTPS Stage-I Chief Engineer B Suresh for negligence and gross misconduct; Chief Secretary Sanjay Jaju deputed five IAS officers (Chevvuru Hari Kiran, Venkatesh Dhotre, Rahul Raj, Zendage Hanumant Kondiba, Killu Sivakumar Naidu) to monitor generation between 15 and 30 October, after CM Revanth Reddy warned officials over sub-optimal power generation.",
+      source: "New Indian Express",
+      url: "https://www.newindianexpress.com/amp/story/states/telangana/2026/Oct/16/telangana-government-suspends-yadadri-thermal-power-station-official-deputes-five-ias-officers",
+    },
+    {
+      date: "2026-10-15",
+      topic: "Sports",
+      headline: "PM felicitates Asian Games 2026 contingent: India 4th with 85 medals",
+      why: "Medal tally + rank is the classic ask. India finished 4th at the Aichi-Nagoya 2026 Asian Games with 85 medals — 21 gold, 27 silver, 37 bronze — tying Uzbekistan on golds and edging it on silvers; the women's hockey team won a historic gold. Modi addressed the contingent at the Major Dhyan Chand National Stadium, New Delhi.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-16-october-2026-10466",
+    },
+    {
+      date: "2026-10-14",
+      topic: "Defence",
+      headline: "Indian Navy completes maiden command of Combined Task Force 154",
+      why: "'Maiden command' + force number + date is the askable triple. The Navy completed its first command of Combined Task Force 154 (CTF 154) on 14 October 2026, having assumed command on 11 February 2026 at the Combined Maritime Forces.",
+      source: "GKToday",
+      url: "https://www.gktoday.in/current-affairs/category/defence-current-affairs/",
+    },
+    {
+      date: "2026-10-06",
+      topic: "Appointments",
+      headline: "Air Marshal Ashutosh Dixit named 29th Chief of the Air Staff",
+      why: "Name + number + date + predecessor is the standard quartet. Appointed on 6 October, he takes charge as the 29th CAS in the rank of Air Chief Marshal from the afternoon of 31 October 2026, succeeding Air Chief Marshal Amar Preet Singh. A fighter pilot with 3,500+ hours (Mirage-2000, MiG variants, Jaguar, Tejas, IL-78, Hawk), he is currently the Vice Chief of the Air Staff; his tenure runs to 31 December 2028.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/air-marshal-ashutosh-dixit-is-the-next-chief-of-air-staff/article71551794.ece",
+    },
     {
       date: "2026-10-16",
       topic: "Defence",
