@@ -528,14 +528,31 @@
         var live = (finalText + " " + interim).trim();
         if (live) setStatus("\u201C" + live.slice(0, 80) + (live.length > 80 ? "…" : "") + "\u201D", true);
       };
-      recog.onerror = function () {
+      recog.onerror = function (ev) {
+        var err = ev && ev.error;
+        /* Benign errors: no speech detected (tapped the mic, then paused to
+           think), or the session was aborted. These are normal — onend fires
+           next and the existing empty-turn path re-listens. Never kill
+           hands-free or cry "trouble" for these. */
+        if (err === "no-speech" || err === "aborted") return;
         errored = true;
         stopRecog();
-        // Recognition errors NEVER auto-restart: stop hands-free and say so plainly.
+        // Real errors: stop hands-free (else a dead mic loops forever) and
+        // say plainly what to do — especially for a blocked permission.
         setHandsFree(false);
-        addMessage("assistant",
-          "The mic ran into trouble, so I turned hands-free off. Tap the mic to try again.",
-          Date.now());
+        var msg;
+        if (err === "not-allowed" || err === "service-not-allowed") {
+          msg = "The microphone is blocked. In Chrome, tap the lock icon in the address bar, " +
+            "allow Microphone, then tap the mic to try again.";
+        } else if (err === "audio-capture") {
+          msg = "No microphone found on this device.";
+        } else if (err === "network") {
+          msg = "Voice recognition needs the internet — check your connection, then tap the mic to try again.";
+        } else {
+          msg = "The mic ran into trouble (" + (err || "unknown error") +
+            "), so I turned hands-free off. Tap the mic to try again.";
+        }
+        addMessage("assistant", msg, Date.now());
         setStatus(IDLE_STATUS);
       };
       recog.onend = function () {
