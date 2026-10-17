@@ -223,6 +223,8 @@
       sub: "Today's tasks, the paper decoded, your mock scores" },
     { id: "lessons", label: "All lessons", icon: null,
       sub: "Every subject, and every topic inside it" },
+    { id: "topics", label: "Topics", icon: null, href: "/topics.html", plain: true,
+      sub: "30 exam topics as 2-minute briefs, ranked by PYQ weight" },
     { id: "current-affairs", label: "Current affairs", icon: null,
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: null,
@@ -237,7 +239,7 @@
   /* Icons are attached here rather than inline so the lists above read as a
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
-    "si-plan": "target", lessons: "book", plan: "cal", "current-affairs": "news",
+    "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
     syllabus: "exam", feed: "spark", focus: "timer" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
