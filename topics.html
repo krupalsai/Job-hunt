@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Topics · Job Hunt</title>
+<meta name="description" content="Every TS SI prelims topic as a 2-minute brief: what the paper asks, the key formulas, 3 practice questions, one video. No hour-long lectures." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<script src="/data/topic-briefs.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:17px; margin:0; }
+  .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 14px; }
+  .chip{ min-height:36px; padding:7px 13px; border-radius:20px; cursor:pointer;
+    background:var(--panel); border:1px solid var(--panel-border);
+    color:var(--text); font-family:inherit; font-size:12.5px; font-weight:600; }
+  .chip.is-on{ background:var(--accent); color:var(--on-accent); border-color:transparent; }
+  button:active:not([disabled]){ filter:brightness(.92); }
+  .topic{ display:block; width:100%; text-align:left; background:var(--panel);
+    border:1px solid var(--panel-border); border-radius:14px; padding:13px 15px; margin-bottom:10px;
+    cursor:pointer; color:var(--text); font-family:inherit; }
+  .topic .row1{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .topic .name{ font-size:14.5px; font-weight:700; }
+  .topic .meta{ font-size:11.5px; color:var(--dim); margin-top:4px; }
+  .pyq{ flex:0 0 auto; font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px;
+    background:var(--accent); color:var(--on-accent); }
+  /* Detail view */
+  #detail{ display:none; }
+  #detail.is-open{ display:block; }
+  #list.is-hidden{ display:none; }
+  .back{ margin-bottom:10px; background:var(--panel); border:1px solid var(--panel-border);
+    color:var(--text); border-radius:10px; padding:9px 14px; font-family:inherit;
+    font-size:13px; font-weight:700; cursor:pointer; }
+  .card{ background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:14px; padding:15px 16px; margin-bottom:12px; }
+  .card h2{ font-size:16px; margin:0 0 2px; }
+  .card h3{ font-size:12px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--dim); margin:16px 0 8px; }
+  .card h3:first-of-type{ margin-top:12px; }
+  .brief{ font-size:13.5px; line-height:1.6; }
+  .card ul{ margin:6px 0; padding-left:20px; font-size:13px; line-height:1.55; }
+  .card li{ margin-bottom:5px; }
+  .keys li{ font-family:ui-monospace,Menlo,monospace; font-size:12.5px; }
+  .q{ border-top:1px solid var(--panel-border); padding:10px 0; }
+  .q:first-of-type{ border-top:none; }
+  .q .qq{ font-size:13.5px; font-weight:600; }
+  .q .ans{ display:none; margin-top:6px; font-size:13px; }
+  .q .ans b{ color:var(--accent); }
+  .q.is-open .ans{ display:block; }
+  .q .why{ color:var(--dim); font-size:12.5px; }
+  .reveal{ margin-top:8px; background:transparent; border:1px solid var(--panel-border);
+    color:var(--text); border-radius:9px; padding:7px 12px; font-family:inherit;
+    font-size:12.5px; font-weight:700; cursor:pointer; }
+  .vid{ position:relative; width:100%; padding-top:56.25%; border-radius:12px;
+    overflow:hidden; background:#000; margin-top:4px; }
+  .vid iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .vid-meta{ font-size:12px; color:var(--dim); margin-top:6px; }
+  .no-video{ font-size:13px; color:var(--dim); padding:14px; text-align:center;
+    border:1px dashed var(--panel-border); border-radius:12px; }
+  .count{ font-size:11.5px; color:var(--dim); margin:0 0 10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Topics</h1>
+  <div class="sub">Every prelims topic as a 2-minute brief — what the paper asks, the key formulas, 3 questions, one video. Ranked by PYQ weight.</div>
+</header>
+<main>
+  <div id="list">
+    <div class="chips" id="chips">
+      <button class="chip is-on" data-f="all" type="button">All</button>
+      <button class="chip" data-f="A" type="button">Part A · Arith + Reasoning</button>
+      <button class="chip" data-f="B" type="button">Part B · General Studies</button>
+    </div>
+    <p class="count" id="count"></p>
+    <div id="topics"></div>
+  </div>
+  <div id="detail"></div>
+</main>
+<script>
+(function () {
+  "use strict";
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  var briefs = (window.TOPIC_BRIEFS || []).slice().sort(function (a, b) { return b.pyq - a.pyq; });
+  var listEl = document.getElementById("list"),
+      topicsEl = document.getElementById("topics"),
+      detailEl = document.getElementById("detail"),
+      countEl = document.getElementById("count"),
+      filter = "all";
+
+  function partLabel(p) { return p === "A" ? "Part A" : "Part B"; }
+
+  function renderList() {
+    var items = briefs.filter(function (t) { return filter === "all" || t.part === filter; });
+    countEl.textContent = items.length + " topics" + (filter === "all" ? "" : " · " + partLabel(filter));
+    topicsEl.innerHTML = items.map(function (t) {
+      return '<button class="topic" type="button" data-id="' + esc(t.id) + '">' +
+        '<span class="row1"><span class="name">' + esc(t.name) + '</span>' +
+        '<span class="pyq">' + t.pyq + " PYQ</span></span>" +
+        '<span class="meta">' + esc(t.section) + " · " + partLabel(t.part) +
+        (t.pages && t.pages !== "\u2014" ? " · book pp. " + esc(t.pages) : "") + "</span>" +
+        "</button>";
+    }).join("");
+  }
+
+  function ytEmbed(url) {
+    var m = String(url || "").match(/[?&]v=([^&#]+)|youtu\.be\/([^?&#]+)/);
+    var id = m ? (m[1] || m[2]) : null;
+    return id ? "https://www.youtube-nocookie.com/embed/" + id : null;
+  }
+
+  function openTopic(id) {
+    var t = null;
+    for (var i = 0; i < briefs.length; i++) if (briefs[i].id === id) t = briefs[i];
+    if (!t) return;
+    var v = t.video && t.video.url ? t.video : null;
+    var emb = v ? ytEmbed(v.url) : null;
+    var html = '<button class="back" type="button" id="backBtn">\u2190 All topics</button>' +
+      '<div class="card"><h2>' + esc(t.name) + '</h2>' +
+      '<div class="sub">' + esc(t.section) + " · " + partLabel(t.part) +
+      " · " + t.pyq + " prelims questions" +
+      (t.pages && t.pages !== "\u2014" ? " · book pp. " + esc(t.pages) : "") + "</div>" +
+      '<h3>The short version</h3><div class="brief">' + esc(t.brief) + "</div>" +
+      '<h3>What the paper asks</h3><ul>' +
+      t.asks.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ul>" +
+      '<h3>Key formulas / facts</h3><ul class="keys">' +
+      t.keys.map(function (k) { return "<li>" + esc(k) + "</li>"; }).join("") + "</ul>" +
+      "</div>" +
+      '<div class="card"><h3 style="margin-top:0">Watch</h3>';
+    if (emb) {
+      html += '<div class="vid"><iframe src="' + esc(emb) +
+        '" title="' + esc(v.title || t.name) +
+        '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>' +
+        '<div class="vid-meta">' + esc(v.title || "") +
+        (v.channel ? " · " + esc(v.channel) : "") +
+        (v.duration ? " · " + esc(v.duration) : "") + "</div>";
+    } else {
+      html += '<div class="no-video">Video link coming — the brief above covers the exam core.</div>';
+    }
+    html += "</div>" +
+      '<div class="card"><h3 style="margin-top:0">3 quick questions</h3>' +
+      t.questions.map(function (qq, qi) {
+        return '<div class="q" id="q' + qi + '"><div class="qq">' + (qi + 1) + ". " + esc(qq.q) + "</div>" +
+          '<button class="reveal" type="button" data-q="' + qi + '">Show answer</button>' +
+          '<div class="ans"><b>' + esc(qq.a) + "</b><br><span class='why'>" + esc(qq.why) + "</span></div></div>";
+      }).join("") + "</div>";
+    detailEl.innerHTML = html;
+    listEl.classList.add("is-hidden");
+    detailEl.classList.add("is-open");
+    document.getElementById("backBtn").addEventListener("click", closeTopic);
+    var revs = detailEl.querySelectorAll(".reveal");
+    for (var j = 0; j < revs.length; j++) {
+      revs[j].addEventListener("click", function () {
+        var box = document.getElementById("q" + this.getAttribute("data-q"));
+        var open = box.classList.toggle("is-open");
+        this.textContent = open ? "Hide answer" : "Show answer";
+      });
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function closeTopic() {
+    detailEl.classList.remove("is-open");
+    listEl.classList.remove("is-hidden");
+    detailEl.innerHTML = "";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  topicsEl.addEventListener("click", function (ev) {
+    var b = ev.target.closest ? ev.target.closest(".topic") : null;
+    if (b) openTopic(b.getAttribute("data-id"));
+  });
+  document.getElementById("chips").addEventListener("click", function (ev) {
+    var c = ev.target.closest ? ev.target.closest(".chip") : null;
+    if (!c) return;
+    filter = c.getAttribute("data-f");
+    var all = this.querySelectorAll(".chip");
+    for (var i = 0; i < all.length; i++) all[i].classList.toggle("is-on", all[i] === c);
+    renderList();
+  });
+
+  // Voice control hook: pages can handle their own phrases first.
+  window.__vcPageCommand = function (text) {
+    var m = String(text || "").toLowerCase().match(/^(open|show)\s+(.+)$/);
+    if (!m) return false;
+    var want = m[2].trim();
+    for (var i = 0; i < briefs.length; i++) {
+      if (briefs[i].name.toLowerCase().indexOf(want) !== -1 || want.indexOf(briefs[i].name.toLowerCase()) !== -1) {
+        openTopic(briefs[i].id);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  renderList();
+})();
+</script>
+</body>
+</html>
