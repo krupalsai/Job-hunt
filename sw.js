@@ -61,7 +61,7 @@
    so without a new cache name phones keep serving the stale card.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v27';
+const CACHE = 'jobhunt-v28';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -121,6 +121,10 @@ const PREP_ASSETS = [
      page itself is static and safe to serve offline, where it shows a
      plain-English offline note instead of the voice tutor working. */
   '/voice.html',
+  /* Topic briefs: the 2-minute anti-lecture layer. Static content, safe to
+     serve offline — videos need the network, the brief itself does not. */
+  '/topics.html',
+  '/data/topic-briefs.js',
   /* The Focus tracker's shell. Timers run client-side; the page is static and
      safe to serve offline, where it keeps counting from localStorage. */
   '/focus.html',
