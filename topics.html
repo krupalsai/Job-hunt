@@ -23,11 +23,6 @@
   h1{ font-size:17px; margin:0; }
   .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
   main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
-  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 14px; }
-  .chip{ min-height:36px; padding:7px 13px; border-radius:20px; cursor:pointer;
-    background:var(--panel); border:1px solid var(--panel-border);
-    color:var(--text); font-family:inherit; font-size:12.5px; font-weight:600; }
-  .chip.is-on{ background:var(--accent); color:var(--on-accent); border-color:transparent; }
   button:active:not([disabled]){ filter:brightness(.92); }
   .topic{ display:block; width:100%; text-align:left; background:var(--panel);
     border:1px solid var(--panel-border); border-radius:14px; padding:13px 15px; margin-bottom:10px;
@@ -76,15 +71,10 @@
 <body>
 <header>
   <h1>Topics</h1>
-  <div class="sub">Every prelims topic as a 2-minute brief — what the paper asks, the key formulas, 3 questions, one video. Ranked by PYQ weight.</div>
+  <div class="sub">Telangana history &amp; movement, Indian history, polity, geography, economy, science, current affairs — each as a 2-minute brief. Ranked by PYQ weight. No hour-long lectures.</div>
 </header>
 <main>
   <div id="list">
-    <div class="chips" id="chips">
-      <button class="chip is-on" data-f="all" type="button">All</button>
-      <button class="chip" data-f="A" type="button">Part A · Arith + Reasoning</button>
-      <button class="chip" data-f="B" type="button">Part B · General Studies</button>
-    </div>
     <p class="count" id="count"></p>
     <div id="topics"></div>
   </div>
@@ -101,19 +91,15 @@
   var listEl = document.getElementById("list"),
       topicsEl = document.getElementById("topics"),
       detailEl = document.getElementById("detail"),
-      countEl = document.getElementById("count"),
-      filter = "all";
-
-  function partLabel(p) { return p === "A" ? "Part A" : "Part B"; }
+      countEl = document.getElementById("count");
 
   function renderList() {
-    var items = briefs.filter(function (t) { return filter === "all" || t.part === filter; });
-    countEl.textContent = items.length + " topics" + (filter === "all" ? "" : " · " + partLabel(filter));
-    topicsEl.innerHTML = items.map(function (t) {
+    countEl.textContent = briefs.length + " topics · General Studies (Part B of the paper)";
+    topicsEl.innerHTML = briefs.map(function (t) {
       return '<button class="topic" type="button" data-id="' + esc(t.id) + '">' +
         '<span class="row1"><span class="name">' + esc(t.name) + '</span>' +
         '<span class="pyq">' + t.pyq + " PYQ</span></span>" +
-        '<span class="meta">' + esc(t.section) + " · " + partLabel(t.part) +
+        '<span class="meta">' + esc(t.section) + " · Part B" +
         (t.pages && t.pages !== "\u2014" ? " · book pp. " + esc(t.pages) : "") + "</span>" +
         "</button>";
     }).join("");
@@ -133,7 +119,7 @@
     var emb = v ? ytEmbed(v.url) : null;
     var html = '<button class="back" type="button" id="backBtn">\u2190 All topics</button>' +
       '<div class="card"><h2>' + esc(t.name) + '</h2>' +
-      '<div class="sub">' + esc(t.section) + " · " + partLabel(t.part) +
+      '<div class="sub">' + esc(t.section) + " · Part B" +
       " · " + t.pyq + " prelims questions" +
       (t.pages && t.pages !== "\u2014" ? " · book pp. " + esc(t.pages) : "") + "</div>" +
       '<h3>The short version</h3><div class="brief">' + esc(t.brief) + "</div>" +
@@ -186,15 +172,6 @@
     var b = ev.target.closest ? ev.target.closest(".topic") : null;
     if (b) openTopic(b.getAttribute("data-id"));
   });
-  document.getElementById("chips").addEventListener("click", function (ev) {
-    var c = ev.target.closest ? ev.target.closest(".chip") : null;
-    if (!c) return;
-    filter = c.getAttribute("data-f");
-    var all = this.querySelectorAll(".chip");
-    for (var i = 0; i < all.length; i++) all[i].classList.toggle("is-on", all[i] === c);
-    renderList();
-  });
-
   // Voice control hook: pages can handle their own phrases first.
   window.__vcPageCommand = function (text) {
     var m = String(text || "").toLowerCase().match(/^(open|show)\s+(.+)$/);
