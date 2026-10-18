@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Pipeline · Job Hunt</title>
+<meta name="description" content="Every job opportunity's behind-the-scenes: what was checked, verification status, who was asked, who responded, resume and deadline. No more phone checking." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:17px; margin:0; }
+  .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+  button:active:not([disabled]){ filter:brightness(.92); }
+
+  .pipe{ display:block; width:100%; text-align:left; background:var(--panel);
+    border:1px solid var(--panel-border); border-radius:14px; padding:13px 15px; margin-bottom:10px;
+    cursor:pointer; color:var(--text); font-family:inherit; }
+  .pipe .row1{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .pipe .co{ font-size:14.5px; font-weight:700; }
+  .pipe .role{ font-size:12.5px; color:var(--dim); margin-top:3px; line-height:1.4; }
+  .pipe .meta{ font-size:11.5px; color:var(--dim); margin-top:6px; line-height:1.5; }
+  .pipe .meta b{ color:var(--text); font-weight:650; }
+
+  /* Stage badges — one vocabulary for where an opportunity stands. */
+  .stage{ flex:0 0 auto; font-size:10.5px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px 10px; border-radius:20px; border:1px solid transparent; }
+  .st-found{ background:var(--surface-3, #edf0f5); color:var(--muted); }
+  .st-verified{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line); }
+  .st-researched{ background:var(--pvt-soft); color:var(--pvt); border-color:var(--pvt-line); }
+  .st-referrals{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn-line); }
+  .st-resume{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line); }
+  .st-applied{ background:var(--ok-soft); color:var(--ok); }
+  .st-failed{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad-line); }
+
+  /* Detail view */
+  #detail{ display:none; }
+  #detail.is-open{ display:block; }
+  #list.is-hidden{ display:none; }
+  .back{ margin-bottom:10px; background:var(--panel); border:1px solid var(--panel-border);
+    color:var(--text); border-radius:10px; padding:9px 14px; font-family:inherit;
+    font-size:13px; font-weight:700; cursor:pointer; }
+  .card{ background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:14px; padding:15px 16px; margin-bottom:12px; }
+  .card h2{ font-size:16px; margin:0 0 2px; }
+  .card .loc{ font-size:12.5px; color:var(--dim); }
+  .card h3{ font-size:12px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--dim); margin:16px 0 8px; }
+  .card h3:first-of-type{ margin-top:12px; }
+  .card p{ font-size:13.5px; line-height:1.6; margin:6px 0; }
+  .card .fine{ font-size:12px; color:var(--dim); }
+
+  /* Referral rows with per-person status chips. */
+  .ref{ border-top:1px solid var(--panel-border); padding:10px 0; }
+  .ref:first-of-type{ border-top:none; }
+  .ref .rrow{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .ref .rname{ font-size:13.5px; font-weight:700; }
+  .ref .rnote{ font-size:12.5px; color:var(--dim); margin-top:4px; line-height:1.5; }
+  .chip{ flex:0 0 auto; font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:20px; }
+  .c-to-ask{ background:var(--surface-3, #edf0f5); color:var(--muted); }
+  .c-asked{ background:var(--warn-soft); color:var(--warn); }
+  .c-responded{ background:var(--ok-soft); color:var(--ok); }
+  .c-no-response{ background:var(--bad-soft); color:var(--bad); }
+
+  .empty{ text-align:center; color:var(--dim); font-size:13.5px; padding:40px 20px; line-height:1.6; }
+  .count{ font-size:12px; color:var(--dim); margin:0 0 10px 2px; }
+  a{ color:var(--accent-ink); }
+</style>
+</head>
+<body data-page="pipeline">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">Pipeline</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+<main>
+  <p class="sub">Everything happening behind the scenes on every opportunity — what was checked, who was asked, who responded, and what's next. Updated by the daily watches; you never have to check your phone.</p>
+  <p class="count" id="count"></p>
+  <div id="list"></div>
+  <div id="detail"></div>
+</main>
+<script>
+(function () {
+  "use strict";
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  var listEl = document.getElementById("list"),
+      detailEl = document.getElementById("detail"),
+      countEl = document.getElementById("count");
+  var opps = [];
+
+  /* ── Stage: one badge per opportunity ──────────────────────────────────
+     Found → Verified → Researched → Referrals → Resume → Applied,
+     plus Failed for postings that died at verification. */
+  var STAGE_LABEL = {
+    found: "Found", verified: "Verified", researched: "Researched",
+    referrals: "Referrals", resume: "Resume", applied: "Applied", failed: "Failed"
+  };
+  function stageOf(o) {
+    if (o.verification && o.verification.status === "failed") return "failed";
+    var app = (o.application && o.application.status) || "";
+    if (app === "applied" || app === "applied-anyway") return "applied";
+    if ((o.resume && (o.resume.draft_path || o.resume.ats_score)) ||
+        (o.resume && o.resume.status === "drafted")) return "resume";
+    var refs = o.referrals || [];
+    if (refs.some(function (r) { return r.status === "asked" || r.status === "responded" || r.status === "no-response"; }))
+      return "referrals";
+    if (o.company_research && o.company_research.status === "done") return "researched";
+    if (o.verification && o.verification.status === "verified") return "verified";
+    return "found";
+  }
+
+  /* ── Deadline countdown ──────────────────────────────────────────────── */
+  function daysUntil(iso) {
+    if (!iso) return null;
+    var d = new Date(iso + "T00:00:00");
+    if (isNaN(d.getTime())) return null;
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    return Math.round((d.getTime() - today.getTime()) / 86400000);
+  }
+  function fmtDay(iso) {
+    var d = new Date(iso + "T00:00:00");
+    return isNaN(d.getTime()) ? iso
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+  function deadlineLine(o) {
+    if (!o.deadline) return "No close date — can vanish without warning";
+    var n = daysUntil(o.deadline), when = fmtDay(o.deadline);
+    if (n === null) return "Deadline: " + esc(o.deadline);
+    if (n < 0) return "Closed " + when + " — deadline passed";
+    if (n === 0) return "Closes today (" + when + ")";
+    if (n === 1) return "Closes tomorrow (" + when + ")";
+    return "Closes in " + n + " days (" + when + ")";
+  }
+
+  var REF_LABEL = { "to-ask": "To ask", asked: "Asked", responded: "Responded", "no-response": "No response" };
+  function refChip(r) {
+    var s = r.status || "to-ask";
+    return '<span class="chip c-' + esc(s) + '">' + esc(REF_LABEL[s] || s) + "</span>";
+  }
+  function refDates(r) {
+    var bits = [];
+    if (r.asked_at) bits.push("asked " + esc(r.asked_at));
+    if (r.responded_at) bits.push("responded " + esc(r.responded_at));
+    return bits.length ? '<div class="fine">' + bits.join(" · ") + "</div>" : "";
+  }
+
+  function cardHtml(o) {
+    var st = stageOf(o);
+    var asked = (o.referrals || []).filter(function (r) { return r.status === "asked" || r.status === "no-response"; }).length;
+    var resp = (o.referrals || []).filter(function (r) { return r.status === "responded"; }).length;
+    var refLine = (o.referrals || []).length
+      ? resp + " responded · " + asked + " waiting / no response"
+      : "No referrals yet";
+    return '<button class="pipe" type="button" data-id="' + esc(o.id) + '">' +
+      '<span class="row1"><span class="co">' + esc(o.company) + "</span>" +
+      '<span class="stage st-' + st + '">' + STAGE_LABEL[st] + "</span></span>" +
+      '<span class="role">' + esc(o.role) + (o.location ? " · " + esc(o.location) : "") + "</span>" +
+      '<span class="meta"><b>Deadline:</b> ' + esc(deadlineLine(o)) + "<br>" +
+      "<b>Referrals:</b> " + esc(refLine) + "</span>" +
+      "</button>";
+  }
+
+  function detailHtml(o) {
+    var st = stageOf(o);
+    var v = o.verification || {};
+    var vLine = v.status === "verified" ? "Verified on the official portal"
+      : v.status === "failed" ? "Failed — not a real opening"
+      : v.status === "pending" ? "Verification pending"
+      : "Not checked yet";
+    var html = '<button class="back" type="button" id="backBtn">← All opportunities</button>' +
+      '<div class="card">' +
+      '<h2>' + esc(o.company) + ' <span class="stage st-' + st + '">' + STAGE_LABEL[st] + "</span></h2>" +
+      '<div class="loc">' + esc(o.role) + (o.location ? " · " + esc(o.location) : "") + "</div>" +
+      '<p class="fine">Spotted via ' + esc(o.source || "unknown") +
+        (o.found_at ? " on " + esc(o.found_at) : "") + ".</p>" +
+
+      "<h3>Verification</h3><p>" + esc(vLine) +
+        (v.checked_at ? " · checked " + esc(v.checked_at) : "") + ".</p>" +
+      (v.notes ? '<p class="fine">' + esc(v.notes) + "</p>" : "") +
+      (o.official_url ? '<p><a href="' + esc(o.official_url) + '" target="_blank" rel="noopener">Official posting ↗</a></p>' : "") +
+
+      "<h3>Company research</h3>";
+    var cr = o.company_research || {};
+    if (cr.status === "done") {
+      html += "<p>" + esc(cr.summary || "") + "</p>";
+      (cr.news_sources || []).forEach(function (s) {
+        html += '<p class="fine"><a href="' + esc(s) + '" target="_blank" rel="noopener">' + esc(s) + " ↗</a></p>";
+      });
+    } else {
+      html += '<p class="fine">' + esc(cr.summary || "Not started yet.") + "</p>";
+    }
+
+    html += "<h3>Referrals</h3>";
+    if ((o.referrals || []).length) {
+      html += o.referrals.map(function (r) {
+        return '<div class="ref"><div class="rrow"><span class="rname">' + esc(r.name) + "</span>" +
+          refChip(r) + "</div>" + refDates(r) +
+          (r.note ? '<div class="rnote">' + esc(r.note) + "</div>" : "") + "</div>";
+      }).join("");
+    } else {
+      html += '<p class="fine">Nobody asked yet.</p>';
+    }
+
+    html += "<h3>Resume</h3>";
+    var rs = o.resume || {};
+    if (rs.draft_path || rs.ats_score) {
+      html += "<p>" + (rs.draft_path ? esc(rs.draft_path) : "Draft ready") +
+        (rs.ats_score ? ' · <b>ATS ' + esc(String(rs.ats_score)) + "</b>" : "") + "</p>";
+    } else {
+      html += '<p class="fine">No draft yet — drafted from the JD once the posting is verified.</p>';
+    }
+
+    html += "<h3>Application</h3>";
+    var ap = o.application || {};
+    var apLine = ap.status === "applied" ? "Applied" + (ap.applied_at ? " on " + esc(ap.applied_at) : "")
+      : ap.status === "applied-anyway" ? "Applied anyway (no referral reply in time)"
+      : "Not applied yet";
+    html += "<p>" + esc(apLine) + ".</p>" +
+      (ap.note ? '<p class="fine">' + esc(ap.note) + "</p>" : "") +
+      "<h3>Deadline</h3><p>" + esc(deadlineLine(o)) + ".</p>" +
+      "</div>";
+    return html;
+  }
+
+  function renderList() {
+    var order = { failed: 0, found: 1, verified: 2, researched: 3, referrals: 4, resume: 5, applied: 6 };
+    var sorted = opps.slice().sort(function (a, b) {
+      return (order[stageOf(a)] - order[stageOf(b)]) ||
+        String(b.found_at || "").localeCompare(String(a.found_at || ""));
+    });
+    countEl.textContent = opps.length
+      ? opps.length + " opportunit" + (opps.length === 1 ? "y" : "ies") + " in the pipeline"
+      : "";
+    listEl.innerHTML = sorted.map(cardHtml).join("");
+  }
+
+  function openDetail(id) {
+    var o = opps.filter(function (x) { return x.id === id; })[0];
+    if (!o) return;
+    detailEl.innerHTML = detailHtml(o);
+    detailEl.classList.add("is-open");
+    listEl.classList.add("is-hidden");
+    countEl.textContent = "";
+    document.getElementById("backBtn").addEventListener("click", closeDetail);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function closeDetail() {
+    detailEl.classList.remove("is-open");
+    listEl.classList.remove("is-hidden");
+    detailEl.innerHTML = "";
+    renderList();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  listEl.addEventListener("click", function (ev) {
+    var b = ev.target.closest ? ev.target.closest(".pipe") : null;
+    if (b) openDetail(b.getAttribute("data-id"));
+  });
+
+  /* Job data is never cached — a stale pipeline would show a passed deadline
+     as if it were live. Same rule as every other job feed in this app. */
+  fetch("/data/job-pipeline.json", { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function (data) {
+      opps = Array.isArray(data) ? data : [];
+      renderList();
+    })
+    .catch(function () {
+      listEl.innerHTML = '<div class="empty">Could not load the pipeline.<br>Check your connection and pull to refresh.</div>';
+    });
+
+  // Voice control hook: pages can handle their own phrases first.
+  window.__vcPageCommand = function (text) {
+    var m = String(text || "").toLowerCase().match(/^(open|show)\s+(.+)$/);
+    if (!m) return false;
+    var want = m[2].trim();
+    for (var i = 0; i < opps.length; i++) {
+      if (opps[i].company.toLowerCase().indexOf(want) !== -1 || want.indexOf(opps[i].company.toLowerCase()) !== -1) {
+        openDetail(opps[i].id);
+        return true;
+      }
+    }
+    return false;
+  };
+})();
+</script>
+</body>
+</html>
