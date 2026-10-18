@@ -61,7 +61,11 @@
    so without a new cache name phones keep serving the stale card.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v28';
+/* v29: the Pipeline tracker (/pipeline.html) — a new page, so every cached copy
+   must go.
+
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v29';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -128,6 +132,10 @@ const PREP_ASSETS = [
   /* The Focus tracker's shell. Timers run client-side; the page is static and
      safe to serve offline, where it keeps counting from localStorage. */
   '/focus.html',
+  /* The Pipeline tracker's shell. The page itself is static and safe to serve
+     offline; the pipeline data (/data/job-pipeline.json) is job data and is
+     NEVER cached — a stale pipeline would show a passed deadline as live. */
+  '/pipeline.html',
   /* Typography is the phone's own face now — nothing to cache, and nothing to
      download before first paint. fonts.css holds only the token aliases. */
   '/fonts/fonts.css',
