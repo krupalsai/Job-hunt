@@ -235,12 +235,14 @@
       sub: "Learning time vs scrolling time, side by side" },
     { id: "feed", label: "Instinct", icon: null, href: "/feed.html", plain: true,
       sub: "Lessons, quizzes and job lists as they are sent" },
+    { id: "pipeline", label: "Pipeline", icon: null, href: "/pipeline.html", plain: true,
+      sub: "Every opportunity's behind-the-scenes — checks, referrals, responses" },
   ];
   /* Icons are attached here rather than inline so the lists above read as a
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
     "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", feed: "spark", focus: "timer" };
+    syllabus: "exam", feed: "spark", focus: "timer", pipeline: "jobs" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
