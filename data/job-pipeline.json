@@ -1,0 +1,125 @@
+[
+  {
+    "application": {
+      "applied_at": null,
+      "status": "not-applied"
+    },
+    "company": "Infosys",
+    "company_research": {
+      "news_sources": [],
+      "status": "skipped",
+      "summary": "Skipped — verification failed, so research never started."
+    },
+    "deadline": null,
+    "found_at": "2026-10-18",
+    "id": "infosys-specialist-programmer-2026",
+    "location": "Pan India",
+    "official_url": null,
+    "referrals": [],
+    "resume": {
+      "ats_score": null,
+      "draft_path": null
+    },
+    "role": "Specialist Programmer (Trainee)",
+    "source": "feed",
+    "verification": {
+      "checked_at": "2026-10-18",
+      "notes": "Not on any official Infosys portal. careers.infosys.com redirects to a US Labor Condition Applications page (no job listings). The graduates page (infosys.com/careers/graduates.html) has no off-campus announcement. The India careers portal returned 0 fresher Specialist Programmer roles and only lateral/experienced roles for 'off campus'. The listing existed only on aggregators (freshersvoice.com and similar).",
+      "status": "failed"
+    }
+  },
+  {
+    "application": {
+      "applied_at": "2026-10-16",
+      "note": "Submitted before the 16-Oct 11:00 pm IST deadline. Watching krupal.saikss.655@gmail.com for the confirmation email — arrival still unconfirmed.",
+      "status": "applied"
+    },
+    "company": "American Express",
+    "company_research": {
+      "news_sources": [],
+      "status": "pending",
+      "summary": "Not yet recorded."
+    },
+    "deadline": "2026-10-16",
+    "found_at": null,
+    "id": "amex-apprentice-26009713",
+    "location": "Bengaluru / Gurugram / Chennai (hybrid)",
+    "official_url": null,
+    "referrals": [
+      {
+        "asked_at": "2026-10-14",
+        "linkedin_url": null,
+        "name": "Aman Mahawar",
+        "note": "Senior Manager, American Express (Gurugram). Connection request with note sent 2026-10-14 — no reply. Portal application submitted anyway per standing order.",
+        "responded_at": null,
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-14",
+        "linkedin_url": null,
+        "name": "Pooja Satija",
+        "note": "Senior Software Engineer II, American Express (Delhi, ex-Microsoft). Connection request with note sent 2026-10-14 — no reply. Portal application submitted anyway per standing order.",
+        "responded_at": null,
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-14",
+        "linkedin_url": null,
+        "name": "Deepthi Kurup",
+        "note": "Engineering Director, American Express (Tamil Nadu). Connection request with note sent 2026-10-14 — no reply. Portal application submitted anyway per standing order.",
+        "responded_at": null,
+        "status": "asked"
+      }
+    ],
+    "resume": {
+      "ats_score": 85,
+      "draft_path": "~/workspace/your_files/Krupal_Resume_AmEx_Apprentice.pdf"
+    },
+    "role": "Apprentice – Enterprise Technology Services",
+    "source": "unknown",
+    "verification": {
+      "checked_at": null,
+      "notes": "Portal application submitted 2026-10-16 ~10:18 IST. Portal confirmed: 'You applied on 16/10/2026 for job Apprentice - Enterprise Technology Services, Bengaluru, KA, India.' No application number was displayed.",
+      "status": "verified"
+    }
+  },
+  {
+    "application": {
+      "applied_at": "2026-10-04",
+      "note": "Awaiting the online test invite (aptitude + Python coding). Gmail watch runs every morning; Krupal confirmed 2026-10-18 to keep it running. WhatsApp and the Workday portal are the backup channels.",
+      "status": "applied"
+    },
+    "company": "Accenture",
+    "company_research": {
+      "news_sources": [],
+      "status": "pending",
+      "summary": "Not yet recorded."
+    },
+    "deadline": null,
+    "found_at": null,
+    "id": "accenture-aiml-associate-aioc-s01665345",
+    "location": "Bengaluru",
+    "official_url": null,
+    "referrals": [
+      {
+        "asked_at": null,
+        "linkedin_url": null,
+        "name": "Easwer Dharavath",
+        "note": "Accenture employee. His referral (PID C28196885) carried the application — submitted 2026-10-04.",
+        "responded_at": null,
+        "status": "responded"
+      }
+    ],
+    "resume": {
+      "ats_score": null,
+      "draft_path": null
+    },
+    "role": "AI/ML Computational Science Associate",
+    "source": "referral",
+    "verification": {
+      "checked_at": null,
+      "notes": "Applied via employee referral (Easwer Dharavath, PID C28196885) on 2026-10-04 ~11:34 IST. Confirmation email received. Workday Candidate Home created. Application ID AIOC-S01665345.",
+      "status": "verified"
+    }
+  }
+]
