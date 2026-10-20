@@ -697,6 +697,7 @@
       <div class="card" id="project-prep-card">
         <h2>Project Preparation</h2>
         <p class="muted" style="margin-top:-4px;">Your Student Platform — interview prep, kept separate from the exam subjects.</p>
+        <p class="muted" id="projectPrepProgress" style="margin:2px 0 10px;"></p>
         <a class="ls-row" href="/index.html?track=interview&amp;lesson=project-guide" style="text-decoration:none;color:inherit;">
           <div class="ls-row-main">
             <div class="ls-title">Project interview — tap &amp; watch</div>
@@ -908,6 +909,13 @@
 <!-- Reads what sync.js and the quiz have recorded and turns it into today's
      blocks, with minutes on them. Last, because it uses all of it. -->
 <script src="/prep/today.js"></script>
+
+<!-- Project Preparation's own progress line, inside #project-prep-card
+     above: study-lessons.js carries the interview lessons and
+     study-roadmap.js owns the tick store that fills the line. The roadmap
+     itself lives on Home; loaded here, the file fills the line and stops. -->
+<script src="/study-lessons.js"></script>
+<script src="/study-roadmap.js"></script>
 
 <script>
 /* The TS SI plan banner: shown only when the prep page is on TS SI. */
