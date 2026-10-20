@@ -71,7 +71,12 @@
    study-roadmap.js / study-lessons.js.
    THE BUMP IS LOAD-BEARING — a phone holding v29 would keep serving the old
    index.html and lesson files cache-first, and the guide would never appear. */
-const CACHE = 'jobhunt-v30';
+/* v31 adds the Project Preparation card to All lessons (learn.html) and
+   deep-link support in study-roadmap.js (?track=interview&lesson=
+   project-guide), so interview prep is one tap from the lesson list.
+   THE BUMP IS LOAD-BEARING — a phone holding v30 would keep serving the
+   old learn.html cache-first, and the card would never appear. */
+const CACHE = 'jobhunt-v31';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
