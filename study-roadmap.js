@@ -69,6 +69,25 @@
     const parsed = JSON.parse(localStorage.getItem(KEY) || '{}');
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) done = parsed;
   } catch (_) { /* damaged or unavailable storage starts with a clean view */ }
+  // Project Preparation carries its OWN total, separate from the exam
+  // topics: ticked Project interview lessons over the lessons that exist
+  // (STUDY_LESSONS.interview), read from this same store. Fills the line
+  // inside the Project Preparation card — on Home (#projectPrepSec) and
+  // on All lessons (#project-prep-card) — whichever page loaded us, so
+  // it runs before the roadmap-only early return below; the tick handler
+  // calls it again so the line stays true while he works through Home.
+  function fillProjectProgress() {
+    try {
+      const ppLine = document.getElementById('projectPrepProgress');
+      const ivLessons = window.STUDY_LESSONS && window.STUDY_LESSONS.interview;
+      if (ppLine && ivLessons) {
+        const ivIds = Object.keys(ivLessons);
+        const ivDone = ivIds.filter(id => done['interview:' + id] === true).length;
+        ppLine.textContent = ivDone + ' of ' + ivIds.length + ' project lessons completed';
+      }
+    } catch (_) { /* a progress line must never break the page */ }
+  }
+  fillProjectProgress();
   let selected = 'quant';
   const summary = document.getElementById('roadmapSummary');
   const panel = document.getElementById('roadmapTopics');
@@ -175,6 +194,7 @@
     if (input.checked) done[key] = true; else delete done[key];
     try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (_) { /* still usable this visit */ }
     drawSummary();
+    fillProjectProgress();
     // Keep the open phase and checkbox in place instead of rerendering under a tap.
     const phase = input.closest('.roadmap-phase');
     if (phase) phase.querySelector('summary span:last-child').textContent =
