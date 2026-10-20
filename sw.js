@@ -65,7 +65,13 @@
    must go.
 
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v29';
+/* v30 adds the Project interview track and the Interactive Project Guide
+   (/project-guide.js): a tap-and-watch player inside the track's first
+   lesson, plus its styles in index.html and the new topics in
+   study-roadmap.js / study-lessons.js.
+   THE BUMP IS LOAD-BEARING — a phone holding v29 would keep serving the old
+   index.html and lesson files cache-first, and the guide would never appear. */
+const CACHE = 'jobhunt-v30';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -88,6 +94,7 @@ const PREP_ASSETS = [
   '/data/top-pay.js',
   '/study-roadmap.js',
   '/study-lessons.js',
+  '/project-guide.js',
   /* The prep page's runtime, split out of what was one inline <script>.
      Inline code was cached for free as part of learn.html; these are
      separate requests and have to be listed, or the page loads offline
