@@ -81,7 +81,14 @@
    not only inside Study → All lessons.
    THE BUMP IS LOAD-BEARING — a phone holding v31 would keep serving the
    old index.html cache-first, and the card would never appear. */
-const CACHE = 'jobhunt-v32';
+/* v33 gives Project Preparation its OWN progress total ("N of 15 project
+   lessons completed", read from the roadmap tick store) inside its card on
+   Home and on All lessons — separate from the "49 topics mastered" exam
+   count, which it does not touch. learn.html also loads study-lessons.js +
+   study-roadmap.js for that line.
+   THE BUMP IS LOAD-BEARING — a phone holding v32 would keep serving the
+   old pages cache-first, and the line would never appear. */
+const CACHE = 'jobhunt-v33';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
