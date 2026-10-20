@@ -40,8 +40,28 @@
       { name: 'Non-verbal reasoning', topics: [
         ['figures', 'Figure series & classification'], ['mirror', 'Mirror & water images'],
         ['paper', 'Paper folding & cutting'], ['spatial', 'Embedded figures & spatial visualization'] ] }
+    ],
+    interview: [
+      { name: '▶ Watch it happen · Interactive guide', note: 'Tap a part of your platform and watch what it does, step by step.', topics: [
+        ['project-guide', 'The whole platform — tap & watch'] ] },
+      { name: 'Start here · Your platform in plain words', topics: [
+        ['platform-overview', 'What your platform is'], ['your-role', 'Your role — the honest answer'] ] },
+      { name: 'APIs and endpoints', topics: [
+        ['what-is-an-api', 'What is an API?'], ['endpoints-routes', 'Endpoints, methods, status codes'] ] },
+      { name: 'Login, sessions, permissions', topics: [
+        ['auth-sessions', 'Login & sessions'], ['roles-isolation', 'Roles & data isolation'] ] },
+      { name: 'Payments — the money path', topics: [
+        ['payment-flow', 'How a payment really works'], ['webhooks-deep', 'Webhooks, idempotency, failures'] ] },
+      { name: 'Bots, voice & AI', topics: [
+        ['whatsapp-telegram', 'WhatsApp bot & Telegram'], ['voice-calls', 'Voice calls — WebRTC to AI'],
+        ['llm-chain', 'The AI brain & fallbacks'] ] },
+      { name: 'When things break', topics: [
+        ['incidents', 'Real bugs you fixed'], ['scaling-security', 'Scaling & security hardening'] ] },
+      { name: 'Behavioural · Tell it straight', topics: [
+        ['behavioral', 'Behavioural answers'] ] }
     ]
   };
+  const TRACK_LABEL = { quant: 'Quant', reasoning: 'Reasoning', interview: 'Project interview' };
   const all = Object.fromEntries(Object.entries(tracks).map(([key, phases]) =>
     [key, phases.flatMap(phase => phase.topics)]));
   let done = {};
@@ -62,8 +82,8 @@
     return item ? item[1] : 'All topics marked done';
   }
   function drawSummary() {
-    summary.innerHTML = ['quant', 'reasoning'].map(track => `
-      <div class="roadmap-track"><b>${track === 'quant' ? 'Quant' : 'Reasoning'}</b>
+    summary.innerHTML = ['quant', 'reasoning', 'interview'].map(track => `
+      <div class="roadmap-track"><b>${TRACK_LABEL[track]}</b>
       <small>Next: ${safe(next(track))}</small>
       <progress value="${count(track)}" max="${all[track].length}" aria-label="${track} progress"></progress>
       <span class="roadmap-count">${count(track)} of ${all[track].length} topics done</span></div>`).join('');
@@ -75,7 +95,7 @@
       tab.setAttribute('aria-selected', String(active));
       tab.tabIndex = active ? 0 : -1;
     });
-    panel.setAttribute('aria-labelledby', selected === 'quant' ? 'roadmapQuantTab' : 'roadmapReasonTab');
+    panel.setAttribute('aria-labelledby', { quant: 'roadmapQuantTab', reasoning: 'roadmapReasonTab', interview: 'roadmapInterviewTab' }[selected]);
     panel.innerHTML = tracks[selected].map((phase, i) => {
       const complete = phase.topics.filter(([id]) => done[selected + ':' + id] === true).length;
       const firstIncomplete = tracks[selected].findIndex(p =>
@@ -98,14 +118,27 @@
   function lessonHtml(track, id) {
     const data = window.STUDY_LESSONS && window.STUDY_LESSONS[track] && window.STUDY_LESSONS[track][id];
     if (!data) return '<div class="roadmap-lesson" role="status">This lesson is not available offline yet.</div>';
-    const [title, concept, worked, questions] = data;
+    // Interview lessons use the rich format: {title, concept, steps, worked,
+    // examples, questions, keywords}. Quant/reasoning keep the original array
+    // format: [title, concept, worked, questions] — rendered as before.
+    const lesson = Array.isArray(data)
+      ? { title: data[0], concept: data[1], worked: data[2], questions: data[3] || [] }
+      : data;
+    const title = lesson.title || id;
+    const concept = lesson.concept || '';
+    const steps = (lesson.steps || []).map(s => String(s).replace(/^\d+[.)]\s*/, ""));
+    const worked = lesson.worked || '';
+    const examples = lesson.examples || [];
+    const questions = lesson.questions || [];
     return `<article class="roadmap-lesson" id="activeRoadmapLesson" aria-label="${safe(title)} lesson">
-      <div class="lesson-kicker">Study · ${track === 'quant' ? 'Quant' : 'Reasoning'}</div>
+      <div class="lesson-kicker">Study · ${TRACK_LABEL[track] || track}</div>
       <h3>${safe(title)}</h3>
       <p>${safe(concept)}</p>
-      <h4>Worked example</h4><p>${safe(worked)}</p>
-      <h4>Try it yourself</h4>
-      ${questions.map(([question, answer, reason], i) => `<details class="lesson-question"><summary>${i + 1}. ${safe(question)} <span>Show answer</span></summary><p><strong>${safe(answer)}</strong> · ${safe(reason)}</p></details>`).join('')}
+      ${steps.length ? `<h4>How to do it — step by step</h4><ol class="roadmap-steps">${steps.map(s => `<li>${safe(s)}</li>`).join('')}</ol>` : ''}
+      ${worked ? `<h4>Worked example</h4><p>${safe(worked)}</p>` : ''}
+      ${examples.length ? `<h4>More worked examples</h4>${examples.map(e => `<p>${safe(e)}</p>`).join('')}` : ''}
+      ${questions.length ? `<h4>Try it yourself</h4>
+      ${questions.map(([question, answer, reason], i) => `<details class="lesson-question"><summary>${i + 1}. ${safe(question)} <span>Show answer</span></summary><p><strong>${safe(answer)}</strong> · ${safe(reason)}</p></details>`).join('')}` : ''}
       <p class="lesson-hint">When you can solve these without peeking, use the box beside this topic to mark it done.</p>
       <p><a class="lesson-ask" href="/voice.html?topic=${encodeURIComponent(id)}&track=${encodeURIComponent(track)}" aria-label="Ask Alex about ${safe(title)}">Ask Alex about this topic →</a></p>
       <p><a class="lesson-ask" href="/voice.html?topic=${encodeURIComponent(id)}&track=${encodeURIComponent(track)}&weak=1" aria-label="Tell Alex you are weak at ${safe(title)}">I'm weak here — teach me from scratch →</a></p>
