@@ -35,7 +35,9 @@
      batch      a live posting, but for another graduating batch (e.g. 2027)
      none       checked, and no fresher opening in India right now
      unchecked  not checked yet; only the usual month is known
-   All fifteen were checked on 13 Oct 2026. `apply` (the careers home page)
+   All fifteen were checked on 13 Oct 2026; a re-check followed on
+   20 Oct 2026 — any role that could not be re-verified that day says so
+   in its `statusNote` and keeps its last confirmed position. `apply` (the careers home page)
    is kept for whoever re-checks; the app no longer shows it as a link —
    only a posting is a link. Re-check and edit `status` when a month comes
    round.
@@ -43,8 +45,8 @@
    Update by editing this file. Nothing here is fetched at runtime.
    ========================================================================== */
 window.TOP_PAY = {
-  asOf: "Reports dated Apr–Jun 2026, checked 13 Oct 2026",
-  checked: "2026-10-13",
+  asOf: "Reports dated Apr–Jun 2026, checked 20 Oct 2026",
+  checked: "2026-10-20",
   sources: [
     { label: "Let's Code — India off-campus hiring calendar 2026 (27 Apr 2026)",
       url: "https://www.lets-code.co.in/blogs/india-off-campus-hiring-calendar-2026/" },
@@ -67,37 +69,37 @@ window.TOP_PAY = {
     { company: "Microsoft", role: "Software Engineer (university hire)", low: 30, high: 55, months: [7, 8],
       apply: "https://careers.microsoft.com/",
       tests: "Online coding test (DSA), then coding and CS-fundamentals interviews.",
-      note: "[B] reports ₹28–40 LPA for new-grad hires.", kind: "Big Tech" , status: "none", statusNote: "India openings right now are Software Engineer II (experienced)." },
+      note: "[B] reports ₹28–40 LPA for new-grad hires.", kind: "Big Tech" , status: "none", statusNote: "Could not re-verify on Microsoft's own site today (its careers pages load by script and showed no listings). At the last confirmed check its India openings were Software Engineer II (experienced)." },
     { company: "Google", role: "Software Engineer (university graduate)", low: 25, high: 50, months: [7, 8],
       apply: "https://www.google.com/about/careers/applications/",
       tests: "Timed online assessment, then medium-to-hard DSA interviews.",
-      note: "[B] reports ₹30–45 LPA (base + stock) for strong new grads.", kind: "Big Tech" , status: "none", statusNote: "No university-graduate software opening in India right now." },
+      note: "[B] reports ₹30–45 LPA (base + stock) for strong new grads.", kind: "Big Tech" , status: "none", statusNote: "No university-graduate software opening in India right now — its 2026 university-graduate posting has closed, and its other India software roles ask for 1+ years of experience." },
     { company: "Meta", role: "Software Engineer (university hire)", low: 35, high: 60, months: [8],
       apply: "https://www.metacareers.com/students-and-grads/",
       tests: "DSA interviews, including an AI-assisted coding round.",
-      note: "[B]: off-campus hiring at zero experience is the lowest-volume of the big four — treat as a later target.", kind: "Big Tech" , status: "none", statusNote: "Its university-grad roles open now are in the US, Canada and Europe — none in India." },
+      note: "[B]: off-campus hiring at zero experience is the lowest-volume of the big four — treat as a later target.", kind: "Big Tech" , status: "none", statusNote: "Could not re-verify on Meta's own site today (its job board loads by script and showed no listings). At the last confirmed check its university-grad roles open were in the US, Canada and Europe — none in India." },
     { company: "NVIDIA", role: "System Software Engineer", low: 25, high: 50, months: [6],
       apply: "https://www.nvidia.com/en-in/about-nvidia/careers/",
-      tests: "C/C++, operating systems and DSA.", kind: "Big Tech" , status: "batch", statusNote: "Its new-grad roles open now are for the 2027 batch." },
+      tests: "C/C++, operating systems and DSA.", kind: "Big Tech" , status: "batch", statusNote: "Could not re-verify today — NVIDIA's job board would not load its listings. Last confirmed: its new-grad roles were for the 2027 batch." },
     { company: "Amazon", role: "SDE-I", low: 24, high: 45, months: [4],
       apply: "https://www.amazon.jobs/",
       tests: "Online assessment (coding, debugging), then DSA + Leadership Principles interviews.",
-      note: "[B] reports ₹28–42 LPA. Re-apply after 6 months if rejected.", kind: "Big Tech" , status: "open", posting: { url: "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition", label: "SDE I — for 2025 and 2026 graduates" }, statusNote: "Open now — for 2025 and 2026 graduates, so your batch qualifies. (Re-verified live 15 Oct 2026.)" },
+      note: "[B] reports ₹28–42 LPA. Re-apply after 6 months if rejected.", kind: "Big Tech" , status: "open", posting: { url: "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition", label: "SDE I — for 2025 and 2026 graduates" }, statusNote: "Open now — for 2025 and 2026 graduates, so your batch qualifies. (Re-verified live 20 Oct 2026.)" },
     { company: "Adobe", role: "Member of Technical Staff", low: 25, high: 45, months: [5, 11],
       apply: "https://www.adobe.com/careers",
-      tests: "Coding test, then DSA and CS-fundamentals interviews.", kind: "Product" , status: "none", statusNote: "Its posting for 2026 graduates (Member of Technical Staff) has been filled; the graduate roles open now are in the US." },
+      tests: "Coding test, then DSA and CS-fundamentals interviews.", kind: "Product" , status: "none", statusNote: "No new-grad posting for India: the Member of Technical Staff roles open in India now are MTS-II, asking for 2+ years of experience." },
     { company: "Intuit", role: "Software Engineer 1", low: 25, high: 45, months: [5],
       apply: "https://www.intuit.com/careers/",
-      tests: "Coding test, then problem-solving and design discussion.", kind: "Product" , status: "none", statusNote: "Its new-college-grad roles open now are in the US and Canada." },
+      tests: "Coding test, then problem-solving and design discussion.", kind: "Product" , status: "none", statusNote: "Could not re-verify on Intuit's own site today (its careers pages showed no listings). At the last confirmed check its new-college-grad roles open were in the US and Canada." },
     { company: "Goldman Sachs", role: "Engineering Analyst", low: 25, high: 45, months: [1, 8],
       apply: "https://www.goldmansachs.com/careers/",
       tests: "HackerRank test (DSA, maths), then technical rounds.", kind: "Finance tech" , status: "none", statusNote: "Its India engineering campus hiring program is not listed as open on its students page." },
     { company: "Uber", role: "SDE-I", low: 22, high: 40, months: [11],
       apply: "https://www.uber.com/global/en/careers/",
-      tests: "Online coding test, then DSA interviews.", kind: "Product" , status: "none", statusNote: "Its SDE I posting for 2025 graduates (March 2026) has closed." },
+      tests: "Online coding test, then DSA interviews.", kind: "Product" , status: "none", statusNote: "Its SDE I posting for 2025 graduates (March 2026) has closed; the India software roles open now are Software Engineer 2 and above." },
     { company: "Salesforce", role: "AMTS Software Engineer", low: 22, high: 40, months: [4, 11],
       apply: "https://www.salesforce.com/company/careers/",
-      tests: "Coding test, then DSA and OOP interviews.", kind: "Product" , status: "none", statusNote: "Its India AMTS drive, for 2027 graduates, ran 19–24 Aug and has closed; the AMTS posting open now is for North America." },
+      tests: "Coding test, then DSA and OOP interviews.", kind: "Product" , status: "none", statusNote: "Its India AMTS drive for 2027 graduates (JR356580) closed on 24 Aug; the AMTS postings open now are for North America." },
   ],
 
   /* Nearer targets: off-campus fresher routes a beginner can realistically
