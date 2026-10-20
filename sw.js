@@ -88,7 +88,15 @@
    study-roadmap.js for that line.
    THE BUMP IS LOAD-BEARING — a phone holding v32 would keep serving the
    old pages cache-first, and the line would never appear. */
-const CACHE = 'jobhunt-v33';
+/* v34 completes the Akamai Software Engineer opening (Job 4073, India
+   Remote) in the job data: its verified apply link on Akamai's own site
+   (data/apply-links.json), the company/location/experience on its post in
+   data/shrestha-jobs.json, its ATS-80 resume draft registered in
+   data/job-content.json, and its Pipeline entry (data/job-pipeline.json).
+   The data files are network-only, but a new cache name still forces
+   every phone onto the current worker and shell.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v34';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
