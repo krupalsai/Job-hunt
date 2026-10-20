@@ -379,4 +379,16 @@
     var article = document.getElementById('activeRoadmapLesson');
     if (article) mount(article);
   });
+
+  /* Deep link (All lessons → Project Preparation card) opens this lesson
+   * without any roadmap click: study-roadmap.js preselects the interview
+   * track and renders the lesson open (its button carries
+   * aria-expanded="true"). Mount immediately in that case. */
+  function mountIfOpen() {
+    var btn = document.querySelector('[data-roadmap-open="project-guide"][aria-expanded="true"]');
+    var article = document.getElementById('activeRoadmapLesson');
+    if (btn && article) mount(article);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountIfOpen);
+  else mountIfOpen();
 })();
