@@ -309,6 +309,72 @@
   .lesson-ask:hover { text-decoration: none; background: var(--accent-2); }
   .roadmap-footnote { margin: 12px 0 1px; color: var(--faint); font-size: 12px; line-height: 1.45; }
 
+  /* Project Guide (project-guide.js) — tap-and-watch player inside the
+     project-guide lesson. Transform/opacity animations only: cheap on a phone. */
+  .pg-root { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .pg-modes { display: flex; gap: 4px; padding: 4px; border-radius: var(--r-md); background: var(--surface-3); margin-bottom: 12px; }
+  .pg-modes button { flex: 1; min-height: 44px; border: 0; border-radius: var(--r-sm); color: var(--muted); background: transparent;
+    font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+  .pg-modes button[aria-selected="true"] { color: var(--ink); background: var(--surface); box-shadow: var(--shadow-1); }
+  .pg-intro { color: var(--muted); font-size: 13.5px; margin: 0 0 10px; }
+  .pg-map { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 6px; }
+  .pg-block { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; min-height: 76px;
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface);
+    color: var(--ink); font: inherit; cursor: pointer; }
+  .pg-block.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-line); }
+  .pg-block-icon { font-size: 20px; line-height: 1.2; }
+  .pg-block-name { font-size: 14px; font-weight: 700; }
+  .pg-block-line { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+  .pg-flows-title, .pg-qs-title { margin: 16px 0 6px; font-size: 13px; }
+  .pg-flowlist { display: flex; flex-direction: column; gap: 6px; }
+  .pg-flowbtn { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 8px 12px; text-align: left;
+    border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink);
+    font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+  .pg-flowbtn.on { border-color: var(--accent); background: var(--surface-2); }
+  .pg-player { margin-top: 14px; border: 1px solid var(--accent-line); border-radius: var(--r-md); background: var(--surface); padding: 14px; }
+  .pg-ptitle { font-size: 16px; font-weight: 750; letter-spacing: -.01em; }
+  .pg-psub { color: var(--muted); font-size: 12.5px; margin: 2px 0 10px; }
+  .pg-bar { height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; margin-bottom: 14px; }
+  .pg-bar-fill { height: 100%; background: var(--accent); transform-origin: left; transition: transform .5s ease; }
+  .pg-nodes { position: relative; display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .pg-rail { position: absolute; left: 8px; top: 14px; bottom: 14px; width: 3px; border-radius: 2px; background: var(--surface-3); overflow: hidden; }
+  .pg-rail-fill { width: 100%; height: 100%; background: var(--accent); transform-origin: top; transition: transform .5s ease; }
+  .pg-node { position: relative; display: flex; align-items: baseline; gap: 9px; padding: 7px 6px 7px 2px; border-radius: var(--r-sm);
+    opacity: .55; transition: opacity .3s ease, background .3s ease; }
+  .pg-node.done { opacity: .8; }
+  .pg-node.on { opacity: 1; background: var(--surface-2); }
+  .pg-dot { flex: 0 0 auto; width: 15px; height: 15px; border-radius: 50%; background: var(--surface-3);
+    border: 2px solid var(--faint); align-self: center; transition: transform .3s ease, background .3s ease, border-color .3s ease; }
+  .pg-node.done .pg-dot { background: var(--accent); border-color: var(--accent); }
+  .pg-node.on .pg-dot { background: var(--accent); border-color: var(--accent); transform: scale(1.35); animation: pgPulse 1.4s ease-in-out infinite; }
+  @keyframes pgPulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-line); } 50% { box-shadow: 0 0 0 6px transparent; } }
+  .pg-node-who { flex: 0 0 auto; font-size: 10.5px; font-weight: 750; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  .pg-node-t { font-size: 13.5px; font-weight: 600; line-height: 1.35; }
+  .pg-cap { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-2); padding: 12px; animation: pgIn .35s ease both; }
+  @keyframes pgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .pg-cap-step { font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+  .pg-cap-t { font-size: 15.5px; font-weight: 700; margin: 3px 0 4px; }
+  .pg-cap p { margin: 0; font-size: 13.5px; line-height: 1.55; }
+  .pg-controls { display: flex; gap: 8px; margin-top: 12px; }
+  .pg-controls button { flex: 0 0 auto; min-width: 48px; min-height: 48px; padding: 0 12px; border: 1px solid var(--line);
+    border-radius: var(--r-md); background: var(--surface); color: var(--ink); font: inherit; font-size: 16px; cursor: pointer; }
+  .pg-controls button:disabled { opacity: .35; cursor: default; }
+  .pg-controls .pg-play { flex: 1; background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 750; font-size: 15px; }
+  .pg-done { margin: 12px 0 0; font-size: 13px; font-weight: 650; color: var(--accent); }
+  .pg-q { border-top: 1px solid var(--line); padding: 10px 0; }
+  .pg-q summary { cursor: pointer; font-weight: 650; font-size: 14px; line-height: 1.45; }
+  .pg-q summary span { display: block; font-size: 12px; font-weight: 500; color: var(--accent); }
+  .pg-q p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; }
+  .pg-q-why { color: var(--muted); font-size: 12.5px; }
+  .pg-rq-card { border: 1px solid var(--accent-line); border-radius: var(--r-md); background: var(--surface); padding: 16px; }
+  .pg-rq-from { font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+  .pg-rq-q { font-size: 17px; font-weight: 700; line-height: 1.4; margin: 8px 0 12px; }
+  .pg-rq-a { border-top: 1px solid var(--line); padding-top: 10px; margin-bottom: 12px; font-size: 14px; line-height: 1.55; animation: pgIn .35s ease both; }
+  .pg-rq-show, .pg-rq-next { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; margin-top: 8px;
+    padding: 0 14px; border-radius: var(--r-md); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .pg-rq-show { border: 0; background: var(--accent); color: var(--on-accent); }
+  .pg-rq-next { border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); }
+
   .data-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px;
                margin: 26px 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
   .data-foot .sub { font-size: 12.5px; color: var(--muted); }
@@ -589,6 +655,7 @@
           <div class="roadmap-tabs" role="tablist" aria-label="Study track">
             <button type="button" role="tab" id="roadmapQuantTab" aria-controls="roadmapTopics" aria-selected="true" data-roadmap-tab="quant">Quant</button>
             <button type="button" role="tab" id="roadmapReasonTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="reasoning">Reasoning</button>
+            <button type="button" role="tab" id="roadmapInterviewTab" aria-controls="roadmapTopics" aria-selected="false" data-roadmap-tab="interview">Project interview</button>
           </div>
           <div id="roadmapTopics" role="tabpanel" aria-labelledby="roadmapQuantTab"></div>
           <p class="roadmap-footnote">Ticks are saved on this phone, offline too. They do not sync across devices.</p>
@@ -600,6 +667,7 @@
 
 <script src="/study-lessons.js" defer></script>
 <script src="/study-roadmap.js" defer></script>
+<script src="/project-guide.js" defer></script>
 <script src="/prep/exams.js"></script>
 <script src="/prep/eligibility.js"></script>
 <script src="/data/top-pay.js"></script>
