@@ -96,7 +96,16 @@
    The data files are network-only, but a new cache name still forces
    every phone onto the current worker and shell.
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v34';
+/* v35 re-checks every role in data/top-pay.js on 20 Oct 2026: statuses and
+   status notes refreshed (Amazon SDE-I re-verified live; Google's 2026
+   university-graduate posting confirmed closed; Salesforce's 2027 AMTS
+   drive confirmed closed on 24 Aug), and the roles whose own job boards
+   would not load (Microsoft, Meta, NVIDIA, Intuit) now say so in their
+   notes instead of silently keeping the 13 Oct position. top-pay.js is
+   precached, so without a new cache name phones keep serving the stale
+   card.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v35';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
