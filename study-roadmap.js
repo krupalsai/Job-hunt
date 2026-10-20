@@ -74,6 +74,18 @@
   const panel = document.getElementById('roadmapTopics');
   let opened = null;
   if (!summary || !panel) return;
+  // Deep link (All lessons → Project Preparation card):
+  // /index.html?track=interview&lesson=project-guide preselects the track
+  // and opens that lesson, so one tap lands inside the interview track.
+  let deepLinked = false;
+  try {
+    const q = new URLSearchParams(location.search);
+    const hq = new URLSearchParams(String(location.hash || '').replace(/^#/, ''));
+    const wantTrack = q.get('track') || hq.get('track');
+    if (wantTrack && Object.prototype.hasOwnProperty.call(tracks, wantTrack)) { selected = wantTrack; deepLinked = true; }
+    const wantLesson = q.get('lesson') || hq.get('lesson');
+    if (wantLesson && all[selected].some(([id]) => id === wantLesson)) opened = wantLesson;
+  } catch (_) { /* a malformed URL just leaves the defaults */ }
   const safe = s => String(s).replace(/[&<>"']/g, c =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function count(track) { return all[track].filter(([id]) => done[track + ':' + id] === true).length; }
@@ -170,4 +182,8 @@
   });
   drawSummary();
   drawTopics();
+  if (deepLinked) {
+    const target = panel.querySelector('#activeRoadmapLesson') || summary;
+    if (target) target.scrollIntoView({ block: 'nearest' });
+  }
 })();
