@@ -76,7 +76,12 @@
    project-guide), so interview prep is one tap from the lesson list.
    THE BUMP IS LOAD-BEARING — a phone holding v30 would keep serving the
    old learn.html cache-first, and the card would never appear. */
-const CACHE = 'jobhunt-v31';
+/* v32 adds the Project Preparation card to Home (index.html), right after
+   Today's study, so interview prep is visible the moment the app opens —
+   not only inside Study → All lessons.
+   THE BUMP IS LOAD-BEARING — a phone holding v31 would keep serving the
+   old index.html cache-first, and the card would never appear. */
+const CACHE = 'jobhunt-v32';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
