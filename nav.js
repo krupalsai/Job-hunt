@@ -219,6 +219,8 @@
      Named on the row exactly as they are titled on the screen they open.
      Pages (plain:true) are real links; the rest are sections of the prep page. */
   const MENU_DESTS = [
+    { id: "interview-prep", label: "Interview Prep", icon: null, href: "/interview-prep.html", plain: true,
+      sub: "Practise your project story, technical questions and checklist" },
     { id: "si-plan", label: "TS SI 47-day plan", icon: null, href: "/si.html", plain: true,
       sub: "Today's tasks, the paper decoded, your mock scores" },
     { id: "lessons", label: "All lessons", icon: null,
@@ -241,7 +243,7 @@
   /* Icons are attached here rather than inline so the lists above read as a
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
-    "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
+    "interview-prep": "book", "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
     syllabus: "exam", feed: "spark", focus: "timer", pipeline: "jobs" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
