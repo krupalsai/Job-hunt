@@ -44,6 +44,11 @@
     interview: [
       { name: '▶ Watch it happen · Interactive guide', note: 'Tap a part of your platform and watch what it does, step by step.', topics: [
         ['project-guide', 'The whole platform — tap & watch'] ] },
+      { name: '📄 Resume Questions · Your resume is the question paper', note: 'Every line on your resume, and the questions it invites — learn the answers in your own words.', topics: [
+        ['resume-guide', 'Your whole resume — tap a line'], ['resume-summary', 'The summary & your role'],
+        ['resume-linux', 'Linux & shell — prove it'], ['resume-code', 'JavaScript, TypeScript & Python'],
+        ['resume-backend', 'APIs, webhooks & the database'], ['resume-ops', 'Git, deploys & the support bot'],
+        ['resume-learning', '“Learning from zero” — say it strong'] ] },
       { name: 'Start here · Your platform in plain words', topics: [
         ['platform-overview', 'What your platform is'], ['your-role', 'Your role — the honest answer'] ] },
       { name: 'APIs and endpoints', topics: [
@@ -81,13 +86,31 @@
       const ppLine = document.getElementById('projectPrepProgress');
       const ivLessons = window.STUDY_LESSONS && window.STUDY_LESSONS.interview;
       if (ppLine && ivLessons) {
-        const ivIds = Object.keys(ivLessons);
+        // Resume Questions lessons (ids starting 'resume-') carry their own
+        // total below; Project Preparation keeps its original 15.
+        const ivIds = Object.keys(ivLessons).filter(id => id.indexOf('resume-') !== 0);
         const ivDone = ivIds.filter(id => done['interview:' + id] === true).length;
         ppLine.textContent = ivDone + ' of ' + ivIds.length + ' project lessons completed';
       }
     } catch (_) { /* a progress line must never break the page */ }
   }
+  // Resume Questions carries its OWN total too: the resume-* lessons inside
+  // the interview track, read from this same store. Fills the line inside
+  // the Resume Questions card — on Home (#resumePrepSec) and on All lessons
+  // (#resume-prep-card) — whichever page loaded us.
+  function fillResumeProgress() {
+    try {
+      const rqLine = document.getElementById('resumePrepProgress');
+      const ivLessons = window.STUDY_LESSONS && window.STUDY_LESSONS.interview;
+      if (rqLine && ivLessons) {
+        const rqIds = Object.keys(ivLessons).filter(id => id.indexOf('resume-') === 0);
+        const rqDone = rqIds.filter(id => done['interview:' + id] === true).length;
+        rqLine.textContent = rqDone + ' of ' + rqIds.length + ' resume lessons completed';
+      }
+    } catch (_) { /* a progress line must never break the page */ }
+  }
   fillProjectProgress();
+  fillResumeProgress();
   let selected = 'quant';
   const summary = document.getElementById('roadmapSummary');
   const panel = document.getElementById('roadmapTopics');
@@ -195,6 +218,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (_) { /* still usable this visit */ }
     drawSummary();
     fillProjectProgress();
+    fillResumeProgress();
     // Keep the open phase and checkbox in place instead of rerendering under a tap.
     const phase = input.closest('.roadmap-phase');
     if (phase) phase.querySelector('summary span:last-child').textContent =
