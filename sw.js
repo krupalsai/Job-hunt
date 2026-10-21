@@ -105,16 +105,25 @@
    precached, so without a new cache name phones keep serving the stale
    card.
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-/* v36 adds Resume Questions: a sibling section to Project Preparation —
+/* v36 flips the Akamai Software Engineer (Job 4073) Pipeline entry:
+   all 5 referral asks (4 connection notes + Roupyadip De's free Open
+   Profile InMail) were sent on 21 Oct 2026, so the referral targets in
+   data/job-pipeline.json now read sent with that date. The application
+   itself is still pending Krupal's own submission.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+/* v37 adds Resume Questions: a sibling section to Project Preparation —
    7 new lessons in the Project interview track (study-lessons.js), a new
    phase in study-roadmap.js with its own progress total for the new
    cards on Home and All lessons, and /resume-guide.js, the tap-a-line
    interactive player ("your resume is the question paper", 13 resume
    lines, 53 questions) that mounts inside the resume-guide lesson.
-   THE BUMP IS LOAD-BEARING — a phone holding v35 would keep serving the
-   old index.html, learn.html and lesson files cache-first, and the
-   whole section would never appear. */
-const CACHE = 'jobhunt-v36';
+   (This worker's first v36 attempt landed minutes after the Akamai v36
+   above; v37 supersedes both so no phone can hold a v36 cache that
+   lacks /resume-guide.js in its precache.)
+   THE BUMP IS LOAD-BEARING — a phone holding v35 or v36 would keep
+   serving the old index.html, learn.html and lesson files cache-first,
+   and the whole section would never appear. */
+const CACHE = 'jobhunt-v37';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
