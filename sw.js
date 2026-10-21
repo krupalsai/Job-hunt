@@ -105,7 +105,13 @@
    precached, so without a new cache name phones keep serving the stale
    card.
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v35';
+/* v36 flips the Akamai Software Engineer (Job 4073) Pipeline entry:
+   all 5 referral asks (4 connection notes + Roupyadip De's free Open
+   Profile InMail) were sent on 21 Oct 2026, so the referral targets in
+   data/job-pipeline.json now read sent with that date. The application
+   itself is still pending Krupal's own submission.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v36';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
