@@ -330,29 +330,101 @@
   var lastPlayerEl = null, lastPlayer = null;
 
   function renderVideo(query) {
-    var q = encodeURIComponent(query);
+    var q = encodeURIComponent(String(query || "").trim().slice(0, 120));
     var wrap = document.createElement("div");
     wrap.className = "video-wrap";
+    var status = document.createElement("div");
+    status.className = "video-open";
+    status.textContent = "Searching current video results…";
+    status.setAttribute("role", "status");
+    wrap.appendChild(status);
+
+    var results = document.createElement("div");
+    results.className = "video-results";
+    results.style.display = "grid";
+    results.style.gap = "10px";
+    wrap.appendChild(results);
+
     var frame = document.createElement("iframe");
-    // enablejsapi=1 so "play the video" can drive it via the IFrame API.
-    frame.src = "https://www.youtube.com/embed?listType=search&list=" + q + "&enablejsapi=1";
     frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; picture-in-picture");
     frame.setAttribute("allowfullscreen", "");
     frame.setAttribute("title", "Recommended video");
     frame.setAttribute("loading", "lazy");
+    frame.style.display = "none";
     wrap.appendChild(frame);
+
     var btn = document.createElement("a");
     btn.className = "video-open";
     btn.href = "https://www.youtube.com/results?search_query=" + q;
     btn.target = "_blank";
     btn.rel = "noopener";
-    btn.textContent = "Watch on YouTube";
+    btn.textContent = "See all results on YouTube";
     wrap.appendChild(btn);
     messagesEl.appendChild(wrap);
-    lastPlayerEl = frame;
+    lastPlayerEl = null;
     lastPlayer = null;
-    ensureYtApi();
     scrollBottom();
+
+    fetch("/api/youtube-search?q=" + q, { headers: { "Accept": "application/json" } })
+      .then(function (res) {
+        return res.json().then(function (data) {
+          if (!res.ok) throw new Error((data && data.error) || "Video search is unavailable.");
+          return data;
+        });
+      })
+      .then(function (data) {
+        status.textContent = data.videos && data.videos.length
+          ? "Fresh results · updated " + new Date(data.updated_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : "No suitable long-form videos found. Try another topic.";
+        (data.videos || []).forEach(function (video, index) {
+          var card = document.createElement("button");
+          card.type = "button";
+          card.style.cssText = "display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:9px;border:1px solid var(--panel-border);border-radius:12px;background:var(--panel);color:var(--text);";
+          var img = document.createElement("img");
+          img.src = video.thumbnail;
+          img.alt = "";
+          img.loading = "lazy";
+          img.style.cssText = "width:112px;aspect-ratio:16/9;object-fit:cover;border-radius:7px;flex-shrink:0;background:#000;";
+          var meta = document.createElement("span");
+          meta.style.cssText = "display:block;min-width:0;font-size:13px;line-height:1.4;";
+          var title = document.createElement("strong");
+          title.textContent = video.title;
+          title.style.cssText = "display:block;margin-bottom:4px;";
+          var details = document.createElement("span");
+          details.textContent = video.channel + " · " + video.duration;
+          details.style.cssText = "display:block;color:var(--muted);";
+          meta.appendChild(title);
+          meta.appendChild(details);
+          card.appendChild(img);
+          card.appendChild(meta);
+          card.addEventListener("click", function () {
+            frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(video.id) + "?enablejsapi=1";
+            frame.style.display = "block";
+            lastPlayerEl = frame;
+            lastPlayer = null;
+            ensureYtApi();
+            status.textContent = "Playing in the app: " + video.title;
+            scrollBottom();
+          });
+          results.appendChild(card);
+          if (index === 0) {
+            frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(video.id) + "?enablejsapi=1";
+            frame.style.display = "block";
+            lastPlayerEl = frame;
+          }
+        });
+        if (lastPlayerEl) ensureYtApi();
+        scrollBottom();
+      })
+      .catch(function (err) {
+        status.textContent = err && err.message ? err.message : "Video search failed.";
+        status.appendChild(document.createTextNode(" "));
+        var retry = document.createElement("button");
+        retry.type = "button";
+        retry.textContent = "Retry";
+        retry.addEventListener("click", function () { wrap.remove(); renderVideo(decodeURIComponent(q)); });
+        status.appendChild(retry);
+      });
   }
 
   function playLastVideo() {
