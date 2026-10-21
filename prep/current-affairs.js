@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-20",
+  updated: "2026-10-21",
 
   items: [
     /* {
@@ -48,6 +48,46 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-21",
+      topic: "Schemes",
+      headline: "UDAN scheme turns 10 on 21 October: 687 routes, 95 aerodromes, 1.72 crore passengers",
+      why: "Milestone numbers the paper loves. Launched 21 October 2016 (Ude Desh ka Aam Naagrik); as of October 2026 — 687 routes operationalised, 95 aerodromes, 3.68 lakh+ flights, 1.72 crore passengers, viability gap funding of Rs. 5,091.23 crore disbursed (till 15 October 2026). Purnea (Bihar, ~2.8 km runway, the state's longest) is the cited before/after example.",
+      source: "Blitz India",
+      url: "https://blitzindiamedia.com/news/india-weekly-news-trade-udan-energy-sports-agriculture/",
+    },
+    {
+      date: "2026-10-20",
+      topic: "Economy",
+      headline: "Singareni revises pay scales for ~1,800 executive officers (E-1 to E-7) on par with Coal India",
+      why: "Askable set: who announced (Deputy CM Mallu Bhatti Vikramarka, 20 October, framed as a Dasara move), who it covers (~1,800 executive officers in E-1 to E-7; basic pay now E-1 Rs. 60,000, E-2 Rs. 70,000, E-3 Rs. 80,000, E-4 Rs. 90,000, E-5 Rs. 1 lakh, E-6/E-7 Rs. 1.2 lakh), and the two dates (notionally from 1 January 2017, money from 25 September 2026 when the 585th SCCL board approved it; orders issued by Director (Personnel) Gautam Potru on the evening of 19 October). Follows the Rs. 596 crore bonus (34% of Rs. 1,754 crore net profit) for ~39,000 workers — avg Rs. 1,53,912 per regular employee, Rs. 5,500 per contract worker.",
+      source: "Livemint",
+      url: "https://www.livemint.com/news/india/dasara-gift-after-bonus-and-festive-money-pay-scale-revision-confirmed-on-par-with-coal-india-telangana-deputy-cm-11792496061215.html",
+    },
+    {
+      date: "2026-10-20",
+      topic: "Polity",
+      headline: "Telangana to earmark 250 acres in Future City for campuses of 10 foreign universities",
+      why: "Numbers + place + names is the set. Government tentatively allots 20–25 acres each to 10 universities, targeting top-200 institutions from the US, UK and Australia (Union rules allow top-500 QS universities to set up offshore campuses). University of Colorado Denver has preliminary UGC approval; University of London, University of Birmingham and four others have expressed interest. A senior-officials committee is working out incentives and a dedicated policy ahead of the Global Summit.",
+      source: "Hyderabad Mail",
+      url: "https://hyderabadmail.com/hyderabad-250-acres-foreign-university-campuses-future-city/",
+    },
+    {
+      date: "2026-10-20",
+      topic: "Schemes",
+      headline: "Telangana to implement 25% RTE quota for EWS children in private schools",
+      why: "Figure + law + who it covers. Under the Right to Education Act, private schools reserve 25% of entry-level seats for economically weaker section and disadvantaged-group children — a state acting on it is the kind of current event the paper pairs with the Act's provision (Section 12(1)(c)). Watch for the formal order/notification before treating it as implemented.",
+      source: "Careers360",
+      url: "https://news.careers360.com/telangana-implement-25-percent-rte-quota-for-ews-children-in-private-schools-report-students-disadvantaged-group-supreme-court",
+    },
+    {
+      date: "2026-10-20",
+      topic: "Summits",
+      headline: "25th SCO Council of Heads of Government meet in Dushanbe: Rajnath Singh leads India, PMTEC Action Plan 2026–2030 endorsed",
+      why: "Askable set: where (Dushanbe, Tajikistan, 19–20 October), who (Defence Minister Rajnath Singh represented India), what was decided (Joint Communique, SCO budget for 2027, and the PMTEC — Programme on Multilateral Trade and Economic Cooperation — Action Plan 2026–2030 covering transport, finance, digital economy and social development). India's line: 'more institutions don't mean more results' + zero tolerance to terrorism with no double standards.",
+      source: "Nation Press",
+      url: "https://www.nationpress.com/international/india-to-sco-more-bodies-wont-mean-more-results",
+    },
     {
       date: "2026-10-19",
       topic: "Polity",
