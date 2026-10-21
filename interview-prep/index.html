@@ -14,6 +14,31 @@
 <main>
 <p class="pill">JOB HUNT · LEARN BY DOING</p><h1>Student Platform: Learn it, then explain it</h1>
 <p class="muted">This is a guided course, not a multiple-choice test. Learn each concept, explore the flows, write your own explanation, reveal a reference answer, and mark the lesson complete. Project details come from the interview guide; items it marks “verify in code” are still unconfirmed.</p>
+
+<section class="panel visual-lab" id="requestVisualLab">
+<style>
+.visual-lab{margin:18px 0}.visual-lab .lab-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.visual-lab .lab-input{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.visual-lab input[type=text]{flex:1;min-width:180px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}.visual-lab select{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}.visual-flow{display:grid;grid-template-columns:1fr;gap:8px;margin:16px 0}.visual-step{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);background:var(--bg);border-radius:13px;padding:11px;text-align:left;width:100%;color:var(--ink)}.visual-step .num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--line);font-weight:800}.visual-step small{display:block;color:var(--muted)}.visual-step.active{border:2px solid var(--accent);background:rgba(124,164,255,.09)}.visual-step.active .num{background:var(--accent);color:#071323}.visual-step.done .num{background:rgba(120,180,130,.22)}.flow-time{font-variant-numeric:tabular-nums;font-size:.82rem;color:var(--muted);white-space:nowrap}.lab-detail{padding:14px;border:1px solid var(--line);border-radius:14px;margin-top:10px}.lab-detail h3{margin-top:0}.lab-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.lab-svg{width:100%;height:auto;display:block;max-height:300px}.lab-svg .node{fill:var(--bg);stroke:var(--line);stroke-width:2}.lab-svg .node-on{stroke:var(--accent);stroke-width:4}.lab-svg text{fill:var(--ink);font:12px system-ui,sans-serif}.lab-svg .arrow{stroke:var(--muted);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}.lab-svg .pulse{stroke:var(--accent);stroke-width:4;fill:none;stroke-linecap:round}.lab-note{font-size:.9rem;color:var(--muted)}@media(min-width:700px){.visual-flow{grid-template-columns:1fr 1fr}.visual-lab .lab-input{flex-wrap:nowrap}}
+</style>
+<div class="lab-head"><div><span class="pill">VISUAL REQUEST SIMULATOR</span><h2>When you type a question, what happens?</h2></div></div>
+<p class="muted">Type an example question and step through the system like a moving diagram. This is a teaching simulation, not a live API call or real production timing.</p>
+<div class="lab-input"><input id="traceQuestion" type="text" value="What is my payment status?" aria-label="Example question"><select id="traceChannel" aria-label="Choose request channel"><option value="web">Job Hunt website</option><option value="whatsapp">WhatsApp support bot</option></select><button class="primary" id="traceStart">Trace this question</button></div>
+<div class="diagram-section"><h3>Visual system map</h3>
+<svg class="lab-svg" viewBox="0 0 720 255" role="img" aria-label="Request flow from user to browser or WhatsApp, server API or webhook, authentication and application logic, database or AI, then response">
+<defs><marker id="traceArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/></marker></defs>
+<rect class="node" id="svg-user" x="12" y="20" rx="12" width="130" height="62"/><text x="77" y="45" text-anchor="middle">YOU</text><text x="77" y="63" text-anchor="middle" id="svg-channel">Browser</text>
+<path class="arrow" d="M142 51 H170"/><rect class="node" id="svg-api" x="174" y="20" rx="12" width="145" height="62"/><text x="246" y="45" text-anchor="middle" id="svg-api-title">Next.js API</text><text x="246" y="63" text-anchor="middle">Vercel server</text>
+<path class="arrow" d="M319 51 H347"/><rect class="node" id="svg-auth" x="351" y="20" rx="12" width="145" height="62"/><text x="423" y="45" text-anchor="middle" id="svg-auth-title">Session + role</text><text x="423" y="63" text-anchor="middle">Check permission</text>
+<path class="arrow" d="M496 51 H524"/><rect class="node" id="svg-data" x="528" y="20" rx="12" width="180" height="62"/><text x="618" y="45" text-anchor="middle" id="svg-data-title">Supabase / logic</text><text x="618" y="63" text-anchor="middle">Read / decide</text>
+<path class="arrow" d="M618 82 V119 H423 V145"/><rect class="node" id="svg-reply" x="351" y="145" rx="12" width="145" height="62"/><text x="423" y="170" text-anchor="middle">Response</text><text x="423" y="188" text-anchor="middle">JSON / message</text>
+<path class="arrow" d="M351 176 H246 V145"/><rect class="node" id="svg-screen" x="174" y="145" rx="12" width="145" height="62"/><text x="246" y="170" text-anchor="middle">Your screen</text><text x="246" y="188" text-anchor="middle">Show result</text>
+<text x="360" y="238" text-anchor="middle">Request travels forward → result comes back ←</text>
+</svg></div>
+<div class="visual-flow" id="traceSteps" aria-live="polite"></div>
+<div class="lab-detail" id="traceDetail"><h3>Ready to trace</h3><p>Tap “Trace this question” to see each step and what it does.</p></div>
+<div class="lab-actions"><button id="tracePrev" disabled>← Previous step</button><button class="primary" id="traceNext" disabled>Next step →</button><button id="traceReset">Reset diagram</button></div>
+<p class="lab-note"><strong>About API time:</strong> times shown here are placeholders for learning, not measurements from your deployed app. Real timing depends on network, authentication, database queries, and external providers. Use browser DevTools → Network to measure the actual request duration.</p>
+</section>
+
 <section class="panel system-map" id="platformSystemMap">
 <h2>Complete system diagram: how our platform works</h2>
 <p class="muted">Use this as the big picture first. Each box is one part of the system; arrows show how information moves. These notes are based on the Student Platform interview guide in this repository. Where the guide says “verify in code,” treat it as unconfirmed.</p>
@@ -196,4 +221,45 @@ function render(){const l=lessons[current];renderList();$('lessonNumber').textCo
 function renderChecklist(){const root=$('checklist');root.replaceChildren();checklistItems.forEach((item,i)=>{const label=document.createElement('label'),input=document.createElement('input'),span=document.createElement('span');input.type='checkbox';input.checked=!!answers['check'+i];input.addEventListener('change',()=>{answers['check'+i]=input.checked});span.textContent=item;label.append(input,span);root.appendChild(label)})}
 $('myAnswer').addEventListener('input',()=>{answers[current]=$('myAnswer').value});$('hintBtn').addEventListener('click',()=>{$('hint').classList.toggle('hidden')});$('modelBtn').addEventListener('click',()=>{$('model').classList.toggle('hidden')});$('completeBtn').addEventListener('click',()=>{if(completed.has(current))completed.delete(current);else completed.add(current);render()});$('prevBtn').addEventListener('click',()=>{if(current>0){current--;render()}});$('nextBtn').addEventListener('click',()=>{current=current===lessons.length-1?0:current+1;render()});
 renderChecklist();render();
-</script></body></html>
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+if(!$('requestVisualLab'))return;
+const webSteps=[
+["1","You type","Your text is entered in the page. Typing alone does not necessarily call an API; the app must send a request after an action or as you type.","No API request yet","User input"],
+["2","Browser sends request","When you submit or tap a control, the page sends an HTTP request to a Next.js API route. The browser waits for the server response.","Network time varies","HTTP request"],
+["3","Server checks identity","For private information, the server validates the session and checks the role and access to this specific record. Public endpoints may use different checks.","Server work; varies","Authentication + authorization"],
+["4","Application queries data","The API runs its business rules and asks Supabase/Postgres for the permitted record. The database may use indexes and relationships to find it.","Database time varies","SQL / Supabase"],
+["5","Server returns result","The API sends a response—often JSON—with the allowed status or a useful error. It should not hide a failed query as an empty result.","Includes server processing","HTTP response"],
+["6","Page displays answer","JavaScript reads the response and updates the visible page. The user sees the status, loading state, or error.","Rendering time varies","UI update"]
+];
+const waSteps=[
+["1","Student sends message","The message is sent through WhatsApp. This channel is different from typing into the Job Hunt website.","Provider/network time varies","WhatsApp"],
+["2","WhatsApp calls webhook","WhatsApp sends an HTTP request to the platform's configured webhook endpoint with message details.","Webhook delivery varies","Webhook request"],
+["3","Webhook validates request","The server checks the expected signature/configuration and applies abuse controls before processing the message.","Server work; varies","Verification"],
+["4","Bot finds the intent","The documented bot tries rules, FAQ answers and fuzzy matching; an AI intent classifier may be used as a fallback.","Lookup / AI time varies","Rules + FAQ + classifier"],
+["5","Application chooses reply","The app uses the structured intent and platform rules to choose an allowed reply. The classifier is not automatically the same as a free-form answer generator.","Depends on selected path","Business logic"],
+["6","Reply goes back to WhatsApp","The server calls the WhatsApp API to send the answer. The provider delivers it to the student; this is an external network hop.","Provider delivery varies","Outbound API"]
+];
+let steps=webSteps,idx=0;
+function render(){
+ const root=$('traceSteps');root.replaceChildren();
+ steps.forEach((s,i)=>{const b=document.createElement('button');b.className='visual-step'+(i===idx?' active':'')+(i<idx?' done':'');b.innerHTML='<span class="num">'+s[0]+'</span><span><strong>'+s[1]+'</strong><small>'+s[4]+'</small></span><span class="flow-time">'+(i===idx?'CURRENT':'STEP '+s[0])+'</span>';b.addEventListener('click',()=>{idx=i;render()});root.appendChild(b)});
+ const s=steps[idx];$('traceDetail').replaceChildren();const h=document.createElement('h3');h.textContent=s[0]+'. '+s[1];const p=document.createElement('p');p.textContent=s[2];const t=document.createElement('p');t.className='lab-note';t.textContent='Timing: '+s[3];const ex=document.createElement('div');ex.className='simple-example';ex.textContent='In this example: “'+$('traceQuestion').value+'”';$('traceDetail').append(h,p,t,ex);
+ $('tracePrev').disabled=idx===0;$('traceNext').disabled=idx===steps.length-1;
+ ['svg-user','svg-api','svg-auth','svg-data','svg-reply','svg-screen'].forEach(id=>$(id).classList.remove('node-on'));
+ const nodeIds=idx===0?['svg-user']:idx===1?['svg-user','svg-api']:idx===2?['svg-auth']:idx===3?['svg-data']:idx===4?['svg-reply']:['svg-screen'];
+ if($('traceChannel').value==='whatsapp'){$('svg-channel').textContent='WhatsApp';$('svg-api-title').textContent='Webhook';$('svg-auth-title').textContent='Verify message';$('svg-data-title').textContent='Rules / AI';}else{$('svg-channel').textContent='Browser';$('svg-api-title').textContent='Next.js API';$('svg-auth-title').textContent='Session + role';$('svg-data-title').textContent='Supabase / logic';}
+ nodeIds.forEach(id=>$(id).classList.add('node-on'));
+}
+$('traceStart').addEventListener('click',()=>{steps=$('traceChannel').value==='whatsapp'?waSteps:webSteps;idx=0;render()});
+$('traceChannel').addEventListener('change',()=>{steps=$('traceChannel').value==='whatsapp'?waSteps:webSteps;idx=0;render()});
+$('tracePrev').addEventListener('click',()=>{idx=Math.max(0,idx-1);render()});
+$('traceNext').addEventListener('click',()=>{idx=Math.min(steps.length-1,idx+1);render()});
+$('traceReset').addEventListener('click',()=>{idx=0;render()});
+render();
+})();
+</script>
+
+</body></html>
