@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="/ui.css"><script src="/prep/exams.js" defer></script><script src="/prep/eligibility.js" defer></script><script src="/nav.js" defer></script>
 <title>Student Platform · Interactive Learning</title>
 <style>
+.system-map{margin:18px 0}.system-map .diagram{display:grid;gap:10px;margin:14px 0}.diagram-row{display:flex;gap:8px;align-items:stretch;justify-content:center;flex-wrap:wrap}.diagram-node{flex:1 1 140px;min-width:120px;border:1px solid var(--line);background:var(--bg);border-radius:13px;padding:12px;text-align:center}.diagram-node strong{display:block;margin-bottom:4px}.diagram-node small{display:block;color:var(--muted);font-size:.84rem}.diagram-arrow{text-align:center;color:var(--accent);font-weight:800;font-size:1.2rem}.diagram-node.primary-node{border-color:var(--accent);background:rgba(124,164,255,.08)}.diagram-caption{font-size:.9rem;color:var(--muted);margin:6px 0 14px}.diagram-section{border-top:1px solid var(--line);padding-top:12px;margin-top:16px}.term-list{display:grid;grid-template-columns:1fr;gap:8px}.term{padding:10px 12px;border:1px solid var(--line);border-radius:10px}.term strong{display:block}.diagram-tabs{display:flex;gap:8px;flex-wrap:wrap}.diagram-tabs button.active{background:var(--accent);color:#081323;font-weight:700}.diagram-panel[hidden]{display:none}@media(min-width:680px){.term-list{grid-template-columns:1fr 1fr}.diagram-node{max-width:240px}}
+
 .roadmap{margin:18px 0}.roadmap-stage{border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;background:var(--bg)}.roadmap-stage h3{margin:0;font-size:1.05rem}.stage-head{display:flex;align-items:center;gap:10px}.stage-head button{flex:1;font-weight:650}.stage-body{padding:12px 4px 4px}.stage-body[hidden]{display:none}.stage-check{display:flex;gap:10px;align-items:flex-start;margin:12px 0}.stage-check input{width:20px;height:20px;flex-shrink:0;accent-color:var(--accent)}.resource-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.resource-links a{border:1px solid var(--line);border-radius:10px;padding:7px 10px;color:var(--accent);text-decoration:none}.simple-example{border-left:3px solid var(--accent);padding:10px 12px;background:rgba(124,164,255,.08);border-radius:0 10px 10px 0}.roadmap-stage.complete .stage-head button:before{content:"✓ ";color:var(--accent)}.stage-body p{margin:8px 0}
 
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:980px;margin:auto;padding:22px 14px 70px}h1,h2,h3{line-height:1.22}h1{font-size:clamp(1.8rem,5vw,2.65rem)}h2{font-size:1.45rem}.muted,.meta{color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.85rem;color:var(--muted)}.layout{display:grid;grid-template-columns:1fr;gap:14px}.panel,.lesson-card,.teach,.exercise{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0}.lesson-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lesson-button,button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer;text-align:left}.lesson-button.active,.primary{background:var(--accent);color:#081323;border-color:transparent;font-weight:700}.lesson-button.done:before{content:'✓ ';font-weight:800}.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0}.bar span{display:block;background:var(--accent);height:100%;width:0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row .grow{flex:1}.teach{background:var(--bg)}.teach h3{margin-top:0}.callout{border-left:3px solid var(--accent);padding:10px 13px;background:rgba(124,164,255,.08);border-radius:0 10px 10px 0}.flow{display:grid;gap:8px}.flow button{width:100%}.flow button[aria-pressed=true]{border-color:var(--accent);outline:1px solid var(--accent)}.flow-detail{padding:12px;border:1px solid var(--line);border-radius:12px}.exercise textarea{width:100%;min-height:110px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}.answer{padding:12px;border-radius:12px;background:rgba(120,180,130,.1);border:1px solid var(--line);margin-top:10px}.hidden{display:none!important}.small{font-size:.92rem}.checks label{display:flex;gap:10px;padding:9px 0}.checks input{width:20px;height:20px;accent-color:var(--accent)}ul,ol{padding-left:1.3rem}code{overflow-wrap:anywhere}.source-link{color:var(--accent)}@media(min-width:760px){main{padding:34px 22px 70px}.layout{grid-template-columns:290px minmax(0,1fr)}.lesson-list{grid-template-columns:1fr}.panel,.lesson-card,.teach,.exercise{padding:22px}}
@@ -12,6 +14,76 @@
 <main>
 <p class="pill">JOB HUNT · LEARN BY DOING</p><h1>Student Platform: Learn it, then explain it</h1>
 <p class="muted">This is a guided course, not a multiple-choice test. Learn each concept, explore the flows, write your own explanation, reveal a reference answer, and mark the lesson complete. Project details come from the interview guide; items it marks “verify in code” are still unconfirmed.</p>
+<section class="panel system-map" id="platformSystemMap">
+<h2>Complete system diagram: how our platform works</h2>
+<p class="muted">Use this as the big picture first. Each box is one part of the system; arrows show how information moves. These notes are based on the Student Platform interview guide in this repository. Where the guide says “verify in code,” treat it as unconfirmed.</p>
+<div class="diagram-section"><h3>1. Main architecture</h3>
+<div class="diagram">
+<div class="diagram-row"><div class="diagram-node"><strong>Student phone / browser</strong><small>Register, upload, view status, ask support question</small></div><div class="diagram-node"><strong>Admin phone / browser</strong><small>Manage students, batches, payments</small></div></div>
+<div class="diagram-arrow">↓ HTTPS requests</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>Next.js app on Vercel</strong><small>Pages / React UI + server API routes (/api/...)</small></div></div>
+<div class="diagram-arrow">↓ API route checks identity and permission before protected work</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Session + authorization</strong><small>Validate token, look up role, restrict admin to assigned batches</small></div><div class="diagram-node"><strong>Server-side business logic</strong><small>Validate inputs, apply rules, call integrations</small></div></div>
+<div class="diagram-arrow">↓ allowed operation only</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>Supabase / PostgreSQL</strong><small>profiles · batches · payments · sessions · assignments · audit data</small></div><div class="diagram-node"><strong>File storage</strong><small>Photos, ID documents, receipts (provider/configuration as implemented)</small></div></div>
+<div class="diagram-row"><div class="diagram-node"><strong>Payment gateway</strong><small>Payment attempt and verified result</small></div><div class="diagram-node"><strong>Messaging services</strong><small>WhatsApp support and Telegram admin alerts</small></div></div>
+<div class="diagram-arrow">↑ response returns through API → page updates</div>
+</div>
+<p class="diagram-caption">Important: the browser is not trusted with the service-role database secret. Protected operations should pass through server-side API routes. The database role and resource permissions must be checked on the server.</p>
+</div>
+<div class="diagram-section"><h3>2. When someone asks the WhatsApp support bot a question</h3>
+<div class="diagram">
+<div class="diagram-row"><div class="diagram-node"><strong>Student sends message</strong><small>WhatsApp</small></div></div><div class="diagram-arrow">↓ webhook request</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Webhook security</strong><small>Verify sender signature and apply rate limits</small></div></div><div class="diagram-arrow">↓ accepted message</div>
+<div class="diagram-row"><div class="diagram-node"><strong>1. Rules</strong><small>Known commands / direct answers</small></div><div class="diagram-node"><strong>2. FAQ lookup</strong><small>Known saved answers</small></div><div class="diagram-node"><strong>3. Fuzzy match</strong><small>Find similar stored questions</small></div></div><div class="diagram-arrow">↓ if earlier methods do not match</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>4. AI intent classifier</strong><small>Guide says Groq classifier; returns structured intent, not a free-form answer</small></div></div><div class="diagram-arrow">↓ structured intent</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Application logic</strong><small>Chooses the allowed reply/action using platform rules</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>Reply sent to student</strong><small>WhatsApp API</small></div></div>
+</div>
+<p class="diagram-caption"><strong>Key distinction:</strong> in the documented WhatsApp bot, AI classifies what the person is asking; application code decides the reply. Do not describe it as a general AI that freely writes every answer. If you mean ChatGPT itself, that is a separate system from this platform bot.</p>
+</div>
+<div class="diagram-section"><h3>3. Example: “What is my payment status?”</h3>
+<div class="diagram">
+<div class="diagram-row"><div class="diagram-node"><strong>1 · User asks</strong><small>Browser or support channel</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>2 · Request reaches server</strong><small>API route receives request / webhook receives message</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>3 · Verify identity and access</strong><small>For private account data, confirm who is asking and what they may see</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>4 · Query saved payment rows</strong><small>Supabase returns permitted records; several attempts may exist</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>5 · Apply display rule</strong><small>Guide says approved status takes priority over duplicate pending rows</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>6 · Return safe result</strong><small>Page or bot displays the status; errors should not be disguised as “no record”</small></div></div>
+</div>
+</div>
+<div class="diagram-section"><h3>4. Login: how the server knows who is asking</h3>
+<div class="diagram">
+<div class="diagram-row"><div class="diagram-node"><strong>Enter registered phone</strong><small>Request a one-time code</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Verify OTP</strong><small>Guide describes push, SMS fallback, and WhatsApp one-time link</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Create session</strong><small>Store hashed token and expiry in sessions table</small></div></div><div class="diagram-arrow">↓ future API requests</div>
+<div class="diagram-row"><div class="diagram-node"><strong>getSession</strong><small>Read bearer token or cookie, hash it, find unexpired session, load role from profiles</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>Allow or deny</strong><small>Check role and record scope; normal admins see assigned batches only</small></div></div>
+</div>
+</div>
+<div class="diagram-section"><h3>5. Payment: why “success” needs server verification</h3>
+<div class="diagram">
+<div class="diagram-row"><div class="diagram-node"><strong>Student starts payment</strong><small>Server creates/records an attempt</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Payment provider</strong><small>Student completes or abandons payment</small></div></div><div class="diagram-arrow">↓ verified result / callback as implemented</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Server verifies and saves status</strong><small>Never trust only the browser’s success screen</small></div></div><div class="diagram-arrow">↓ if approved</div>
+<div class="diagram-row"><div class="diagram-node primary-node"><strong>One approval workflow</strong><small>Guide names autoApprovePayment: status, related record, audit entry, notification</small></div></div><div class="diagram-arrow">↓</div>
+<div class="diagram-row"><div class="diagram-node"><strong>Student and admin see consistent status</strong><small>Retries should not create duplicate side effects</small></div></div>
+</div>
+</div>
+<div class="diagram-section"><h3>6. What the technical words mean</h3>
+<div class="term-list">
+<div class="term"><strong>Front end</strong>The screen and controls the user sees.</div><div class="term"><strong>Back end</strong>Server-side code that checks rules and performs operations.</div>
+<div class="term"><strong>API</strong>A defined way for one part of a system to request data or an action from another part.</div><div class="term"><strong>API route</strong>A server endpoint such as /api/admin/students that receives a request and returns a response.</div>
+<div class="term"><strong>Database</strong>Structured storage. Supabase hosts the PostgreSQL database used by this project.</div><div class="term"><strong>Webhook</strong>A service sends your server a request when an event occurs, such as a message arriving.</div>
+<div class="term"><strong>Authentication</strong>Checks who the person is.</div><div class="term"><strong>Authorization</strong>Checks what that person is allowed to do.</div>
+<div class="term"><strong>AI intent classifier</strong>Predicts the category/intent of a message. In this documented bot, code chooses the reply.</div><div class="term"><strong>Deployment</strong>The built version running for users. A GitHub commit alone does not prove the change is live.</div>
+</div>
+</div>
+<div class="diagram-section"><h3>7. Where to look in the repository</h3>
+<ul><li><strong>Original architecture and incident notes:</strong> <a class="source-link" href="/docs/student-platform-interview-prep.md">Student Platform interview guide</a>.</li><li><strong>App screens and APIs:</strong> inspect the relevant page and its matching <code>/api/...</code> route.</li><li><strong>Database:</strong> inspect the table definitions and queries for <code>profiles</code>, <code>batches</code>, <code>payments</code>, and <code>sessions</code>.</li><li><strong>Login and permissions:</strong> look for <code>getSession</code>, <code>authz.ts</code>, and <code>adminBatchIds()</code>.</li><li><strong>Payment approval:</strong> search for <code>autoApprovePayment</code>.</li><li><strong>Support bot:</strong> trace the WhatsApp webhook, FAQ/rule matching, intent classifier, and reply selection.</li></ul>
+<p class="diagram-caption">This page explains the documented architecture, not a guarantee that every integration is currently live. Verify current code and production settings before claiming a feature is active.</p>
+</div>
+</section>
 <section class="panel roadmap" id="beginnerRoadmap">
 <h2>Start here: complete beginner roadmap</h2>
 <p class="muted">If words like API, database, server, or deployment feel confusing, begin with Stage 1. You do not need to understand everything at once. Finish one stage, explain it simply, then move forward.</p>
