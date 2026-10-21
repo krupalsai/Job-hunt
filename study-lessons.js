@@ -624,6 +624,306 @@ window.STUDY_LESSONS = {
         ]
       ],
       "keywords": "behavioural behavioral star incident rebuild differently ai dependent future teamwork conflict"
+    },
+    "resume-guide": {
+      "title": "Your whole resume — tap a line",
+      "concept": "Your resume is the question paper. Every line on it — 'Linux daily', 'webhook verification', 'Python: learning' — is a question the interviewer is already holding. This interactive guide lays your resume out line by line: tap a line, and the questions it invites unfold, easy first and toughest last, each with a model answer in your own words and at your real level. Master this page and no resume question can surprise you.",
+      "steps": [
+        "1. Tap a resume line below (start with the Summary — it is always asked first).",
+        "2. Read the line exactly as the interviewer sees it on your resume.",
+        "3. Open each question and answer it OUT LOUD before tapping for the model answer.",
+        "4. Work easy → tough inside one line, then move to the next line.",
+        "5. Switch to 🎲 Practice mode for random questions from all 13 lines — 53 in the deck."
+      ],
+      "worked": "Try it now: tap the Linux line and find 'You say Linux daily — show me.' That is the most dangerous question on this resume — and it has a calm, true answer built from your real routine: resources first, logs second, guessing last. Every line here gets the same treatment.",
+      "examples": [],
+      "questions": [
+        [
+          "What is this guide for?",
+          "It turns my resume into a question paper I can rehearse: every line, the questions it triggers — easy to tough — and a speakable honest answer for each, so an interviewer can never catch me on my own resume.",
+          "Built from the finalized resume and the verified platform audit — nothing here invents depth I do not have."
+        ],
+        [
+          "How should you use it?",
+          "One line at a time. Answer each question out loud, then compare with the model answer. When a whole line comes without peeking, tick the lesson and move on — then live in Practice mode.",
+          "Speaking is what makes it stick. Reading silently does not survive an interview room."
+        ]
+      ],
+      "keywords": "resume questions question paper tap a line interactive guide akamai resume lines answers"
+    },
+    "resume-summary": {
+      "title": "The summary & your role — the first five minutes",
+      "concept": "Your summary makes three claims: founder and AI-assisted builder/operator; 150+ students across 2 colleges; and a 2025 B.Tech from GNIT Hyderabad with real work since. The first five minutes of every interview are these lines being tested. Your defence is that every word is literally true and you can prove each one with a story, a number or a screen.",
+      "steps": [
+        "1. Learn the 30-second introduction until it needs no thinking — it opens everything.",
+        "2. For 'AI-assisted', always pair the honesty with the ownership: AI writes drafts, I own outcomes.",
+        "3. Anchor the user claim to the database count, never to 'many users'.",
+        "4. When marks come up, say the number yourself, calmly, then point at the daily system.",
+        "5. Close every answer inside 4–6 sentences. Rambling reads as doubt."
+      ],
+      "worked": "The full opening, as one breath: 'I am Krupal Sai, a 2025 B.Tech CSE graduate from GNIT Hyderabad. I founded and run a live student-services platform used by more than 150 students across two colleges. I built it with AI assistance and I operate it myself — integration, deployment, debugging and support. Alongside running it, I am learning programming fundamentals properly, from zero.' Thirty seconds. Everything after this is follow-up.",
+      "examples": [
+        "If they push on 'founder': the business is registered — STUDENT PLATFORM GREY — and the fee, the users and the court cases are real.",
+        "If they push on 'operator': name today's operations — logs checked, a deploy verified, a student answered — before naming any technology."
+      ],
+      "questions": [
+        [
+          "Introduce yourself in 30 seconds.",
+          "I am Krupal Sai, a 2025 B.Tech CSE graduate from GNIT Hyderabad. I founded and run a live student-services platform used by more than 150 students across two colleges. I built it with AI assistance and I operate it myself — integration, deployment, debugging and support. Alongside running it, I am learning programming fundamentals properly, from zero.",
+          "This IS your summary spoken aloud. Practise until it fits 30 seconds exactly."
+        ],
+        [
+          "So did YOU build it, or did the AI?",
+          "Both, in different parts. The AI generated much of the code text. I did the integration — making Next.js, Supabase, Razorpay and the bots work as one system — plus deployment, live debugging and daily operations for real users. When the students list broke in production, I read the error, found the cause and shipped the fix. That ownership is my actual job on this project.",
+          "Calm and specific beats defensive every time. The incident is your proof; offer it."
+        ],
+        [
+          "How do you know it is 150-plus users — where does that number come from?",
+          "From the database itself — registered student profiles in the live batches. It is a count of real accounts, not page visits, and the admin panel shows the same numbers to the admins who run the batches.",
+          "'From the database, not from visits' — that distinction is what they are testing."
+        ],
+        [
+          "You graduated in 2025. What have you done since?",
+          "Built and run the Student Platform full-time, under a registered business — STUDENT PLATFORM GREY. Shipped real payments, a support bot, an AI voice feature and a court-case tracker for real students, and studied daily alongside it. The platform is not a gap after graduation; it is the work since graduation.",
+          "Name the business in the first sentence — it converts 'gap' into 'founder' truthfully."
+        ],
+        [
+          "Your marks were average. Why?",
+          "They were — 6.54, and I will not dress that up. In college, my hours went into building outside the syllabus more than scoring inside it, and the platform is the evidence of where those hours went. Since graduating I study in a structured way, every day — my tracks are in this app — because the only answer that counts is current ability, demonstrated.",
+          "Say the number yourself before they dig for it. Owning it calmly ends the attack."
+        ]
+      ],
+      "keywords": "summary introduce yourself founder ai-assisted role users 150 students since graduation marks cgpa"
+    },
+    "resume-linux": {
+      "title": "Linux & shell — prove it",
+      "concept": "Two resume lines invite live testing: 'Work is Linux-native' and 'shell scripting basics — Linux VM daily use'. Interviewers test these with 'show me' questions, not definitions. Your proof is a routine, not a claim: an Oracle Cloud Ubuntu VM you SSH into daily, logs you read, services you restart, cron jobs you keep, secrets locked at mode 600. Learn to narrate that routine slowly — narration IS the demonstration.",
+      "steps": [
+        "1. Learn the slow-site routine as a chant: resources first, logs second, guessing last.",
+        "2. Attach every command to its job — a command without a purpose sounds memorised.",
+        "3. Keep the VM facts exact: Ubuntu on Oracle Cloud, SSH key login, Tailscale on top.",
+        "4. For cron, name your two real jobs: the daily court check and the health check.",
+        "5. Never claim a command you have not run. If asked about one, say what you would check first instead."
+      ],
+      "worked": "The 'show me' answer, full length: 'The site is slow. First I check resources — top for CPU and memory, df -h for disk. Then the logs: journalctl for the service, or tail -f on the app log, grepping for errors. Nine times out of ten the log names the problem — a failing database call, a provider timing out. Resources first, logs second, guessing last.' That is not a textbook answer; it is last Tuesday.",
+      "examples": [
+        "systemctl status/restart for the voice server on the VM; Restart=always in its unit is why a crash self-heals.",
+        "crontab -l shows the timetable the server keeps — the court check runs daily without any human remembering."
+      ],
+      "questions": [
+        [
+          "What do you actually do on Linux every day?",
+          "My development and operations run on a Linux VM — an Oracle Cloud Ubuntu server. Every day I work over SSH in a terminal: read application logs, restart services, run deployments and scheduled jobs, and debug live issues from the command line. The platform's voice server and jobs live on that machine.",
+          "Name the machine, the access, and the four daily actions: logs, services, deploys, jobs."
+        ],
+        [
+          "You say Linux daily — show me. The site is slow. What do you run first?",
+          "First, resources: top or htop for CPU and memory, df -h for disk, free -m for RAM. Then the logs: journalctl for the service, or tail -f on the app log, and grep -i error to find the failures. Resources first, logs second, guessing last — that order is my real routine.",
+          "Speak the commands slowly and in order. The order is the skill being tested."
+        ],
+        [
+          "Name five Linux commands you used this week.",
+          "ls and cd to move around the filesystem. tail -f and grep to read and search logs. systemctl status and restart to manage services. crontab -l to check scheduled jobs. And chmod — my secret files are locked owner-only, mode 600, because a key file everyone can read is not a secret.",
+          "Five commands, each with its job. The chmod example quietly proves security thinking."
+        ],
+        [
+          "What shell scripting do you actually do — honestly?",
+          "Mostly one-liners and small scripts on the VM: tailing and grepping logs to find errors, checking disk and memory, restarting services in the right order. The biggest is my voice server's deploy script — it rebuilds the package, swaps it in and restarts the service, in sequence, so a deploy is one command instead of ten chances to make a mistake.",
+          "'One command instead of ten chances to make a mistake' — that is why scripts exist."
+        ],
+        [
+          "What scheduled jobs — cron — run on your platform?",
+          "A daily job checks the Telangana High Court site for every batch's case and posts an in-app notification when something changes — a hearing, an order. There are also scheduled health checks that scan for server errors. Cron itself is simple: at this time, run this command; the server keeps the timetable so no human has to remember.",
+          "Court check + health check: two real jobs, both already in your platform story."
+        ],
+        [
+          "What is a process — and what happens when your service process dies?",
+          "A process is a program that is running — it has memory, a state, an ID. When my voice-server process dies, systemd starts it again automatically because the service unit is configured to restart always. From the student's side, a call service blips; from my side, the journal shows the crash and the restart, and I go read why it died.",
+          "Process = running program; systemd = the manager that restarts it. Both are things you genuinely operate."
+        ]
+      ],
+      "keywords": "linux shell commands show me ssh vm terminal logs systemctl cron chmod process systemd ubuntu oracle"
+    },
+    "resume-code": {
+      "title": "JavaScript, TypeScript & Python — the language lines",
+      "concept": "Your languages line makes two opposite claims: JavaScript/TypeScript at working level from production, and Python as learning-from-zero. Interviewers will probe both — a 'show me' for the strong one and a 'how much really?' for the honest one. Your strength is precision about the boundary: what you can do today, said first and plainly, is worth more than a big claim that collapses at the first follow-up.",
+      "steps": [
+        "1. For TypeScript, lead with the image: types are labels the compiler checks before the code runs.",
+        "2. Keep the batchIds story ready — it is your proof of working IN code, not near it.",
+        "3. Drill the two 'write it' shapes until automatic: reverse a string (split/reverse/join) and count vowels (loop + condition + counter).",
+        "4. For Python, always answer in the same order: can-do list, honest limit, daily practice.",
+        "5. If a coding question is beyond today, say the approach you WOULD take and the stage you are at — never fake-write code you cannot explain."
+      ],
+      "worked": "The Python boundary, spoken perfectly: 'Today: variables, conditions, loops, functions, lists and dictionaries — the basics, practised in small programs every day. I can read simple Python and write small scripts. What I cannot do yet is solve DSA problems in Python unaided. That is exactly my stage, and my resume says it in those words.' Notice: can, cannot, stage — in that order, with no apology anywhere.",
+      "examples": [
+        "async/await in your own words: 'start it, wait for the result, but do not freeze everything else' — every API route you operate works this way.",
+        "List versus dictionary: position versus label — a list of students, each student a record of named fields."
+      ],
+      "questions": [
+        [
+          "JavaScript or TypeScript — what is the difference?",
+          "TypeScript is JavaScript with types. A type is a label saying what kind of value something is — text, a number, an object with these exact fields. The compiler checks those labels before the code runs, so a whole class of mistakes fails the build on my machine instead of failing on a student's phone. My platform is TypeScript, and I work in it daily.",
+          "Labels checked before running — that one image carries the whole answer."
+        ],
+        [
+          "Show me something you actually changed in the code yourself.",
+          "A deploy once failed because one file declared the same variable — batchIds — twice. TypeScript refused to build. I read the error, opened the file, found both declarations, removed the duplicate, and the build went green. That is my real working level: read the error, trace it to the exact line, fix the smallest thing, verify.",
+          "A true story beats a claimed skill. Keep it under 30 seconds."
+        ],
+        [
+          "Reverse a string. Talk me through it.",
+          "Split the string into its characters, reverse that list, join it back into a string. In JavaScript that is split, reverse, join — three array steps. String and array methods like these are exactly the fundamentals I am drilling right now, and this one I can do without help.",
+          "Practise this exact question until it is boring. It is the most common 'show me' in fresher interviews."
+        ],
+        [
+          "Your resume says Python — learning. What can you actually do in Python today?",
+          "Today: variables, conditions, loops, functions, lists and dictionaries — the basics, which I practise in small programs every day. I can read simple Python and write small scripts. What I cannot do yet is solve DSA problems in Python unaided. That is exactly my stage, and my resume says it in those words.",
+          "List what you CAN do first, then the honest limit, then stop. Never trail off apologising."
+        ],
+        [
+          "Write a Python function that counts the vowels in a string.",
+          "A counter, a loop, a membership test: start count at zero; for each character in the lowercased string, if the character is in 'aeiou', add one; return the count. In code: def count_vowels(s): count = 0; for ch in s.lower(): if ch in 'aeiou': count += 1; return count. Loop plus condition plus counter — that shape answers half of all beginner questions.",
+          "Drill this shape — loop, condition, counter — until your hands know it. Say it slowly, line by line."
+        ]
+      ],
+      "keywords": "javascript typescript python languages reverse string count vowels async await batchids learning zero"
+    },
+    "resume-backend": {
+      "title": "APIs, webhooks & the database — the backend lines",
+      "concept": "Three skills lines carry your backend: RESTful APIs you designed and operate, webhook-based payment verification across PhonePe/Razorpay, and PostgreSQL schema, queries and migrations via Supabase. These are your strongest technical claims because each is backed by a production mechanism you can walk end to end: the guarded request journey, the signed webhook, and the foreign-key scar. Depth here is real — spend your best rehearsal time in this lesson.",
+      "steps": [
+        "1. REST in three words: door, address, method. Then immediately give YOUR endpoint journey.",
+        "2. Payments always in the same order: signature first, match second, approve third.",
+        "3. Keep the ₹1,100 failed-orders detail — it proves the webhook rule was earned, not read.",
+        "4. For SQL, say the query slowly, clause by clause: SELECT, FROM, WHERE, AND.",
+        "5. On RLS, never claim what you do not run — name the app-code guard and the stronger design you know."
+      ],
+      "worked": "The webhook answer as one story: 'A student pays ₹2,200. Razorpay's server calls my server directly — that call is the webhook. Before reading anything, my server verifies the HMAC signature, a stamp only Razorpay can make with our shared secret. Then it matches the payment by gateway order id. Only then does the row become approved. If the same webhook arrives again, the handler sees it is already approved and stops — already_approved. The phone's success screen is never the proof; the signed webhook is.'",
+      "examples": [
+        "Authentication versus authorization: who are you (session, 401) versus what may you do (role, 403).",
+        "The PhonePe honesty split: Razorpay is live and carries the money; PhonePe is integrated but its merchant account was blocked before launch — in escalation."
+      ],
+      "questions": [
+        [
+          "What is a REST API, really?",
+          "An API is a door with rules: the app knocks with a request, the server answers with data. REST is the common style of those doors. Each address — an endpoint — stands for a thing, like payments or students, and the method says the action: GET reads, POST creates, PATCH updates, DELETE removes. My platform has about 150 API routes doing exactly this for login, payments, documents and notifications.",
+          "Door, address, method. If you can say those three, you can answer any 'what is REST' variant."
+        ],
+        [
+          "Walk me through one of your endpoints, end to end.",
+          "Take payment status. The app sends a GET with the student's session token. The server first checks the session — no valid session, the answer is 401 and nothing else happens. Then it checks the role — 403 if a student asks for admin data. Then it reads the payment row from the database and answers 200 with the status. Guard first, database last — that order is the whole design.",
+          "Same journey as the API flow in the Project Guide. Order is what they score."
+        ],
+        [
+          "Explain webhooks — using your payment example.",
+          "A webhook is the other system calling you when something happens. When a student pays, Razorpay's server calls my server directly: this order was paid. My server first verifies the message's HMAC signature — a stamp only Razorpay can make with our shared secret — then matches the payment by its gateway order id, and only then marks it approved. The phone showing 'success' is never the proof. The signed webhook is.",
+          "Signature first, match second, approve third. This is THE payment answer."
+        ],
+        [
+          "Money was debited, but the app shows the payment failed. What do you do?",
+          "I cross-check with Razorpay's own APIs using the order id — what does the gateway itself say? If the gateway confirms the money was captured, the payment is approved through that same verified path. What I never do is mark it paid by hand from a screenshot — that is exactly how fake-payment fraud gets in.",
+          "Gateway APIs are the referee. 'Never by hand from a screenshot' is the line they write down."
+        ],
+        [
+          "What is a JOIN? Give me your own example.",
+          "A join lines up rows from two tables that belong together. My students table holds a batch_id; joining to the batches table gives each student next to their batch's name. I learned joins the hard way: two relationships exist between profiles and batches, so the database once refused an ambiguous query — the famous PGRST201 error — and the fix was naming the exact foreign key in the query.",
+          "Your own production scar is the best JOIN teacher you own. Tell it proudly."
+        ],
+        [
+          "Supabase has Row Level Security. Do you use it?",
+          "Honestly: my server uses the service-role key, which bypasses RLS, so data isolation lives in the application code — every admin route checks the user's role and batch assignments before returning anything. I know the stronger design is RLS enforcing access per user inside the database itself; moving the guard there is on my hardening list. Today the guard is app code, and I test it with every admin role.",
+          "Never claim RLS you do not run. Naming the stronger design shows you know the map even where you have not built yet."
+        ]
+      ],
+      "keywords": "rest api endpoints webhook hmac signature razorpay phonepe postgresql supabase join pgrst201 rls migration sql"
+    },
+    "resume-ops": {
+      "title": "Git, deploys & the support bot — the operations lines",
+      "concept": "Your tools line (Git, Vercel, cron) and the reliability line (automated triage, a support bot that handled 1,300+ messages) describe the half of engineering most freshers have never done: running a system after it ships. These questions test judgement, not syntax — what you do when it breaks, how you know it is healthy, and why your deploys are safe. Every answer here is a true story with a rule at the end.",
+      "steps": [
+        "1. Deploy answer in four beats: push, build, live, verify. Never drop the verify.",
+        "2. For incidents, use STAR and land the rule: read the error before touching code.",
+        "3. The bot answer has a fixed order: facts first, AI chain second, escalate third.",
+        "4. Triage: explain the policy change — an alert you cannot act on is noise.",
+        "5. Health: end on the live check as a student sees it. Dashboards can lie; the live app cannot."
+      ],
+      "worked": "The deploy answer, complete: 'I push to main on GitHub. Vercel builds everything — TypeScript checks every file. If the build passes, the new version is live on studentplatform.dev in a minute or two, and I verify on the real domain with real data before calling it done. If the build fails, the last good version keeps serving, I read the log, fix the smallest thing, and push again.' Four beats plus the failure branch — that is a senior-shaped answer built entirely from your real routine.",
+      "examples": [
+        "Branches honestly: production runs from main; the voice calling feature landed through a pull request you reviewed and merged.",
+        "Git's real gift: history. When a deploy went wrong, the commit list showed exactly what moved."
+      ],
+      "questions": [
+        [
+          "How do you deploy your platform?",
+          "I push the change to the main branch on GitHub. Vercel builds the whole app — TypeScript checks every file — and if the build passes, the new version is live on studentplatform.dev within a minute or two. Then I verify on the real domain, with real data, before I call it done.",
+          "Push, build, live, verify. The verify step is what separates operators from committers."
+        ],
+        [
+          "What happens when a build fails?",
+          "Nothing breaks for students — Vercel keeps serving the last good build. I read the build log, find the exact error, fix the smallest thing, push again, and verify. A failed build once hid every student's data behind an old version for hours; that day taught me the rule: never claim fixed until the live site proves it.",
+          "Old version keeps serving + the rule the failure taught you. Both halves matter."
+        ],
+        [
+          "How does your support bot answer a student's question?",
+          "Facts first: the bot reads the student's own record and the conversation history, so 'is my payment approved?' is answered from their real payment row, not a guess. For open questions it uses an AI chain — Gemini, then Groq, then OpenRouter, then Cloudflare — each with a timeout, first good answer wins. If nothing can answer safely, it escalates to a human instead of inventing one.",
+          "Facts first, chain second, escalate third. That order is the whole answer."
+        ],
+        [
+          "What is the 'automated incident triage' on your resume?",
+          "Server errors are collected into one table. An AI triage step groups them, rates how serious each group is, and only verified serious problems reach me — explained in plain words. Minor warnings from students' phones are logged silently. I built that policy after raw error dumps proved useless: an alert you cannot act on is just noise with a notification sound.",
+          "'An alert you cannot act on is noise' — a line with real scar tissue behind it."
+        ],
+        [
+          "Tell me about the hardest production bug you fixed.",
+          "At peak registrations, the admin students list suddenly rendered empty — over 200 students mid-process. I stopped, read the actual API error instead of guessing: PostgREST said the relationship between profiles and batches was ambiguous. I fixed every query to name the exact foreign key, redeployed, and verified with each of the four admin accounts before telling anyone it was fixed. Rule it taught me: production errors usually name their own cause — read them before touching code.",
+          "STAR in under a minute: situation, action, result, rule. Time yourself out loud."
+        ]
+      ],
+      "keywords": "git vercel deploy build fails support bot triage incident health check 1300 messages operations"
+    },
+    "resume-learning": {
+      "title": "'Learning from zero' — say it strong",
+      "concept": "The 'Learning in progress' section is the part of your resume most candidates would hide — and it is where you win or lose the interview. Your position is unusual and strong: the fundamentals gap is real, closing on a visible daily schedule, and everything around it — production operations, payments, debugging — is already professional-grade. This lesson turns the section into your closer: order, evidence, and the one answer that reframes the whole interview.",
+      "steps": [
+        "1. Always give the order: Python fundamentals, then OOP, then DSA — Big-O, arrays, strings, hash maps.",
+        "2. Point at the evidence: the study tracks live in this app; progress is ticked, not promised.",
+        "3. Big-O with your own numbers: 200 students one-by-one versus every pair — 40,000 checks.",
+        "4. Class versus object through the mirror you know: table is the blueprint, row is the real student.",
+        "5. Save the closer for the end: potential plus a running production system. It only works if everything before it was honest."
+      ],
+      "worked": "The closer, word for word: 'Because the gap is closing on a schedule you can inspect — daily practice, a fixed order, visible progress — and the rest of the job I already do: operating a real system, debugging production, and handling real money safely, for real users, provable line by line in this interview. Most freshers offer potential. I offer potential plus a running production system.' Practise it until it sounds like a fact — because it is one.",
+      "examples": [
+        "If they ask 'when will you be ready?': give the honest shape — Python basics solid in weeks of daily practice, DSA building over the following months — never a fake date.",
+        "If they test a topic mid-learning: answer the part you know, name the stage you are at, and say what comes next in your order. Partial honesty beats a bluff that collapses."
+      ],
+      "questions": [
+        [
+          "What are you learning right now — and in what order?",
+          "Python fundamentals from zero first. Then OOP — classes, objects, inheritance, polymorphism. Then data structures and algorithms: Big-O, arrays, strings, hash maps. In that fixed order, with daily practice — my study tracks live in this same app, so the plan is visible, not a promise. Integration taught me systems first; now I am building the code-first foundation underneath.",
+          "Order + daily + visible. Three proofs that the learning is a system, not a mood."
+        ],
+        [
+          "Then why list Python on the resume at all?",
+          "Because the roles I apply to ask for it, and hiding my level would be dishonest. Writing 'learning, daily practice from zero' tells the truth twice: I am working on it every day, and nobody should expect production Python from me today. In a few months that line changes — because the practice is real, not because I edited the resume.",
+          "This answer turns the weakest line into a trust line. Interviewers notice."
+        ],
+        [
+          "What is Big-O, in simple words?",
+          "Big-O describes how the work grows when the data grows. Checking 200 students one by one is fine. Checking every pair of students is 40,000 checks — that growth shape is the difference between O(n), which grows in a line, and O(n squared), which explodes. I meet it in real life: a slow admin page is usually an accidental n-squared hiding in a loop.",
+          "The 200-students example is yours. Keep every abstract answer tied to a number like that."
+        ],
+        [
+          "Class versus object — explain it with your own platform.",
+          "A class is the blueprint: 'Student' — with fields like name, batch and fee status, and things a student can do. An object is one real student built from that blueprint. My database tables are the same idea in rows — the table is the blueprint, each row is one real student. OOP is that idea living inside the code instead of the database.",
+          "Blueprint versus the real one built from it — then the table/row mirror. Two images, one answer."
+        ],
+        [
+          "Why should we hire someone who is still learning the fundamentals?",
+          "Because the gap is closing on a schedule you can inspect — daily practice, a fixed order, visible progress — and the rest of the job I already do: operating a real system, debugging production, and handling real money safely, for real users, provable line by line in this interview. Most freshers offer potential. I offer potential plus a running production system.",
+          "This is the closer. Practise it until it sounds like a fact, not a plea — because it is one."
+        ]
+      ],
+      "keywords": "learning in progress zero oop dsa big-o python fundamentals hire why closer order daily practice"
     }
   }
 };
