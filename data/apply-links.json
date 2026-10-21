@@ -1,6 +1,6 @@
 {
   "_about": "Direct application links for the @careerwithshrestha posts, found on each company's own site so the app does not send you to Instagram to comment for a DM. Keyed by the job key in shrestha-jobs.json. Only links checked on the company's site (or its official job board) are listed; a job missing here has no verified public link. 'kind': posting = the exact job; search = the company's job search for that role/ID; portal = the company's official fresher-hiring portal. 'fresher': set only when the company's own page shows the opening is for freshers (the evidence, in words) — it counts even when the Instagram caption did not say so. 'closed': the posting has come down on the company's site — the opening is then shown as closed, with no apply button.",
-  "checked": "2026-10-18",
+  "checked": "2026-10-21",
   "links": {
     "ig-18117027149081665": {
       "url": "https://jobs.lever.co/hevodata/993a3ed3-3014-432f-b0f4-28d300d58d9a",
@@ -63,6 +63,12 @@
       "label": "Akamai — Software Engineer (Job 4073, India Remote)",
       "kind": "posting",
       "fresher": "Akamai's own posting asks for at least 0.6 years' experience — programming in Python, Go and/or shell, and development on Linux/Unix — inside the 0–1 year fresher band; verified live on jobs.akamai.com 17 Oct, re-verified 20 Oct"
+    },
+    "ig-18114521360032206": {
+      "url": "https://elementsenergies.com/talent/dXx1fXV-ZWU",
+      "label": "Elements Energy — Software Developer",
+      "kind": "posting",
+      "fresher": "Company's own application form has a Fresher/Experienced checkbox and the posting lists 0-2 years experience, Chennai, full-time"
     }
   }
 }
