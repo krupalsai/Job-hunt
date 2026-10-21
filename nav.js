@@ -219,7 +219,7 @@
      Named on the row exactly as they are titled on the screen they open.
      Pages (plain:true) are real links; the rest are sections of the prep page. */
   const MENU_DESTS = [
-    { id: "interview-prep", label: "Interview Prep", icon: null, href: "/interview-prep.html", plain: true,
+    { id: "interview-prep", label: "Interview Prep", icon: null, href: "/interview-prep/", plain: true,
       sub: "Practise your project story, technical questions and checklist" },
     { id: "si-plan", label: "TS SI 47-day plan", icon: null, href: "/si.html", plain: true,
       sub: "Today's tasks, the paper decoded, your mock scores" },
