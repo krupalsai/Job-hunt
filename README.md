@@ -554,6 +554,16 @@ it is a convenience, not the security — the secret is.
     SUPABASE_SERVICE_ROLE_KEY    Supabase → Settings → API (server-side only)
     CRON_SECRET                  any long random string
     INSTINCT_FEED_SECRET         any long random string (feed writes)
+    YOUTUBE_API_KEY              YouTube Data API v3 key (server-side only; enables live tutor video results)
+
+Alex's tutor calls `GET /api/youtube-search?q=...` whenever it recommends a video.
+The endpoint returns current video titles, thumbnails, channels, durations and
+watch URLs; it filters videos up to 60 seconds and titles labelled Shorts, and
+caches responses for 30 seconds. YouTube does not expose aspect ratio through
+this endpoint, so longer vertical Shorts cannot all be identified reliably.
+Create a YouTube Data API v3 key in Google Cloud Console, then add
+`YOUTUBE_API_KEY` in Vercel → Project → Settings → Environment Variables and
+redeploy. The key remains server-side and is never sent to the browser.
 
 ## Running ingestion
 
