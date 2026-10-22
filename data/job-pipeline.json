@@ -298,6 +298,30 @@
         "note": "GNIT '25 batchmate at Amazon Hyderabad — Krupal's own batch. Connection ask sent 2026-10-17; invitation WITHDRAWN 2026-10-22 under his no-own-batch rule.",
         "responded_at": null,
         "status": "withdrawn"
+      },
+      {
+        "asked_at": "2026-10-05",
+        "linkedin_url": null,
+        "name": "Sai Shanmukh G",
+        "note": "GNIT alumnus at Amazon; Oct-5 referral round. Verified 2026-10-22: LinkedIn invite still pending (sent ~Oct 5), never accepted, no reply (no message thread). Still at Amazon.",
+        "responded_at": null,
+        "status": "no-response"
+      },
+      {
+        "asked_at": "2026-10-05",
+        "linkedin_url": null,
+        "name": "Agresh Gupta",
+        "note": "GNIT alumnus at Amazon; Oct-5 referral round. Verified 2026-10-22: LinkedIn invite still pending (sent ~Oct 5), no reply to Oct 19 follow-up InMail (thread contains only that follow-up). Still at Amazon.",
+        "responded_at": null,
+        "status": "no-response"
+      },
+      {
+        "asked_at": "2026-10-05",
+        "linkedin_url": null,
+        "name": "Sagar Brammaiahgari",
+        "note": "GNIT alumnus at Amazon; Oct-5 referral round. Verified 2026-10-22: LinkedIn invite still pending (sent ~Oct 5), no reply to Oct 19 follow-up InMail (thread contains only that follow-up). Still at Amazon.",
+        "responded_at": null,
+        "status": "no-response"
       }
     ],
     "resume": {
