@@ -2,6 +2,78 @@
   {
     "application": {
       "applied_at": null,
+      "note": "Not applied yet — application pending Krupal's tap. Resume sent to Bhanu Prakash (he responded 2026-10-21); the application itself is still not submitted. No close date, so the standing deadline guard applies: apply today anyway; referrals can follow.",
+      "status": "not-applied"
+    },
+    "company": "Akamai",
+    "company_research": {
+      "news_sources": [],
+      "status": "pending",
+      "summary": "Not yet recorded."
+    },
+    "deadline": null,
+    "found_at": "2026-10-17",
+    "id": "akamai-swe-4073",
+    "location": "India (Remote)",
+    "official_url": "https://jobs.akamai.com/en/sites/CX_1/jobs/preview/4073/?keyword=Software+Engineer&mode=location",
+    "referrals": [
+      {
+        "asked_at": "2026-10-21",
+        "linkedin_url": "https://www.linkedin.com/in/shashikanth-varma/",
+        "name": "Shashikanth Varma",
+        "note": "Senior Software Engineer II, Akamai (Remote), Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
+        "responded_at": null,
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-21",
+        "linkedin_url": "https://www.linkedin.com/in/nitish-kumar-6b35431b4/",
+        "name": "Nitish Kumar",
+        "note": "Software Engineer II, Akamai, Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
+        "responded_at": null,
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-21",
+        "linkedin_url": "https://www.linkedin.com/in/shivaprasad-shetty-31421a193/",
+        "name": "Shivaprasad Shetty",
+        "note": "SDET, Akamai, Udupi. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
+        "responded_at": null,
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-21",
+        "linkedin_url": "https://www.linkedin.com/in/bhanu-prakash-bbb01bb1/",
+        "name": "Bhanu Prakash",
+        "note": "Senior SDE 2, Akamai (Remote), Bengaluru. Connection note drafted 2026-10-17 — sent 2026-10-21. Responded 2026-10-21 20:02 IST: 'sure share your resume.' Resume sent 2026-10-21 20:53; phone-free replacement sent 2026-10-21 23:33.",
+        "responded_at": "2026-10-21",
+        "resume_sent_at": "2026-10-21",
+        "status": "responded"
+      },
+      {
+        "asked_at": "2026-10-21",
+        "linkedin_url": "https://www.linkedin.com/in/roupyadip-de-b33156a9/",
+        "name": "Roupyadip De",
+        "note": "Talent Acquisition Partner (Engineering & Cyber Security), Akamai, Bengaluru. Free Open Profile InMail drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
+        "responded_at": null,
+        "status": "asked"
+      }
+    ],
+    "resume": {
+      "ats_score": 80,
+      "draft_path": "~/workspace/jobhunt-repo/data/resume-drafts/akamai-swe-4073.md"
+    },
+    "role": "Software Engineer (Network Operations Systems Group)",
+    "source": "us-remote-watch",
+    "verification": {
+      "checked_at": "2026-10-20",
+      "notes": "Verified live on Akamai's official careers portal (jobs.akamai.com) on 2026-10-17 and re-verified 2026-10-20: posting live, APPLY NOW opens the application form, no fee. Bar: at least 0.6 years programming in Python, Go and/or shell + at least 0.6 years development on Linux/Unix — inside the 0–1 year fresher band; his daily Linux-based development and production-ops work is genuinely relevant. No closing date listed on the posting. Nothing applied for yet; all 5 referral asks sent 2026-10-21.",
+      "status": "verified"
+    }
+  },
+  {
+    "application": {
+      "applied_at": null,
       "status": "not-applied"
     },
     "company": "Infosys",
@@ -119,78 +191,6 @@
     "verification": {
       "checked_at": null,
       "notes": "Applied via employee referral (Easwer Dharavath, PID C28196885) on 2026-10-04 ~11:34 IST. Confirmation email received. Workday Candidate Home created. Application ID AIOC-S01665345.",
-      "status": "verified"
-    }
-  },
-  {
-    "application": {
-      "applied_at": null,
-      "note": "Not applied yet — application pending Krupal's tap. Resume sent to Bhanu Prakash (he responded 2026-10-21); the application itself is still not submitted. No close date, so the standing deadline guard applies: apply today anyway; referrals can follow.",
-      "status": "not-applied"
-    },
-    "company": "Akamai",
-    "company_research": {
-      "news_sources": [],
-      "status": "pending",
-      "summary": "Not yet recorded."
-    },
-    "deadline": null,
-    "found_at": "2026-10-17",
-    "id": "akamai-swe-4073",
-    "location": "India (Remote)",
-    "official_url": "https://jobs.akamai.com/en/sites/CX_1/jobs/preview/4073/?keyword=Software+Engineer&mode=location",
-    "referrals": [
-      {
-        "asked_at": "2026-10-21",
-        "linkedin_url": "https://www.linkedin.com/in/shashikanth-varma/",
-        "name": "Shashikanth Varma",
-        "note": "Senior Software Engineer II, Akamai (Remote), Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
-        "responded_at": null,
-        "status": "asked"
-      },
-      {
-        "asked_at": "2026-10-21",
-        "linkedin_url": "https://www.linkedin.com/in/nitish-kumar-6b35431b4/",
-        "name": "Nitish Kumar",
-        "note": "Software Engineer II, Akamai, Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
-        "responded_at": null,
-        "status": "asked"
-      },
-      {
-        "asked_at": "2026-10-21",
-        "linkedin_url": "https://www.linkedin.com/in/shivaprasad-shetty-31421a193/",
-        "name": "Shivaprasad Shetty",
-        "note": "SDET, Akamai, Udupi. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
-        "responded_at": null,
-        "status": "asked"
-      },
-      {
-        "asked_at": "2026-10-21",
-        "linkedin_url": "https://www.linkedin.com/in/bhanu-prakash-bbb01bb1/",
-        "name": "Bhanu Prakash",
-        "note": "Senior SDE 2, Akamai (Remote), Bengaluru. Connection note drafted 2026-10-17 — sent 2026-10-21. Responded 2026-10-21 20:02 IST: 'sure share your resume.' Resume sent 2026-10-21 20:53; phone-free replacement sent 2026-10-21 23:33.",
-        "responded_at": "2026-10-21",
-        "resume_sent_at": "2026-10-21",
-        "status": "responded"
-      },
-      {
-        "asked_at": "2026-10-21",
-        "linkedin_url": "https://www.linkedin.com/in/roupyadip-de-b33156a9/",
-        "name": "Roupyadip De",
-        "note": "Talent Acquisition Partner (Engineering & Cyber Security), Akamai, Bengaluru. Free Open Profile InMail drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
-        "responded_at": null,
-        "status": "asked"
-      }
-    ],
-    "resume": {
-      "ats_score": 80,
-      "draft_path": "~/workspace/jobhunt-repo/data/resume-drafts/akamai-swe-4073.md"
-    },
-    "role": "Software Engineer (Network Operations Systems Group)",
-    "source": "us-remote-watch",
-    "verification": {
-      "checked_at": "2026-10-20",
-      "notes": "Verified live on Akamai's official careers portal (jobs.akamai.com) on 2026-10-17 and re-verified 2026-10-20: posting live, APPLY NOW opens the application form, no fee. Bar: at least 0.6 years programming in Python, Go and/or shell + at least 0.6 years development on Linux/Unix — inside the 0–1 year fresher band; his daily Linux-based development and production-ops work is genuinely relevant. No closing date listed on the posting. Nothing applied for yet; all 5 referral asks sent 2026-10-21.",
       "status": "verified"
     }
   },
