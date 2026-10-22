@@ -45,10 +45,14 @@
       { name: '▶ Watch it happen · Interactive guide', note: 'Tap a part of your platform and watch what it does, step by step.', topics: [
         ['project-guide', 'The whole platform — tap & watch'] ] },
       { name: '📄 Resume Questions · Your resume is the question paper', note: 'Every line on your resume, and the questions it invites — learn the answers in your own words.', topics: [
-        ['resume-guide', 'Your whole resume — tap a line'], ['resume-summary', 'The summary & your role'],
-        ['resume-linux', 'Linux & shell — prove it'], ['resume-code', 'JavaScript, TypeScript & Python'],
-        ['resume-backend', 'APIs, webhooks & the database'], ['resume-ops', 'Git, deploys & the support bot'],
-        ['resume-learning', '“Learning from zero” — say it strong'] ] },
+        ['resume-flow', '🎬 Start here — how an interview flows'], ['resume-guide', 'Your whole resume — tap a line'],
+        ['resume-summary', 'The summary & your role'], ['resume-linux', 'Linux & shell — prove it'],
+        ['resume-code', 'JavaScript, TypeScript & Python'], ['resume-backend', 'APIs, webhooks & the database'],
+        ['resume-ops', 'Git, deploys & the support bot'], ['resume-learning', '“Learning from zero” — say it strong'],
+        ['resume-type-coding', '💻 Coding questions — small ones, from your stack'],
+        ['resume-type-technical', '🔧 Technical questions — concepts from your platform'],
+        ['resume-type-quick', '⚡ Small questions — rapid fire'],
+        ['resume-type-depth', '🏗 Project-depth questions — end to end'] ] },
       { name: 'Start here · Your platform in plain words', topics: [
         ['platform-overview', 'What your platform is'], ['your-role', 'Your role — the honest answer'] ] },
       { name: 'APIs and endpoints', topics: [
