@@ -1072,4 +1072,10 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
   })();
 
   if (IS_LEARN && !hasChosen && exams.some(activeExam)) openPicker("first");
+
+  // Shared activity tracking across pages that load the common navigation.
+  const activityScript = document.createElement("script");
+  activityScript.src = "/activity.js";
+  activityScript.defer = true;
+  document.head.appendChild(activityScript);
 })();
