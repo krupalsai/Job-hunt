@@ -243,10 +243,21 @@
     return html;
   }
 
+  /* ── Remote-first display order (Krupal's rule, 2026-10-22) ───────────
+     Entries whose OWN location value says Remote sort before all others.
+     Classification uses the entry's stated location only — never the
+     company name. The sort runs on a copy; within the remote group and
+     within the remaining group, the existing stage/found_at order is
+     preserved exactly. */
+  function isRemote(o) {
+    return /remote/i.test(String((o && o.location) || ""));
+  }
+
   function renderList() {
     var order = { failed: 0, found: 1, verified: 2, researched: 3, referrals: 4, resume: 5, applied: 6 };
     var sorted = opps.slice().sort(function (a, b) {
-      return (order[stageOf(a)] - order[stageOf(b)]) ||
+      return ((isRemote(b) ? 1 : 0) - (isRemote(a) ? 1 : 0)) ||
+        (order[stageOf(a)] - order[stageOf(b)]) ||
         String(b.found_at || "").localeCompare(String(a.found_at || ""));
     });
     countEl.textContent = opps.length
