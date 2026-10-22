@@ -196,9 +196,9 @@
   },
   {
     "application": {
-      "applied_at": null,
-      "note": "Not submitted — creating the Amazon.jobs candidate account still needs Krupal's explicit approval. Referral outreach runs in parallel and never gates the application.",
-      "status": "not-applied"
+      "applied_at": "2026-10-22",
+      "note": "Submitted by Krupal on amazon.jobs 2026-10-22 (Job 10453457). Mehul Bhandari referral in progress (he said 'will refer today'; portal phone field supplied via phone-variant resume 21:51 IST).",
+      "status": "applied"
     },
     "company": "Amazon",
     "company_research": {
