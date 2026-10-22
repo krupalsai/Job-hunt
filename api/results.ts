@@ -7,9 +7,13 @@
  * notice and candidate login page.
  */
 import { createClient } from "@supabase/supabase-js";
+import webpush from "web-push";
 
 const SUPABASE_URL = process.env.SUPABASE_URL ?? "";
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+const VAPID_PUBLIC = process.env.VAPID_PUBLIC_KEY ?? "";
+const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY ?? "";
+const VAPID_SUBJECT = process.env.VAPID_SUBJECT ?? "mailto:results@krupal-job-tracker.vercel.app";
 const SOURCES = [
   { exam_key: "tgprb", exam_name: "Telangana Police / TGPRB", url: "https://www.tgprb.in/" },
   { exam_key: "ssc", exam_name: "SSC recruitment exams", url: "https://ssc.gov.in/" },
@@ -91,7 +95,42 @@ export default async function handler(req: any, res: any) {
       }
       inserted = data?.length ?? 0;
     }
-    return res.status(200).json({ ok: sources.every((s) => s.ok), checked_at: new Date().toISOString(), inserted, sources });
+    let push = { sent: 0, failed: 0, pruned: 0 };
+    // Notify subscribed devices when a genuinely new official result notice is detected.
+    // Missing VAPID configuration never blocks the results API itself.
+    if (inserted > 0 && VAPID_PUBLIC && VAPID_PRIVATE) {
+      try {
+        webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE);
+        const { data: subscriptions, error: subError } = await db
+          .from("push_subscriptions").select("endpoint,p256dh,auth");
+        if (!subError) {
+          const dead: string[] = [];
+          await Promise.all((subscriptions ?? []).map(async (sub: any) => {
+            try {
+              await webpush.sendNotification(
+                { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+                JSON.stringify({
+                  title: "New official exam result notice",
+                  body: "Job Hunt detected a new result-related notice. Open the app to verify it.",
+                  url: "/"
+                })
+              );
+              push.sent++;
+            } catch (error: any) {
+              push.failed++;
+              if (error?.statusCode === 404 || error?.statusCode === 410) dead.push(sub.endpoint);
+            }
+          }));
+          if (dead.length) {
+            await db.from("push_subscriptions").delete().in("endpoint", dead);
+            push.pruned = dead.length;
+          }
+        }
+      } catch (error: any) {
+        console.error("[results] push notification failed", error?.message ?? error);
+      }
+    }
+    return res.status(200).json({ ok: sources.every((s) => s.ok), checked_at: new Date().toISOString(), inserted, push, sources });
   }
 
   const exam = String(req.query?.exam ?? "").trim().toLowerCase();
