@@ -37,6 +37,9 @@ async function readNotices(source: typeof SOURCES[number]) {
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const html = await response.text();
   const links = [...html.matchAll(/<a\b[^>]*href\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)];
+  if (!links.length && /id=["']root["']|enable javascript|__next/i.test(html)) {
+    throw new Error("Official page is JavaScript-rendered; no server-rendered links to inspect.");
+  }
   const seen = new Set<string>();
   return links.flatMap((match) => {
     const title = htmlText(match[2]).slice(0, 240);
