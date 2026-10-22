@@ -53,8 +53,8 @@
         ['resume-type-technical', '🔧 Technical questions — concepts from your platform'],
         ['resume-type-quick', '⚡ Small questions — rapid fire'],
         ['resume-type-depth', '🏗 Project-depth questions — end to end'] ] },
-      { name: 'Start here · Your platform in plain words', topics: [
-        ['platform-overview', 'What your platform is'], ['your-role', 'Your role — the honest answer'] ] },
+      { name: 'Start here · Understand before memorising', note: 'Learn one small idea, follow an example, then answer a question without peeking.', topics: [
+        ['platform-overview', 'Your platform — the simple version'], ['your-role', 'Your role — what you actually do'] ] },
       { name: 'APIs and endpoints', topics: [
         ['what-is-an-api', 'What is an API?'], ['endpoints-routes', 'Endpoints, methods, status codes'] ] },
       { name: 'Login, sessions, permissions', topics: [

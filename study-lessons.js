@@ -78,44 +78,39 @@ window.STUDY_LESSONS = {
       "keywords": "interactive guide demo watch flow tap video project guide map platform payments webhook"
     },
     "platform-overview": {
-      "title": "What your platform is — say it in 30 seconds",
-      "concept": "The Student Platform helps students who filed High Court writ petitions (GNIT and GNITC colleges) get their original certificates back. Around 219 students in writ batches use it to register, upload documents, pay the batch fee of ₹2,200, track their court case live, and get help — on the web and in an Android app. You built and run it for real users, under a registered business (STUDENT PLATFORM GREY).",
+      "title": "Your Student Platform — understand it one piece at a time",
+      "concept": "Think of your platform as one place where a student can handle four jobs: register, submit documents, pay the batch fee, and follow the court case. The website is the front door. The server checks requests and applies rules. Supabase stores the records. Other services handle payments, messages and voice. You do not need to memorise this sentence. Learn what each part does, then explain it in your own words.",
       "steps": [
-        "1. A student joins through a WhatsApp login link and OTP — no password to remember or leak.",
-        "2. They complete their profile and upload their college ID, photo and signature.",
-        "3. They pay the batch fee — ₹2,200 total — through the payment gateway inside the app.",
-        "4. An admin verifies the payment and documents; the student gets access to their batch material.",
-        "5. The app tracks their court case (writ petition) — hearing dates, live court status, and the final order.",
-        "6. For help they use in-app support, the WhatsApp bot, or an AI voice call inside the app."
+        "1. Student opens the website or Android app. This is the screen they interact with.",
+        "2. The student signs in. The server checks the login before allowing private actions.",
+        "3. The student completes a profile and uploads the required documents.",
+        "4. For a payment, the server creates an order with Razorpay. Razorpay processes the money.",
+        "5. Razorpay sends a server-to-server notification. Your server checks its signature before changing the payment record.",
+        "6. The website reads approved records and shows the student the right status. Admin tools help the team review cases and documents."
       ],
-      "worked": "GNITC Batch 1: 34 students, writ petition WP 32745/2026. The Telangana High Court ALLOWED it on 13 October 2026 — the college must return the students' original certificates, and fee dues cannot be used to hold certificates hostage. Your app tracked this case for those 34 students from filing to the final order.",
+      "worked": "Follow one example: Maya opens the app → signs in → uploads her college ID → taps Pay → Razorpay processes her UPI payment → Razorpay notifies your server → your server verifies the notification → the payment record becomes approved → Maya sees the approved status. The important part is that the app does not trust a success message from the phone by itself.",
       "examples": [
-        "A student asking the voice assistant 'is my payment approved?' gets an answer from their own real payment record — not a guess.",
-        "An admin exporting a batch's petition as a Word document for the advocate, straight from the app."
+        "Website = the counter where a student asks for help. Server = the staff member who checks the rules. Database = the filing cabinet containing the records.",
+        "Razorpay handles the payment; your platform records and verifies the result. Keeping those jobs separate makes the flow safer."
       ],
       "questions": [
         [
-          "Tell me about your project.",
-          "It is a live platform for students in High Court writ-petition batches. They register, upload documents, pay a ₹2,200 batch fee, and track their court case in one app. About 219 students across GNIT and GNITC batches use it, on web and Android. I built it and I run it — deployments, payment issues, student support, everything.",
-          "Keep it under 30 seconds: what it is, who uses it, how many users, what you do. Numbers make it real."
+          "In your own words, what problem does the platform solve?",
+          "It gives students one place to register, submit documents, pay the batch fee and follow their case, instead of handling each task separately.",
+          "First name the student's problem. Then explain how the platform makes it easier."
         ],
         [
-          "What problem does it solve?",
-          "Before this, students had no single place to know their case status, pay the batch fee safely, or submit documents. Everything was phone calls and confusion. The platform puts registration, payment, documents and live case tracking in one place.",
-          "Name the pain first (no visibility, unsafe manual payments), then what the platform does about each one."
+          "Which part stores student and payment records?",
+          "Supabase Postgres is the database that stores the records. The website asks the server for the information it is allowed to show.",
+          "Remember the distinction: the screen displays data; the database stores it."
         ],
         [
-          "What is your tech stack?",
-          "Next.js with React and TypeScript on Vercel, Supabase Postgres for the database, Razorpay for payments, a WhatsApp bot, and a voice-calling server I run on an Oracle VM. The Android app is the same web app wrapped with Capacitor.",
-          "Say it in layers: frontend, backend/API, database, payments, hosting. That order sounds like an engineer."
-        ],
-        [
-          "Is this a real project or a practice project?",
-          "Real. It has paying users — students pay a real ₹2,200 fee through Razorpay — a registered business behind it, and court cases with real deadlines. When it breaks, real students are affected, so I verify every fix live before I say it is fixed.",
-          "Interviewers ask this to test whether you have faced production pressure. Your answer: yes, daily."
+          "When a phone says 'payment successful', is that enough to approve the payment?",
+          "No. The server must verify the payment gateway's signed notification and update the record based on verified information.",
+          "The phone is not proof. The server checks the gateway."
         ]
       ],
-      "keywords": "project introduction overview platform students writ petition certificates tell me about your project"
+      "keywords": "student platform beginner overview website server database supabase payment razorpay registration documents court case"
     },
     "your-role": {
       "title": "Your role — the honest answer",
