@@ -123,7 +123,21 @@
    THE BUMP IS LOAD-BEARING — a phone holding v35 or v36 would keep
    serving the old index.html, learn.html and lesson files cache-first,
    and the whole section would never appear. */
-const CACHE = 'jobhunt-v37';
+/* v38 rebuilds Resume Questions from the MASTER resume
+   (data/resume-drafts/master-resume.md): the tap-a-line player
+   (resume-guide.js) is regenerated from the master — 14 resume
+   lines, 59 questions, incl. new auth and voice lines — and 5 new
+   lessons join the phase in study-lessons.js: 'How an interview
+   actually flows' (resume-flow) plus the four question TYPES —
+   coding (resume-type-coding), technical (resume-type-technical),
+   small/rapid-fire (resume-type-quick) and project-depth
+   (resume-type-depth). Interview track total: 27 lessons, 127
+   questions; Resume Questions carries 12 of the lessons / 69 of
+   the questions on its own progress line, as before.
+   THE BUMP IS LOAD-BEARING — a phone holding v37 would keep serving
+   the old lesson files cache-first and the new lessons would never
+   appear. */
+const CACHE = 'jobhunt-v38';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
