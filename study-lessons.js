@@ -633,7 +633,7 @@ window.STUDY_LESSONS = {
         "2. Read the line exactly as the interviewer sees it on your resume.",
         "3. Open each question and answer it OUT LOUD before tapping for the model answer.",
         "4. Work easy → tough inside one line, then move to the next line.",
-        "5. Switch to 🎲 Practice mode for random questions from all 13 lines — 53 in the deck."
+        "5. Switch to 🎲 Practice mode for random questions from all 14 lines — 59 in the deck."
       ],
       "worked": "Try it now: tap the Linux line and find 'You say Linux daily — show me.' That is the most dangerous question on this resume — and it has a calm, true answer built from your real routine: resources first, logs second, guessing last. Every line here gets the same treatment.",
       "examples": [],
@@ -649,7 +649,7 @@ window.STUDY_LESSONS = {
           "Speaking is what makes it stick. Reading silently does not survive an interview room."
         ]
       ],
-      "keywords": "resume questions question paper tap a line interactive guide akamai resume lines answers"
+      "keywords": "resume questions question paper tap a line interactive guide master resume lines answers"
     },
     "resume-summary": {
       "title": "The summary & your role — the first five minutes",
@@ -924,6 +924,279 @@ window.STUDY_LESSONS = {
         ]
       ],
       "keywords": "learning in progress zero oop dsa big-o python fundamentals hire why closer order daily practice"
+    },
+    "resume-flow": {
+      "title": "How an interview actually flows — your first one, round by round",
+      "concept": "You have never given an interview, so here is the whole map before you walk in. A fresher SDE interview is usually four rounds, and your resume drives most of the questions in every one — that is why this whole section exists. Round 1 is a short intro screen: who are you, what did you build, can you speak clearly. Round 2 is technical: concepts from YOUR stack — APIs, databases, auth, Git. Round 3 is coding: small problems, solved out loud, where how you think matters more than a perfect answer. Round 4 is project-depth plus behaviour: your platform end to end, your hardest bug, and finally YOUR questions to them. Two skills carry a first-timer through all four: a 30-second introduction that needs no thinking, and a calm protocol for the questions you cannot answer — because there will be some, and how you handle them is itself scored.",
+      "steps": [
+        "1. Learn the round order: intro screen → technical concepts → small coding → project deep-dive + behaviour → your questions to them.",
+        "2. The intro round is your summary spoken aloud — nothing new to learn, only to rehearse.",
+        "3. Technical questions come from your resume lines. If a line is on the paper, its concept answer lives in this app.",
+        "4. Coding means thinking out loud: say the plan, write slowly, trace with an example. Silence is what fails people, not slowness.",
+        "5. The don't-know protocol: say what you DO know, name your stage honestly, say what you would check first. Never invent.",
+        "6. End with real questions for them — about the team, mentoring and the first months. It is part of the test."
+      ],
+      "worked": "Your 30-second introduction, word for word: 'I am Krupal Sai, a 2025 B.Tech CSE graduate from GNIT Hyderabad. I founded and run a live student-services platform used by more than 150 students across two colleges. I built it with AI assistance and I operate it myself — integration, deployment, debugging and support. Alongside running it, I am learning programming fundamentals properly, from zero.' Every round opens with some version of 'tell me about yourself' — this is the answer, and everything after it is follow-up on these exact lines.",
+      "examples": [
+        "A don't-know answer that still scores: 'Row Level Security is on my hardening list — today isolation lives in my app code, every route checks role and batch before returning data, and I know the stronger design moves that guard into the database itself.' Honest limit + real current state + correct direction.",
+        "Good end questions: 'What would my first three months look like?' 'Who mentors freshers on this team?' 'What stack would I touch daily?' — never salary in a technical round; that belongs to HR later."
+      ],
+      "questions": [
+        [
+          "Walk me through the rounds of a typical fresher SDE interview.",
+          "First a short intro screen — who I am, what I built, whether I can explain it clearly. Then a technical round: concepts from my own stack and resume lines — APIs, databases, authentication, Git. Then a coding round: small problems solved out loud — strings, lists, a simple query — where they watch how I think, not just the final code. Then project-depth and behaviour: my platform end to end, my hardest bug, how I work. It closes with my questions to them. The order can shuffle, but the resume drives most of it.",
+          "You are describing the map you prepared with. Calm structure here tells them the rest is under control."
+        ],
+        [
+          "Give your self-introduction — the exact words you will open with.",
+          "I am Krupal Sai, a 2025 B.Tech CSE graduate from GNIT Hyderabad. I founded and run a live student-services platform used by more than 150 students across two colleges. I built it with AI assistance and I operate it myself — integration, deployment, debugging and support. Alongside running it, I am learning programming fundamentals properly, from zero.",
+          "Thirty seconds, no longer. Rehearse until it needs zero thinking — it buys calm for the whole interview."
+        ],
+        [
+          "You don't know an answer. What exactly do you say?",
+          "I say three things. First, what I do know that touches it. Second, my honest stage: 'that topic is later in my learning order — I am at Python and DSA basics right now.' Third, what I would check first if it happened in my system — a log, a query, a doc. What I never do is invent. In my platform work, guessing is how production breaks; the same rule holds in this room.",
+          "Don't-know is a scored moment, not a failure. The protocol — know / stage / first check — is the whole technique."
+        ],
+        [
+          "What questions should you ask them at the end?",
+          "What would my first three to six months look like on this team? Who mentors freshers, and how does code review work here? What stack would I touch daily? And what does a strong first year look like for this role? Those questions tell them I am thinking like an engineer joining a team, not a candidate begging for a seat. Salary and perks wait for the HR conversation.",
+          "Ask at least two. Silence at 'any questions for us?' reads as low interest, every time."
+        ],
+        [
+          "How is a coding round different from a technical round?",
+          "A technical round asks me to EXPLAIN — what is a webhook, how does my login work — the answers live in words and in my platform. A coding round asks me to PRODUCE — a small function, a loop, a query — usually while talking through it. I prepare differently: concepts from my resume lines for the first, tiny hand-written Python drills for the second. Both are in this app, in that order.",
+          "Explain versus produce. Naming the difference shows you understand what each round is measuring."
+        ]
+      ],
+      "keywords": "interview flow rounds first interview self introduction how it works dont know protocol questions to ask hr technical coding rounds fresher"
+    },
+    "resume-type-coding": {
+      "title": "Coding questions — small ones, from your stack",
+      "concept": "Coding questions for a fresher are small on purpose: a string, a list, one SQL query, one idea taken from your own code. The interviewer is not hunting for genius — they are checking whether your hands can do what your resume implies, and whether you think in steps. Your method for every single one: say the plan in words first, write the code slowly, then trace it with a tiny example out loud. The five shapes in this lesson — loop with a condition, a counter in a dictionary, two tracked variables, a filtered query, verify-before-trust — cover nearly everything a first coding round will throw at you, and every one of them already lives somewhere in your platform.",
+      "steps": [
+        "1. Always speak the plan before touching code: 'a loop, a variable that remembers, return at the end.'",
+        "2. Write the smallest version that works. Clever comes never; correct comes first.",
+        "3. Trace with the smallest example — two or three values — and say each step out loud.",
+        "4. The master shape: loop + condition + memory (a counter, a total, a dictionary). Most beginner problems are this shape wearing a costume.",
+        "5. For SQL, think in clause order: which table, which rows (WHERE), which columns (SELECT).",
+        "6. If you blank on syntax, say the steps in plain words and write pseudocode — stated honestly, it still scores. A silent freeze scores zero."
+      ],
+      "worked": "Reverse a string, the full performance. Plan: 'I will build the answer one character at a time, adding each new character to the FRONT.' Code: def reverse_string(s): result = '' — then for ch in s: result = ch + result — then return result. Trace on 'abc': start result empty; a gives 'a'; b gives 'ba'; c gives 'cba'. Return 'cba'. And yes, Python has a shortcut — s[::-1] — name it AFTER the loop, as a bonus, never instead of it: the loop is what they are testing.",
+      "examples": [
+        "Palindrome in one breath: clean = s.lower(); return clean == clean[::-1]. 'madam' reversed is 'madam' — True. 'krupal' reversed is 'lapurk' — False.",
+        "Counting shape: counts = {} then counts[b] = counts.get(b, 0) + 1 — the get-with-default is the one trick worth memorising cold."
+      ],
+      "questions": [
+        [
+          "Reverse a string in Python — write it and talk me through it.",
+          "My plan: walk the string once, building the answer by putting each character at the front. In code: def reverse_string(s): result = '' ; for ch in s: result = ch + result ; return result. Trace on 'abc': result becomes 'a', then 'ba', then 'cba'. Python also has the slicing shortcut, s[::-1], which does the same thing in one step — but the loop shows the mechanics, and the mechanics are what I practise daily.",
+          "Plan, code, trace — in that order, out loud. This exact question shape opens most fresher coding rounds."
+        ],
+        [
+          "How do you check if a string is a palindrome?",
+          "A palindrome reads the same both ways, so I compare the string with its own reverse. In code: def is_palindrome(s): s = s.lower() ; return s == s[::-1]. The lower() matters — 'Madam' should count as yes. Trace: 'madam' reversed is 'madam', equal, so True. If they ask about spaces, I would remove spaces first — same comparison after cleaning.",
+          "Compare-with-reverse is the whole idea. The capital-letter catch shows care without being asked twice."
+        ],
+        [
+          "Find the second largest number in a list.",
+          "One pass, two memories: the largest seen so far, and the runner-up. In code: largest = second = the smallest possible start; for n in nums: if n is bigger than largest, the old largest becomes second and n becomes largest; else if n sits between second and largest, n becomes second. Trace on 4, 9, 7: largest goes 4 then 9; 7 lands between, so second is 7. No sorting needed, one walk through the list.",
+          "Two tracked variables is a classic pattern — practise the trace until the hand-offs (largest demotes to second) feel automatic."
+        ],
+        [
+          "Write a SQL query: all approved payments for one batch.",
+          "SELECT * FROM payments WHERE batch_id = 5 AND status = 'approved'. Table first — payments. Then the filters: this batch, and only the approved status. This is not a textbook exercise for me: my admin screens run exactly this shape against the live payments table. If they want the batch name too, that is a JOIN to the batches table on batch_id — the same join family that once taught me the PGRST201 lesson.",
+          "Say it clause by clause, slowly. WHERE filters, AND narrows. This query is genuinely yours — own it."
+        ],
+        [
+          "A webhook lands on your server. Write the steps to verify it is genuine.",
+          "Step one: take the raw request body exactly as it arrived — do not parse or change it first. Step two: recompute the stamp myself — HMAC of that body using our shared secret, in code: hmac.new(secret, body, sha256).hexdigest(). Step three: compare my stamp with the signature the gateway sent, with a constant-time compare. Only if they match do I read the payment and process it. That is literally the order in my Razorpay webhook handler: verify first, trust after.",
+          "This is pseudocode-level coding anchored in code you operate. Verify-then-process order is the marks."
+        ],
+        [
+          "Count how many students are in each batch, from a list of student records.",
+          "A dictionary does the counting — keys are batch names, values are running totals. In code: counts = {} ; for st in students: b = st['batch'] ; counts[b] = counts.get(b, 0) + 1. The get with default 0 handles the first student of a batch, when the key does not exist yet. Loop plus dictionary — this counting pattern is the seed of hash-map thinking, and it mirrors what my admin dashboard computes from real rows.",
+          "Dictionary-as-counter is THE hash-map pattern. If you learn one coding shape cold, it is this one."
+        ]
+      ],
+      "keywords": "coding questions python reverse string palindrome second largest sql query webhook verify hmac count dictionary loop fresher write code"
+    },
+    "resume-type-technical": {
+      "title": "Technical questions — concepts from your platform",
+      "concept": "Technical rounds do not ask textbook definitions — they ask YOUR versions of the concepts: your API, your webhook, your login, your database. That is good news: every concept in this lesson is something your platform does in production today, so every answer has the same safe shape — what it is in one line, how YOUR system does it, one trade-off or scar. Eight concepts cover the round: REST, webhook-versus-call, HMAC, session auth, JOIN, the push-to-deploy path, slow-site debugging, and WebRTC. If a concept outside these eight appears, use the interview-flow protocol: what you know, your stage, your first check.",
+      "steps": [
+        "1. Answer in the fixed shape: one-line definition → your platform's version → one real detail or scar.",
+        "2. Never define a term with the same term ('an API is an application programming interface') — use the door/waiter pictures.",
+        "3. Numbers are proof: 152 routes, 100+ migrations, 90-day student sessions. Keep them exact.",
+        "4. Where your design has a known weakness (app-layer isolation instead of RLS), name it before they find it — with the fix direction.",
+        "5. Keep each answer under a minute. Depth is shown by the follow-ups you survive, not by one long speech."
+      ],
+      "worked": "The shape, demonstrated on HMAC. Definition: 'HMAC is a tamper-proof stamp made from a message plus a shared secret.' My platform: 'When Razorpay calls my webhook, I recompute the HMAC of the body with our secret and compare it with the signature they sent — before I read anything else in the request.' The scar: 'Secrets live only in server environment variables, never in the browser bundle — a stamp anyone can copy is not a stamp.' Definition, mine, scar: thirty seconds, complete.",
+      "examples": [
+        "Webhook vs API call in one line: 'An API call is me asking Razorpay a question now; a webhook is Razorpay calling me later when the answer exists.'",
+        "Build error vs runtime error: 'Build error — the package refuses to assemble, and the old version keeps serving students. Runtime error — the live request itself fails. Different evidence, different fix.'"
+      ],
+      "questions": [
+        [
+          "What is a REST API, really?",
+          "An API is a door with rules: the app knocks with a request, the server answers with data. REST is the common style of those doors — each address, an endpoint, stands for a thing like payments or students, and the method says the action: GET reads, POST creates, PATCH updates, DELETE removes. My platform has 152 API routes doing exactly this for login, payments, documents and notifications, and every one follows the same skeleton: check the session, check the role, validate, do the work, answer in a standard shape.",
+          "Door, address, method, skeleton. Four anchors and any 'what is REST' variant is covered."
+        ],
+        [
+          "What is the difference between an API call and a webhook?",
+          "Direction and timing. An API call is me asking, right now: my server calls Razorpay to create an order, and gets an answer in the same breath. A webhook is the other side calling ME, later, when something finishes: Razorpay's server calls my webhook URL when the student's payment actually completes. Payments taught me why both exist — the student's phone can close mid-payment, so the result cannot travel back through the phone. The webhook is server-to-server, signed, and independent of the app being open.",
+          "Direction + timing + the closed-phone reason. That third part is yours alone — use it."
+        ],
+        [
+          "What is HMAC, and where does your platform use it?",
+          "HMAC is a stamp: you run the message through a hash function mixed with a shared secret, and only someone holding that secret can produce the same stamp. My platform uses it in three places. The Razorpay webhook: I recompute the stamp over the body and compare before trusting a single field. The voice-call negotiate endpoint is HMAC-signed so strangers cannot open calls. And my admin copilot needs an HMAC-signed confirmation token, valid ten minutes, before any data-changing action runs. Same idea everywhere: prove the message really came from who it claims, unaltered.",
+          "Stamp + secret + compare, then three real addresses where it lives. Concrete beats abstract."
+        ],
+        [
+          "How does authentication work in your app?",
+          "Students log in through a one-time link or OTP sent on WhatsApp. The server then creates a random session token — and stores only its SHA hash, never the token itself, the same logic as passwords. Every request carries the token; the server hashes it, looks the session up, and checks expiry. Sessions slide: a student stays in for 90 idle days, staff only 7, because a staff account can do more damage if stolen. The role — student, admin, super admin — comes from the student's profile row, and every route re-checks it server-side.",
+          "Issue, hash, check, slide, role. Five beats; the 90/7 split is the detail they remember."
+        ],
+        [
+          "What is a JOIN? Give me your own example.",
+          "A join lines up rows from two tables that belong together. My profiles table holds a batch_id; joining profiles to batches puts each student next to their batch's name and case details. I learned joins through a production scar: two relationships exist between profiles and batches, so one day the database refused my query as ambiguous — the PostgREST error PGRST201 — and the admin students list rendered empty during registrations. The fix was naming the exact foreign key in every query. So for me a join is not a definition; it is a thing that broke, and a thing I fixed.",
+          "The scar IS the credential here. Ambiguity → named foreign key → verified across admin roles."
+        ],
+        [
+          "What happens, step by step, when you push code?",
+          "I commit and push to the main branch on GitHub. Vercel picks it up and builds the whole app — TypeScript checks every file first. If the build fails, nothing changes for students: the last good build keeps serving, and I read the log, fix the smallest thing, push again. If it passes, the new version is live on studentplatform.dev in a minute or two — and only after I verify the changed page on the real domain, with real data, do I call it done. A build error is packaging refusing; a runtime error is the live request failing; I never confuse the two, because the evidence for each is different.",
+          "Push, build, gate, verify. The verify step is your signature — end on it."
+        ],
+        [
+          "Your site suddenly feels slow. What do you check first?",
+          "Resources first, logs second, guessing last — my real order. On the server: top for CPU and memory, df -h for disk, free -m for RAM. Then the logs: journalctl for the service, or tailing the app log while grepping for errors and slow calls. Nine times out of ten the log names the problem — a database call timing out, a provider hanging without a timeout. What I never do is restart things blindly or change code on a hunch while students are mid-registration.",
+          "Same routine as the Linux lesson, framed as incident discipline. Order is the answer."
+        ],
+        [
+          "What is WebRTC, in simple words?",
+          "WebRTC is the technology that lets a browser send live voice and video in real time, without a plugin. Two ideas make it work: SDP, where the two ends agree on the audio format, and ICE, where they find a network path that actually connects them. In my platform, the student's browser connects to my own media server on an Oracle Cloud VM; the server hears the speech, gets it transcribed, asks the same answer brain the WhatsApp bot uses, and speaks the reply back. I run that server myself — which is why WebRTC is not a buzzword on my resume; it is a service I restart, log and debug.",
+          "SDP = agree the format, ICE = find the path, then YOUR server. Simple words, real system."
+        ]
+      ],
+      "keywords": "technical concepts rest api webhook hmac session authentication join git push deploy slow linux webrtc sdp ice definition platform"
+    },
+    "resume-type-quick": {
+      "title": "Small questions — rapid fire, one-line answers",
+      "concept": "Every interview has a fast round you cannot predict: ten small questions in two minutes, checking whether the basic words of the job live in your head without hesitation. These are not traps and they are not deep — JSON, HTTP methods, status codes, what an API key is. The skill is speed plus a tiny anchor: definition in one line, then one example from your platform, then STOP. Rambling on a small question hurts more than a short silence. Drill these until each takes under fifteen seconds; if one is truly outside your stage, the don't-know protocol still applies — but for these ten, there is no excuse: they are the vocabulary of the system you operate daily.",
+      "steps": [
+        "1. One line, one anchor, stop. Fifteen seconds is the ceiling, not the target.",
+        "2. Every answer borrows an example from your platform — it proves the word is lived, not memorised.",
+        "3. Status codes as a story: 200 fine, 401 who are you, 403 I know you and no, 404 not here, 500 we broke.",
+        "4. If two small questions blur together (Git vs GitHub), the contrast IS the answer — say both halves.",
+        "5. Practise in Practice mode and out loud. Rapid fire punishes readers, rewards speakers."
+      ],
+      "worked": "Watch the tempo on the hardest of the ten — 'What is an environment variable?' Answer: 'A setting kept outside the code — a secret key, a config value — that the program reads when it starts. My platform's keys live in Vercel and VM environment variables, never in git. I respect them because a missing env file once crash-looped my voice server at 2 a.m. — the logs said so, once I read them.' One line, one anchor, one scar, done — under twenty seconds.",
+      "examples": [
+        "GET vs POST in five words each: 'GET reads, changes nothing. POST creates or changes something.'",
+        "API key in one line: 'A password for a program, not a person.'"
+      ],
+      "questions": [
+        [
+          "What is JSON?",
+          "A text format for structured data: labelled values, like name: Krupal, paid: true. Every language can read it, so my frontend and my API routes exchange JSON for everything — and when a payment fails at midnight, I can read the JSON in the logs with my own eyes.",
+          "Format + where yours flows + logs. Fifteen seconds."
+        ],
+        [
+          "GET or POST — how do you choose?",
+          "GET reads and changes nothing, so it is safe to repeat — fetching a payment status. POST creates or changes state — placing the order itself. Money only ever moves by POST in my platform; that line is not negotiable.",
+          "Reads versus changes. The money sentence is the anchor."
+        ],
+        [
+          "Run me through the status codes you actually use.",
+          "200 — fine, here is the data. 400 — your request itself is wrong. 401 — who are you? no valid session. 403 — I know exactly who you are, and no. 429 — too many attempts, slow down, that is the rate limiter. 500 — the server broke, and that one is mine to fix. My routes return these deliberately, not by accident.",
+          "Tell them as a story in person-order: fine, wrong, who, no, slow, broke."
+        ],
+        [
+          "What is an API key?",
+          "A secret password for a program instead of a person. My server presents keys when it talks to Razorpay, Groq or Cloudflare. They live in environment variables on the server — never in the browser code, never in git — because a leaked key is a leaked account.",
+          "Program's password + where yours live. Two facts, stop."
+        ],
+        [
+          "What is a database index, in one line?",
+          "It is the book's index at the back: instead of reading every page to find a topic, the database jumps straight to the matching rows. My payment lookups by order id and batch ride on indexes — without them, every admin screen would scan the whole table.",
+          "Book index analogy, then your order-id example. Done."
+        ],
+        [
+          "Git and GitHub — same thing?",
+          "No. Git is the tool on my machine: it records every change as commits with history I can search and roll back. GitHub is the website where that repository lives so Vercel can build from it. Git does the remembering; GitHub does the hosting.",
+          "Contrast is the answer. Machine versus website."
+        ],
+        [
+          "What is a server, in plain words?",
+          "A program — usually on a computer that never sleeps — that waits for requests and answers them. My app server answers API requests all day; my Oracle VM is a server whose one job is voice calls. When students say 'the app is down', a server somewhere is the thing that stopped answering.",
+          "Waits and answers. Then one of yours, by name."
+        ],
+        [
+          "What is an environment variable?",
+          "A setting stored outside the code — a secret, a key, a flag — read by the program when it starts. Mine live in Vercel's settings and in protected files on the VM, locked to owner-only. A missing env file once crash-looped my voice server; the fix took one line once the logs told me which file was missing.",
+          "Outside the code + the crash-loop scar. The scar makes it stick."
+        ],
+        [
+          "What is DNS?",
+          "The internet's phone book: it turns a name, studentplatform.dev, into the actual address of the hosting, so a browser can find the server. When a site 'does not open' but the server is healthy, DNS is one of the first suspects — the name is pointing nowhere, or somewhere old.",
+          "Phone book + one debugging use. That is all a small question wants."
+        ],
+        [
+          "Async and await — one line.",
+          "Async code starts a slow thing — a database call, a gateway call — and waits for its result without freezing everything else; await is the pause point inside that function. Every API route I operate is built this way.",
+          "Start, wait, do not freeze. The same plain-words core as the resume line — consistency scores."
+        ]
+      ],
+      "keywords": "rapid fire small questions json get post status codes 401 403 api key index git github server environment variable dns async await one line"
+    },
+    "resume-type-depth": {
+      "title": "Project-depth questions — your platform, end to end",
+      "concept": "The depth round is where freshers usually die — and where you are strongest, because your project is real: real money, real outages, real users who phone you. Depth questions all share one shape — 'walk me through…' — and one judging rule: do the details stay consistent as they dig? Yours do, because you lived them. Six questions cover the round: the architecture in one walk, the payment path rupee by rupee, the worst incident as a STAR story, the AI-ownership question head-on, scaling honestly, and what you would rebuild. Keep the audit numbers ready: 152 API routes, 101 migrations, 150+ students, ₹2,200, four-second answers from a chain of four AI providers, one media server on one small VM.",
+      "steps": [
+        "1. Walk top-down always: user → app → API → database → outside systems. Never start in the middle.",
+        "2. For the payment walk, the order is sacred: order → gateway → webhook verify → idempotent approve → status check.",
+        "3. Incidents in STAR: situation in one line, what YOU did step by step, result, and the rule it taught you.",
+        "4. The ownership answer never apologises: AI wrote code text; integration, security, deploys, debugging and ops are yours — provable.",
+        "5. Scaling answers name the pressure points you actually have, in the order they would bite — not a generic cloud lecture.",
+        "6. 'Rebuild differently' answers must be scars, not wishes: each item exists because it cost you something real."
+      ],
+      "worked": "The architecture walk, as one breath: 'A student opens the app — web on Vercel, or the same app wrapped for Android. The screens call my API routes, 152 of them, which check the session and role, then read or write PostgreSQL through Supabase. Money leaves through Razorpay and returns as a signed webhook. Help comes from the WhatsApp and Telegram bots and an AI voice agent; live calls run on my own media server on an Oracle VM. Cron jobs watch the High Court site and the platform's own health. One brain — the same grounded answer engine — serves the bots and the calls.' Practise this until it flows without a single 'um'.",
+      "examples": [
+        "The money trail when a student says 'debited but failed': believe the gateway, not the screenshot — query Razorpay by order id; if captured, approve through the verified path; if failed, the bank auto-refunds and the student gets the reference and timeline.",
+        "A scaling pressure point with a face: the rate-limit table gets a write on every guarded request — at 10x students that quiet table becomes a hot spot long before the pages do."
+      ],
+      "questions": [
+        [
+          "Walk me through your platform's architecture, end to end.",
+          "Three tiers plus side systems. Students and admins use a Next.js app on Vercel — the same codebase wrapped as an Android app — and every screen talks to 152 API routes in that app. Those routes guard first (session, then role, then input validation), then read and write PostgreSQL hosted on Supabase; the database shape grew through 101 migrations. Around that core: Razorpay, Cashfree and PhonePe for payments, all returning as signed webhooks; WhatsApp and Telegram bots for support and case status; my own WebRTC media server on an Oracle Cloud VM for AI voice calls, with a Cloudflare worker as a second voice lane; and cron jobs that watch court orders and platform health. One grounded answer engine serves every bot and call, so facts live in exactly one place.",
+          "Tiers first, side systems second, one-brain last. This is the audit map spoken aloud — keep the numbers exact."
+        ],
+        [
+          "Walk me through a payment, rupee by rupee.",
+          "The fee is one total: ₹2,200. The student taps pay; my server creates an order with Razorpay and the student pays at the gateway. Then the truth arrives server-to-server: Razorpay calls my webhook. My handler verifies the HMAC signature before reading anything, matches the payment by its gateway order id, and approves it — idempotently, so a retried webhook changes nothing the second time. The app confirms through the status endpoint, cross-checked against Razorpay's own record. If the gateway says failed, the row stays failed and the student sees that honestly. Screenshots are never evidence in this flow — manual approval is refused by design, because that is exactly where fake-payment fraud enters.",
+          "Order → webhook → verify → idempotent approve → confirm. Never let the phone's success screen into the story as proof."
+        ],
+        [
+          "Tell me about your hardest production incident.",
+          "Situation: peak registrations, and the admin students list suddenly rendered empty — over 200 students mid-process, admins blind. Task: find it without breaking anything live. Action: I stopped and read the actual API error instead of guessing — PostgREST said the relationship between profiles and batches was ambiguous, the PGRST201 error. I fixed every query to name the exact foreign key, redeployed, and verified the list with each of the admin accounts before telling anyone it was fixed. Result: full list back, no data lost. Rule it taught me: production errors usually name their own cause — read them before touching code, and never declare a fix the live site has not proven.",
+          "STAR, under ninety seconds, ending on the rule. This story is your incident credential — rehearse it cold."
+        ],
+        [
+          "Did YOU build this platform, or did the AI?",
+          "Both, in different parts — and I can draw the line exactly. AI tools generated much of the code text, from my designs and instructions. What is mine: choosing what to build and in what order; integrating Next.js, Supabase, three payment gateways, the bots and a voice server into one system that agrees with itself; the security decisions — hashed sessions, allow-list authorization, verify-before-trust on every webhook; every deployment; and every 2 a.m. debugging session when real students hit real problems. When the students list broke, no AI owned that outage — I did, and I fixed it. That ownership is my actual job on this project, and I describe it this way because it is true.",
+          "Calm, specific, zero defensiveness. This answer is the interview in miniature — it must sound like a fact."
+        ],
+        [
+          "How would your platform scale to ten times the students?",
+          "Measure first, then fix the pressure points in the order they would actually bite. The app tier is stateless, so it scales almost free on Vercel. The real pressure: database connections and hot tables — my rate-limit table takes a write on every guarded request; then AI provider quotas, since four chained providers have free-tier ceilings; then the single media server, which is one small VM carrying every voice call. My order: pool and index the database paths, cache the read-heavy screens, add provider capacity, and put a second media server behind the negotiate endpoint. What I would not do is rebuild anything on a guess — the health-check data tells me which wall is closest.",
+          "Stateless scales free; name YOUR four walls in order; measure-first close. Generic cloud answers fail this question; yours cannot."
+        ],
+        [
+          "What would you rebuild differently, knowing what you know now?",
+          "Three things, each one a scar. First, per-user Row Level Security in the database itself — today my server uses the service-role key and isolation lives in app code, which works but means one forgotten check is a leak; the guard belongs in both places. Second, fees and prices driven from the database, not code — a fee change should be a settings edit, not a deploy. Third, type checks gating every merge from day one — the duplicate-variable build failure taught me that cheap lesson late. Each of these exists on my list because it already cost me something real.",
+          "Scars, not wishes. End the depth round as the person who keeps the list — that is the operator they are hiring."
+        ]
+      ],
+      "keywords": "project depth architecture walkthrough payment flow incident star ai ownership scale 10x rebuild differently pressure points media server"
     }
   }
 };
