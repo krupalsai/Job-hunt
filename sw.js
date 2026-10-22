@@ -137,7 +137,7 @@
    THE BUMP IS LOAD-BEARING — a phone holding v37 would keep serving
    the old lesson files cache-first and the new lessons would never
    appear. */
-const CACHE = 'jobhunt-v40';
+const CACHE = 'jobhunt-v41';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
