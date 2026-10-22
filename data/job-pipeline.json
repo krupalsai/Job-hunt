@@ -125,7 +125,7 @@
   {
     "application": {
       "applied_at": null,
-      "note": "Not applied yet — awaiting Krupal's go. No close date, so the standing deadline guard applies: apply today anyway; referrals can follow.",
+      "note": "Not applied yet — application pending Krupal's tap. Resume sent to Bhanu Prakash (he responded 2026-10-21); the application itself is still not submitted. No close date, so the standing deadline guard applies: apply today anyway; referrals can follow.",
       "status": "not-applied"
     },
     "company": "Akamai",
@@ -144,41 +144,42 @@
         "asked_at": "2026-10-21",
         "linkedin_url": "https://www.linkedin.com/in/shashikanth-varma/",
         "name": "Shashikanth Varma",
-        "note": "Senior Software Engineer II, Akamai (Remote), Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21.",
+        "note": "Senior Software Engineer II, Akamai (Remote), Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
         "responded_at": null,
-        "status": "sent"
+        "status": "asked"
       },
       {
         "asked_at": "2026-10-21",
         "linkedin_url": "https://www.linkedin.com/in/nitish-kumar-6b35431b4/",
         "name": "Nitish Kumar",
-        "note": "Software Engineer II, Akamai, Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21.",
+        "note": "Software Engineer II, Akamai, Hyderabad. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
         "responded_at": null,
-        "status": "sent"
+        "status": "asked"
       },
       {
         "asked_at": "2026-10-21",
         "linkedin_url": "https://www.linkedin.com/in/shivaprasad-shetty-31421a193/",
         "name": "Shivaprasad Shetty",
-        "note": "SDET, Akamai, Udupi. Connection note drafted 2026-10-17 — sent 2026-10-21.",
+        "note": "SDET, Akamai, Udupi. Connection note drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
         "responded_at": null,
-        "status": "sent"
+        "status": "asked"
       },
       {
         "asked_at": "2026-10-21",
         "linkedin_url": "https://www.linkedin.com/in/bhanu-prakash-bbb01bb1/",
         "name": "Bhanu Prakash",
-        "note": "Senior SDE 2, Akamai (Remote), Bengaluru. Connection note drafted 2026-10-17 — sent 2026-10-21.",
-        "responded_at": null,
-        "status": "sent"
+        "note": "Senior SDE 2, Akamai (Remote), Bengaluru. Connection note drafted 2026-10-17 — sent 2026-10-21. Responded 2026-10-21 20:02 IST: 'sure share your resume.' Resume sent 2026-10-21 20:53; phone-free replacement sent 2026-10-21 23:33.",
+        "responded_at": "2026-10-21",
+        "resume_sent_at": "2026-10-21",
+        "status": "responded"
       },
       {
         "asked_at": "2026-10-21",
         "linkedin_url": "https://www.linkedin.com/in/roupyadip-de-b33156a9/",
         "name": "Roupyadip De",
-        "note": "Talent Acquisition Partner (Engineering & Cyber Security), Akamai, Bengaluru. Free Open Profile InMail drafted 2026-10-17 — sent 2026-10-21.",
+        "note": "Talent Acquisition Partner (Engineering & Cyber Security), Akamai, Bengaluru. Free Open Profile InMail drafted 2026-10-17 — sent 2026-10-21. Still waiting — no reply (checked 2026-10-22).",
         "responded_at": null,
-        "status": "sent"
+        "status": "asked"
       }
     ],
     "resume": {
@@ -190,6 +191,124 @@
     "verification": {
       "checked_at": "2026-10-20",
       "notes": "Verified live on Akamai's official careers portal (jobs.akamai.com) on 2026-10-17 and re-verified 2026-10-20: posting live, APPLY NOW opens the application form, no fee. Bar: at least 0.6 years programming in Python, Go and/or shell + at least 0.6 years development on Linux/Unix — inside the 0–1 year fresher band; his daily Linux-based development and production-ops work is genuinely relevant. No closing date listed on the posting. Nothing applied for yet; all 5 referral asks sent 2026-10-21.",
+      "status": "verified"
+    }
+  },
+  {
+    "application": {
+      "applied_at": null,
+      "note": "Not submitted — creating the Amazon.jobs candidate account still needs Krupal's explicit approval. Referral outreach runs in parallel and never gates the application.",
+      "status": "not-applied"
+    },
+    "company": "Amazon",
+    "company_research": {
+      "news_sources": [],
+      "status": "pending",
+      "summary": "Not yet recorded."
+    },
+    "deadline": null,
+    "found_at": "2026-10-19",
+    "id": "amazon-sde-i-10453457",
+    "location": "Bengaluru / Hyderabad / Chennai / Delhi",
+    "official_url": "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition",
+    "referrals": [
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Mehul Bhandari",
+        "note": "Software Engineer, Amazon. Asked in the 2026-10-22 broad round (166 connection+note asks). Replied 2026-10-22 07:08 IST: agreed to refer ('sure I can refer you') and advised attaching the resume upfront. Resume (honest rev 3, phone-free) sent 2026-10-22 09:56.",
+        "responded_at": "2026-10-22",
+        "resume_sent_at": "2026-10-22",
+        "status": "responded"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Naman Tyagi",
+        "note": "GenAI / Application Developer, AWS ProServe. Asked in the 2026-10-22 broad round. Replied 2026-10-22 04:16 IST: 'Sure' + 'Send me your resume along with job link'. Resume and the official job link sent 2026-10-22 09:58.",
+        "responded_at": "2026-10-22",
+        "resume_sent_at": "2026-10-22",
+        "status": "responded"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Natarajan Muthuraman",
+        "note": "AWS EMR (ex-Walmart, ex-Zoho). Asked in the 2026-10-22 broad round. Replied 2026-10-22 05:17 IST: soft yes — can refer, but advised reaching someone at Amazon India first. Held as backup; resume NOT sent.",
+        "responded_at": "2026-10-22",
+        "status": "responded"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Saketh Thogarucheeti",
+        "note": "Software Development Engineer, Amazon. Asked in the 2026-10-22 broad round; accepted the connection 2026-10-22. Resume sent 2026-10-22 with a thanks note; no message reply yet.",
+        "responded_at": null,
+        "resume_sent_at": "2026-10-22",
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Gaurav Sharma",
+        "note": "Senior Software Development Engineer, Amazon. Asked in the 2026-10-22 broad round; accepted the connection 2026-10-22. Resume sent 2026-10-22 with a thanks note; no message reply yet.",
+        "responded_at": null,
+        "resume_sent_at": "2026-10-22",
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Tarang Garlapally",
+        "note": "SDE II, Amazon. Asked in the 2026-10-22 broad round; accepted the connection 2026-10-22. Resume sent 2026-10-22 with a thanks note; no message reply yet.",
+        "responded_at": null,
+        "resume_sent_at": "2026-10-22",
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Santhosh Reddy",
+        "note": "SDE 2, AWS MP. Asked in the 2026-10-22 broad round; accepted the connection 2026-10-22. Resume sent 2026-10-22 with a thanks note; no message reply yet.",
+        "responded_at": null,
+        "resume_sent_at": "2026-10-22",
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-22",
+        "linkedin_url": null,
+        "name": "Lathish Kumar",
+        "note": "Full Life Cycle Recruiter II, Amazon (University Recruitment). Asked in the 2026-10-22 broad round; accepted the connection 2026-10-22. Resume sent 2026-10-22 with a thanks note; no message reply yet.",
+        "responded_at": null,
+        "resume_sent_at": "2026-10-22",
+        "status": "asked"
+      },
+      {
+        "asked_at": "2026-10-17",
+        "linkedin_url": null,
+        "name": "Sanjukta Acharya",
+        "note": "Was Senior Program Manager – Talent, Amazon (Dubai). 1st-degree DM sent 2026-10-17. Replied that she is no longer at Amazon — thread closed.",
+        "responded_at": null,
+        "status": "closed"
+      },
+      {
+        "asked_at": "2026-10-17",
+        "linkedin_url": null,
+        "name": "Mohammed Yaseen",
+        "note": "GNIT '25 batchmate at Amazon Hyderabad — Krupal's own batch. Connection ask sent 2026-10-17; invitation WITHDRAWN 2026-10-22 under his no-own-batch rule.",
+        "responded_at": null,
+        "status": "withdrawn"
+      }
+    ],
+    "resume": {
+      "ats_score": 83,
+      "draft_path": "~/workspace/your_files/Krupal_Resume_Amazon_SDEI.pdf"
+    },
+    "role": "Software Dev Engineer I",
+    "source": "morning-digest",
+    "verification": {
+      "checked_at": "2026-10-19",
+      "notes": "Verified live on Amazon's official portal (amazon.jobs, Job ID 10453457, Amazon University Talent Acquisition) on 2026-10-19: posting live, Apply flow accepting applications, no fee; no last date published (rolling review — can vanish without warning). 2025 and 2026 graduates eligible. Referral hunt: rounds sent 2026-10-05 / 10-17 / 10-19 / 10-21 plus 166 more on 2026-10-22 ~03:20 IST — 252 invitations pending on LinkedIn in total.",
       "status": "verified"
     }
   }
