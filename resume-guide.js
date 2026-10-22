@@ -2,7 +2,7 @@
  * player for the Project interview track. Mounts inside the resume-guide
  * lesson when it is opened in the roadmap (index.html), exactly like the
  * Project Guide player. Pure vanilla JS. Content is built ONLY from the
- * finalized resume (data/resume-drafts/akamai-swe-4073.md) and the verified
+ * master resume (data/resume-drafts/master-resume.md) and the verified
  * platform audit — every answer is at Krupal's real level: AI-assisted
  * builder/operator, learning fundamentals from zero. Nothing here invents
  * depth he does not have; the "learning" lines model how to say so with
@@ -16,8 +16,8 @@
 
   var LINES = [
     {
-      id: 'role', icon: '🎤', name: '“Founder & AI-assisted builder/operator”',
-      claim: 'Summary line 1 — who you are, in one breath',
+      id: 'role', icon: '🎤', name: '“AI-Assisted Builder & Operator | Backend & Systems”',
+      claim: 'Headline + Summary — who you are, in one breath',
       qs: [
         ['Introduce yourself in 30 seconds.', 'I am Krupal Sai, a 2025 B.Tech CSE graduate from GNIT Hyderabad. I founded and run a live student-services platform used by more than 150 students across two colleges. I built it with AI assistance and I operate it myself — integration, deployment, debugging and support. Alongside running it, I am learning programming fundamentals properly, from zero.', 'This IS your summary, spoken aloud. Practise until it fits 30 seconds — no longer, no shorter.', 'Easy'],
         ['What does “AI-assisted builder/operator” actually mean?', 'It means AI tools help me write code faster, but everything around the code is mine: deciding what to build, connecting the parts — payments, database, bots — deploying it, and fixing it when real users hit problems. AI writes drafts; I own what ships and what happens after it ships.', 'One honest sentence for the title, one for the ownership. Never let this sound like an apology.', 'Easy'],
@@ -36,14 +36,15 @@
       ]
     },
     {
-      id: 'linux', icon: '🐧', name: '“Work is Linux-native — Linux VM, daily”',
-      claim: 'Summary + Skills — the line they will test live',
+      id: 'ops', icon: '🐧', name: '“Linux daily operations — SSH, logs, systemd, cron”',
+      claim: 'Skills — Tools & ops line — the line they will test live',
       qs: [
         ['What do you actually do on Linux every day?', 'My development and operations run on a Linux VM — an Oracle Cloud Ubuntu server. Every day I work over SSH in a terminal: read application logs, restart services, run deployments and scheduled jobs, and debug live issues from the command line. The platform\u2019s voice server and jobs live on that machine.', 'Name the machine, the access (SSH), and the four daily actions: logs, services, deploys, jobs.', 'Easy'],
         ['You say Linux daily — show me. The site is slow. What do you run first?', 'First, resources: top or htop for CPU and memory, df -h for disk, free -m for RAM. Then the logs: journalctl for the service, or tail -f on the app log, and grep -i error to find the failures. Resources first, logs second, guessing last — that order is my real routine.', 'This is the “show me” moment. Speak the commands slowly and in order; that IS the demonstration.', 'Real'],
         ['Name five Linux commands you used this week.', 'ls and cd to move around the filesystem. tail -f and grep to read and search logs. systemctl status and restart to manage services. crontab -l to check scheduled jobs. And chmod — my secret files are locked owner-only, mode 600, because a key file everyone can read is not a secret.', 'Five commands, each with its job. The chmod example quietly proves security thinking.', 'Real'],
         ['How do you log into a server with no password?', 'With an SSH key pair. The private key stays on my side; the public key sits on the server. The server challenges, my key answers — no password travels. My VM access additionally goes through Tailscale, so the SSH port is not even exposed to the open internet.', 'Key pair + private stays home + Tailscale. Three facts, one breath.', 'Tough'],
-        ['What is a process — and what happens when your service process dies?', 'A process is a program that is running — it has memory, a state, an ID. When my voice-server process dies, systemd starts it again automatically because the service unit is configured to restart always. From the student\u2019s side, a call service blips; from my side, the journal shows the crash and the restart, and I go read why it died.', 'Process = running program; systemd = the manager that restarts it. Both are things you genuinely operate.', 'Tough']
+        ['What is a process — and what happens when your service process dies?', 'A process is a program that is running — it has memory, a state, an ID. When my voice-server process dies, systemd starts it again automatically because the service unit is configured to restart always. From the student\u2019s side, a call service blips; from my side, the journal shows the crash and the restart, and I go read why it died.', 'Process = running program; systemd = the manager that restarts it. Both are things you genuinely operate.', 'Tough'],
+        ['What scheduled jobs — cron — run on your platform?', 'A daily job checks the Telangana High Court site for every batch\u2019s case and posts an in-app notification when something changes — a hearing, an order. There are also scheduled health checks that scan for server errors. Cron itself is simple: at this time, run this command; the server keeps the timetable so no human has to remember.', 'Court check + health check: two real jobs, both already in your platform story.', 'Real']
       ]
     },
     {
@@ -67,27 +68,28 @@
       ]
     },
     {
-      id: 'shell', icon: '🐚', name: '“Shell scripting basics — Linux VM daily use”',
-      claim: 'Skills — Languages line, second half',
+      id: 'api', icon: '🛣️', name: '“152 RESTful API routes — auth, payments, notifications”',
+      claim: 'Skills — Backend line + Experience',
       qs: [
-        ['What shell scripting do you actually do — honestly?', 'Mostly one-liners and small scripts on the VM: tailing and grepping logs to find errors, checking disk and memory, restarting services in the right order. The biggest is my voice server\u2019s deploy script — it rebuilds the package, swaps it in and restarts the service, in sequence, so a deploy is one command instead of ten chances to make a mistake.', '“One command instead of ten chances to make a mistake” — that is why scripts exist. Say it.', 'Easy'],
-        ['What scheduled jobs — cron — run on your platform?', 'A daily job checks the Telangana High Court site for every batch\u2019s case and posts an in-app notification when something changes — a hearing, an order. There are also scheduled health checks that scan for server errors. Cron itself is simple: at this time, run this command; the server keeps the timetable so no human has to remember.', 'Court check + health check: two real jobs, both already in your platform story.', 'Real'],
-        ['What does chmod 600 on a file mean?', 'Permissions have three audiences — owner, group, everyone else — and three actions: read, write, execute. 600 means only the owner can read and write; nobody else can even open it. My API key and secret files on the VM are 600 for exactly that reason.', 'Three audiences, three actions, then your real example. Complete in four sentences.', 'Real']
+        ['What is a REST API, really?', 'An API is a door with rules: the app knocks with a request, the server answers with data. REST is the common style of those doors. Each address — an endpoint — stands for a thing, like payments or students, and the method says the action: GET reads, POST creates, PATCH updates, DELETE removes. My platform has 152 API routes doing exactly this for login, payments, documents and notifications.', 'Door, address, method. If you can say those three, you can answer any “what is REST” variant.', 'Easy'],
+        ['Walk me through one of your endpoints, end to end.', 'Take payment status. The app sends a GET with the student\u2019s session token. The server first checks the session — no valid session, the answer is 401 and nothing else happens. Then it checks the role — 403 if a student asks for admin data. Then it reads the payment row from the database and answers 200 with the status. Guard first, database last — that order is the whole design.', 'Same journey as the API flow in the Project Guide. Order is what they score.', 'Real'],
+        ['Which status codes do you return?', '200 for success. 400 when the request itself is wrong. 401 — who are you: no valid session. 403 — I know who you are, and no: wrong role. 429 — too many attempts, that is the rate limiter. 500 — the server broke, and that one is mine to fix. My routes return these deliberately: the code tells the app exactly what kind of problem happened, so the student sees the right message instead of a mystery.', 'Person-order story: fine, wrong, who, no, slow, broke. Same order as the rapid-fire lesson.', 'Real'],
+        ['How are your 152 APIs organised?', 'In families that match the product: student routes, admin routes, payments per gateway, voice, and cron jobs. Inside, every route runs the same skeleton — authenticate, authorize, validate the input, do the work, answer in the standard response shape. One skeleton means a new route inherits the platform’s safety instead of re-inventing it — and a bug pattern, once fixed in the skeleton’s guards, is fixed everywhere.', 'Families outside, skeleton inside. The skeleton sentence is the engineering maturity they are listening for.', 'Tough']
       ]
     },
     {
-      id: 'api', icon: '🛣️', name: '“RESTful APIs I designed and operate”',
-      claim: 'Skills — Backend line + Experience',
+      id: 'auth', icon: '🔐', name: '“Custom sessions — hashed tokens, role allow-lists”',
+      claim: 'Skills — Auth & security line',
       qs: [
-        ['What is a REST API, really?', 'An API is a door with rules: the app knocks with a request, the server answers with data. REST is the common style of those doors. Each address — an endpoint — stands for a thing, like payments or students, and the method says the action: GET reads, POST creates, PATCH updates, DELETE removes. My platform has about 150 API routes doing exactly this for login, payments, documents and notifications.', 'Door, address, method. If you can say those three, you can answer any “what is REST” variant.', 'Easy'],
-        ['Walk me through one of your endpoints, end to end.', 'Take payment status. The app sends a GET with the student\u2019s session token. The server first checks the session — no valid session, the answer is 401 and nothing else happens. Then it checks the role — 403 if a student asks for admin data. Then it reads the payment row from the database and answers 200 with the status. Guard first, database last — that order is the whole design.', 'Same journey as the API flow in the Project Guide. Order is what they score.', 'Real'],
-        ['How do your APIs know who is asking?', 'The app sends the session token with every request. The server stores only the hash of each token — never the token itself — and checks it on every request. Sessions slide: a student stays logged in for 90 idle days, staff only 7, because staff accounts can do more damage if stolen.', 'Hash stored, checked per request, staff expire faster. Three facts.', 'Real'],
-        ['Authentication versus authorization — difference?', 'Authentication asks: who are you? That is the session check. Authorization asks: what are you allowed to do? That is the role check. A student is authenticated but never authorized for admin endpoints — that is the difference between a 401 and a 403.', 'Who are you / what may you do. The classic pair — never mix them up.', 'Tough']
+        ['How does login work on your platform?', 'A student asks for a login link on WhatsApp and taps it. The server creates a random session token, stores only its SHA hash in the sessions table, and the app carries that token with every request after. There is no password anywhere in the system — the link plus the phone is the door, and the token is the key the server recognises.', 'Link in, token created, hash stored. Three beats — and “no password anywhere” is a design choice, not a gap.', 'Easy'],
+        ['Why store only the hash of the session token?', 'For the same reason passwords are hashed: if my database ever leaked, the attacker gets hashes — and a hash cannot be presented to the server as a token, because the server hashes whatever it receives and compares hashes. The raw token exists only on the student’s phone and in that one login link. Stealing the database does not steal a single login.', '“A hash cannot be presented” is the sentence that proves you understand WHY, not just what.', 'Real'],
+        ['What is a sliding session?', 'The expiry clock restarts with use: a session dies only after a period of NO activity, not at a fixed date. Students get 90 idle days — they open the app in bursts around court dates — while staff get only 7, because a stolen staff session can do real damage. Same mechanism, different risk, different number.', 'Idle-based, role-based numbers. The why behind 90 versus 7 is the answer.', 'Real'],
+        ['Authentication versus authorization — difference?', 'Authentication asks: who are you? That is the session check. Authorization asks: what are you allowed to do? That is the role check — my authorization lives in one module of allow-list functions: can this admin see this batch, can this student read this payment. A student is authenticated but never authorized for admin endpoints — that is the difference between a 401 and a 403.', 'Who are you / what may you do. The classic pair — never mix them up.', 'Tough']
       ]
     },
     {
       id: 'webhook', icon: '🔁', name: '“Webhook-based payment verification”',
-      claim: 'Skills — Backend line (PhonePe/Razorpay)',
+      claim: 'Skills — Backend line (Razorpay live; Cashfree + PhonePe integrated)',
       qs: [
         ['Explain webhooks — using your payment example.', 'A webhook is the other system calling you when something happens. When a student pays, Razorpay\u2019s server calls my server directly: this order was paid. My server first verifies the message\u2019s HMAC signature — a stamp only Razorpay can make with our shared secret — then matches the payment by its gateway order id, and only then marks it approved. The phone showing “success” is never the proof. The signed webhook is.', 'Signature first, match second, approve third. This is THE payment answer — the Project Guide has the full flow.', 'Easy'],
         ['Why not just trust the phone when it shows payment success?', 'Because phones lie — apps close mid-payment, and screenshots can be faked in a minute. We had real students whose ₹1,100 orders failed at the gateway while they believed they had paid. The webhook is Razorpay telling our server directly, with a signature only Razorpay can produce. That is the only evidence we accept.', 'The failed-₹1,100 detail is real and makes the answer un-fakeable.', 'Real'],
@@ -108,8 +110,8 @@
       ]
     },
     {
-      id: 'git', icon: '🔧', name: '“Git (version control & deployment), Vercel, cron”',
-      claim: 'Skills — Tools & practices line',
+      id: 'git', icon: '🔧', name: '“Git & Vercel — version control and deployment”',
+      claim: 'Skills — Tools & ops line',
       qs: [
         ['How do you deploy your platform?', 'I push the change to the main branch on GitHub. Vercel builds the whole app — TypeScript checks every file — and if the build passes, the new version is live on studentplatform.dev within a minute or two. Then I verify on the real domain, with real data, before I call it done.', 'Push, build, live, verify. The verify step is what separates operators from committers.', 'Easy'],
         ['What happens when a build fails?', 'Nothing breaks for students — Vercel keeps serving the last good build. I read the build log, find the exact error, fix the smallest thing, push again, and verify. A failed build once hid every student\u2019s data behind an old version for hours; that day taught me the rule: never claim fixed until the live site proves it.', 'Old version keeps serving + the rule the failure taught you. Both halves matter.', 'Real'],
@@ -118,8 +120,18 @@
       ]
     },
     {
+      id: 'voice', icon: '🎙️', name: '“WebRTC voice backend — speech in, Telugu speech out”',
+      claim: 'Skills — Voice & AI line + Experience',
+      qs: [
+        ['How does a voice call work on your platform?', 'The student taps the call button. The app first asks my negotiate endpoint — session-checked and rate-limited — then WebRTC carries the live audio to my media server on the Oracle Cloud VM. There, Groq Whisper turns speech into text, the same answer brain that powers the WhatsApp bot replies from the student’s real records, and Piper speaks it back in English or Telugu, sentence by sentence as it generates. If nobody speaks for sixty seconds, the call ends itself.', 'Negotiate, carry, transcribe, answer, speak. The chain in order — same as the architecture walk.', 'Easy'],
+        ['Why run your own media server instead of using a calling service?', 'Two reasons. Cost: my rule for this platform is free tooling wherever it can hold, and calling services charge per minute. Control: the call had to talk to my own answer brain with my own session rules, and a server I run is a server I can log, restart and fix at 2 a.m. The trade-off is honest too — I am the on-call engineer, and if that VM dies, calls die with it until I bring it back.', 'Free + control, then the trade-off named before they name it. That honesty is the pattern of this whole resume.', 'Real'],
+        ['What are SDP and ICE, in simple words?', 'When two ends start a WebRTC call, SDP is them agreeing on the format — which audio codec, at what quality: the handshake where both sides say “this is how I will talk”. ICE is them finding a network path that actually connects — home routers and firewalls hide the real addresses, so ICE tries the candidate paths until one works. Agree the language, then find the road.', 'Two pictures: language, then road. Simple words are the whole assignment here.', 'Real'],
+        ['How did you make the voice replies feel fast?', 'Streaming, in sentences. The answer engine produces text sentence by sentence; the moment the first sentence exists, Piper speaks it while the next sentence is still being written and converted — and the following audio is prefetched during playback. The student hears the first words in about a second instead of waiting in silence for the whole answer. Dead air is what makes a voice agent feel broken; the pipeline exists to kill it.', '“Dead air is what makes it feel broken” — the product instinct behind the engineering. Say both halves.', 'Tough']
+      ]
+    },
+    {
       id: 'bot', icon: '💬', name: '“Support bot — 1,300+ real user messages”',
-      claim: 'Experience — Reliability & operations line',
+      claim: 'Skills — Voice & AI line; Experience — Support & AI',
       qs: [
         ['How does your support bot answer a student\u2019s question?', 'Facts first: the bot reads the student\u2019s own record and the conversation history, so “is my payment approved?” is answered from their real payment row, not a guess. For open questions it uses an AI chain — Gemini, then Groq, then OpenRouter, then Cloudflare — each with a timeout, first good answer wins. If nothing can answer safely, it escalates to a human instead of inventing one.', 'Facts first, chain second, escalate third. That order is the whole answer.', 'Easy'],
         ['What is the “automated incident triage” on your resume?', 'Server errors are collected into one table. An AI triage step groups them, rates how serious each group is, and only verified serious problems reach me — explained in plain words. Minor warnings from students\u2019 phones are logged silently. I built that policy after raw error dumps proved useless: an alert you cannot act on is just noise with a notification sound.', '“An alert you cannot act on is noise” — a line with real scar tissue behind it.', 'Real'],
