@@ -67,11 +67,26 @@ export default async function handler(req: any, res: any) {
 
   const db = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
   const check = String(req.query?.check ?? "") === "1";
-  if (check) {
-    const auth = req.headers?.authorization ?? "";
-    const secret = process.env.CRON_SECRET ?? "";
-    if (!(req.headers?.["x-vercel-cron"] || (secret && auth === `Bearer ${secret}`))) {
-      return res.status(401).json({ error: "Unauthorized." });
+  const refresh = String(req.query?.refresh ?? "") === "1";
+  if (check || refresh) {
+    if (check) {
+      const auth = req.headers?.authorization ?? "";
+      const secret = process.env.CRON_SECRET ?? "";
+      if (!(req.headers?.["x-vercel-cron"] || (secret && auth === `Bearer ${secret}`))) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+    }
+    // On-demand refreshes are globally throttled so an open page cannot hammer
+    // official recruitment websites. While the app is open, it can request a
+    // fresh source check at most once every five minutes.
+    const { data: previousCheck } = await db.from("app_config")
+      .select("value").eq("key", "exam_results_last_checked").maybeSingle();
+    const lastCheckMs = previousCheck?.value ? Date.parse(previousCheck.value) : 0;
+    if (refresh && Number.isFinite(lastCheckMs) && Date.now() - lastCheckMs < 5 * 60 * 1000) {
+      return res.status(200).json({
+        ok: true, skipped: true, checked_at: previousCheck.value,
+        reason: "A source check was completed in the last five minutes."
+      });
     }
     const sources: any[] = [];
     const found: any[] = [];
