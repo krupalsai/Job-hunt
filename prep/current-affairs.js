@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-21",
+  updated: "2026-10-22",
 
   items: [
     /* {
@@ -48,6 +48,54 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-22",
+      topic: "Polity",
+      headline: "Union Home Ministry convenes Telangana-Andhra meeting on 22 October to resolve post-bifurcation issues",
+      why: "Askable set: the meeting (22 October, deferred from 30 September; Planning Secretary Gaurav Uppal defending Telangana's interests), the agenda (apportionment of Schedule IX and X institutions, assets of institutions not named in the AP Reorganisation Act 2014, Centrally-sponsored-scheme funds, public debt on externally-aided projects, reimbursement for common institutions used by Andhra Pradesh when Hyderabad was the joint capital), and the contested point (Andhra Pradesh has repeatedly sought Singareni Collieries; Telangana's stand is location-based distribution of assets).",
+      source: "The Hindu",
+      url: "https://scoopfeeds.com/article/29e17b4f-541a-522c-98b5-cd42f3a6a0a9",
+    },
+    {
+      date: "2026-10-21",
+      topic: "Polity",
+      headline: "Police Commemoration Day: CM says all Telangana police vacancies to be filled by 2028; Home Guard ex-gratia doubled to Rs. 10 lakh",
+      why: "Highly relevant for this paper. Announcements by CM A. Revanth Reddy at the Police Commemoration Parade, Goshamahal Stadium, on 21 October: 5,000 police vacancies already notified, all vacancies to be filled by 2028, recruitment of 112 DSPs (called unprecedented in Telangana's history); ex-gratia for personnel dying in service raised — constables Rs. 40 lakh to Rs. 1 crore, Head Constable/ASI Rs. 45 lakh to Rs. 1 crore, SI/Inspector to Rs. 1.25 crore, DSP/Addl SP to Rs. 1.5 crore, SP/IPS Rs. 1 crore to Rs. 2 crore; Home Guards Rs. 5 lakh to Rs. 10 lakh (DGP C.V. Anand to implement); Young India Police School to shift from the Greyhounds campus to a 44-acre Manchirevula facility by April. Also highlighted: transgender traffic assistants, SHE Teams and Spandana units.",
+      source: "Mirror Now",
+      url: "https://www.mirrornow.in/hyderabad-news/telangana-police-vacancies-to-be-filled-by-2028-revanth-reddy-article-156378822",
+    },
+    {
+      date: "2026-10-21",
+      topic: "Environment",
+      headline: "Hyderabad Police rescues four Indian Rollers (Palapitta) caged during Dussehra",
+      why: "State-bird hook: the Indian Roller (Palapitta) is Telangana's state bird, and the paper pairs species news with state symbols. On 21 October, Hyderabad Police (Commissioner V.C. Sajjanar) raided three locations — Bapu Ghat (Langer Houz), Sri Chitragupta Swamy Temple (Chatrinaka), Balaji Nagar (Mangalhat) — and freed four birds caged over the 'sighting brings good luck on Dussehra' superstition; birds handed to the forest department, legal action initiated against those responsible.",
+      source: "hi INDiA",
+      url: "https://hiindia.com/hyderabad-police-rescues-4-indian-rollers-caged-during-dussehra-due-to-old-superstition/",
+    },
+    {
+      date: "2026-10-21",
+      topic: "Environment",
+      headline: "UNEP releases Emissions Gap Report 2026 'The Point of Return' on 21 October",
+      why: "The numbers are the askable part: for the lowest-overshoot path back to 1.5°C, global greenhouse-gas emissions must fall 18% by 2030, 45% by 2035 and 69% by 2040 versus 2025; current policies point to 2.8°C this century, full delivery of all NDCs to 2.6°C, and even meeting all net-zero pledges only holds warming to about 2.1°C.",
+      source: "CrackTarget",
+      url: "https://cracktarget.com/current-affairs-21-october-2026/",
+    },
+    {
+      date: "2026-10-21",
+      topic: "Sports",
+      headline: "BCCI names Ramesh Powar to men's senior selection committee; Pragyan Ojha stays chairman",
+      why: "Appointments the paper asks cold. Former India off-spinner Ramesh Powar (2 Tests, 31 ODIs; later coached India women to the 2022 Asia Cup title) joins on the unanimous Cricket Advisory Committee recommendation (Ashok Malhotra, Jatin Paranjape; interviews 15 October in Mumbai); Pragyan Ojha continues as chairman on seniority, succeeding Ajit Agarkar whose term ended 4 October 2026. Committee: Ojha, Shiv Sundar Das, RP Singh, Ajay Ratra and Powar.",
+      source: "CrackTarget",
+      url: "https://cracktarget.com/current-affairs-21-october-2026/",
+    },
+    {
+      date: "2026-10-19",
+      topic: "Defence",
+      headline: "Fifth edition of Exercise AUSTRAHIND 2026 (India-Australia) begins at Thiruvananthapuram",
+      why: "The drill-set: 19 October to 1 November at the Foreign Training Node, Thiruvananthapuram, Kerala; about 240 personnel (120 each); India — the Garhwal Rifles; Australia — 13 Brigade; New Zealand joins for the first time as an observer; covers tactical planning, surveillance, coastal and island operations, and disaster relief under a UN mandate.",
+      source: "BankersAdda",
+      url: "https://www.bankersadda.com/daily-current-affairs-and-gk-updates-21st-october-2026/",
+    },
     {
       date: "2026-10-21",
       topic: "Schemes",
