@@ -2893,6 +2893,10 @@ renderBasicsLink();
     button.disabled = true;
     status.textContent = "Checking saved official notices…";
     try {
+      // Request a throttled source refresh, then read the current notices.
+      const checkResponse = await fetch("/api/results?refresh=1", { cache: "no-store" });
+      const checkPayload = await checkResponse.json();
+      if (!checkResponse.ok) throw new Error(checkPayload.error || "Unable to check official sources");
       const response = await fetch("/api/results", { cache: "no-store" });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || "Unable to load result notices");
@@ -2907,7 +2911,7 @@ renderBasicsLink();
           '</small></span><span aria-hidden="true">↗</span></a>'
         ).join("");
       }
-      status.textContent = "Official pages are checked hourly. This screen refreshes every minute. " +
+      status.textContent = "Official sources are checked on demand at most every five minutes while the app is open, with a daily background check. " +
         (payload.checked_at ? "Latest notice detected: " + new Date(payload.checked_at).toLocaleString() : "No notice has been stored yet.");
     } catch (error) {
       status.textContent = "Could not load result updates. " + (error && error.message ? error.message : "");
