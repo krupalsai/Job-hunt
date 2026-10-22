@@ -84,6 +84,11 @@ export default async function handler(req: any, res: any) {
         sources.push({ exam: source.exam_name, ok: false, error: String(error?.message ?? "Fetch failed").slice(0, 120) });
       }
     }
+    const checkedAt = new Date().toISOString();
+    const { error: checkStampError } = await db.from("app_config")
+      .upsert({ key: "exam_results_last_checked", value: checkedAt }, { onConflict: "key" });
+    if (checkStampError) console.error("[results] could not save check timestamp", checkStampError.message);
+
     let inserted = 0;
     if (found.length) {
       const { data, error } = await db.from("exam_results")
@@ -130,7 +135,7 @@ export default async function handler(req: any, res: any) {
         console.error("[results] push notification failed", error?.message ?? error);
       }
     }
-    return res.status(200).json({ ok: sources.every((s) => s.ok), checked_at: new Date().toISOString(), inserted, push, sources });
+    return res.status(200).json({ ok: sources.every((s) => s.ok), checked_at: checkedAt, inserted, push, sources });
   }
 
   const exam = String(req.query?.exam ?? "").trim().toLowerCase();
@@ -140,6 +145,8 @@ export default async function handler(req: any, res: any) {
     .limit(50);
   if (exam) query = query.eq("exam_key", exam);
   const { data, error } = await query;
+  const { data: checkStamp } = await db.from("app_config")
+    .select("value").eq("key", "exam_results_last_checked").maybeSingle();
   if (error) {
     console.error("[results] read failed", error.message);
     return res.status(500).json({ error: "Could not load result notices." });
@@ -148,7 +155,7 @@ export default async function handler(req: any, res: any) {
   return res.status(200).json({
     results: data ?? [],
     count: data?.length ?? 0,
-    checked_at: data?.[0]?.first_seen_at ?? null,
+    checked_at: checkStamp?.value ?? null,
     note: "Notices are discovered from official recruitment pages; confirm your roll number and eligibility in the linked official notice.",
   });
 }
