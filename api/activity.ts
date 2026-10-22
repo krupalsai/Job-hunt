@@ -21,6 +21,13 @@ function authorized(req: any) {
 export default async function handler(req: any, res: any) {
   if (!URL || !KEY) return res.status(500).json({ error: "Activity store is not configured." });
   if (req.method === "POST") {
+    const origin = String(req.headers?.origin ?? "");
+    const host = String(req.headers?.host ?? "");
+    let originHost = "";
+    try { originHost = new URL(origin).host; } catch {}
+    if (!originHost || !host || originHost !== host) {
+      return res.status(403).json({ error: "Same-origin activity events only." });
+    }
     const body = req.body ?? {};
     if (!TYPES.has(body.event_type) || typeof body.page !== "string") {
       return res.status(400).json({ error: "Invalid activity event." });
