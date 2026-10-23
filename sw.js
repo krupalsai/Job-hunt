@@ -141,7 +141,10 @@
    below, while its data (/data/job-board.json) stays network-only like all
    job data — a cached board would show a closed role as open.
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v43';
+/* v44 splits Home into two worlds — GOVERNMENT and PRIVATE zones
+    (index.html only: a top switcher, per-zone sections, sector-filtered
+    Open-now). THE BUMP IS LOAD-BEARING — see the v11/v12 notes above. */
+const CACHE = 'jobhunt-v44';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
