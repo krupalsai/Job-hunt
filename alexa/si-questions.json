@@ -10,10 +10,12 @@
       "1621"
     ],
     "answerIndex": 0,
+    "level": 1,
     "explanation": "The Charminar was built in 1591 by Muhammad Quli Qutb Shah, the founder of Hyderabad."
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "24",
@@ -27,6 +29,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "45 kilometres per hour",
@@ -40,6 +43,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "14",
@@ -53,6 +57,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "400 rupees",
@@ -66,6 +71,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "20",
@@ -79,6 +85,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "3",
@@ -92,6 +99,7 @@
   },
   {
     "answerIndex": 3,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "10 days",
@@ -105,6 +113,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "26",
@@ -118,6 +127,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "34",
@@ -131,6 +141,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "4 15 7",
@@ -144,6 +155,7 @@
   },
   {
     "answerIndex": 3,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "Square",
@@ -157,6 +169,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Indian Polity",
     "choices": [
       "Article 14",
@@ -170,6 +183,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Geography",
     "choices": [
       "Warangal",
@@ -183,6 +197,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "History",
     "choices": [
       "1757",
@@ -196,6 +211,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "History",
     "choices": [
       "1857",
@@ -209,6 +225,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Indian Economy",
     "choices": [
       "State Bank of India",
@@ -222,6 +239,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "So",
@@ -235,6 +253,7 @@
   },
   {
     "answerIndex": 3,
+    "level": 1,
     "category": "Geography",
     "choices": [
       "Krishna",
@@ -248,6 +267,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Sports",
     "choices": [
       "P. T. Usha",
@@ -261,6 +281,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "14",
@@ -274,6 +295,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 3,
     "category": "Arithmetic",
     "choices": [
       "250",
@@ -287,6 +309,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "No change",
@@ -300,6 +323,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "12 percent",
@@ -313,6 +337,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "2,000 rupees",
@@ -326,6 +351,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "5 days",
@@ -339,6 +365,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "15",
@@ -352,6 +379,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "5",
@@ -365,6 +393,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "480 rupees",
@@ -378,6 +407,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "144 square centimetres",
@@ -391,6 +421,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "24",
@@ -404,6 +435,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Arithmetic",
     "choices": [
       "320",
@@ -417,6 +449,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "1,600 rupees",
@@ -430,6 +463,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "2 hours",
@@ -443,6 +477,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "13,200 rupees",
@@ -456,6 +491,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Arithmetic",
     "choices": [
       "48 centimetres",
@@ -469,6 +505,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 3,
     "category": "Arithmetic",
     "choices": [
       "0.5 kilometres per hour",
@@ -482,6 +519,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "40",
@@ -495,6 +533,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "162",
@@ -508,6 +547,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "G R J",
@@ -521,6 +561,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "N B O H P",
@@ -534,6 +575,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "3 kilometres",
@@ -547,6 +589,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 3,
     "category": "Reasoning",
     "choices": [
       "Her brother",
@@ -560,6 +603,7 @@
   },
   {
     "answerIndex": 3,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "Apple",
@@ -573,6 +617,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "T",
@@ -586,6 +631,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "75",
@@ -599,6 +645,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "All pens are chairs",
@@ -612,6 +659,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "Tuesday",
@@ -625,6 +673,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "60 degrees",
@@ -638,6 +687,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "27th",
@@ -651,6 +701,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "36",
@@ -664,6 +715,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "S",
@@ -677,6 +729,7 @@
   },
   {
     "answerIndex": 3,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "121",
@@ -690,6 +743,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Reasoning",
     "choices": [
       "North",
@@ -703,6 +757,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "Cement",
@@ -716,6 +771,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Reasoning",
     "choices": [
       "84",
@@ -729,6 +785,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Acetic acid",
@@ -742,6 +799,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "General Science",
     "choices": [
       "6.5",
@@ -755,6 +813,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Vitamin A",
@@ -768,6 +827,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Joule",
@@ -781,6 +841,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Carbon dioxide",
@@ -794,6 +855,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Nucleus",
@@ -807,6 +869,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 3,
     "category": "General Science",
     "choices": [
       "Fibrinogen",
@@ -820,6 +883,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Convex mirror",
@@ -833,6 +897,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "General Science",
     "choices": [
       "Carbon dioxide",
@@ -846,6 +911,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Geography",
     "choices": [
       "Coromandel coast",
@@ -859,6 +925,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Geography",
     "choices": [
       "Deltas",
@@ -872,6 +939,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Geography",
     "choices": [
       "Himachal Pradesh",
@@ -885,6 +953,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Geography",
     "choices": [
       "Wheat",
@@ -898,6 +967,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Geography",
     "choices": [
       "Low rainfall and low temperature",
@@ -911,6 +981,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 3,
     "category": "Geography",
     "choices": [
       "6",
@@ -924,6 +995,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Geography",
     "choices": [
       "Pulicat Lake",
@@ -937,6 +1009,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "History",
     "choices": [
       "Jawaharlal Nehru",
@@ -950,6 +1023,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "History",
     "choices": [
       "1920",
@@ -963,6 +1037,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "History",
     "choices": [
       "C. Rajagopalachari",
@@ -976,6 +1051,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "History",
     "choices": [
       "1757",
@@ -989,6 +1065,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "History",
     "choices": [
       "Mahatma Gandhi",
@@ -1002,6 +1079,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "History",
     "choices": [
       "Harappa",
@@ -1015,6 +1093,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "History",
     "choices": [
       "Ashoka",
@@ -1028,6 +1107,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "Telangana",
     "choices": [
       "2 June 2014",
@@ -1041,6 +1121,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Telangana",
     "choices": [
       "Sankranti",
@@ -1054,6 +1135,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Telangana",
     "choices": [
       "Krishna",
@@ -1067,6 +1149,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Telangana",
     "choices": [
       "Guda Anjaiah",
@@ -1080,6 +1163,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 2,
     "category": "Telangana",
     "choices": [
       "Folk singer and poet",
@@ -1093,6 +1177,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "Telangana",
     "choices": [
       "Warangal",
@@ -1106,6 +1191,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 3,
     "category": "Telangana",
     "choices": [
       "Padma Shri",
@@ -1119,6 +1205,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Telangana",
     "choices": [
       "Fazal Ali Commission",
@@ -1132,6 +1219,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 3,
     "category": "Telangana",
     "choices": [
       "Mulugu",
@@ -1145,6 +1233,7 @@
   },
   {
     "answerIndex": 0,
+    "level": 1,
     "category": "Indian Economy",
     "choices": [
       "1 July 2017",
@@ -1158,6 +1247,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Indian Economy",
     "choices": [
       "5",
@@ -1171,6 +1261,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 3,
     "category": "Indian Economy",
     "choices": [
       "Generation, Transmission and Construction",
@@ -1184,6 +1275,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Indian Economy",
     "choices": [
       "Goods and Services Tax",
@@ -1197,6 +1289,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Indian Economy",
     "choices": [
       "2014",
@@ -1210,6 +1303,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 2,
     "category": "Current Affairs",
     "choices": [
       "1950",
@@ -1223,6 +1317,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 2,
     "category": "Current Affairs",
     "choices": [
       "2022",
@@ -1236,6 +1331,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Current Affairs",
     "choices": [
       "2019",
@@ -1249,6 +1345,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Current Affairs",
     "choices": [
       "Mary Kom",
@@ -1262,6 +1359,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Current Affairs",
     "choices": [
       "Mumbai",
@@ -1275,6 +1373,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 1,
     "category": "Current Affairs",
     "choices": [
       "Australia",
@@ -1288,6 +1387,7 @@
   },
   {
     "answerIndex": 2,
+    "level": 1,
     "category": "Indian Polity",
     "choices": [
       "Review judgments of High Courts",
@@ -1301,6 +1401,7 @@
   },
   {
     "answerIndex": 1,
+    "level": 3,
     "category": "Indian Polity",
     "choices": [
       "The Governor of the State",
@@ -1314,6 +1415,7 @@
   },
   {
     "answerIndex": 3,
+    "level": 2,
     "category": "Indian Polity",
     "choices": [
       "Seventh Schedule",
