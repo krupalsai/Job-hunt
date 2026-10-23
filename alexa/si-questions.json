@@ -1,0 +1,1315 @@
+[
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "24",
+      "30",
+      "36",
+      "48"
+    ],
+    "explanation": "15 percent of 240 is 0.15 multiplied by 240, which equals 36.",
+    "id": "q01",
+    "question": "What is 15 percent of 240?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "45 kilometres per hour",
+      "54 kilometres per hour",
+      "60 kilometres per hour",
+      "72 kilometres per hour"
+    ],
+    "explanation": "50 divided by 3 metres per second, multiplied by 18 by 5, gives 60 kilometres per hour.",
+    "id": "q02",
+    "question": "A vehicle covers 50 metres in 3 seconds. What is its speed in kilometres per hour?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "14",
+      "15",
+      "16",
+      "18"
+    ],
+    "explanation": "The total is 60, and 60 divided by 4 equals 15.",
+    "id": "q03",
+    "question": "What is the average of 12, 18, 20, and 10?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "400 rupees",
+      "600 rupees",
+      "800 rupees",
+      "1,000 rupees"
+    ],
+    "explanation": "Simple interest is principal multiplied by rate and time, divided by 100: 5,000 times 8 times 2, divided by 100, equals 800 rupees.",
+    "id": "q04",
+    "question": "What is the simple interest on 5,000 rupees at 8 percent per year for 2 years?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "20",
+      "24",
+      "28",
+      "40"
+    ],
+    "explanation": "There are 8 equal parts in total. Each part is 8, so the smaller number is 3 times 8, or 24.",
+    "id": "q05",
+    "question": "Two numbers are in the ratio 3 to 5. If their sum is 64, what is the smaller number?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "3",
+      "6",
+      "9",
+      "12"
+    ],
+    "explanation": "The common factors include 1, 2, 3, and 6. The highest is 6.",
+    "id": "q06",
+    "question": "What is the highest common factor of 18 and 30?"
+  },
+  {
+    "answerIndex": 3,
+    "category": "Arithmetic",
+    "choices": [
+      "10 days",
+      "12 days",
+      "14 days",
+      "15 days"
+    ],
+    "explanation": "The job needs 300 worker-days. Dividing 300 by 20 workers gives 15 days.",
+    "id": "q07",
+    "question": "If 25 workers can finish a task in 12 days, how many days will 20 workers take at the same rate?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "26",
+      "28",
+      "32",
+      "34"
+    ],
+    "explanation": "28 multiplied by 28 equals 784.",
+    "id": "q08",
+    "question": "What is the square root of 784?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Reasoning",
+    "choices": [
+      "34",
+      "36",
+      "38",
+      "41"
+    ],
+    "explanation": "The increases are 3, 5, 7, and 9. The next increase is 11, so 27 plus 11 equals 38.",
+    "id": "q09",
+    "question": "What is the next number in this sequence: 3, 6, 11, 18, 27?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Reasoning",
+    "choices": [
+      "4 15 7",
+      "5 14 6",
+      "4 14 7",
+      "5 15 8"
+    ],
+    "explanation": "D is the 4th letter, O is the 15th, and G is the 7th.",
+    "id": "q10",
+    "question": "If C A T is written as 3 1 20 using the positions of letters in the alphabet, how is D O G written?"
+  },
+  {
+    "answerIndex": 3,
+    "category": "Reasoning",
+    "choices": [
+      "Square",
+      "Rectangle",
+      "Triangle",
+      "Cube"
+    ],
+    "explanation": "A cube is three-dimensional. The others are two-dimensional shapes.",
+    "id": "q11",
+    "question": "Which one is the odd one out: square, rectangle, triangle, or cube?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Indian Polity",
+    "choices": [
+      "Article 14",
+      "Article 19",
+      "Article 21",
+      "Article 32"
+    ],
+    "explanation": "Article 21 provides that no person shall be deprived of life or personal liberty except according to procedure established by law.",
+    "id": "q12",
+    "question": "Which Article of the Indian Constitution protects the right to life and personal liberty?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Geography",
+    "choices": [
+      "Warangal",
+      "Hyderabad",
+      "Nizamabad",
+      "Karimnagar"
+    ],
+    "explanation": "Hyderabad is the capital of Telangana.",
+    "id": "q13",
+    "question": "Which city is the capital of Telangana?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "History",
+    "choices": [
+      "1757",
+      "1764",
+      "1772",
+      "1782"
+    ],
+    "explanation": "The Battle of Plassey was fought in 1757.",
+    "id": "q14",
+    "question": "In which year was the Battle of Plassey fought?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "History",
+    "choices": [
+      "1857",
+      "1885",
+      "1905",
+      "1919"
+    ],
+    "explanation": "The Indian National Congress was founded in 1885.",
+    "id": "q15",
+    "question": "In which year was the Indian National Congress founded?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Indian Economy",
+    "choices": [
+      "State Bank of India",
+      "Securities and Exchange Board of India",
+      "Reserve Bank of India",
+      "NITI Aayog"
+    ],
+    "explanation": "The Reserve Bank of India is responsible for issuing bank notes.",
+    "id": "q16",
+    "question": "Which institution issues currency notes in India, other than one-rupee notes and coins?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "General Science",
+    "choices": [
+      "So",
+      "Sd",
+      "Na",
+      "N"
+    ],
+    "explanation": "Sodium uses the symbol Na, derived from its Latin name, natrium.",
+    "id": "q17",
+    "question": "What is the chemical symbol for sodium?"
+  },
+  {
+    "answerIndex": 3,
+    "category": "Geography",
+    "choices": [
+      "Krishna",
+      "Cauvery",
+      "Narmada",
+      "Godavari"
+    ],
+    "explanation": "The Godavari is the longest river in peninsular India.",
+    "id": "q18",
+    "question": "Which river is the longest river in peninsular India?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Sports",
+    "choices": [
+      "P. T. Usha",
+      "Karnam Malleswari",
+      "Mary Kom",
+      "Saina Nehwal"
+    ],
+    "explanation": "Weightlifter Karnam Malleswari won bronze at the Sydney 2000 Olympics.",
+    "id": "q19",
+    "question": "Who was the first Indian woman to win an Olympic medal?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Arithmetic",
+    "choices": [
+      "14",
+      "5",
+      "1",
+      "3"
+    ],
+    "explanation": "19 times 105 is 1995, leaving a remainder of 5. Adding 19 minus 5, which is 14, makes it exactly divisible.",
+    "id": "q20",
+    "question": "What least number must be added to 2000 to get a number exactly divisible by 19?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "250",
+      "300",
+      "350",
+      "400"
+    ],
+    "explanation": "The block's volume is 46,200 cubic centimetres. Each candle is 22 by 7 times 3.5 squared times 4, which is 154 cubic centimetres. 46,200 divided by 154 equals 300.",
+    "id": "q21",
+    "question": "A wax block measures 60 centimetres by 35 centimetres by 22 centimetres. How many cylindrical candles of diameter 7 centimetres and height 4 centimetres can be made from it? Take pi as 22 by 7."
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "No change",
+      "4 percent increase",
+      "4 percent decrease",
+      "2 percent decrease"
+    ],
+    "explanation": "Start with 100. A 20 percent increase gives 120, and 20 percent of 120 is 24, leaving 96. That is a net decrease of 4 percent.",
+    "id": "q22",
+    "question": "A number is increased by 20 percent and then decreased by 20 percent. What is the net change?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "12 percent",
+      "15 percent",
+      "18 percent",
+      "20 percent"
+    ],
+    "explanation": "The profit is 120 rupees. 120 divided by 800, multiplied by 100, gives 15 percent.",
+    "id": "q23",
+    "question": "An article is bought for 800 rupees and sold for 920 rupees. What is the profit percentage?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "2,000 rupees",
+      "2,100 rupees",
+      "2,200 rupees",
+      "2,050 rupees"
+    ],
+    "explanation": "After 2 years the amount is 10,000 times 1.1 squared, which is 12,100 rupees. The interest is 12,100 minus 10,000, or 2,100 rupees.",
+    "id": "q24",
+    "question": "What is the compound interest on 10,000 rupees at 10 percent per year for 2 years?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "5 days",
+      "6 days",
+      "7 days",
+      "8 days"
+    ],
+    "explanation": "Together they complete 1 by 10 plus 1 by 15, which is 1 by 6 of the work per day, so they need 6 days.",
+    "id": "q25",
+    "question": "A can finish a work in 10 days and B can finish it in 15 days. Working together, in how many days will they finish it?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "15",
+      "18",
+      "20",
+      "25"
+    ],
+    "explanation": "Multiply by 5 and divide by 18: 72 times 5 by 18 equals 20 metres per second.",
+    "id": "q26",
+    "question": "A train runs at 72 kilometres per hour. What is its speed in metres per second?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "5",
+      "5.5",
+      "6",
+      "6.5"
+    ],
+    "explanation": "The sum of the first 10 natural numbers is 55. 55 divided by 10 equals 5.5.",
+    "id": "q27",
+    "question": "What is the average of the first 10 natural numbers?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "480 rupees",
+      "600 rupees",
+      "720 rupees",
+      "800 rupees"
+    ],
+    "explanation": "There are 5 parts in total, so each part is 240 rupees. The larger share is 3 times 240, or 720 rupees.",
+    "id": "q28",
+    "question": "Divide 1,200 rupees between two people in the ratio 2 to 3. What is the larger share?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "144 square centimetres",
+      "154 square centimetres",
+      "164 square centimetres",
+      "176 square centimetres"
+    ],
+    "explanation": "Area is pi times radius squared: 22 by 7 times 49 equals 154 square centimetres.",
+    "id": "q29",
+    "question": "What is the area of a circle whose radius is 7 centimetres? Take pi as 22 by 7."
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "24",
+      "36",
+      "54",
+      "72"
+    ],
+    "explanation": "12 is 2 squared times 3, and 18 is 2 times 3 squared. The least common multiple is 4 times 9, which is 36.",
+    "id": "q30",
+    "question": "What is the least common multiple of 12 and 18?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "320",
+      "360",
+      "400",
+      "440"
+    ],
+    "explanation": "If 40 percent is 160, then 1 percent is 4, so the full number is 400.",
+    "id": "q31",
+    "question": "40 percent of a number is 160. What is the number?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "1,600 rupees",
+      "1,650 rupees",
+      "1,680 rupees",
+      "1,720 rupees"
+    ],
+    "explanation": "12 percent of 1,500 is 180. The selling price is 1,500 plus 180, which is 1,680 rupees.",
+    "id": "q32",
+    "question": "An article bought for 1,500 rupees is sold at a profit of 12 percent. What is the selling price?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "2 hours",
+      "3 hours",
+      "4 hours",
+      "6 hours"
+    ],
+    "explanation": "Together they fill 1 by 4 plus 1 by 12, which is 1 by 3 of the tank per hour, so the tank fills in 3 hours.",
+    "id": "q33",
+    "question": "One pipe can fill a tank in 4 hours and another pipe can fill it in 12 hours. If both are opened together, in how many hours will the tank be filled?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "13,200 rupees",
+      "13,800 rupees",
+      "14,000 rupees",
+      "12,800 rupees"
+    ],
+    "explanation": "Simple interest is 12,000 times 5 times 3, divided by 100, which is 1,800 rupees. The amount is 12,000 plus 1,800, or 13,800 rupees.",
+    "id": "q34",
+    "question": "What amount will 12,000 rupees become in 3 years at 5 percent simple interest per year?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Arithmetic",
+    "choices": [
+      "48 centimetres",
+      "52 centimetres",
+      "56 centimetres",
+      "64 centimetres"
+    ],
+    "explanation": "The side is the square root of 196, which is 14 centimetres. The perimeter is 4 times 14, or 56 centimetres.",
+    "id": "q35",
+    "question": "The area of a square is 196 square centimetres. What is its perimeter?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Arithmetic",
+    "choices": [
+      "0.5 kilometres per hour",
+      "1 kilometre per hour",
+      "1.5 kilometres per hour",
+      "2 kilometres per hour"
+    ],
+    "explanation": "Downstream speed is 6 and upstream speed is 4 kilometres per hour. The stream's speed is half the difference: 6 minus 4, divided by 2, equals 1.",
+    "id": "q36",
+    "question": "A man rows 12 kilometres downstream in 2 hours and the same distance upstream in 3 hours. What is the speed of the stream?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "40",
+      "42",
+      "44",
+      "46"
+    ],
+    "explanation": "Each term is n times n plus 1: 1 times 2, 2 times 3, 3 times 4, and so on. The next is 6 times 7, which is 42.",
+    "id": "q37",
+    "question": "What is the next number in this sequence: 2, 6, 12, 20, 30?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Reasoning",
+    "choices": [
+      "162",
+      "189",
+      "243",
+      "324"
+    ],
+    "explanation": "Each term is multiplied by 3. 81 times 3 equals 243.",
+    "id": "q38",
+    "question": "What is the next number in this sequence: 3, 9, 27, 81?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Reasoning",
+    "choices": [
+      "G R J",
+      "G R K",
+      "F Q I",
+      "H Q J"
+    ],
+    "explanation": "Shift each letter forward by 3: D becomes G, O becomes R, and G becomes J. So D O G is coded as G R J.",
+    "id": "q39",
+    "question": "If C A T is coded as F D W by shifting each letter forward by 3 positions, how is D O G coded?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Reasoning",
+    "choices": [
+      "N B O H P",
+      "N B N H P",
+      "O B Q H P",
+      "M Z O H P"
+    ],
+    "explanation": "Shift each letter forward by 1: M becomes N, A becomes B, N becomes O, G becomes H, and O becomes P.",
+    "id": "q40",
+    "question": "If A P P L E is coded as B Q Q M F by shifting each letter forward by 1 position, how is M A N G O coded?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Reasoning",
+    "choices": [
+      "3 kilometres",
+      "5 kilometres",
+      "8 kilometres",
+      "13 kilometres"
+    ],
+    "explanation": "The two 5-kilometre walks cancel out, since they are in opposite directions. He is only the 3 kilometres walked sideways away from the start.",
+    "id": "q41",
+    "question": "A man walks 5 kilometres north, then turns right and walks 3 kilometres, then turns right again and walks 5 kilometres. How far is he from his starting point?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "Her brother",
+      "Her son",
+      "Her father",
+      "Her nephew"
+    ],
+    "explanation": "The only daughter of her mother is the woman herself. So the man is her own son.",
+    "id": "q42",
+    "question": "Pointing to a man, a woman says: He is the son of the only daughter of my mother. How is the man related to the woman?"
+  },
+  {
+    "answerIndex": 3,
+    "category": "Reasoning",
+    "choices": [
+      "Apple",
+      "Mango",
+      "Orange",
+      "Potato"
+    ],
+    "explanation": "Apple, mango, and orange are fruits. A potato is a vegetable.",
+    "id": "q43",
+    "question": "Which one is the odd one out: apple, mango, orange, or potato?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "T",
+      "U",
+      "V",
+      "W"
+    ],
+    "explanation": "The gaps grow by one each time: plus 2, plus 3, plus 4, plus 5. The next gap is plus 6, taking O to U.",
+    "id": "q44",
+    "question": "What is the next letter in this sequence: A, C, F, J, O?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Reasoning",
+    "choices": [
+      "75",
+      "100",
+      "125",
+      "150"
+    ],
+    "explanation": "3 cubed is 27. Following the same pattern, 5 cubed is 125.",
+    "id": "q45",
+    "question": "If 3 is to 27 as 5 is to what number?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Reasoning",
+    "choices": [
+      "All pens are chairs",
+      "All chairs are pens",
+      "Some chairs are not pens",
+      "No pen is a chair"
+    ],
+    "explanation": "Since every pen is a book and every book is a chair, every pen must also be a chair.",
+    "id": "q46",
+    "question": "All pens are books. All books are chairs. Which conclusion definitely follows?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "explanation": "100 divided by 7 leaves a remainder of 2. Two days after Monday is Wednesday.",
+    "id": "q47",
+    "question": "If today is Monday, what day of the week will it be after 100 days?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Reasoning",
+    "choices": [
+      "60 degrees",
+      "75 degrees",
+      "90 degrees",
+      "120 degrees"
+    ],
+    "explanation": "At 3 o'clock the hands are a quarter of the dial apart. A quarter of 360 degrees is 90 degrees.",
+    "id": "q48",
+    "question": "What is the angle between the hour hand and the minute hand of a clock at 3 o'clock?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Reasoning",
+    "choices": [
+      "27th",
+      "28th",
+      "29th",
+      "30th"
+    ],
+    "explanation": "Position from the right is 40 minus 12 plus 1, which is 29th.",
+    "id": "q49",
+    "question": "In a row of 40 students, Ravi is 12th from the left. What is his position from the right?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "36",
+      "38",
+      "40",
+      "42"
+    ],
+    "explanation": "F is 6, I is 9, R is 18, and E is 5. Their sum is 38, just as the letters of WATER add up to 67.",
+    "id": "q50",
+    "question": "If W A T E R is coded as 67 by adding the positions of its letters in the alphabet, how is F I R E coded?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "S",
+      "R",
+      "Q",
+      "P"
+    ],
+    "explanation": "Moving backwards through the alphabet, one letter is skipped each time: Z, X, V, T, so the next is R.",
+    "id": "q51",
+    "question": "What is the next letter in this sequence: Z, X, V, T?"
+  },
+  {
+    "answerIndex": 3,
+    "category": "Reasoning",
+    "choices": [
+      "121",
+      "144",
+      "169",
+      "190"
+    ],
+    "explanation": "121, 144, and 169 are perfect squares: 11, 12, and 13 squared. 190 is not a perfect square.",
+    "id": "q52",
+    "question": "Which one is the odd one out: 121, 144, 169, or 190?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "North",
+      "South",
+      "East",
+      "West"
+    ],
+    "explanation": "From west, a 90-degree clockwise turn points him north. Turning 180 degrees anticlockwise from north points him south.",
+    "id": "q53",
+    "question": "A man is facing west. He turns 90 degrees clockwise, and then turns 180 degrees anticlockwise. Which direction is he facing now?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Reasoning",
+    "choices": [
+      "Cement",
+      "Bricks",
+      "Paint",
+      "Door"
+    ],
+    "explanation": "A book is made up of pages, just as a wall is made up of bricks.",
+    "id": "q54",
+    "question": "Book is to pages as wall is to what?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Reasoning",
+    "choices": [
+      "84",
+      "96",
+      "112",
+      "120"
+    ],
+    "explanation": "Each term is double the previous one. 56 times 2 equals 112.",
+    "id": "q55",
+    "question": "What is the next number in this sequence: 7, 14, 28, 56?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "General Science",
+    "choices": [
+      "Acetic acid",
+      "Formic acid",
+      "Citric acid",
+      "Hydrochloric acid"
+    ],
+    "explanation": "An ant sting contains formic acid, which causes the burning sensation. This question appeared in the TS SI papers.",
+    "id": "q56",
+    "question": "Which acid is present in an ant sting?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "General Science",
+    "choices": [
+      "6.5",
+      "6.0",
+      "5.5",
+      "7.5"
+    ],
+    "explanation": "When the mouth's pH drops below about 5.5, bacteria-produced acid starts dissolving the tooth enamel.",
+    "id": "q57",
+    "question": "Tooth decay starts when the pH of the mouth falls below about what value?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "General Science",
+    "choices": [
+      "Vitamin A",
+      "Vitamin C",
+      "Vitamin D",
+      "Vitamin K"
+    ],
+    "explanation": "Sunlight helps the skin make Vitamin D, which is needed for healthy bones and teeth.",
+    "id": "q58",
+    "question": "Which vitamin is produced in the human skin in the presence of sunlight?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "General Science",
+    "choices": [
+      "Joule",
+      "Newton",
+      "Pascal",
+      "Watt"
+    ],
+    "explanation": "Force is measured in newtons, named after Isaac Newton. The joule measures energy and the watt measures power.",
+    "id": "q59",
+    "question": "What is the SI unit of force?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "General Science",
+    "choices": [
+      "Carbon dioxide",
+      "Oxygen",
+      "Nitrogen",
+      "Hydrogen"
+    ],
+    "explanation": "During photosynthesis, plants take in carbon dioxide and release oxygen.",
+    "id": "q60",
+    "question": "Which gas do green plants release during photosynthesis?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "General Science",
+    "choices": [
+      "Nucleus",
+      "Ribosome",
+      "Mitochondria",
+      "Golgi body"
+    ],
+    "explanation": "Mitochondria produce most of the cell's energy, so they are called the powerhouse of the cell.",
+    "id": "q61",
+    "question": "Which part of the cell is known as its powerhouse?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "General Science",
+    "choices": [
+      "Fibrinogen",
+      "Heparin",
+      "Thrombin",
+      "Vitamin K"
+    ],
+    "explanation": "Heparin is a natural anticoagulant. It stops clots from forming inside blood vessels.",
+    "id": "q62",
+    "question": "Which of the following is a natural anticoagulant, a substance that prevents blood from clotting?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "General Science",
+    "choices": [
+      "Convex mirror",
+      "Concave mirror",
+      "Plane mirror",
+      "Cylindrical mirror"
+    ],
+    "explanation": "A concave mirror forms an enlarged, upright image when the object is close to it, which is why dentists use it.",
+    "id": "q63",
+    "question": "Which mirror do dentists use to see an enlarged image of teeth?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "General Science",
+    "choices": [
+      "Carbon dioxide",
+      "Chlorofluorocarbons",
+      "Methane",
+      "Water vapour"
+    ],
+    "explanation": "Chlorofluorocarbons, once widely used in refrigerators and sprays, are the main cause of ozone layer depletion.",
+    "id": "q64",
+    "question": "Which of the following is mainly responsible for the depletion of the ozone layer?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Geography",
+    "choices": [
+      "Coromandel coast",
+      "Kerala coast",
+      "Himachal Pradesh",
+      "Bihar"
+    ],
+    "explanation": "The south-west monsoon reaches India first at the Kerala coast, usually around the beginning of June. This question is from the TS SI 2016 prelims paper.",
+    "id": "q65",
+    "question": "Which region of India is first affected by the south-west monsoon?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Geography",
+    "choices": [
+      "Deltas",
+      "Estuaries",
+      "Lagoons",
+      "Flood plains"
+    ],
+    "explanation": "West-flowing rivers like the Narmada and the Tapi flow through rift valleys and form estuaries, not deltas, at their mouths.",
+    "id": "q66",
+    "question": "West-flowing peninsular rivers such as the Narmada form which feature at their mouth?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Geography",
+    "choices": [
+      "Himachal Pradesh",
+      "Uttarakhand",
+      "Jammu and Kashmir",
+      "Sikkim"
+    ],
+    "explanation": "Banihal pass crosses the Pir Panjal range in Jammu and Kashmir and connects the Kashmir valley with Jammu.",
+    "id": "q67",
+    "question": "The Banihal pass is located in which region?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Geography",
+    "choices": [
+      "Wheat",
+      "Gram",
+      "Rice",
+      "Mustard"
+    ],
+    "explanation": "Rice is sown with the onset of the monsoon and harvested in autumn, making it a Kharif crop. Wheat, gram, and mustard are Rabi crops.",
+    "id": "q68",
+    "question": "Which of the following is a Kharif crop?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Geography",
+    "choices": [
+      "Low rainfall and low temperature",
+      "Heavy rainfall and high temperature",
+      "Desert conditions",
+      "Heavy snowfall"
+    ],
+    "explanation": "Laterite soil forms in areas of heavy rainfall and high temperature, where silica is leached away from the soil.",
+    "id": "q69",
+    "question": "Laterite soil is typically found in regions with which conditions?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Geography",
+    "choices": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "explanation": "The Tropic of Cancer passes through 8 states: Gujarat, Rajasthan, Madhya Pradesh, Chhattisgarh, Jharkhand, West Bengal, Tripura, and Mizoram.",
+    "id": "q70",
+    "question": "Through how many Indian states does the Tropic of Cancer pass?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Geography",
+    "choices": [
+      "Pulicat Lake",
+      "Chilika Lake",
+      "Wular Lake",
+      "Vembanad Lake"
+    ],
+    "explanation": "Chilika Lake in Odisha is India's largest brackish water lagoon and one of the largest lagoons in the world.",
+    "id": "q71",
+    "question": "Which is the largest brackish water lagoon in India?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "History",
+    "choices": [
+      "Jawaharlal Nehru",
+      "Subhas Chandra Bose",
+      "Sardar Vallabhbhai Patel",
+      "Bhagat Singh"
+    ],
+    "explanation": "Subhas Chandra Bose reorganised and led the Indian National Army, also called the Azad Hind Fauj, from 1943.",
+    "id": "q72",
+    "question": "Who led the Indian National Army during the Second World War?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "History",
+    "choices": [
+      "1920",
+      "1930",
+      "1942",
+      "1947"
+    ],
+    "explanation": "The Quit India Movement was launched by Mahatma Gandhi in August 1942, during the Second World War.",
+    "id": "q73",
+    "question": "In which year was the Quit India Movement launched?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "History",
+    "choices": [
+      "C. Rajagopalachari",
+      "Lord Mountbatten",
+      "Dr Rajendra Prasad",
+      "Lord Wavell"
+    ],
+    "explanation": "Lord Mountbatten was the first Governor-General of independent India. C. Rajagopalachari succeeded him as the first Indian to hold the post.",
+    "id": "q74",
+    "question": "Who was the first Governor-General of independent India?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "History",
+    "choices": [
+      "1757",
+      "1764",
+      "1772",
+      "1782"
+    ],
+    "explanation": "The Battle of Buxar was fought in 1764, seven years after the Battle of Plassey.",
+    "id": "q75",
+    "question": "In which year was the Battle of Buxar fought?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "History",
+    "choices": [
+      "Mahatma Gandhi",
+      "Jawaharlal Nehru",
+      "Rabindranath Tagore",
+      "Dr B. R. Ambedkar"
+    ],
+    "explanation": "The Discovery of India was written by Jawaharlal Nehru during his imprisonment in the 1940s.",
+    "id": "q76",
+    "question": "Who wrote the book, The Discovery of India?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "History",
+    "choices": [
+      "Harappa",
+      "Mohenjo-daro",
+      "Lothal",
+      "Dholavira"
+    ],
+    "explanation": "The Great Bath, an early public water tank, was found at Mohenjo-daro.",
+    "id": "q77",
+    "question": "The Great Bath is a famous structure found at which Indus Valley site?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "History",
+    "choices": [
+      "Ashoka",
+      "Bindusara",
+      "Chandragupta Maurya",
+      "Samudragupta"
+    ],
+    "explanation": "Chandragupta Maurya founded the Mauryan Empire around 321 BCE, with the guidance of Chanakya.",
+    "id": "q78",
+    "question": "Who was the founder of the Mauryan Empire?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Telangana",
+    "choices": [
+      "2 June 2014",
+      "2 June 2015",
+      "9 December 2009",
+      "30 July 2013"
+    ],
+    "explanation": "Telangana formally came into existence on 2 June 2014 as the 29th state of India.",
+    "id": "q79",
+    "question": "Telangana became a separate state of India on which date?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Telangana",
+    "choices": [
+      "Sankranti",
+      "Dussehra",
+      "Diwali",
+      "Ugadi"
+    ],
+    "explanation": "Bathukamma is celebrated over nine days of Navratri and ends a day before Dussehra, with the Saddula Bathukamma.",
+    "id": "q80",
+    "question": "Bathukamma, the floral festival of Telangana, reaches its climax during which festival season?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Telangana",
+    "choices": [
+      "Krishna",
+      "Manjira",
+      "Godavari",
+      "Musi"
+    ],
+    "explanation": "The Kaleshwaram project lifts water from the Godavari river at Kaleshwaram, near its confluence with the Pranahita.",
+    "id": "q81",
+    "question": "The Kaleshwaram Lift Irrigation Project is built on which river?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Telangana",
+    "choices": [
+      "Guda Anjaiah",
+      "Ande Sri",
+      "Kaloji Narayana Rao",
+      "Dasarathi Krishnamacharya"
+    ],
+    "explanation": "Poet Ande Sri wrote Jaya Jaya He Telangana, which is the official state song of Telangana.",
+    "id": "q82",
+    "question": "The song Jaya Jaya He Telangana, the state song of Telangana, was written by whom?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Telangana",
+    "choices": [
+      "Folk singer and poet",
+      "Classical dancer",
+      "Scientist",
+      "Cricketer"
+    ],
+    "explanation": "Guda Anjaiah was a celebrated folk singer and poet whose songs energised the Telangana movement.",
+    "id": "q83",
+    "question": "Guda Anjaiah, famous for the song Ooru Manadira, was a renowned what?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Telangana",
+    "choices": [
+      "Warangal",
+      "Karimnagar",
+      "Nizamabad",
+      "Khammam"
+    ],
+    "explanation": "The Thousand Pillar Temple stands at Hanamkonda in Warangal and was built under the Kakatiya ruler Rudra Deva.",
+    "id": "q84",
+    "question": "The Thousand Pillar Temple built by the Kakatiyas is located at which place?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Telangana",
+    "choices": [
+      "Padma Shri",
+      "Padma Bhushan",
+      "Padma Vibhushan",
+      "Bharat Ratna"
+    ],
+    "explanation": "Kaloji Narayana Rao received the Padma Vibhushan in 1992 for his literary contribution.",
+    "id": "q85",
+    "question": "Kaloji Narayana Rao, the people's poet of Telangana, was honoured with which civilian award?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Telangana",
+    "choices": [
+      "Fazal Ali Commission",
+      "Srikrishna Committee",
+      "Sarkaria Commission",
+      "Punchhi Commission"
+    ],
+    "explanation": "The Justice B. N. Srikrishna Committee was set up in February 2010 to consult all sections on the Telangana issue.",
+    "id": "q86",
+    "question": "Which committee was appointed by the Union Government in 2010 to examine the demand for a separate Telangana state?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Telangana",
+    "choices": [
+      "Mulugu",
+      "Warangal Urban",
+      "Bhadradri Kothagudem",
+      "Jayashankar Bhupalpally"
+    ],
+    "explanation": "The Ramappa Temple stands at Palampet in Mulugu district. UNESCO listed it as a World Heritage Site in 2021.",
+    "id": "q87",
+    "question": "The Ramappa Temple, a UNESCO World Heritage Site, is located in which district of Telangana?"
+  },
+  {
+    "answerIndex": 0,
+    "category": "Indian Economy",
+    "choices": [
+      "1 July 2017",
+      "15 August 2016",
+      "1 April 2018",
+      "26 January 2017"
+    ],
+    "explanation": "GST, the nationwide indirect tax reform, came into force across India on 1 July 2017.",
+    "id": "q88",
+    "question": "The Goods and Services Tax, or GST, was launched in India on which date?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Indian Economy",
+    "choices": [
+      "5",
+      "6",
+      "7",
+      "9"
+    ],
+    "explanation": "The Monetary Policy Committee has 6 members: three from the Reserve Bank and three appointed by the Government.",
+    "id": "q89",
+    "question": "How many members does the Monetary Policy Committee of the Reserve Bank of India have?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Indian Economy",
+    "choices": [
+      "Generation, Transmission and Construction",
+      "Generation, Transmission and Distribution",
+      "Hydel Power, Solar Power and Thermal Power",
+      "Distribution, Construction and Transmission"
+    ],
+    "explanation": "The Electricity Board was unbundled into generation, transmission, and distribution companies. This question is from the TS SI 2016 prelims paper.",
+    "id": "q90",
+    "question": "As part of the economic reforms, the then Andhra Pradesh Government divided the Andhra Pradesh Electricity Board into companies for which functions?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Indian Economy",
+    "choices": [
+      "Goods and Services Tax",
+      "Customs duty",
+      "Income tax",
+      "Excise duty"
+    ],
+    "explanation": "Income tax is a direct tax because the person who pays it also bears its burden. GST, customs, and excise are indirect taxes.",
+    "id": "q91",
+    "question": "Which of the following is a direct tax?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Indian Economy",
+    "choices": [
+      "2014",
+      "2015",
+      "2016",
+      "2017"
+    ],
+    "explanation": "NITI Aayog replaced the Planning Commission and came into existence on 1 January 2015.",
+    "id": "q92",
+    "question": "In which year was NITI Aayog established?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Current Affairs",
+    "choices": [
+      "1950",
+      "1952",
+      "1954",
+      "1956"
+    ],
+    "explanation": "The Bharat Ratna was instituted and first awarded in 1954, to C. Rajagopalachari, Dr S. Radhakrishnan, and Dr C. V. Raman.",
+    "id": "q93",
+    "question": "In which year was the Bharat Ratna, India's highest civilian award, first awarded?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Current Affairs",
+    "choices": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "explanation": "India won the inaugural Under-19 Women's T20 World Cup held in South Africa in January 2023.",
+    "id": "q94",
+    "question": "India won the first ICC Under-19 Women's T20 World Cup in which year?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Current Affairs",
+    "choices": [
+      "2019",
+      "2021",
+      "2023",
+      "2024"
+    ],
+    "explanation": "Chandrayaan-3's Vikram lander touched down near the lunar south pole on 23 August 2023.",
+    "id": "q95",
+    "question": "Chandrayaan-3 successfully landed near the south pole of the Moon in which year?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Current Affairs",
+    "choices": [
+      "Mary Kom",
+      "P. V. Sindhu",
+      "Mirabai Chanu",
+      "Lovlina Borgohain"
+    ],
+    "explanation": "Shuttler P. V. Sindhu won silver at Rio 2016 and bronze at Tokyo 2020, becoming the first Indian woman with two Olympic medals.",
+    "id": "q96",
+    "question": "Who was the first Indian woman to win two Olympic medals?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Current Affairs",
+    "choices": [
+      "Mumbai",
+      "New Delhi",
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "explanation": "The 2023 G20 Leaders' Summit was held at Bharat Mandapam in New Delhi in September 2023.",
+    "id": "q97",
+    "question": "The G20 Leaders' Summit hosted by India in 2023 was held in which city?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Current Affairs",
+    "choices": [
+      "Australia",
+      "South Africa",
+      "England",
+      "Pakistan"
+    ],
+    "explanation": "India beat South Africa by 7 runs in the final at Barbados on 29 June 2024 to lift the T20 World Cup.",
+    "id": "q98",
+    "question": "In the 2024 ICC Men's T20 World Cup final, India defeated which team to win the trophy?"
+  },
+  {
+    "answerIndex": 2,
+    "category": "Indian Polity",
+    "choices": [
+      "Review judgments of High Courts",
+      "Advise the President of India",
+      "Decide the constitutionality of laws made by the legislature",
+      "Review the functioning of the Council of Ministers"
+    ],
+    "explanation": "Judicial review is the power to examine laws and executive orders and strike down those that violate the Constitution. This question is from the TS SI 2016 prelims paper.",
+    "id": "q99",
+    "question": "In the context of the Supreme Court, judicial review means the power to do what?"
+  },
+  {
+    "answerIndex": 1,
+    "category": "Indian Polity",
+    "choices": [
+      "The Governor of the State",
+      "The Election Commission of India",
+      "The State High Court",
+      "The Union Cabinet"
+    ],
+    "explanation": "Beyond one year, President's Rule needs the Election Commission to certify that Assembly elections cannot be held, along with a national emergency condition. This is based on a TS SI 2016 prelims question.",
+    "id": "q100",
+    "question": "A proclamation of President's Rule under Article 356 can continue beyond one year only if which body certifies that elections to the State Assembly cannot be held?"
+  },
+  {
+    "answerIndex": 3,
+    "category": "Indian Polity",
+    "choices": [
+      "Seventh Schedule",
+      "Eighth Schedule",
+      "Ninth Schedule",
+      "Tenth Schedule"
+    ],
+    "explanation": "The Tenth Schedule, added by the 52nd Amendment in 1985, contains the anti-defection provisions.",
+    "id": "q101",
+    "question": "The anti-defection law is contained in which Schedule of the Indian Constitution?"
+  }
+]
