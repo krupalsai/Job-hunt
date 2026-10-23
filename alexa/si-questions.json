@@ -1,5 +1,18 @@
 [
   {
+    "id": "live001",
+    "category": "Telangana",
+    "question": "The Charminar in Hyderabad was built in which year?",
+    "choices": [
+      "1591",
+      "1601",
+      "1571",
+      "1621"
+    ],
+    "answerIndex": 0,
+    "explanation": "The Charminar was built in 1591 by Muhammad Quli Qutb Shah, the founder of Hyderabad."
+  },
+  {
     "answerIndex": 2,
     "category": "Arithmetic",
     "choices": [
