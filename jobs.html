@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Daily Jobs · Job Hunt</title>
+<meta name="description" content="Today's verified job openings — every role checked on the company's own careers page before it appears here. Eligibility stated honestly: eligible, applied, long-shot, or closed." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:17px; margin:0; }
+  .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+
+  .job{ display:block; width:100%; background:var(--panel);
+    border:1px solid var(--panel-border); border-radius:14px; padding:13px 15px; margin-bottom:10px;
+    color:var(--text); }
+  .job .row1{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .job .co{ font-size:14.5px; font-weight:700; }
+  .job .role{ font-size:12.5px; color:var(--dim); margin-top:3px; line-height:1.4; }
+  .job .meta{ font-size:11.5px; color:var(--dim); margin-top:6px; line-height:1.5; }
+  .job .meta b{ color:var(--text); font-weight:650; }
+  .job .note{ font-size:12.5px; color:var(--dim); margin-top:6px; line-height:1.5; }
+  .job .linkrow{ display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .job .ver{ font-size:11px; color:var(--dim); }
+
+  /* Fit badges — one vocabulary for how a role stands for a 2025 fresher.
+     Same colour families as the Pipeline stage badges. */
+  .fit{ flex:0 0 auto; font-size:10.5px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px 10px; border-radius:20px; border:1px solid transparent; }
+  .fit-eligible{ background:var(--ok-soft); color:var(--ok); }
+  .fit-applied{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line); }
+  .fit-longshot{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn-line); }
+  .fit-closed{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad-line); }
+
+  .empty{ text-align:center; color:var(--dim); font-size:13.5px; padding:40px 20px; line-height:1.6; }
+  .count{ font-size:12px; color:var(--dim); margin:0 0 10px 2px; }
+  a{ color:var(--accent-ink); }
+</style>
+</head>
+<body data-page="daily-jobs">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">Daily Jobs</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+<main>
+  <p class="sub">Verified on official careers pages only. A role appears here after it has been checked on the company's own site — eligibility is stated honestly, including the ones that turned out closed.</p>
+  <p class="count" id="count"></p>
+  <div id="list"><div class="empty">Loading verified openings…</div></div>
+</main>
+<script>
+(function () {
+  "use strict";
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  var listEl = document.getElementById("list"),
+      countEl = document.getElementById("count");
+  var items = [];
+
+  /* ── Fit: one badge per opening, colour-coded like the Pipeline stages ── */
+  function fitClass(fit) {
+    var f = String(fit || "");
+    if (f.indexOf("Eligible") === 0) return "fit-eligible";
+    if (f.indexOf("Applied") === 0) return "fit-applied";
+    if (f.indexOf("Long-shot") === 0) return "fit-longshot";
+    if (f.indexOf("Closed") === 0) return "fit-closed";
+    return "fit-closed";
+  }
+  function fmtDay(iso) {
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    return isNaN(d.getTime()) ? iso
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  function cardHtml(j) {
+    var loc = esc(j.location || "");
+    if (j.workMode && j.workMode !== "—" && j.workMode !== "Not stated") loc += " · " + esc(j.workMode);
+    var html = '<div class="job">' +
+      '<div class="row1"><span class="co">' + esc(j.company) + "</span>" +
+      '<span class="fit ' + fitClass(j.fit) + '">' + esc(j.fit) + "</span></div>" +
+      '<div class="role">' + esc(j.role) + (loc ? " · " + loc : "") + "</div>" +
+      '<div class="meta"><b>Experience:</b> ' + esc(j.experience) +
+      (j.status ? "<br><b>Status:</b> " + esc(j.status) : "") + "</div>" +
+      (j.note ? '<div class="note">' + esc(j.note) + "</div>" : "") +
+      '<div class="linkrow">';
+    if (j.officialUrl) {
+      html += '<a class="btn btn-sm" href="' + esc(j.officialUrl) + '" target="_blank" rel="noopener">Official posting ↗</a>';
+    }
+    if (j.verifiedOn) html += '<span class="ver">Verified ' + esc(fmtDay(j.verifiedOn)) + "</span>";
+    html += "</div></div>";
+    return html;
+  }
+
+  function render() {
+    var open = items.filter(function (j) { return String(j.fit || "").indexOf("Closed") !== 0; }).length;
+    var closed = items.length - open;
+    countEl.textContent = items.length
+      ? open + " open · " + closed + " checked, no fresher role · " + items.length + " companies"
+      : "";
+    listEl.innerHTML = items.length
+      ? items.map(cardHtml).join("")
+      : '<div class="empty">No verified openings right now.<br>New roles appear here only after they have been checked on the company\'s own careers page.</div>';
+  }
+
+  /* Job data is never cached — a stale board would show a closed role as if
+     it were open. Same rule as every other job feed in this app. */
+  fetch("/data/job-board.json", { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function (data) {
+      items = Array.isArray(data) ? data : [];
+      render();
+    })
+    .catch(function () {
+      countEl.textContent = "";
+      listEl.innerHTML = '<div class="empty">Could not load Daily Jobs.<br>Check your connection and pull to refresh.</div>';
+    });
+})();
+</script>
+</body>
+</html>
