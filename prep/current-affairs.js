@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-22",
+  updated: "2026-10-23",
 
   items: [
     /* {
@@ -48,6 +48,126 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-22",
+      topic: "Power",
+      headline: "Telangana Deputy CM orders daily thermal generation raised to 140 million units for Rabi and summer",
+      why: "Telangana-specific numbers the paper loves. At a review at the Dr B.R. Ambedkar Secretariat on 22 October, Deputy CM Bhatti Vikramarka directed daily thermal generation up to 140 million units — average is ~91 MU now, with a 118 MU peak on 16 October — because El Niño could cut hydel output while Rabi/summer demand rises. Yadadri's fifth 800 MW unit synced to the grid on 20 October; Coal India starts an alternative coal supply arrangement in November; and a One-Time Settlement scheme is planned for closed industries' long-pending power dues.",
+      source: "Indian Economic Observer",
+      url: "https://www.IndianEconomicObserver.com/news/telangana-deputy-cm-directs-officials-to-raise-daily-thermal-power-generation-to-140-million-units20261023050049//",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Urban",
+      headline: "Telangana authorises in-principle sanctions for urban projects under Centre's Urban Challenge Fund",
+      why: "A real Telangana GO pattern item. A Municipal Administration Department order on 22 October authorises the State Mission Director of the Urban Challenge Fund to grant in-principle administrative sanctions for urban local bodies' projects, following the Union Housing and Urban Affairs Ministry's operational guidelines — including the Credit Repayment Guarantee Sub-scheme (CRGSS). Remember: sanctions need State Level High Powered Committee approval plus Finance Department clearance of the Preliminary Project Report.",
+      source: "The Hindu",
+      url: "https://scoopfeeds.com/article/80319582-06fc-55fc-b69d-b2b474856137",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Polity",
+      headline: "Telangana CM announces cabinet sub-committee to study Mudiraj community's move from BC-D to BC-A",
+      why: "Reservation categories are paper gold. At the Panduga Sayanna Mudiraj birth anniversary on 22 October, CM Revanth Reddy said the lack of accurate data had blocked reclassifying the Mudiraj community from BC-D to BC-A; a cabinet sub-committee will conduct a comprehensive study and the matter goes to the next cabinet meeting. Currently relevant fact: Mudiraj is in BC-D.",
+      source: "Indian Economic Observer",
+      url: "https://www.indianeconomicobserver.com/news/telangana-cm-urges-support-for-rahul-gandhi-in-next-elections-says-he-must-become-pm-for-empowerment-of-bahujans20261022170057/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "IR",
+      headline: "PM Modi holds talks with Polish PM Donald Tusk at Hyderabad House on 22 October",
+      why: "Bilateral-visit triple: who (Donald Tusk), where (Hyderabad House, Delhi), what (defence manufacturing and exports, doubling ~USD 6 billion trade, emerging tech, space, renewable energy, India–EU ties). Reviewed the Joint Action Plan 2024–28; ties became a Strategic Partnership in August 2024; Tusk travelled to Bengaluru on 23 October for a second business forum.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-22-october-2026-10470",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Science",
+      headline: "ISRO to launch NVS-03 navigation satellite on 30 October",
+      why: "NavIC constellation watch. NVS-03 is the next launch in ISRO's NVS series for the Navigation with Indian Constellation system — the paper asks launch dates, series names and what the constellation does (regional navigation). Remember: NVS-03, 30 October 2026, ISRO.",
+      source: "Adda247",
+      url: "https://currentaffairs.adda247.com/category/current-affairs/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Science",
+      headline: "India hosts 7th AgriVoltaics World Conference at Bharat Mandapam — first in the Global South",
+      why: "First-ever claim plus venue. The 7th AgriVoltaics World Conference (co-locating solar power generation with agriculture) opened at Bharat Mandapam, New Delhi — the first edition in the Global South. Remember: 7th edition, Bharat Mandapam New Delhi, Global South first.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-22-october-2026/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Defence",
+      headline: "SIMBEX-2026: 33rd India–Singapore maritime exercise opens at Visakhapatnam",
+      why: "Exercise-name round: SIMBEX = Singapore–India Maritime Bilateral Exercise, 33rd edition, opened at Visakhapatnam. The paper pairs exercise name with country and edition number — 33, Singapore, Visakhapatnam is the set to hold.",
+      source: "Adda247",
+      url: "https://currentaffairs.adda247.com/category/current-affairs/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Defence",
+      headline: "IBSAMAR 2026: 9th India–Brazil–South Africa maritime exercise concludes at Simon's Town",
+      why: "Acronym decode matters: IBSAMAR = India, Brazil, South Africa Maritime exercise — 9th edition concluded at Simon's Town, South Africa. The paper asks the three member countries plus the edition, so lock the IBSAMAR country set.",
+      source: "Adda247",
+      url: "https://currentaffairs.adda247.com/category/current-affairs/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Economy",
+      headline: "Core sector grows 7.9% in September 2026; iron ore leads at 18.4%",
+      why: "Index of Eight Core Industries (ICI) for September 2026 grew 7.9% — iron ore was the fastest at 18.4%. Remember the pair: 7.9% headline, 18.4% iron ore, September 2026.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-22-october-2026/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Economy",
+      headline: "RBI's MPC minutes show 4–2 split on shift to 'calibrated tightening'",
+      why: "MPC vote arithmetic is a favourite. The RBI Monetary Policy Committee's minutes for the October 2026 meeting show a 4–2 split in favour of shifting the stance to 'calibrated tightening' — remember 4–2 and the exact stance phrase.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-22-october-2026-10470",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Sports",
+      headline: "Asian Para Games 2026 Day 3: India climbs to fifth with 62 medals (14 gold, 22 silver, 26 bronze)",
+      why: "Tally checkpoint the paper loves: 62 medals on Day 3 — 14 gold, 22 silver, 26 bronze — lifting India to fifth place. Follows the 19 October gold/silver item already in this file; now remember the Day-3 totals.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-22-october-2026/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Environment",
+      headline: "Delhi AQI turns 'Poor': CAQM invokes GRAP Stage-I across NCR",
+      why: "Pollution-control set: the Commission for Air Quality Management invoked GRAP Stage-I (Graded Response Action Plan) across the National Capital Region after Delhi's AQI turned 'Poor'. Remember: CAQM, GRAP Stage-I, Poor AQI trigger.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-22-october-2026/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Digital",
+      headline: "MeitY forms special team to investigate eMudhra digital certificate leak",
+      why: "Cybersecurity-in-government hook. The Ministry of Electronics and IT formed a special team to investigate the leak of eMudhra digital certificates — remember the body (MeitY), the company (eMudhra) and what leaked (digital certificates).",
+      source: "Adda247",
+      url: "https://currentaffairs.adda247.com/category/current-affairs/",
+    },
+    {
+      date: "2026-10-21",
+      topic: "Defence",
+      headline: "MoD signs ₹770 crore deal with BEL for drone-detecting LLLR-I radars on 21 October",
+      why: "Defence-procurement triple: who (Defence Ministry), with whom (Bharat Electronics Ltd), how much (₹770 crore), what (LLLR-I low-level lightweight radars that detect drones). Remember ₹770 crore + BEL + drone detection.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-22-october-2026/",
+    },
+    {
+      date: "2026-10-21",
+      topic: "Defence",
+      headline: "Army Commanders' Conference begins in New Delhi; Rajnath Singh to release Land Warfare Doctrine",
+      why: "The paper asks what gets released at apex conferences. The biannual Army Commanders' Conference (chaired by the COAS) runs 21–23 October in New Delhi; Defence Minister Rajnath Singh releases the Land Warfare Doctrine — the overarching framework for future warfare — plus the annual UN Journal, felicitating Army UN peacekeepers. Remember: Land Warfare Doctrine, Rajnath Singh, 21–23 October.",
+      source: "Devdiscourse",
+      url: "https://www.devdiscourse.com/article/headlines/3995854-army-commanders-conference-begins-in-new-delhi-land-warfare-doctrine-to-be-released-by-defence-minister-rajnath-singh",
+    },
     {
       date: "2026-10-22",
       topic: "Polity",
