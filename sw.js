@@ -137,7 +137,11 @@
    THE BUMP IS LOAD-BEARING — a phone holding v37 would keep serving
    the old lesson files cache-first and the new lessons would never
    appear. */
-const CACHE = 'jobhunt-v42';
+/* v43 adds the Daily Jobs board (/jobs.html): its shell joins the precache
+   below, while its data (/data/job-board.json) stays network-only like all
+   job data — a cached board would show a closed role as open.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v43';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -210,6 +214,10 @@ const PREP_ASSETS = [
      offline; the pipeline data (/data/job-pipeline.json) is job data and is
      NEVER cached — a stale pipeline would show a passed deadline as live. */
   '/pipeline.html',
+  /* The Daily Jobs board's shell. Same rule as Pipeline: the page is static
+     and safe offline; its data (/data/job-board.json) is job data and is
+     NEVER cached — a stale board would show a closed role as open. */
+  '/jobs.html',
   /* Typography is the phone's own face now — nothing to cache, and nothing to
      download before first paint. fonts.css holds only the token aliases. */
   '/fonts/fonts.css',
