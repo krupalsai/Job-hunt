@@ -375,6 +375,25 @@
   .pg-rq-show { border: 0; background: var(--accent); color: var(--on-accent); }
   .pg-rq-next { border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); }
 
+
+  /* ── GOVT | PRIVATE zones (v44): one tap at the top of Home picks a world.
+     The other world's sections get .zone-off; their own hidden/show logic
+     (hidden attribute) is never touched — the class only ever adds hiding. */
+  .zone-sec { margin-bottom: 14px; }
+  .zone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .zone-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    min-height: 92px; padding: 14px; border-radius: var(--r-lg); text-align: left;
+    background: var(--surface); color: var(--ink); border: 2px solid var(--line);
+    box-shadow: var(--shadow-2); cursor: pointer; }
+  .zone-btn .zone-ico { font-size: 22px; line-height: 1; }
+  .zone-btn .zone-t { font-size: 17px; font-weight: 800; letter-spacing: .01em; }
+  .zone-btn .zone-s { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .zone-btn.is-gov[aria-selected="true"] { border-color: var(--gov); background: var(--gov-soft);
+    box-shadow: 0 0 0 3px var(--gov-soft); }
+  .zone-btn.is-pvt[aria-selected="true"] { border-color: var(--pvt); background: var(--pvt-soft);
+    box-shadow: 0 0 0 3px var(--pvt-soft); }
+  .zone-note { font-size: 12.5px; color: var(--muted); margin: 10px 2px 0; }
+  [data-zone].zone-off { display: none !important; }
   .data-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px;
                margin: 26px 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
   .data-foot .sub { font-size: 12.5px; color: var(--muted); }
@@ -487,13 +506,32 @@
        #path, #basics) instead of stacking under this one. The complaint was
        "a long scrolling down until down there is also something else". -->
   <div class="view" data-view="home">
-    <section class="hero hero-tight" aria-labelledby="newsH">
+    <!-- ── THE TWO WORLDS: Government and Private are separate sections.
+         One tap picks one; the other world's cards leave Home entirely.
+         The buttons reuse data-track, so the existing setTrack() + the
+         saved jobhunt_track choice drive everything below. ── -->
+    <section class="sec zone-sec" id="zoneSec" aria-label="Government or private">
+      <div class="zone-grid" role="tablist" aria-label="Government or private">
+        <button type="button" role="tab" class="zone-btn is-gov" data-track="gov" aria-selected="true">
+          <span class="zone-ico" aria-hidden="true">🏛️</span>
+          <span class="zone-t">GOVERNMENT</span>
+          <span class="zone-s">Exams · study · results</span>
+        </button>
+        <button type="button" role="tab" class="zone-btn is-pvt" data-track="pvt" aria-selected="false">
+          <span class="zone-ico" aria-hidden="true">💼</span>
+          <span class="zone-t">PRIVATE</span>
+          <span class="zone-s">Jobs · interviews · resume</span>
+        </button>
+      </div>
+      <p class="zone-note" id="zoneNote"></p>
+    </section>
+    <section class="hero hero-tight" data-zone="gov" aria-labelledby="newsH">
       <div class="hero-date" id="heroDate"></div>
       <h2 class="hero-h" id="newsH">Coming up</h2>
       <div class="xrows" id="newsExams"></div>
     </section>
 
-    <section class="sec" id="examResultsSec" aria-labelledby="examResultsH">
+    <section class="sec" data-zone="gov" id="examResultsSec" aria-labelledby="examResultsH">
       <div class="sec-head">
         <h2 id="examResultsH">Official exam results</h2>
         <button class="btn btn-sm" type="button" id="refreshResultsBtn">Check updates</button>
@@ -504,7 +542,7 @@
 
     <!-- ── TODAY: the study home. What to study now, how long, what's next,
          am I improving — answered here, before any jobs content. ── -->
-    <section class="sec today-sec" id="todaySec" aria-labelledby="todayH" hidden>
+    <section class="sec today-sec" data-zone="gov" id="todaySec" aria-labelledby="todayH" hidden>
       <div class="today-kicker" id="todayKicker"></div>
       <h2 id="todayH">Today's study</h2>
       <p class="today-meta" id="todayMeta"></p>
@@ -518,7 +556,7 @@
          Home — not buried inside the exam subjects. The link reloads this
          page with the roadmap params study-roadmap.js reads on load, so
          the interview track opens with the tap-and-watch guide lesson. ── -->
-    <section class="sec today-sec" id="projectPrepSec" aria-labelledby="projectPrepH">
+    <section class="sec today-sec" data-zone="pvt" id="projectPrepSec" aria-labelledby="projectPrepH">
       <h2 id="projectPrepH">Project Preparation</h2>
       <p class="today-meta">Your Student Platform — 27 lessons · 127 interview questions · interactive tap-and-watch guides</p>
       <p class="today-meta">Prepare in this order: explain the project in 60 seconds → login and API flow → payments and duplicate-webhook safety → roles and batch isolation → support bot → debugging and deployment → walk through code. Then practise the questions attached to each flow; do not memorise features you have not verified.</p>
@@ -530,26 +568,26 @@
          of Project Preparation on Home — its own card, its own progress
          total, and a deep link into the interview track's resume-guide
          lesson, where resume-guide.js mounts the tap-a-line player. ── -->
-    <section class="sec today-sec" id="resumePrepSec" aria-labelledby="resumePrepH">
+    <section class="sec today-sec" data-zone="pvt" id="resumePrepSec" aria-labelledby="resumePrepH">
       <h2 id="resumePrepH">Resume Questions</h2>
       <p class="today-meta">Your resume is the question paper — tap a line, learn the answers it invites · 7 lessons · 53 questions</p>
       <p class="today-meta" id="resumePrepProgress"></p>
       <a class="btn btn-primary today-cta" href="/index.html?track=interview&lesson=resume-guide">Open resume questions</a>
     </section>
 
-    <button class="exam-over" id="examOver">
+    <button class="exam-over" data-zone="gov" id="examOver">
       <b>That exam is behind you</b><br>
       <span id="examOverWhen"></span> Tap to pick what you are preparing for next.
     </button>
 
     <!-- Confident matches only, closing soonest first. Three here; the rest on #open. -->
-    <section class="sec" id="openSec" aria-labelledby="openH">
+    <section class="sec" data-zone="open" id="openSec" aria-labelledby="openH">
       <div class="sec-head"><h2 id="openH">Open now — you can apply</h2><a class="sec-link" id="openAll" href="#open">See all</a></div>
       <div class="list" id="openList"><div class="empty">Loading openings…</div></div>
       <a class="row-link hidden" id="newLink" href="#open"></a>
     </section>
 
-    <section class="sec" id="trackSec" aria-label="Government or private">
+    <section class="sec" data-zone="both" id="trackSec" aria-label="Government or private">
       <div class="seg seg-track" role="tablist" aria-label="Government or private">
         <button type="button" role="tab" id="tabGov" data-track="gov" aria-controls="trackGov" aria-selected="true">Government<span class="seg-n" id="govMeta"></span></button>
         <button type="button" role="tab" id="tabPvt" data-track="pvt" aria-controls="trackPvt" aria-selected="false">Private<span class="seg-n" id="pvtMeta"></span></button>
@@ -566,10 +604,12 @@
         <div class="sec-head sub-head"><h3>₹40 LPA+ · apply online</h3><a class="sec-link" id="tpAll" href="#toppay">See all</a></div>
         <div class="list" id="tpPreview"></div>
         <a class="row-link" id="pathLink" href="#path"></a>
+        <a class="row-link" href="/jobs.html"><span><b>Daily Jobs board</b><small>Today's verified private openings, checked on each company's own site</small></span></a>
+        <a class="row-link" href="/pipeline.html"><span><b>Pipeline</b><small>Where each private application stands</small></span></a>
       </div>
     </section>
 
-    <section class="sec">
+    <section class="sec" data-zone="gov">
       <a class="row-link" id="basicsLink" href="#basics"></a>
     </section>
 
@@ -1386,7 +1426,8 @@ const PREVIEW = 3;
 /** Confident matches on the role and the qualification, open to all of India
     or in Telangana, closing soonest first. */
 function openNowRows(live) {
-  return live.filter(j => !applied[j.id] && eligibility(j) === true && onMyTrack(j) && !isOtherStateLocal(j))
+  return live.filter(j => !applied[j.id] && eligibility(j) === true && onMyTrack(j) && !isOtherStateLocal(j)
+    && sectorOf(j) === (track === 'pvt' ? 'private' : 'government'))
     .sort(bySoonestJob);
 }
 function renderOpenNow(live) {
@@ -1440,6 +1481,19 @@ function setTrack(t, scroll) {
   if (pvt) pvt.hidden = track !== 'pvt';
   document.querySelectorAll('[data-track]').forEach(b =>
     b.setAttribute('aria-selected', String(b.getAttribute('data-track') === track)));
+  /* The two worlds: every tagged Home section outside the chosen zone is
+     hidden by class only — sections keep their own hidden/show logic. */
+  document.querySelectorAll('[data-view="home"] [data-zone]').forEach(el => {
+    const z = el.getAttribute('data-zone');
+    el.classList.toggle('zone-off', !(z === 'both' || z === 'open' || z === track));
+  });
+  const note = document.getElementById('zoneNote');
+  if (note) note.textContent = track === 'pvt'
+    ? 'Private only — jobs, your pipeline, project & interview prep. Government exams and study are under GOVERNMENT.'
+    : 'Government only — exams, study, results and government openings. Private jobs are under PRIVATE.';
+  const openH = document.getElementById('openH');
+  if (openH) openH.textContent = track === 'pvt' ? 'Open now — private jobs you can apply' : 'Open now — government jobs you can apply';
+  if (typeof allJobs !== 'undefined' && allJobs.length) renderOpenNow(allJobs.filter(j => !isClosed(j)));
   if (scroll) {
     const el = document.getElementById('trackSec');
     if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
