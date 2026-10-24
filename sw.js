@@ -151,12 +151,14 @@
    card re-renders only when its notices actually change (background
    refreshes no longer flicker it or fetch while it is in the other zone).
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+/* v47 adds the Amazon Prep page (/amazon-prep.html) to the precache list.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
 /* v46 fixes the Home prep deep links (study-roadmap.js only): a load with
    ?track=…&lesson=… rendered the opened lesson inside the still-hidden
    #basics view and only scrolled to it, so the tap appeared to do nothing.
    The roadmap now routes to #basics via the hash — the app's own way in —
    before scrolling. THE BUMP IS LOAD-BEARING — see the v11/v12 notes. */
-const CACHE = 'jobhunt-v46';
+const CACHE = 'jobhunt-v47';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -233,6 +235,7 @@ const PREP_ASSETS = [
      and safe offline; its data (/data/job-board.json) is job data and is
      NEVER cached — a stale board would show a closed role as open. */
   '/jobs.html',
+  '/amazon-prep.html',
   /* Typography is the phone's own face now — nothing to cache, and nothing to
      download before first paint. fonts.css holds only the token aliases. */
   '/fonts/fonts.css',
@@ -273,6 +276,7 @@ self.addEventListener('fetch', event => {
               || url.pathname === '/ui.css'
               || url.pathname === '/feed.html'
               || url.pathname === '/voice.html'
+              || url.pathname === '/amazon-prep.html'
               || url.pathname === '/nav.js'
               || url.pathname.startsWith('/prep/')
               || url.pathname.startsWith('/app/')

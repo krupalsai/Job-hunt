@@ -239,12 +239,14 @@
       sub: "Lessons, quizzes and job lists as they are sent" },
     { id: "pipeline", label: "Pipeline", icon: null, href: "/pipeline.html", plain: true,
       sub: "Every opportunity's behind-the-scenes — checks, referrals, responses" },
+    { id: "amazon-prep", label: "Amazon Prep", icon: null, href: "/amazon-prep.html", plain: true,
+      sub: "Leadership Principles, Python basics, DP, Trees, Graphs — one topic at a time" },
   ];
   /* Icons are attached here rather than inline so the lists above read as a
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
     "interview-prep": "book", "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", feed: "spark", focus: "timer", pipeline: "jobs" };
+    syllabus: "exam", feed: "spark", focus: "timer", pipeline: "jobs", "amazon-prep": "book" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
