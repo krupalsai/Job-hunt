@@ -15,6 +15,12 @@
 <script src="/nav.js" defer></script>
 <link rel="stylesheet" href="/fonts/fonts.css" />
 <link rel="stylesheet" href="/ui.css" />
+<!-- Pre-paint zone: stamp the saved track on <html> before the body parses,
+     so the other world's Home sections never paint at all (see the trk-*
+     rules in the style below). setTrack() removes these classes on its first
+     call and manages .zone-off from then on. Fails safe: no class, old
+     behaviour. -->
+<script>try{var __t=localStorage.getItem('jobhunt_track');if(__t==='pvt'||__t==='gov')document.documentElement.classList.add('trk-'+__t);}catch(e){}</script>
 <style>
   /* ============================================================================
      HOME — the news first, then the choice.
@@ -394,6 +400,12 @@
     box-shadow: 0 0 0 3px var(--pvt-soft); }
   .zone-note { font-size: 12.5px; color: var(--muted); margin: 10px 2px 0; }
   [data-zone].zone-off { display: none !important; }
+  /* Pre-paint zone (the head script stamps trk-gov / trk-pvt from the saved
+     track): hide the other world from the very first paint, so Home can
+     never flash both worlds stacked before setTrack() runs. Mirrors
+     setTrack's own rule exactly ('both' and 'open' always show). */
+  html.trk-pvt [data-view="home"] [data-zone="gov"],
+  html.trk-gov [data-view="home"] [data-zone="pvt"] { display: none !important; }
   .data-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px;
                margin: 26px 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
   .data-foot .sub { font-size: 12.5px; color: var(--muted); }
@@ -481,7 +493,7 @@
 <header class="is-brand">
   <div class="nav-bar">
     <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
-      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+      <svg class="nav-ico" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
     <div class="nav-title">
@@ -489,11 +501,11 @@
       <div class="nav-exam" id="nav-exam"></div>
     </div>
     <button class="nav-burger" id="refreshBtn" onclick="load()" aria-label="Refresh openings" title="Refresh">
-      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+      <svg class="nav-ico" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
     </button>
     <a class="nav-burger" href="/jobs.html" aria-label="Daily Jobs" title="Daily Jobs">
-      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+      <svg class="nav-ico" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7.5" width="19" height="12.5" rx="2"/><path d="M8.5 7.5V6a2.5 2.5 0 0 1 2.5-2.5h2A2.5 2.5 0 0 1 15.5 6v1.5"/><path d="M2.5 12.5h19"/></svg>
     </a>
   </div>
@@ -1475,6 +1487,10 @@ function renderNew(live) {
 /* ── 4. The choice ────────────────────────────────────────────────────── */
 function setTrack(t, scroll) {
   track = t === 'pvt' ? 'pvt' : 'gov';
+  /* The pre-paint trk-* classes (head script) have done their job once real
+     zone state is being applied; .zone-off below governs from here. Both
+     change inside this one synchronous pass, so no frame can disagree. */
+  document.documentElement.classList.remove('trk-gov', 'trk-pvt');
   try { localStorage.setItem(TRACK_KEY, track); } catch (e) {}
   const gov = document.getElementById('trackGov'), pvt = document.getElementById('trackPvt');
   if (gov) gov.hidden = track !== 'gov';
@@ -2948,9 +2964,18 @@ renderBasicsLink();
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (ch) => ({
     "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
   }[ch]));
-  async function refreshResults() {
+  let lastResultsKey = "";
+  async function refreshResults(force) {
+    if (!force) {
+      // Background runs stay invisible: no status flicker, no list rebuild,
+      // no layout jump — and no fetches at all while this card is in the
+      // other zone or the app is in the background.
+      if (document.hidden) return;
+      const sec = document.getElementById("examResultsSec");
+      if (sec && (sec.classList.contains("zone-off") || sec.hidden)) return;
+    }
     button.disabled = true;
-    status.textContent = "Checking saved official notices…";
+    if (force) status.textContent = "Checking saved official notices…";
     try {
       // Request a throttled source refresh, then read the current notices.
       const checkResponse = await fetch("/api/results?refresh=1", { cache: "no-store" });
@@ -2960,6 +2985,9 @@ renderBasicsLink();
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || "Unable to load result notices");
       const results = Array.isArray(payload.results) ? payload.results : [];
+      const key = JSON.stringify([payload.checked_at || "", results]);
+      if (!force && key === lastResultsKey) return; // unchanged: leave the DOM alone
+      lastResultsKey = key;
       if (!results.length) {
         list.innerHTML = '<div class="empty">No result notices have been detected yet. This does not mean your exam result is unavailable — check the official recruitment site too.</div>';
       } else {
@@ -2973,15 +3001,15 @@ renderBasicsLink();
       status.textContent = "Official sources are checked on demand at most every five minutes while the app is open, with a daily background check. " +
         (payload.checked_at ? "Latest notice detected: " + new Date(payload.checked_at).toLocaleString() : "No notice has been stored yet.");
     } catch (error) {
-      status.textContent = "Could not load result updates. " + (error && error.message ? error.message : "");
+      if (force) status.textContent = "Could not load result updates. " + (error && error.message ? error.message : "");
       if (!list.children.length) list.innerHTML = '<div class="empty">Try again shortly, or open the official recruitment site directly.</div>';
     } finally {
       button.disabled = false;
     }
   }
-  button.addEventListener("click", refreshResults);
-  refreshResults();
-  window.setInterval(refreshResults, 60000);
+  button.addEventListener("click", () => refreshResults(true));
+  refreshResults(true);
+  window.setInterval(() => refreshResults(false), 60000);
 })();
 </script>
 

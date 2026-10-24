@@ -144,7 +144,14 @@
 /* v44 splits Home into two worlds — GOVERNMENT and PRIVATE zones
     (index.html only: a top switcher, per-zone sections, sector-filtered
     Open-now). THE BUMP IS LOAD-BEARING — see the v11/v12 notes above. */
-const CACHE = 'jobhunt-v44';
+/* v45 stops Home's load flashes (index.html only): the header icons carry
+   their own 23px size so they can never paint giant before nav.js injects
+   its styles, the saved zone is stamped on <html> pre-paint so the other
+   world never flashes stacked on top of this one, and the exam-results
+   card re-renders only when its notices actually change (background
+   refreshes no longer flicker it or fetch while it is in the other zone).
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v45';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
