@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-23",
+  updated: "2026-10-24",
 
   items: [
     /* {
@@ -48,6 +48,102 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-23",
+      topic: "Polity",
+      headline: "Southern Regional Police Coordination Committee meets at Hyderabad's ICCC; CM offers Telangana tech grid to five southern states",
+      why: "Who-where-what set. At the SRPCC meet at Hyderabad's Integrated Command and Control Centre on 23 October, CM Revanth Reddy offered Telangana's ICCC and surveillance tech as a shared pan-South India policing grid; police chiefs of five southern states (Telangana, Andhra Pradesh, Tamil Nadu, Karnataka, Kerala) plus Puducherry, Lakshadweep and the Andaman & Nicobar Islands attended. Remember: cross-border focus areas named were cyber fraud, narcotics and trafficking networks.",
+      source: "Nation Press",
+      url: "https://www.nationpress.com/national/cm-revanth-opens-srpcc-meet-in-hyderabad",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Polity",
+      headline: "Telangana to present case for 152-metre Tummidihetti barrage, seeks Maharashtra's agreement",
+      why: "Inter-state river facts are paper staples. On 23 October the CM directed irrigation officials to prepare a presentation for Maharashtra on the Tummidihetti barrage at 152 metres — the height that maximises Godavari diversion to irrigate two lakh acres in undivided Adilabad; Maharashtra CM Devendra Fadnavis agreed to discussions after 23 October. Numbers to hold: 152 m vs 150 m; submergence ~2,300 acres at 152 m, under 1,000 acres at 150 m; engineers briefed on diversion potential up to Yellampalli.",
+      source: "Indian Economic Observer",
+      url: "https://www.indianeconomicobserver.com/news/telangana-to-make-presentation-on-construction-of-barrage-at-152-meter-height-seek-maharashtras-approval20261023185928/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Schemes",
+      headline: "Indiramma Towers: Telangana targets one lakh houses in Hyderabad's core urban region (CURE), in three phases",
+      why: "Scheme-number pairs get asked. At a 23 October Secretariat review with collectors of Hyderabad, Rangareddy and Medchal-Malkajgiri, Housing Minister Ponguleti Srinivasa Reddy set a one-lakh-house target for Indiramma Towers in CURE across three phases — phase one is ~500 houses per constituency, with each Assembly constituency treated as a unit, and the government stressed housing the poor near their existing residence. Related date: beneficiary selection for two-bedroom houses in the three districts to finish by end of October.",
+      source: "The Hindu",
+      url: "https://scoopfeeds.com/article/bb54da63-adaa-54fa-bca9-aae7bb4aa491",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Schemes",
+      headline: "Drought warning: Telangana announces special employment scheme from after Sankranti to May",
+      why: "The numbers make the item. CM Revanth Reddy on 23 October warned drought could persist 8–10 months — major irrigation projects below 20% capacity, only ~200 TMC water available, and ~15 lakh of 30 lakh agricultural pump sets dried up. Response package: a special four-month employment scheme (after Sankranti to May) focused on field-access roads, canal/pond desilting and water-body revival monitored by a mobile app; drinking water is the top priority with a toll-free grievance number; fodder and drinking-water centres for cattle in villages.",
+      source: "The News Trust",
+      url: "https://www.thenewstrust.in/telangana-to-launch-spl-employment-scheme-after-sankranti-amid-drought-cm-revanth-reddy/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Schemes",
+      headline: "PM Surya Ghar: 65,102 rooftop solar installations completed in Telangana; ₹413.86 crore subsidy released",
+      why: "Central-scheme state scorecards are asked. Union Minister G. Kishan Reddy's 23 October update for Telangana: 99,259 applications received, 65,102 installations completed, 82,000+ families on rooftop solar, 28,429 solar loans sanctioned, and ₹413.86 crore in subsidies released.",
+      source: "Nation Press",
+      url: "https://www.nationpress.com/national/kishan-reddy-82k-homes-go-solar-in-telangana",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Environment",
+      headline: "WWF-India EIACP launches Green Diwali Campaign 2026 for cracker-free celebrations",
+      why: "Campaign-name + body pair. WWF-India's EIACP (Environment Information, Awareness, Capacity Building and Livelihood Programme) hub launched the Green Diwali Campaign 2026 to promote cracker-free celebrations.",
+      source: "AffairsCloud",
+      url: "https://affairscloud.com/current-affairs-23-october-2026/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "IR",
+      headline: "India–Poland Strategic Summit 2026: joint statement targets doubling bilateral trade by 2030",
+      why: "Summit-outcome pairs are the askable shape. The India–Poland Strategic Summit's joint statement set a target of doubling bilateral trade by 2030.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-23-october-2026/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Polity",
+      headline: "Ladakh LG notifies 100 constituencies for hill development councils, nearly doubling council strength",
+      why: "Ladakh LG Vinai Kumar Saxena notified 100 constituencies for the Ladakh Autonomous Hill Development Councils (Leh and Kargil) — nearly doubling the councils' strength.",
+      source: "AffairsCloud",
+      url: "https://affairscloud.com/current-affairs-23-october-2026/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Defence",
+      headline: "Indian Navy's First Training Squadron visits the Maldives",
+      why: "Naval visits to neighbours are asked. The Indian Navy's First Training Squadron visited the Maldives — keep it with SIMBEX/SLP exercises as maritime-outreach items.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-23-october-2026/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Science",
+      headline: "Vultr announces 20 MW AI supercluster in Chennai on AMD Instinct MI355X GPUs",
+      why: "Tech-location pairs. US cloud company Vultr announced on 22 October a 20-megawatt AI supercluster in Chennai built on AMD Instinct MI355X GPUs.",
+      source: "FreeJobAlert",
+      url: "https://www.freejobalert.com/articles/daily-current-affairs-23-october-2026-10473",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Summits",
+      headline: "India to host 12th BRICS Parliamentary Forum in New Delhi on 26–27 October; Om Birla chairs",
+      why: "Forum-facts: the 12th BRICS Parliamentary Forum in New Delhi on 26–27 October 2026 under the theme 'Fostering Parliaments for People-Centric Development', chaired by Lok Sabha Speaker Om Birla, discussing ethical AI, digital transformation, global governance reform and sustainability with a joint declaration expected. Background fact: India assumed the BRICS chairship on 1 January 2026 under the theme 'Building for Resilience, Innovation, Cooperation and Sustainability'.",
+      source: "BankersAdda",
+      url: "https://www.bankersadda.com/daily-current-affairs-and-gk-updates-22nd-october-2026/",
+    },
+    {
+      date: "2026-10-22",
+      topic: "Sports",
+      headline: "Asian Para Games 2026 Day 4: India wins 26 medals on 22 October, tally reaches 88, back to fourth",
+      why: "22 October was India's best day so far at Aichi-Nagoya: 26 medals including seven golds, taking the four-day tally to 88 and pushing India back to fourth place. Keep with the Day-1 opener item for the running-tally shape.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-23-october-2026/",
+    },
     {
       date: "2026-10-22",
       topic: "Power",
