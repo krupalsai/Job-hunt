@@ -2641,6 +2641,38 @@ async function shDraftHtml(j) {
     (md ? shMd(md) : '<p class="sh-gate-note">Could not load the draft.</p>');
 }
 
+function shReferralsHtml(j) {
+  const c = shContent[j.key] || {};
+  const asked = (c.referrals && Array.isArray(c.referrals.asked)) ? c.referrals.asked : [];
+  let inner = `<h4>Referral asked list</h4>`;
+  if (!asked.length) {
+    inner += `<p class="sh-gate-note">No one asked yet for this role.
+      Referral sends need your approval of the exact recipients + text first,
+      and sends are paused under your stop order until you lift it — nothing
+      here is sent by the app.</p>`;
+  } else {
+    inner += '<ul>' + asked.map(a =>
+      `<li><strong>${escapeHtml(a.name || 'Contact')}</strong>` +
+      (a.status ? ` — ${escapeHtml(a.status)}` : '') +
+      (a.at ? ` (${escapeHtml(a.at)})` : '') + '</li>').join('') + '</ul>';
+  }
+  return inner;
+}
+
+function shApplyTapHtml(j) {
+  const link = shApply(j);
+  if (!link) return `<h4>Apply — one tap</h4>
+    <p class="sh-gate-note">No public apply link found on the company's own
+    site yet — the post sends it by DM.</p>`;
+  return `<h4>Apply — one tap</h4>
+    <p class="sh-gate-note">One tap opens the company's own apply page.
+    The app never submits anything — you apply there yourself, then mark
+    it Applied below.</p>
+    <div class="sh-actions">
+      <a class="btn-approve" href="${escapeHtml(link.url)}" target="_blank" rel="noopener">Apply on ${escapeHtml(j.company || 'the company site')} →</a>
+    </div>`;
+}
+
 /* The hard gate. The app never submits anything; "Applied" is set only when
    he confirms he applied from the original post himself. */
 function shGateHtml(j) {
@@ -2715,7 +2747,7 @@ async function shRenderDetail(j, idx) {
   const [learn, draft, study] = await Promise.all([
     shLearnHtml(j), shDraftHtml(j), shStudyHtml(j),
   ]);
-  box.innerHTML = shFactsHtml(j) + learn + draft + shGateHtml(j) + study;
+  box.innerHTML = shFactsHtml(j) + draft + shReferralsHtml(j) + shApplyTapHtml(j) + learn + shGateHtml(j) + study;
 }
 
 function shSetStatus(key, status) {
