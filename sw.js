@@ -151,7 +151,12 @@
    card re-renders only when its notices actually change (background
    refreshes no longer flicker it or fetch while it is in the other zone).
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v45';
+/* v46 fixes the Home prep deep links (study-roadmap.js only): a load with
+   ?track=…&lesson=… rendered the opened lesson inside the still-hidden
+   #basics view and only scrolled to it, so the tap appeared to do nothing.
+   The roadmap now routes to #basics via the hash — the app's own way in —
+   before scrolling. THE BUMP IS LOAD-BEARING — see the v11/v12 notes. */
+const CACHE = 'jobhunt-v46';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.

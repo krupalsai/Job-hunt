@@ -231,7 +231,20 @@
   drawSummary();
   drawTopics();
   if (deepLinked) {
-    const target = panel.querySelector('#activeRoadmapLesson') || summary;
-    if (target) target.scrollIntoView({ block: 'nearest' });
+    // The roadmap lives inside the #basics view (index.html), which stays
+    // hidden until the hash names it — a param load has no hash, so the
+    // scroll alone lands nowhere visible and the user just sees Home.
+    // Route there the way the app itself does (its Basics link is
+    // href="#basics"; the hashchange listener calls showView), then
+    // scroll once that view is shown (showView also resets scroll to top).
+    if ((location.hash || '').replace(/^#/, '') !== 'basics') {
+      location.hash = 'basics';
+    }
+    const scrollToLesson = () => {
+      const target = panel.querySelector('#activeRoadmapLesson') || summary;
+      if (target) target.scrollIntoView({ block: 'nearest' });
+    };
+    scrollToLesson();
+    setTimeout(scrollToLesson, 60);
   }
 })();
