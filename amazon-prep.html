@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Amazon Prep · Job Hunt</title>
+<meta name="description" content="Amazon prep in simple words, one topic at a time: Leadership Principles, Python basics, and DSA — Dynamic Programming, Trees, Graphs." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:20px; margin:0; line-height:1.25; }
+  .sub{ color:var(--muted); font-size:13.5px; line-height:1.5; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+  .jump{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px; }
+  .jump a{ display:inline-flex; align-items:center; min-height:44px; padding:0 14px;
+    border:1px solid var(--panel-border); border-radius:999px; background:var(--panel);
+    color:var(--accent-ink); font-size:13.5px; font-weight:700; text-decoration:none; }
+  .topic{ background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:16px; padding:16px; margin:0 0 12px; }
+  .topic h2{ font-size:18px; margin:0 0 6px; }
+  .topic h3{ font-size:16px; margin:14px 0 4px; }
+  .topic p, .topic li{ font-size:14.5px; line-height:1.6; color:var(--text); }
+  .topic p.muted, .topic .muted{ color:var(--muted); }
+  .topic ul{ margin:6px 0 10px; padding-left:20px; }
+  details{ border-top:1px solid var(--panel-border); padding:10px 0 2px; margin-top:10px; }
+  details summary{ cursor:pointer; font-weight:700; font-size:15px; min-height:44px;
+    display:flex; align-items:center; }
+  details summary::-webkit-details-marker{ margin-right:8px; }
+  .say{ background:var(--accent-soft); border:1px solid var(--accent-line);
+    border-radius:12px; padding:12px 14px; margin:12px 0 4px; }
+  .say b{ display:block; margin-bottom:2px; }
+  .say p{ margin:0; font-size:14px; }
+  code{ font-size:13px; background:var(--surface-2); border:1px solid var(--panel-border);
+    border-radius:6px; padding:1px 6px; overflow-wrap:anywhere; }
+  pre{ background:var(--surface-2); border:1px solid var(--panel-border); border-radius:12px;
+    padding:12px 14px; overflow:auto; font-size:13.5px; line-height:1.55; margin:10px 0; }
+  pre code{ background:none; border:0; padding:0; }
+  .checks label{ display:flex; gap:10px; align-items:flex-start; padding:10px 0;
+    border-top:1px solid var(--panel-border); font-size:14.5px; line-height:1.5; cursor:pointer; }
+  .checks input{ width:22px; height:22px; flex:none; margin-top:1px; accent-color:var(--accent); }
+  .back{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .back a{ display:inline-flex; align-items:center; min-height:44px; padding:0 14px;
+    border:1px solid var(--panel-border); border-radius:12px; background:var(--panel);
+    color:var(--accent-ink); font-size:13.5px; font-weight:700; text-decoration:none; }
+</style>
+</head>
+<body data-page="amazon-prep">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">Amazon Prep</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+<main>
+  <h1>Amazon Prep, one topic at a time</h1>
+  <p class="sub">Simple words, for a beginner learning Python from zero. No long lectures here. Pick one topic, read it, try one small example in your head, then stop.</p>
+  <p class="sub">If coding feels new, that is expected. You spent years focused on government exams, a different track. This page starts from zero, and it does not pretend you already know DSA.</p>
+  <div class="jump" aria-label="Jump to a section">
+    <a href="#focus">How to use this</a>
+    <a href="#principles">Leadership Principles</a>
+    <a href="#python">Python basics</a>
+    <a href="#dp">DP</a>
+    <a href="#trees">Trees</a>
+    <a href="#graphs">Graphs</a>
+  </div>
+
+  <section class="topic" id="focus">
+    <h2>How to study this when you cannot focus</h2>
+    <p>Do not try to finish this whole page in one sitting. That is how the fear grows.</p>
+    <ul>
+      <li><b>One topic at a time.</b> Today, only DP, or only Trees, or only one principle.</li>
+      <li><b>20 to 30 minutes, then stop.</b> Read the short meaning, look at the one example, and close the page.</li>
+      <li><b>Say it back in your own words.</b> If you can explain it in two simple sentences, you understood it. If not, that is fine. Read it again tomorrow.</li>
+      <li><b>Tick it only when it feels clear.</b> The ticks below are saved on your phone only. They are not sent anywhere, and nobody checks them.</li>
+    </ul>
+    <p class="muted" id="progressText">0 of 5 parts ticked.</p>
+    <div class="checks" id="checks">
+      <label><input type="checkbox" data-part="principles" /> Leadership Principles — I can name a few and explain them simply.</label>
+      <label><input type="checkbox" data-part="python" /> Python basics — I can read a small loop and a function.</label>
+      <label><input type="checkbox" data-part="dp" /> Dynamic Programming — I can explain the “remember the answer” idea.</label>
+      <label><input type="checkbox" data-part="trees" /> Trees — I can explain root, branches, and leaves.</label>
+      <label><input type="checkbox" data-part="graphs" /> Graphs — I can explain nodes, edges, BFS, and DFS.</label>
+    </div>
+  </section>
+
+  <section class="topic" id="principles">
+    <h2>Amazon Leadership Principles</h2>
+    <p>Amazon has 16 Leadership Principles. In an interview, they are not a memory test. The interviewer asks, “Tell me about a time when…”, and listens for how you actually acted. Answer with a real story, in this order: what happened, what you had to do, what you did, and what happened in the end.</p>
+    <p><b>How to answer honestly with your own story:</b> you are a Founder / Product Builder. You built and run the Student Platform, used by 150+ students. Your own work was integration, deployment, and live verification — checking a problem live, putting the fix out, and confirming it worked for real students. The writing and debugging of the code was AI-assisted, with Claude. Say that plainly. Do not claim you debugged code by hand, and do not invent a story that never happened. One true story, told simply, is stronger than a perfect invented one.</p>
+    <p class="muted">Tap each principle to read its plain meaning and a prompt for your own story.</p>
+    <details><summary>1. Customer Obsession</summary>
+      <p>Start from what the user needs, not from what is easy to build. Keep their trust.</p>
+      <div class="say"><b>Say it in your own words</b><p>“A student had a problem on the platform. What did I check first, and how did I make sure it worked for them?”</p></div>
+    </details>
+    <details><summary>2. Ownership</summary>
+      <p>Act like it is yours. Think long term. Never say, “That is not my job.”</p>
+      <div class="say"><b>Say it in your own words</b><p>“When something broke on the platform, even if I did not build that part by hand, what did I take responsibility for?”</p></div>
+    </details>
+    <details><summary>3. Invent and Simplify</summary>
+      <p>Try a new idea, and find the simpler way to do it.</p>
+      <div class="say"><b>Say it in your own words</b><p>“What did I make simpler for students or admins, instead of leaving a confusing step?”</p></div>
+    </details>
+    <details><summary>4. Are Right, A Lot</summary>
+      <p>Use good judgement. Listen to other views. Check your own idea before you trust it.</p>
+      <div class="say"><b>Say it in your own words</b><p>“When was I unsure, and what did I check before deciding?”</p></div>
+    </details>
+    <details><summary>5. Learn and Be Curious</summary>
+      <p>Never stop learning. Ask why, and try to understand how things work.</p>
+      <div class="say"><b>Say it in your own words</b><p>“What am I learning right now, and why did I start learning it?”</p></div>
+    </details>
+    <details><summary>6. Hire and Develop the Best</summary>
+      <p>Raise the bar, and help other people grow. For a fresher, this can mean helping a teammate learn, or being someone a team wants to work with.</p>
+      <div class="say"><b>Say it in your own words</b><p>“When did I help another student or teammate understand something?”</p></div>
+    </details>
+    <details><summary>7. Insist on the Highest Standards</summary>
+      <p>Do not send broken work forward. Fix a problem properly, so it stays fixed.</p>
+      <div class="say"><b>Say it in your own words</b><p>“When did I refuse a quick fix and check the result properly instead?”</p></div>
+    </details>
+    <details><summary>8. Think Big</summary>
+      <p>Do not think only about one small fix. Think about what it could become.</p>
+      <div class="say"><b>Say it in your own words</b><p>“How did the Student Platform grow from one need into something 150+ students use?”</p></div>
+    </details>
+    <details><summary>9. Bias for Action</summary>
+      <p>Decide and move. Speed matters. Do not wait for a perfect plan.</p>
+      <div class="say"><b>Say it in your own words</b><p>“When did I act quickly to unblock students, instead of waiting?”</p></div>
+    </details>
+    <details><summary>10. Frugality</summary>
+      <p>Do more with less. Do not waste money, time, or effort.</p>
+      <div class="say"><b>Say it in your own words</b><p>“How did I run the platform without a big team or a big budget?”</p></div>
+    </details>
+    <details><summary>11. Earn Trust</summary>
+      <p>Listen carefully, speak honestly, and keep your promises.</p>
+      <div class="say"><b>Say it in your own words</b><p>“How did students learn they could trust the platform and my replies?”</p></div>
+    </details>
+    <details><summary>12. Dive Deep</summary>
+      <p>Check the details yourself. Do not guess from the top.</p>
+      <div class="say"><b>Say it in your own words</b><p>“When a payment or login looked wrong, what did I actually check, step by step?”</p></div>
+    </details>
+    <details><summary>13. Have Backbone; Disagree and Commit</summary>
+      <p>Say it respectfully when you disagree. Once a decision is made, support it fully.</p>
+      <div class="say"><b>Say it in your own words</b><p>“When did I disagree with an idea, say so politely, and then still commit to the final plan?”</p></div>
+    </details>
+    <details><summary>14. Deliver Results</summary>
+      <p>Finish on time, with quality. Focus on what actually matters.</p>
+      <div class="say"><b>Say it in your own words</b><p>“What did I actually ship and get working for real students, and when?”</p></div>
+    </details>
+    <details><summary>15. Strive to be Earth’s Best Employer</summary>
+      <p>Help make work safe, fair, and enjoyable for the people around you.</p>
+      <div class="say"><b>Say it in your own words</b><p>“How did I treat the students and people who depend on the platform?”</p></div>
+    </details>
+    <details><summary>16. Success and Scale Bring Broad Responsibility</summary>
+      <p>When a company is big, its choices affect many people. Use that size responsibly.</p>
+      <div class="say"><b>Say it in your own words</b><p>“Why does it matter that a platform used by many students handles their data carefully?”</p></div>
+    </details>
+    <p class="muted">These are short plain-word meanings written for this page. They are not Amazon’s full official wording. For a role itself, always check the company’s own careers page.</p>
+  </section>
+
+  <section class="topic" id="python">
+    <h2>Coding basics first: Python in one short refresher</h2>
+    <p>DSA is hard if Python itself is still new. This is only the on-ramp, not a full course. Learn these six ideas, and DSA becomes readable.</p>
+    <details><summary>Variables — a named box for a value</summary>
+      <p><code>name = "Krupal"</code> puts a value in a box called <code>name</code>. Later, <code>name</code> gives that value back.</p>
+    </details>
+    <details><summary>If-else — a choice</summary>
+      <p>“If this is true, do this. Otherwise, do that.” Example: if a score is 40 or more, pass; otherwise, fail.</p>
+<pre><code>if score &gt;= 40:
+    print("pass")
+else:
+    print("fail")</code></pre>
+    </details>
+    <details><summary>Loops — repeat a small step</summary>
+      <p>A loop does the same step for every item in a list, one by one, until the list ends.</p>
+<pre><code>for student in students:
+    print(student)</code></pre>
+    </details>
+    <details><summary>Functions — a named block you can reuse</summary>
+      <p>A function is a small job with a name. You call it when you need that job done, instead of writing it again.</p>
+<pre><code>def add(a, b):
+    return a + b</code></pre>
+    </details>
+    <details><summary>Lists — items in order</summary>
+      <p>A list keeps items in order, and you can reach each one by its position, starting at 0. Example: <code>marks = [40, 55, 70]</code>, so <code>marks[0]</code> is 40.</p>
+    </details>
+    <details><summary>Dictionaries — items by name, not position</summary>
+      <p>A dictionary keeps pairs: a key, and its value. Example: <code>{"name": "Krupal", "batch": "GNIT"}</code>. You look a value up by its key, which is fast.</p>
+    </details>
+    <div class="say"><b>Say it in your own words</b><p>“What is a loop, and when would I use one instead of writing the same line many times?”</p></div>
+  </section>
+
+  <section class="topic" id="dp">
+    <h2>DSA core 1: Dynamic Programming (DP)</h2>
+    <p><b>What it is, in 2 lines:</b> DP solves a big problem by solving its small parts first, and remembering those answers. When the same small part comes up again, it reuses the answer instead of solving it again.</p>
+    <p><b>Why Amazon asks it:</b> it tests whether you can spot repeated work and avoid wasting time on it. Many “best way” or “how many ways” problems are DP problems.</p>
+    <h3>One core pattern: remember, then build up</h3>
+    <p>Start from the smallest case. Write its answer down. Use that answer to build the next case, and the next one. A table, or a saved answer, is the whole trick.</p>
+    <h3>One easy example idea</h3>
+    <p>Climbing stairs: you can take 1 step or 2 steps at a time. How many ways can you reach step 5? The ways to reach step 5 are the ways to reach step 4, plus the ways to reach step 3. Once you know steps 3 and 4, step 5 is just their sum. You never need to recount from step 1.</p>
+    <h3>Common mistakes</h3>
+    <ul>
+      <li>Forgetting the base case: what is the answer for the smallest input, like 0 steps?</li>
+      <li>Solving the same small part again and again, without remembering it. That is the slow version DP is meant to fix.</li>
+      <li>Jumping to a formula before you can explain the small cases in words.</li>
+    </ul>
+    <div class="say"><b>Say it in your own words</b><p>“DP means: solve the small parts once, remember their answers, and build the big answer from them.”</p></div>
+  </section>
+
+  <section class="topic" id="trees">
+    <h2>DSA core 2: Trees</h2>
+    <p><b>What it is, in 2 lines:</b> a tree is data shaped like branches. It starts at one root, each part can have children below it, and the ends with no children are leaves. Think of folders inside folders, or a family tree.</p>
+    <p><b>Why Amazon asks it:</b> trees show whether you can think in steps that repeat. Most tree answers use the same idea at every level: handle this node, then handle its children.</p>
+    <h3>One core pattern: recursion, one node at a time</h3>
+    <p>To visit a whole tree, do a small job at the current node, then repeat the same job for its left child and its right child. The stopping rule is simple: if there is no node, stop and return.</p>
+    <h3>One easy example idea</h3>
+    <p>Count all the nodes in a tree. The count is 1 for the current node, plus the count of its left side, plus the count of its right side. The same rule works at every level, until you reach an empty spot, which counts as 0.</p>
+    <h3>Common mistakes</h3>
+    <ul>
+      <li>No stopping rule for an empty node, so the code keeps going forever.</li>
+      <li>Mixing up left and right, or forgetting to return the result from a child.</li>
+      <li>Trying to hold the whole tree in your head at once, instead of trusting the one-node rule.</li>
+    </ul>
+    <div class="say"><b>Say it in your own words</b><p>“A tree starts at a root, branches into children, and ends in leaves. To solve it, I do one small job at a node, then repeat it for its children.”</p></div>
+  </section>
+
+  <section class="topic" id="graphs">
+    <h2>DSA core 3: Graphs</h2>
+    <p><b>What it is, in 2 lines:</b> a graph is points joined by lines. The points are called nodes, the lines are called edges. Think of cities joined by roads, or people joined by friendships.</p>
+    <p><b>Why Amazon asks it:</b> many real problems are really graphs in disguise: can you reach this place, what is the shortest route, or are these two things connected?</p>
+    <h3>One core pattern: BFS and DFS</h3>
+    <p><b>BFS (breadth-first):</b> visit level by level, like ripples in water. All neighbours first, then their neighbours. This is the natural way to find the shortest route in steps.</p>
+    <p><b>DFS (depth-first):</b> go as deep as you can down one road first, then come back and try the next road. This is the natural way to explore everything, or to check if a path exists at all.</p>
+    <h3>One easy example idea</h3>
+    <p>Cities A, B, and C. A connects to B, B connects to C. Can you reach C from A? Yes: A to B, then B to C. With BFS, you check all of A’s neighbours first, so the first time you reach C, you know it took the fewest steps.</p>
+    <h3>Common mistakes</h3>
+    <ul>
+      <li>Not marking a node as visited. Then you can walk in a circle forever: A to B, B to A, A to B again.</li>
+      <li>Using DFS when the question asks for the shortest route in steps. That is BFS work.</li>
+      <li>Forgetting that a graph can have a node with no edges, or a part that is not connected to the rest.</li>
+    </ul>
+    <div class="say"><b>Say it in your own words</b><p>“A graph is nodes joined by edges. BFS goes level by level and finds shortest steps. DFS goes deep down one road first.”</p></div>
+  </section>
+
+  <section class="topic" id="other">
+    <h2>Other common Amazon DSA topics, by name only</h2>
+    <p>Do not try to learn all of these at once. They are listed here so the names feel familiar later, after DP, Trees, and Graphs feel clear.</p>
+    <ul>
+      <li>Arrays and Strings</li>
+      <li>Linked Lists</li>
+      <li>Stacks and Queues</li>
+      <li>Hash Tables (in Python, dictionaries)</li>
+      <li>Sorting and Searching, including Binary Search</li>
+      <li>Two Pointers</li>
+      <li>Sliding Window</li>
+      <li>Heaps, for “top K” problems</li>
+      <li>Recursion, which is also the heart of Trees</li>
+    </ul>
+    <p class="muted">This list names topics that commonly appear in fresher SDE preparation. It does not promise any particular question, and it is not a full course for any of them.</p>
+  </section>
+
+  <div class="back">
+    <a href="/">← Home</a>
+    <a href="/jobs.html">Daily Jobs board</a>
+    <a href="/pipeline.html">Pipeline</a>
+    <a href="/interview-prep.html">Interview Prep: your project story</a>
+  </div>
+  <p class="sub" style="margin-top:16px;">Prep notes written in simple words for this app. For any real role, check the company’s own careers page. No question counts, dates, or salary figures are stated here, because those change and are not verified on this page.</p>
+</main>
+<script>
+(function () {
+  "use strict";
+  var KEY = "amazon_prep_done_v1";
+  var text = document.getElementById("progressText");
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#checks input"));
+  function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+      boxes.forEach(function (b) { b.checked = saved.indexOf(b.getAttribute("data-part")) !== -1; });
+    } catch (e) {}
+    update();
+  }
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    if (text) text.textContent = done + " of " + boxes.length + " parts ticked.";
+    try {
+      localStorage.setItem(KEY, JSON.stringify(boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.getAttribute("data-part"); })));
+    } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener("change", update); });
+  load();
+})();
+</script>
+</body>
+</html>
