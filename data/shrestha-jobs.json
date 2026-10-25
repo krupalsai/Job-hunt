@@ -1,7 +1,41 @@
 {
   "source": "instagram @careerwithshrestha",
-  "updated_at": "2026-10-22T02:06:10.563Z",
+  "updated_at": "2026-10-25T10:41:00Z",
   "jobs": [
+    {
+      "key": "jll-req510700",
+      "post_id": "REQ510700",
+      "post_url": "https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Bengaluru-KA/Software-Engineer-I_REQ510700",
+      "posted_at": "2026-10-22",
+      "company": "JLL",
+      "role": "Software Engineer I",
+      "location": "Bengaluru, KA (on-site)",
+      "qualification": "B.Tech CSE or related; bootcamp/self-taught with portfolio also considered",
+      "experience": "0-2 years / recent graduate",
+      "skills": [
+        "React",
+        "TypeScript",
+        "C# or Java",
+        "SQL",
+        "Git",
+        "HTML/CSS/JavaScript",
+        "OOP",
+        "Testing",
+        "REST APIs",
+        "LLM APIs"
+      ],
+      "package": null,
+      "graduation_year": null,
+      "dm_keyword": null,
+      "apply_hint": "Apply on JLL's own careers site (Workday) - link verified live 25 Oct 2026",
+      "deadline": null,
+      "deadline_note": "No closing date published - may close without notice",
+      "notes": "Martech Intelligence Pod; REQ510700; full-time, 40 hrs/week",
+      "status": "live",
+      "first_seen_at": "2026-10-25T10:41:00Z",
+      "duplicate_of": null,
+      "source": "official"
+    },
     {
       "key": "ig-18039552515892720",
       "post_id": "18039552515892720",

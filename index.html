@@ -2390,7 +2390,12 @@ document.addEventListener('jobhunt:qualification', (e) => {
    the Supabase jobs table on purpose: these are Instagram postings, not
    official notifications.
 
-   Per-job pipeline, in Krupal's order:
+   Per-job pipeline, in Krupal's order (set 2026-10-25 — notification first,
+   referral only after a 90 resume):
+     0. NOTIFY   push alert fires ONLY after the posting is verified live on
+                 the company's own careers portal (scripts/pull-shrestha.js
+                 --mark-verified calls /api/push-send). Enable alerts at
+                 /alerts.html; without a subscription nothing can reach him.
      1. LEARN    what to learn for the job (data/learn/<key>.md), simplest-first,
                  written for someone starting from absolute zero
      2. DRAFT    tailored resume + ATS badge (data/resume-drafts/<key>.md).
@@ -2399,10 +2404,21 @@ document.addEventListener('jobhunt:qualification', (e) => {
                  (his words): B.Tech CSE 2025 fresher who builds and ships
                  working systems with AI assistance — he owns integration,
                  deployment, debugging and operations — and is now learning
-                 programming fundamentals. Never invent.
-     3. APPROVE  hard gate — nothing is ever submitted by the app
-     4. APPLIED  he applies from the original post link himself, then marks it
-     5. STUDY    session auto-created after approval (data/study-sessions/<key>.md)
+                 programming fundamentals. Never invent. ATS TARGET IS 90:
+                 below 90 the draft is "needs work" and step 3 stays locked.
+     3. REFERRAL locked until ATS >= 90 (data/job-content.json
+                 <key>.referrals). GNIT alumni at the company first, verified
+                 from real sources only — no invented names or profile URLs.
+                 Draft connection note (<300 chars) + follow-up DM are
+                 prepared here; NOTHING is ever sent by the app, and nothing
+                 is sent anywhere without his approval of the exact names +
+                 exact text. Referral sends stay frozen until he lifts the
+                 stop order. His own portal application does NOT wait for
+                 the referral — no closing date means apply today, referral
+                 can follow.
+     4. APPROVE  hard gate — nothing is ever submitted by the app
+     5. APPLIED  he applies from the original post link himself, then marks it
+     6. STUDY    session auto-created after approval (data/study-sessions/<key>.md)
 
    Drafting, learn guides and study sessions are written by Muse and committed
    as markdown; data/job-content.json records which jobs have which. The
@@ -2546,6 +2562,10 @@ const SH_STEP_LABELS = {
   new: 'New', waiting: 'Draft ready — waiting approval', approved: 'Approved',
   rejected: 'Rejected', applied: 'Applied', interviewing: 'Interviewing', offer: 'Offer',
 };
+/* ATS gate (set 2026-10-25): a tailored draft must score 90 before the
+   referral step unlocks. Below 90 the draft is "needs work" — the score is
+   never inflated to pass the gate. */
+const SH_ATS_TARGET = 90;
 
 function shChips(j) {
   const st = shStatusOf(j);
@@ -2608,10 +2628,13 @@ function shFactsHtml(j) {
     ${shApply(j)
       ? row('How to apply', 'On the company\'s own site: ' + shApply(j).label)
       : row('How to apply', 'No public link found on the company\'s site — the post sends it by DM')}
+    ${(() => { const n = (shContent[j.key] || {}).notified;
+      return n ? row('Notified', 'Yes — ' + (n.channel || 'push') + ', ' + shDate(n.at))
+        : row('Notified', 'Not yet — enable alerts at /alerts.html so the next verified opening reaches your phone'); })()}
     ${dupeRow}
     <div class="sh-actions">
       ${shApply(j) ? `<a class="btn-approve" href="${escapeHtml(shApply(j).url)}" target="_blank" rel="noopener">Apply on ${escapeHtml(j.company || 'the company site')} →</a>` : ''}
-      <a class="btn-stage" href="${escapeHtml(j.post_url)}" target="_blank" rel="noopener">Instagram post</a>
+      <a class="btn-stage" href="${escapeHtml(j.post_url)}" target="_blank" rel="noopener">${/instagram\.com/.test(j.post_url || '') ? 'Instagram post' : 'Official posting'}</a>
     </div>`;
 }
 
@@ -2631,9 +2654,9 @@ async function shDraftHtml(j) {
     <p class="sh-gate-note">No tailored draft for this job yet. Drafts are
     written from the job description — never with invented experience — and
     appear here with an ATS score.</p>`;
-  const badge = c.draft.ats_score >= 80
+  const badge = c.draft.ats_score >= SH_ATS_TARGET
     ? `<span class="ats-badge">ATS ~${c.draft.ats_score}</span>`
-    : `<span class="ats-badge low">ATS ~${c.draft.ats_score} — below the 80 target, needs work</span>`;
+    : `<span class="ats-badge low">ATS ~${c.draft.ats_score} — below the ${SH_ATS_TARGET} target, needs work — referral stays locked</span>`;
   const md = await shFetchText('/' + c.draft.file);
   return `<h4><span class="sh-stepnum">2</span> Resume draft</h4>
     <p>${badge}</p>
@@ -2641,21 +2664,47 @@ async function shDraftHtml(j) {
     (md ? shMd(md) : '<p class="sh-gate-note">Could not load the draft.</p>');
 }
 
+/* Step 3 — Referral, ask correctly. Locked until the tailored resume scores
+   SH_ATS_TARGET. Nothing here ever sends anything: the plan (route + draft
+   connection note + follow-up DM) is prepared for his approval of the exact
+   names + exact text, and referral sends stay frozen until he lifts the
+   stop order. People already asked live in c.referrals.asked. */
 function shReferralsHtml(j) {
   const c = shContent[j.key] || {};
-  const asked = (c.referrals && Array.isArray(c.referrals.asked)) ? c.referrals.asked : [];
-  let inner = `<h4>Referral asked list</h4>`;
-  if (!asked.length) {
-    inner += `<p class="sh-gate-note">No one asked yet for this role.
-      Referral sends need your approval of the exact recipients + text first,
-      and sends are paused under your stop order until you lift it — nothing
-      here is sent by the app.</p>`;
+  const r = c.referrals || {};
+  const asked = Array.isArray(r.asked) ? r.asked : [];
+  let inner = `<h4><span class="sh-stepnum">3</span> Referral — ask correctly</h4>`;
+  if (!c.draft) {
+    return inner + `<p class="sh-gate-note">No resume draft yet — a referral
+      ask waits for the draft, and for it to score ${SH_ATS_TARGET}.</p>`;
+  }
+  const score = c.draft.ats_score;
+  if (score == null || score < SH_ATS_TARGET) {
+    inner += `<p><span class="ats-badge low">Locked — ATS ~${score == null ? '?' : score} is below the ${SH_ATS_TARGET} target</span></p>
+      <p class="sh-gate-note">Asking someone to stake their name on a
+      sub-${SH_ATS_TARGET} resume is the wrong order. Fix the draft first —
+      the draft names the one lift that gets it to ${SH_ATS_TARGET}. His own
+      portal application does not wait for this: no closing date means apply
+      today, referral can follow.</p>`;
   } else {
+    inner += `<p><span class="ats-badge">Unlocked — ATS ~${score}</span></p>`;
+  }
+  if (asked.length) {
     inner += '<ul>' + asked.map(a =>
       `<li><strong>${escapeHtml(a.name || 'Contact')}</strong>` +
       (a.status ? ` — ${escapeHtml(a.status)}` : '') +
       (a.at ? ` (${escapeHtml(a.at)})` : '') + '</li>').join('') + '</ul>';
+  } else if (!r.route && !r.note) {
+    inner += `<p class="sh-gate-note">No one asked yet for this role.
+      Referral sends need your approval of the exact recipients + text first,
+      and sends are paused under your stop order until you lift it — nothing
+      here is sent by the app.</p>`;
   }
+  if (r.note) inner += `<p class="sh-gate-note">${escapeHtml(r.note)}</p>`;
+  if (r.route) inner += `<p class="sh-gate-note">Correct route: ${escapeHtml(r.route)}</p>`;
+  if (r.connection_note) inner += `<p class="sh-gate-note">Connection note (under 300 chars, draft only — nothing sent):<br>“${escapeHtml(r.connection_note)}”</p>`;
+  if (r.follow_up_dm) inner += `<p class="sh-gate-note">Follow-up DM after they accept (draft only — nothing sent):<br>“${escapeHtml(r.follow_up_dm)}”</p>`;
+  if (r.send_state) inner += `<p class="sh-gate-note">${escapeHtml(r.send_state)}</p>`;
   return inner;
 }
 
@@ -2678,7 +2727,7 @@ function shApplyTapHtml(j) {
 function shGateHtml(j) {
   const st = shStatusOf(j);
   const c = shContent[j.key] || {};
-  let inner = `<h4><span class="sh-stepnum">3</span> Your approval</h4>`;
+  let inner = `<h4><span class="sh-stepnum">4</span> Your approval</h4>`;
   if (!c.draft) {
     inner += `<p class="sh-gate-note">There is no draft to approve yet. Nothing
       can be approved — or applied for from here — before you have seen the
@@ -2724,7 +2773,7 @@ function shGateHtml(j) {
 async function shStudyHtml(j) {
   const st = shStatusOf(j);
   const c = shContent[j.key] || {};
-  let inner = `<h4><span class="sh-stepnum">4</span> Study session</h4>`;
+  let inner = `<h4><span class="sh-stepnum">5</span> Study session</h4>`;
   if (!['approved', 'applied', 'interviewing', 'offer'].includes(st)) {
     inner += `<p class="sh-gate-note">The study session (interview questions,
       checklist, daily plan) is created after you approve the job.</p>`;
@@ -2897,7 +2946,7 @@ async function loadShrestha() {
       shJobs = Array.isArray(d.jobs) ? d.jobs : [];
       const upd = d.updated_at ? shDate(d.updated_at) : '';
       const sub = document.getElementById('shresthaSub');
-      if (sub) sub.textContent = `Each one opens the company's own apply page. Found in @careerwithshrestha posts${upd ? ', updated ' + upd : ''}.`;
+      if (sub) sub.textContent = `Each one opens the company's own apply page. Found in @careerwithshrestha posts and verified direct finds${upd ? ', updated ' + upd : ''}.`;
     }
     if (contentR.ok) shContent = await contentR.json();
   } catch (e) {

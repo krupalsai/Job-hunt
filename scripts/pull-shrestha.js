@@ -22,6 +22,7 @@
 'use strict';
 const { execFileSync } = require('child_process');
 const fs = require('fs');
+const https = require('https');
 const path = require('path');
 
 const REPO = 'krupalsai/Job-hunt';
@@ -397,6 +398,59 @@ function gh(args) {
   return execFileSync('github', args, { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
 }
 
+/* ── Push notification (2026-10-25) ───────────────────────────────────────
+   Fires ONLY after a posting is verified live on the company's own site
+   (--mark-verified below). Never for unverified items, never for a raw daily
+   pull. POSTs {title, body, url} to the deployed /api/push-send with the
+   bearer secret from PUSH_NOTIFY_SECRET or the .push-secret file next to
+   this script. A notify failure never fails the verification — it only warns.
+   The secret is never logged. */
+const PUSH_SEND_URL = 'https://krupal-job-tracker.vercel.app/api/push-send';
+function pushSecret() {
+  if (process.env.PUSH_NOTIFY_SECRET) return process.env.PUSH_NOTIFY_SECRET.trim();
+  for (const p of [path.join(__dirname, '.push-secret'),
+    path.join(process.env.HOME || '', 'workspace', 'jobhunt', '.push-secret')]) {
+    try { const s = fs.readFileSync(p, 'utf8').trim(); if (s) return s; } catch (e) { /* try next */ }
+  }
+  return '';
+}
+function notifyVerified({ label, fresher }) {
+  return new Promise(resolve => {
+    const secret = pushSecret();
+    if (!secret) {
+      console.log('notify: no PUSH_NOTIFY_SECRET found — skipping push alert (verification itself is done).');
+      return resolve({ skipped: true });
+    }
+    const body = JSON.stringify({
+      title: `New verified job: ${label}`,
+      body: `${fresher ? fresher + ' — ' : ''}Apply link live on the company's own site. No closing date published — may close without notice.`.slice(0, 300),
+      url: '/#pvt',
+    });
+    const req = https.request(PUSH_SEND_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${secret}`,
+        'Content-Length': Buffer.byteLength(body),
+      },
+    }, res => {
+      let out = '';
+      res.on('data', c => { out += c; });
+      res.on('end', () => {
+        console.log('notify: push-send replied ' + res.statusCode + ' ' + out.slice(0, 200));
+        resolve({ status: res.statusCode, body: out });
+      });
+    });
+    req.on('error', e => {
+      console.log('notify: push-send failed (verification itself is done): ' + (e.message || e));
+      resolve({ error: String(e.message || e) });
+    });
+    req.setTimeout(15000, () => req.destroy(new Error('timeout')));
+    req.write(body);
+    req.end();
+  });
+}
+
 /* Read the current committed file through the github CLI (works behind the
    egress proxy; plain https from node does not). Returns {text, sha} or null
    when the file does not exist yet. */
@@ -442,6 +496,47 @@ function pushFile(content, message) {
 /* ── Main ───────────────────────────────────────────────────────────────── */
 
 async function main() {
+  // Verification marking (2026-10-14): after the worker verifies a posting live
+  // on the company's official careers portal, it runs
+  //   node pull-shrestha.js --mark-verified <job-key> --official-url <url>
+  //     --label "<Company — Role>" [--kind posting|search|portal] [--fresher "<evidence>"]
+  // which adds the company's own apply link to data/apply-links.json and
+  // pushes. That file is the app's gate: only openings with a live link there
+  // appear in the main job list (see shApply/shLinkRec in index.html).
+  // (2026-10-25) It also fires the push notification via /api/push-send —
+  // the notify step happens HERE, at verification, never on a raw daily pull.
+  if (FLAG('--mark-verified')) {
+    const key = arg('--mark-verified', '');
+    const officialUrl = arg('--official-url', '');
+    const label = arg('--label', '');
+    const kind = arg('--kind', 'posting');
+    const fresher = arg('--fresher', '');
+    if (!key || !officialUrl || !label) die('usage: --mark-verified <job-key> --official-url <url> --label "<Company — Role>" [--kind posting|search|portal] [--fresher "<evidence>"]', 2);
+    if (!['posting', 'search', 'portal'].includes(kind)) die('kind must be posting, search or portal', 2);
+    if (!hasCmd('github')) die('github CLI not found; cannot read the committed files.', 4);
+    const LINKS_PATH = 'data/apply-links.json';
+    const cur = ghReadFile(LINKS_PATH, 'main');
+    if (!cur) die('no committed ' + LINKS_PATH + ' found.', 4);
+    let data;
+    try { data = JSON.parse(cur.text); }
+    catch (e) { die('committed ' + LINKS_PATH + ' is not valid JSON; refusing to overwrite it.', 6); }
+    data.links = data.links || {};
+    const rec = { url: officialUrl, label, kind };
+    if (fresher) rec.fresher = fresher;
+    data.links[key] = rec;
+    data.checked = new Date().toISOString().slice(0, 10);
+    const out = JSON.stringify(data, null, 2) + '\n';
+    const argsJson = { owner: REPO.split('/')[0], repo: REPO.split('/')[1], path: LINKS_PATH,
+      content: out, message: `jobs: verified apply link — ${label}`, branch: 'main' };
+    if (cur.sha) argsJson.sha = cur.sha;
+    const res = gh(['call-tool', '--name', 'create_or_update_file', '--arguments-json', JSON.stringify(argsJson)]);
+    console.log('verified link added: ' + key + ' -> ' + officialUrl);
+    console.log('pushed to main:', String(res).slice(0, 200));
+    // Notification step: the opening is verified NOW, so the push alert
+    // fires now — never for an unverified item, never on a raw daily pull.
+    await notifyVerified({ label, fresher });
+    return;
+  }
   const limit = parseInt(arg('--limit', '25'), 10) || 25;
   let posts;
   const postsFile = arg('--posts', null);

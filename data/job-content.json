@@ -31,7 +31,35 @@
     "learn": null,
     "session": null,
     "referrals": {
-      "asked": []
+      "asked": [],
+      "status": "locked — ATS 75 below the 90 target",
+      "ats_gate": 90
+    }
+  },
+  "jll-req510700": {
+    "draft": {
+      "at": "2026-10-25",
+      "ats_score": 82,
+      "file": "data/resume-drafts/jll-software-engineer-i-req510700.md",
+      "status": "draft"
+    },
+    "learn": null,
+    "session": null,
+    "notified": {
+      "at": "2026-10-25",
+      "channel": "push",
+      "note": "Verified live on JLL's own site 25 Oct 2026; push alert fires via /api/push-send when the verified link lands (see --mark-verified)."
+    },
+    "referrals": {
+      "asked": [],
+      "status": "locked — ATS 82 below the 90 target",
+      "ats_gate": 90,
+      "verified_targets": [],
+      "note": "No GNIT Hyderabad alumnus at JLL verified from public sources (web + LinkedIn search, 25 Oct 2026). No names or profile URLs invented.",
+      "route": "LinkedIn alumni search: Guru Nanak Institute of Technology → current company JLL (Bengaluru); Martech / JLL Technologies engineers first. If no alumnus appears, any JLL Bengaluru software engineer — guidance first, referral second.",
+      "connection_note": "Hi, I'm Sai Krupal — GNIT Hyderabad, CSE 2025. I applied for JLL's Software Engineer I (REQ510700, Bengaluru) and run a live student platform in React/TypeScript. Would value your guidance on the role. — Krupal",
+      "follow_up_dm": "Hi <Name>, thank you for connecting. I'm Sai Krupal, a 2025 CSE graduate from GNIT Hyderabad. I've applied for Software Engineer I (REQ510700) on JLL's Martech Intelligence Pod in Bengaluru — I run a live student platform (React/TypeScript frontend, Node APIs, PostgreSQL) used by 150+ students, and I experiment daily with LLM APIs and AI agents. C#/Java is my gap and I'm building a small hands-on project in it now. If you're open to it, could I ask for your referral? Happy to share my tailored resume. Thank you! — Krupal",
+      "send_state": "Draft only — nothing sent. Needs Krupal's approval of exact names + text first; referral sends stay frozen until he lifts the stop order."
     }
   }
 }

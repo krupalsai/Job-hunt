@@ -4,7 +4,8 @@
   "private": true,
   "description": "Government and private job tracker with automated ingestion from official sources, exam preparation (TS SI 47-day plan, SSC CGL), and a path to top-paying fresher roles",
   "scripts": {
-    "test": "node scripts/validate-prep.js && node scripts/validate-generated.js && node scripts/validate-si-plan.js && node scripts/e2e-si.js && node scripts/e2e-home.js && node scripts/e2e-prep.js && node scripts/e2e-integration.js && node scripts/e2e-nav.js && node scripts/e2e-dedupe.js",
+    "test": "node scripts/e2e-pipeline.js && node scripts/validate-prep.js && node scripts/validate-generated.js && node scripts/validate-si-plan.js && node scripts/e2e-si.js && node scripts/e2e-home.js && node scripts/e2e-prep.js && node scripts/e2e-integration.js && node scripts/e2e-nav.js && node scripts/e2e-dedupe.js",
+    "test:pipeline": "node scripts/e2e-pipeline.js",
     "test:bank": "node scripts/validate-prep.js",
     "test:generated": "node scripts/validate-generated.js",
     "test:prep": "node scripts/e2e-prep.js",
