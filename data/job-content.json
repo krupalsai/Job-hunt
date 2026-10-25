@@ -48,7 +48,8 @@
     "notified": {
       "at": "2026-10-25",
       "channel": "push",
-      "note": "Verified live on JLL's own site 25 Oct 2026; push alert fires via /api/push-send when the verified link lands (see --mark-verified)."
+      "note": "Verified live on JLL's own site 25 Oct 2026. Push alert ATTEMPTED 25 Oct 2026 ~16:35 IST — /api/push-send returned 500 'Could not read subscriptions': Vercel's stored Supabase credentials are stale (env vars present since Aug 2026, never re-checked). NO phone notification went out. Fix: in the Supabase dashboard copy the current Project URL + service_role key into Vercel krupal-job-tracker env vars, then redeploy — then re-run --mark-verified to re-fire the alert.",
+      "delivered": false
     },
     "referrals": {
       "asked": [],
