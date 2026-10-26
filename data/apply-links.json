@@ -1,6 +1,6 @@
 {
   "_about": "Direct application links for the @careerwithshrestha posts, found on each company's own site so the app does not send you to Instagram to comment for a DM. Keyed by the job key in shrestha-jobs.json. Only links checked on the company's site (or its official job board) are listed; a job missing here has no verified public link. 'kind': posting = the exact job; search = the company's job search for that role/ID; portal = the company's official fresher-hiring portal. 'fresher': set only when the company's own page shows the opening is for freshers (the evidence, in words) — it counts even when the Instagram caption did not say so. 'closed': the posting has come down on the company's site — the opening is then shown as closed, with no apply button.",
-  "checked": "2026-10-25",
+  "checked": "2026-10-26",
   "links": {
     "ig-18117027149081665": {
       "url": "https://jobs.lever.co/hevodata/993a3ed3-3014-432f-b0f4-28d300d58d9a",
@@ -81,6 +81,12 @@
       "label": "JLL — Software Engineer I",
       "kind": "posting",
       "fresher": "0-2 years / recent graduate — official JLL posting REQ510700"
+    },
+    "ig-18144093880608640": {
+      "url": "https://careers.qualcomm.com/careers?query=Engineer+-+Modem&start=0&location=Hyderabad%2C+India&pid=446721275984&sort_by=relevance&filter_distance=80&filter_include_remote=0&filter_include_relocation=0",
+      "label": "Qualcomm — Engineer- Modem Development",
+      "kind": "posting",
+      "fresher": "Minimum qualifications: Bachelor's degree in Engineering, Information Systems, Computer Science, or related field; no minimum years of experience stated on Qualcomm's posting (Job ID 3096962)"
     }
   }
 }
