@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-25",
+  updated: "2026-10-26",
 
   items: [
     /* {
@@ -48,6 +48,30 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-25",
+      topic: "Schemes",
+      headline: "Telangana targets Rs. 15,000 crore tourism investment and 3 lakh jobs under Tourism Policy 2025–2030",
+      why: "The numbers are the askable set. Deputy CM Bhatti Vikramarka, chief guest at the K-Harmony Festa – Korea Culture Day 2026 at Shilpakala Vedika, Hyderabad, on 25 October, said the Tourism Policy 2025–2030 aims to attract Rs. 15,000 crore investment and create 3 lakh additional jobs over five years, with an action plan to develop 27 tourist destinations. He pitched Korean investment in electronics, semiconductors, electric vehicles, advanced manufacturing, life sciences and renewable energy, building on CM Revanth Reddy's August 2024 South Korea visit.",
+      source: "The News Trust",
+      url: "https://www.thenewstrust.in/telangana-targets-rs-15000-crore-tourism-investments-three-lakh-jobs/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "Defence",
+      headline: "IAF marks 94th anniversary with 'Wings over Ganges' air display at Namo Ghat, Varanasi",
+      why: "Theme + venue + aircraft is the askable triple. PM Narendra Modi was chief guest at the Air Force Day Aerial Display-2026, themed 'Wings over Ganges', at Namo Ghat, Varanasi, on 25 October, featuring Tejas, LCH Prachand, Su-30MKI and Rafale plus Surya Kiran and Sarang display teams, with Navy and Army aircraft joining to show jointness.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "Economy",
+      headline: "PM inaugurates RBI Data Centre and Cybersecurity Training Institute in Bhubaneswar",
+      why: "Banking-infrastructure facts get asked as place + standard. Inaugurated in Bhubaneswar on 25 October: the RBI Data Centre and Cybersecurity Training Institute, certified to Uptime Institute Tier IV and among the largest Tier IV facilities in the BFSI sector worldwide; four data centres will host mission-critical payment and settlement systems, and the training institute will focus on quantum computing and AI.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
     {
       date: "2026-10-24",
       topic: "Appointments",
@@ -73,6 +97,62 @@ const CURRENT_AFFAIRS = {
       url: "https://www.freejobalert.com/articles/daily-current-affairs-23-october-2026-10473",
     },
     {
+      date: "2026-10-24",
+      topic: "Defence",
+      headline: "Indigenous AIP system for Navy submarines reaches 'Setting to Work Phase-2'",
+      why: "Defence-indigenisation facts are asked as system + maker + place. On 24 October the 'Setting to Work (STW) Phase-2' of the indigenously developed Air Independent Propulsion (AIP) Energy Module was inaugurated at L&T's AM Naik Heavy Engineering Complex, Hazira, Gujarat; developed by DRDO's Naval Materials Research Laboratory (NMRL), AIP lets diesel-electric submarines stay submerged longer, and the module will go to Mazagon Dock Shipbuilders for integration on a Kalvari-class submarine in early 2027.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-24",
+      topic: "Environment",
+      headline: "AATAL, world's first-of-its-kind air-pollution analysis lab, opens for Delhi-NCR",
+      why: "First-of-its-kind + acronym + mission is the askable set. Union Minister Jitendra Singh inaugurated the Integrated Atmospheric Chemistry and Aerosol Toxicity Analysis Laboratory (AATAL) at the Delhi branch of the Indian Institute of Tropical Meteorology (IITM) on 24 October, set up under Mission Mausam; it identifies pollution sources in real time, and its AIRWISE link gives forecasts at 400-metre resolution for the next 72 hours for the Commission for Air Quality Management (CAQM).",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-24",
+      topic: "Sports",
+      headline: "India beat New Zealand by 4 wickets in 2nd T20I at Christchurch, lead series 2–0",
+      why: "Scoreline cricket facts are direct asks. India beat New Zealand by four wickets with one ball to spare in the second T20I at Hagley Oval, Christchurch, on 24 October 2026 (NZ 180/5, India 181/6 in 19.5 overs), taking a 2–0 lead in the five-match series; Tilak Varma hit 51* off 26 balls, and Mitchell Santner took 4–21 for New Zealand.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-24",
+      topic: "Economy",
+      headline: "NICDC launches Bihar Integrated Manufacturing City Gaya; Rs. 4,200 crore MoUs signed",
+      why: "Industrial-corridor launches are asked as project + investment + jobs. The National Industrial Corridor Development Corporation (NICDC) formally launched Bihar Integrated Manufacturing City Gaya Limited on 24 October at Bodh Gaya, with 12 MoUs for about 300 acres — about Rs. 4,200 crore investment and 16,095 jobs — in food processing, auto components and pharmaceuticals.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-24",
+      topic: "Economy",
+      headline: "Satna–Devendranagar and Rewa–Churhat rail lines open in Madhya Pradesh",
+      why: "New rail lines are asked as route + length + what they connect. Railway Minister Ashwini Vaishnaw and MP CM Mohan Yadav opened the Satna–Devendranagar (about 53 km, Rs. 873 crore) and Rewa–Churhat (about 65 km, Rs. 1,070 crore) sections on 24 October, both part of the 541-km Lalitpur–Singrauli project; the Rewa–Churhat line brings Sidhi district onto the national rail network.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-24",
+      topic: "Environment",
+      headline: "National Biodiversity Authority shares Rs. 1.04 crore ABS benefits with states",
+      why: "Benefit-sharing facts are asked as amount + recipients + top state. The National Biodiversity Authority disbursed about Rs. 1.04 crore of Access and Benefit-Sharing (ABS) money from agricultural bioresources to 27 State Biodiversity Boards and two UT Biodiversity Councils, the Environment Ministry said on 24 October; the top recipient was Uttar Pradesh (Rs. 10.36 lakh), followed by Maharashtra and Madhya Pradesh.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-25-october-2026/",
+    },
+    {
+      date: "2026-10-24",
+      topic: "Economy",
+      headline: "11 crore farmers now hold a digital Farmer ID, five months before the deadline",
+      why: "Digital-agriculture milestones are asked as number + deadline. The Agriculture Ministry said on 24 October that 11 crore farmers now hold a digital Farmer ID, five months before the March 2027 deadline — a core agri-stack fact for the GS paper.",
+      source: "Blitz India",
+      url: "https://blitzindiamedia.com/news/india-weekly-news-diary-19-25-oct-2026-fta-economy-sports-blitz-india-media/",
+    },
+    {
       date: "2026-10-23",
       topic: "Sports",
       headline: "Asian Para Games 2026: India finish fourth with a record 114 medals (30 gold, 35 silver, 49 bronze)",
@@ -87,6 +167,14 @@ const CURRENT_AFFAIRS = {
       why: "Doctrine + date + what it replaces is the triple. Released on 23 October 2026, the closing day of the Army Commanders' Conference (21–23 October, New Delhi), it replaces the December 2018 doctrine and is aligned with Defence Forces Vision 2047. It draws lessons from recent conflicts including Operation Sindoor and pushes AI, autonomous systems, data analytics, cybersecurity and secure communications. Present: CDS General N. S. Raja Subramani and Army Chief General Dhiraj Seth.",
       source: "QuestionPaper4Exam",
       url: "https://questionpaper4exam.com/daily-current-affairs-24-october-2026/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Sports",
+      headline: "Bodhana Sivanandan, 11, becomes youngest female International Master in chess history",
+      why: "Record facts are asked as name + age + whose record fell. British prodigy Bodhana Sivanandan completed the requirements for the open International Master title on 23 October at the European Club Cup in Budva, Montenegro, aged 11 years, 7 months and 16 days — breaking Judit Polgar's 38-year-old record (Polgar qualified at 12 in 1988); she scored 5.5/7 on board one for She Plays To Win Lionesses A and is the seventh-youngest IM of all time.",
+      source: "ChessBase India",
+      url: "https://chessbase.in/news-bites/11-year-old-bodhana-sivanandan-becomes-youngest-female-im-in-history-of-chess",
     },
     {
       date: "2026-10-23",
