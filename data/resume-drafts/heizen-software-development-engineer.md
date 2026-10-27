@@ -58,10 +58,6 @@ linkedin.com/in/krupal-sai · github.com/krupalsai
 **B.Tech, Computer Science and Engineering | 2025**
 Guru Nanak Institute of Technology (GNIT), Hyderabad, Telangana
 
-## Learning in Progress
-
-Python programming — writing code by hand, daily practice from zero (fixed order: syntax → OOP → data structures & algorithms); Java/Go — not in my learning path yet; AWS/GCP — working knowledge from Oracle Cloud VM + Vercel operations, formal AWS learning in progress; SQL and REST APIs — working level from production, revision for interviews.
-
 ---
 ## Internal notes (not part of the resume)
 
