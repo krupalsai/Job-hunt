@@ -23,10 +23,10 @@ software / AI / ML / data roles; India locations.
 | 3 | Microsoft | https://careers.microsoft.com/us/en/search-results | Careers search, India, software engineer, entry-level |
 | 4 | Meta | https://www.metacareers.com/jobs | Careers search, India, software engineer, university grad |
 | 5 | NVIDIA | https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite | Workday search, India, entry-level software |
-| 6 | Adobe | https://adobe.wd5.myworkdayjobs.com/en-US/ExternalCareerSite | Workday search, India, university / new grad |
+| 6 | Adobe | https://adobe.wd5.myworkdayjobs.com/en-US/ExternalCareerSite | Workday search, India, university / new grad. NOTE 27 Oct: text fetch returned HTTP 404 — re-check this URL in a live browser before trusting it. |
 | 7 | Oracle | https://www.oracle.com/careers/ | Careers search, India, entry-level software |
 | 8 | Salesforce | https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site | Workday search, India, early career |
-| 9 | ServiceNow | https://servicenow.wd5.myworkdayjobs.com/en-US/NowCareers | Workday search, India, early career / entry-level |
+| 9 | ServiceNow | https://servicenow.wd5.myworkdayjobs.com/en-US/NowCareers | Workday search, India, early career / entry-level. NOTE 27 Oct: text fetch returned HTTP 500 (3 attempts) — portal may need a live-browser check. |
 | 10 | Cisco | https://jobs.cisco.com/jobs/SearchJobs | Careers search, India, Software Engineer, 0–2 yrs |
 | 11 | Intel | https://intel.wd1.myworkdayjobs.com/External | Workday search, India, college graduate |
 | 12 | Qualcomm | https://careers.qualcomm.com/careers | Careers search, India, 0–2 yrs engineering |

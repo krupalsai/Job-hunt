@@ -1,1 +1,202 @@
-{"note": "Every requisition the direct watch has already seen. A role is NEW only if its requisition/job ID is not in this list. Statuses: open | applied | closed | not-fit | not-fulltime.", "seen": [{"company": "Amazon", "requisition": "10453457", "role": "Software Dev Engineer I (University Talent)", "status": "applied", "verifiedOn": "2026-10-22"}, {"company": "Amazon", "requisition": "10555143", "role": "Software Dev Engineer I", "status": "not-fit", "verifiedOn": "2026-10-24"}, {"company": "Amazon", "requisition": "10432823", "role": "Software Dev Engineer I", "status": "not-fit", "verifiedOn": "2026-10-24"}, {"company": "Amazon", "requisition": "10580011", "role": "Software Dev Engineer I", "status": "not-fit", "verifiedOn": "2026-10-24"}, {"company": "Amazon", "requisition": "10580010", "role": "Software Dev Engineer I", "status": "not-fit", "verifiedOn": "2026-10-24"}, {"company": "Google", "requisition": "105109659337007814", "role": "Cloud AI Engineer", "status": "open", "verifiedOn": "2026-10-26"}, {"company": "Microsoft", "requisition": "200050103", "role": "Software Engineer", "status": "closed", "verifiedOn": "2026-10-25"}, {"company": "Oracle", "requisition": "342318", "role": "Support Engineer 1", "status": "open", "verifiedOn": "2026-10-24"}, {"company": "Cisco", "requisition": "2028048", "role": "Software Engineer", "status": "open", "verifiedOn": "2026-10-23"}, {"company": "Cisco", "requisition": "2014481", "role": "Software Engineer Apprentice", "status": "not-fulltime", "verifiedOn": "2026-10-23"}, {"company": "Intel", "requisition": "JR0288211", "role": "AI System Performance Engineer", "status": "open", "verifiedOn": "2026-10-24"}, {"company": "Qualcomm", "requisition": "3096962", "role": "Engineer, Modem Development", "status": "open", "verifiedOn": "2026-10-27"}, {"company": "Qualcomm", "requisition": "3089099", "role": "Engineer, Camera Systems (3A)", "status": "open", "verifiedOn": "2026-10-23"}, {"company": "Akamai", "requisition": "4073", "role": "Software Engineer, Network Operations Systems", "status": "open", "verifiedOn": "2026-10-24"}, {"company": "Mastercard", "requisition": "R-294544", "role": "Software Engineer I, Java Full Stack", "status": "open", "verifiedOn": "2026-10-23"}, {"company": "Visa", "requisition": "REF087844W", "role": "SW Engineer, Bengaluru", "status": "closed", "verifiedOn": "2026-10-27"}, {"company": "HPE", "requisition": "1210218", "role": "Graduate Software Engineer", "status": "closed", "verifiedOn": "2026-10-27"}, {"company": "Razorpay", "requisition": "4744129005", "role": "Data Analyst, Business Finance", "status": "open", "verifiedOn": "2026-10-26"}, {"company": "Juspay", "requisition": "DEV-BE01", "role": "Backend Engineer", "status": "open", "verifiedOn": "2026-10-24"}, {"company": "AMETEK", "requisition": "1441296700", "role": "AI Engineer/Developer", "status": "open", "verifiedOn": "2026-10-27"}, {"company": "JLL", "requisition": "REQ510700", "role": "Software Engineer I", "status": "open", "verifiedOn": "2026-10-25"}, {"company": "Heizen", "requisition": "associate-software-engineer", "role": "Associate Software Engineer", "status": "open", "verifiedOn": "2026-10-24"}, {"company": "Auric AI", "requisition": "JQEHMTC6T", "role": "Junior Software Engineer", "status": "open", "verifiedOn": "2026-10-27"}, {"company": "Heizen", "requisition": "software-engineer-fullstack-app", "role": "Software Engineer (Fullstack + React Native)", "status": "open", "verifiedOn": "2026-10-27"}, {"company": "Heizen", "requisition": "software-engineer", "role": "Software Development Engineer", "status": "open", "verifiedOn": "2026-10-27"}], "updated": "2026-10-27"}
+{
+  "note": "Every requisition the direct watch has already seen. A role is NEW only if its requisition/job ID is not in this list. Statuses: open | applied | closed | not-fit | not-fulltime.",
+  "seen": [
+    {
+      "company": "Amazon",
+      "requisition": "10453457",
+      "role": "Software Dev Engineer I (University Talent)",
+      "status": "applied",
+      "verifiedOn": "2026-10-22"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10555143",
+      "role": "Software Dev Engineer I",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10432823",
+      "role": "Software Dev Engineer I",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10580011",
+      "role": "Software Dev Engineer I",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10580010",
+      "role": "Software Dev Engineer I",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Google",
+      "requisition": "105109659337007814",
+      "role": "Cloud AI Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-26"
+    },
+    {
+      "company": "Microsoft",
+      "requisition": "200050103",
+      "role": "Software Engineer",
+      "status": "closed",
+      "verifiedOn": "2026-10-25"
+    },
+    {
+      "company": "Oracle",
+      "requisition": "342318",
+      "role": "Support Engineer 1",
+      "status": "open",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Cisco",
+      "requisition": "2028048",
+      "role": "Software Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-23"
+    },
+    {
+      "company": "Cisco",
+      "requisition": "2014481",
+      "role": "Software Engineer Apprentice",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-10-23"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288211",
+      "role": "AI System Performance Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3096962",
+      "role": "Engineer, Modem Development",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3089099",
+      "role": "Engineer, Camera Systems (3A)",
+      "status": "open",
+      "verifiedOn": "2026-10-23"
+    },
+    {
+      "company": "Akamai",
+      "requisition": "4073",
+      "role": "Software Engineer, Network Operations Systems",
+      "status": "open",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-294544",
+      "role": "Software Engineer I, Java Full Stack",
+      "status": "open",
+      "verifiedOn": "2026-10-23"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF087844W",
+      "role": "SW Engineer, Bengaluru",
+      "status": "closed",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1210218",
+      "role": "Graduate Software Engineer",
+      "status": "closed",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4744129005",
+      "role": "Data Analyst, Business Finance",
+      "status": "closed",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Juspay",
+      "requisition": "DEV-BE01",
+      "role": "Backend Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1441296700",
+      "role": "AI Engineer/Developer",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ510700",
+      "role": "Software Engineer I",
+      "status": "open",
+      "verifiedOn": "2026-10-25"
+    },
+    {
+      "company": "Heizen",
+      "requisition": "associate-software-engineer",
+      "role": "Associate Software Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-24"
+    },
+    {
+      "company": "Auric AI",
+      "requisition": "JQEHMTC6T",
+      "role": "Junior Software Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Heizen",
+      "requisition": "software-engineer-fullstack-app",
+      "role": "Software Engineer (Fullstack + React Native)",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Heizen",
+      "requisition": "software-engineer",
+      "role": "Software Development Engineer",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4747560005",
+      "role": "Analyst, Financial Operations",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4744950005",
+      "role": "AI Builder",
+      "status": "open",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1210743",
+      "role": "SW Engineer I",
+      "status": "closed",
+      "verifiedOn": "2026-10-27"
+    }
+  ],
+  "updated": "2026-10-27"
+}
