@@ -1,92 +1,98 @@
 {
-  "_about": "Direct application links for the @careerwithshrestha posts, found on each company's own site so the app does not send you to Instagram to comment for a DM. Keyed by the job key in shrestha-jobs.json. Only links checked on the company's site (or its official job board) are listed; a job missing here has no verified public link. 'kind': posting = the exact job; search = the company's job search for that role/ID; portal = the company's official fresher-hiring portal. 'fresher': set only when the company's own page shows the opening is for freshers (the evidence, in words) — it counts even when the Instagram caption did not say so. 'closed': the posting has come down on the company's site — the opening is then shown as closed, with no apply button.",
-  "checked": "2026-10-26",
+  "_about": "Direct application links for the @careerwithshrestha posts, found on each company's own site so the app does not send you to Instagram to comment for a DM. Keyed by the job key in shrestha-jobs.json. Only links checked on the company's site (or its official job board) are listed; a job missing here has no verified public link. 'kind': posting = the exact job; search = the company's job search for that role/ID; portal = the company's official fresher-hiring portal. 'fresher': set only when the company's own page shows the opening is for freshers (the evidence, in words) \u2014 it counts even when the Instagram caption did not say so. 'closed': the posting has come down on the company's site \u2014 the opening is then shown as closed, with no apply button.",
+  "checked": "2026-10-27",
   "links": {
     "ig-18117027149081665": {
       "url": "https://jobs.lever.co/hevodata/993a3ed3-3014-432f-b0f4-28d300d58d9a",
-      "label": "Hevo Data — Associate SDE",
+      "label": "Hevo Data \u2014 Associate SDE",
       "kind": "posting"
     },
     "ig-18443546758130717": {
       "url": "https://www.amazon.jobs/en/jobs/10453457/software-dev-engineer-i-amazon-university-talent-acquisition",
-      "label": "Amazon — SDE I (2025 & 2026 graduates)",
+      "label": "Amazon \u2014 SDE I (2025 & 2026 graduates)",
       "kind": "posting",
       "fresher": "Amazon's posting is for 2025 and 2026 graduates"
     },
     "ig-17910658281466911": {
       "url": "https://careers.wipro.com/job/Graduate-Engineer-Trainee/201955-en_US/",
-      "label": "Wipro — Graduate Engineer Trainee (Job 201955)",
+      "label": "Wipro \u2014 Graduate Engineer Trainee (Job 201955)",
       "kind": "posting"
     },
     "ig-18637664536017963": {
       "url": "https://www.heizen.work/careers/associate-software-engineer",
-      "label": "Heizen — Associate Software Engineer (0–2 years, Hyderabad or remote)",
+      "label": "Heizen \u2014 Associate Software Engineer (0\u20132 years, Hyderabad or remote)",
       "kind": "posting",
-      "fresher": "Heizen's posting asks for 0–2 years' experience, so freshers can apply"
+      "fresher": "Heizen's posting asks for 0\u20132 years' experience, so freshers can apply"
     },
     "ig-17916795342430968": {
       "url": "https://careers.oracle.com/en/sites/jobsearch/job/342318",
-      "label": "Oracle — Support Engineer 1 (Job 342318)",
+      "label": "Oracle \u2014 Support Engineer 1 (Job 342318)",
       "kind": "posting"
     },
     "ig-18064814318765442": {
       "url": "https://jobs.thermofisher.com/global/en/search-results?keywords=R-01363446",
-      "label": "Thermo Fisher — Software Engineer I (R-01363446)",
+      "label": "Thermo Fisher \u2014 Software Engineer I (R-01363446)",
       "kind": "search",
       "closed": "no longer posted on Thermo Fisher's site (R-01363446, checked 13 Oct)"
     },
     "ig-17902741311665253": {
       "url": "https://nextstep.tcs.com/",
-      "label": "TCS NextStep — TCS's fresher hiring portal",
+      "label": "TCS NextStep \u2014 TCS's fresher hiring portal",
       "kind": "portal"
     },
     "ig-18116768981281211": {
       "url": "https://discoverdollar.keka.com/careers/jobdetails/164757",
-      "label": "Discover Dollar — AI Engineer Intern",
+      "label": "Discover Dollar \u2014 AI Engineer Intern",
       "kind": "posting",
-      "fresher": "0-1 yrs, AI Engineering, Bengaluru — apply form open, verified 2026-10-16"
+      "fresher": "0-1 yrs, AI Engineering, Bengaluru \u2014 apply form open, verified 2026-10-16"
     },
     "ig-17915022156470133": {
       "url": "https://discoverdollar.keka.com/careers/jobdetails/164757",
-      "label": "Discover Dollar — AI Engineer Intern",
+      "label": "Discover Dollar \u2014 AI Engineer Intern",
       "kind": "posting",
       "fresher": "Official posting accepts 'currently pursuing or recently completed' B.E./B.Tech/M.Tech/MCA in CS/AI; 0-1 years; Bangalore"
     },
     "ig-17947654707071100": {
       "url": "https://www.accenture.com/in-en/careers/jobdetails?id=ATCI-5637353-S2059863_en&title=Custom+Software+Engineer",
-      "label": "Accenture — Custom Software Engineer",
+      "label": "Accenture \u2014 Custom Software Engineer",
       "kind": "posting",
       "fresher": "Official posting: 'Minimum 0-2 year(s) of experience is required'; 15 years full time education; Bengaluru BDC11-SEZ"
     },
     "ig-17923011612225946": {
       "url": "https://jobs.akamai.com/en/sites/CX_1/jobs/preview/4073/?keyword=Software+Engineer&mode=location",
-      "label": "Akamai — Software Engineer (Job 4073, India Remote)",
+      "label": "Akamai \u2014 Software Engineer (Job 4073, India Remote)",
       "kind": "posting",
-      "fresher": "Akamai's own posting asks for at least 0.6 years' experience — programming in Python, Go and/or shell, and development on Linux/Unix — inside the 0–1 year fresher band; verified live on jobs.akamai.com 17 Oct, re-verified 20 Oct"
+      "fresher": "Akamai's own posting asks for at least 0.6 years' experience \u2014 programming in Python, Go and/or shell, and development on Linux/Unix \u2014 inside the 0\u20131 year fresher band; verified live on jobs.akamai.com 17 Oct, re-verified 20 Oct"
     },
     "ig-18114521360032206": {
       "url": "https://elementsenergies.com/talent/dXx1fXV-ZWU",
-      "label": "Elements Energy — Software Developer",
+      "label": "Elements Energy \u2014 Software Developer",
       "kind": "posting",
       "fresher": "Company's own application form has a Fresher/Experienced checkbox and the posting lists 0-2 years experience, Chennai, full-time"
     },
     "ig-18039552515892720": {
       "url": "https://advancesensing.com/pages/careers/careers/software-engineer.html",
-      "label": "Advance Sensing — Software Engineer",
+      "label": "Advance Sensing \u2014 Software Engineer",
       "kind": "posting",
       "fresher": "Official careers page: Experience 0-2 Years; 'suitable for fresh graduates and early-career software engineers'; Who Should Apply: 'Fresh graduates and candidates with up to two years of experience'"
     },
     "jll-req510700": {
       "url": "https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Bengaluru-KA/Software-Engineer-I_REQ510700",
-      "label": "JLL — Software Engineer I",
+      "label": "JLL \u2014 Software Engineer I",
       "kind": "posting",
-      "fresher": "0-2 years / recent graduate — official JLL posting REQ510700"
+      "fresher": "0-2 years / recent graduate \u2014 official JLL posting REQ510700"
     },
     "ig-18144093880608640": {
       "url": "https://careers.qualcomm.com/careers?query=Engineer+-+Modem&start=0&location=Hyderabad%2C+India&pid=446721275984&sort_by=relevance&filter_distance=80&filter_include_remote=0&filter_include_relocation=0",
-      "label": "Qualcomm — Engineer- Modem Development",
+      "label": "Qualcomm \u2014 Engineer- Modem Development",
       "kind": "posting",
       "fresher": "Minimum qualifications: Bachelor's degree in Engineering, Information Systems, Computer Science, or related field; no minimum years of experience stated on Qualcomm's posting (Job ID 3096962)"
+    },
+    "ig-18022300724935188": {
+      "url": "https://jobs.ametek.com/job/Bangalore-AI-Engineer-Developer-KA-560048/1441296700/",
+      "label": "AMETEK \u2014 AI Engineer/ Developer",
+      "kind": "posting",
+      "fresher": "0 to 2 years of experience, including internships, academic or personal projects in AI/ML"
     }
   }
 }
