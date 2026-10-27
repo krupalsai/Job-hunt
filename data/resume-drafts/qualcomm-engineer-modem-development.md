@@ -3,13 +3,21 @@ job_key: qualcomm-engineer-modem-development
 company: Qualcomm India Private Limited
 role: Engineer- Modem Development
 location: Hyderabad, Telangana
-experience: No minimum experience stated (preferred: 1+ year)
-source: Shrestha daily pull 2026-10-26 — verified live on Qualcomm's official careers portal
-  https://careers.qualcomm.com/careers?query=Engineer+-+Modem&start=0&location=Hyderabad%2C+India&pid=446721275984&sort_by=relevance&filter_distance=80&filter_include_remote=0&filter_include_relocation=0
-  (Job ID 3096962; verified live 2026-10-26 ~09:31 IST; Apply Now opened the application flow; no closing date listed)
+requisition: 3096962
+official_link: https://careers.qualcomm.com/careers?query=Engineer+-+Modem&start=0&location=Hyderabad%2C+India&pid=446721275984&sort_by=relevance&filter_distance=80&filter_include_remote=0&filter_include_relocation=0
+verified_live: 2026-10-27 ~11:35 IST (re-verified: official careers.qualcomm.com search page still lists Engineer- Modem Development, Hyderabad, published 2026-09-28; first verified 2026-10-26 ~09:31 IST, Apply flow opened)
+closing_date: none published — can vanish without notice
+employment: Full-time
+eligibility: Bachelor's degree in Engineering, Information Systems, Computer Science, or related field; no minimum experience stated. B.Tech CSE (2025) clears the minimum outright. Preferred (not minimum): 1+ year with a programming language such as C, C++, Java, Python; 1+ year with database management software; 1+ year with API; 1+ year with Git/Perforce/SCM.
 ats_score: 65
+ats_basis: Honest keyword coverage against the real JD (see internal notes). Strong matches honestly present: B.Tech CSE, API (152 production REST routes), database management / SQL / PostgreSQL (100+ migrations in production), Git/SCM (daily production deployments), debugging / unit testing / regression testing / triage, technical documentation. Partial only: Python (learning from zero, daily hand-written practice — NOT 1+ year experience). Missing and NOT claimed: C/C++/Java, embedded software / wireless / modem domain, 1+ year professional experience, formal team code review. 65 is the honest ceiling; the modem/embedded domain is the real distance.
+experience: No minimum experience stated (preferred: 1+ year)
+source: Shrestha daily pull 2026-10-26 — verified live on Qualcomm's official careers portal (link above; Job ID 3096962; verified live 2026-10-26 ~09:31 IST; Apply Now opened the application flow; no closing date listed)
 drafted_at: 2026-10-26
 status: draft
+referral: FROZEN — referral stop order (2026-10-23) still in force. No messages drafted for sending. Sends wait for Krupal's lift + approval of exact recipients + text.
+phone: 0 hits — no phone number in this draft, per phone rule
+cgpa: 0 hits — CGPA off by default
 ---
 
 # Kusanapelli Sai Krupal
@@ -57,6 +65,8 @@ Python programming — writing code by hand, daily practice from zero (fixed ord
 ## Internal notes (not part of the resume)
 
 **Verification (this run, 2026-10-26 ~09:31 IST):** Official posting LIVE at careers.qualcomm.com — "Engineer- Modem Development", Job ID 3096962, Hyderabad, Telangana, India; posted "a month ago" per the portal. Minimum qualifications: Bachelor's degree in Engineering, Information Systems, Computer Science, or related field — NO minimum years of experience stated. Preferred: 1+ year with a programming language such as C, C++, Java, Python; 1+ year with database management software; 1+ year with API; 1+ year with Git/Perforce/SCM. "Apply Now" opened the application flow (sign-in prompt, no closed/expired message) — intake is open. NO closing date anywhere on the page — can vanish without warning, apply today. Shrestha's caption claims ₹25 LPA; Qualcomm's own page states no salary — package is per her post only, not verified on the portal.
+
+**Re-verification (2026-10-27 ~11:35 IST):** Official careers.qualcomm.com search page (Engineer - Modem, Hyderabad) still lists the role live — job card "Engineer- Modem Development", Published 2026-09-28. JD text cross-checked against the Foundit mirror of the official posting (Engineer- Modem, 0 years, Hyderabad): Bachelor's degree; good C, C++ programming skills and awareness of OS concepts; good knowledge of Embedded Systems, computer architecture and Wireless Communications (5G/4G physical layer, protocol overview) desired; familiarity with GenAI and basics of ML/Deep learning an added advantage. No change to the draft or the ATS 65 — the JD matches the 26-Oct verification.
 
 **Honest-fit assessment:** Meets the minimum qualification outright (B.Tech CSE 2025, no experience floor). Real matches on the preferred list: API work (152 production REST routes), database software (PostgreSQL/SQL, 100+ migrations in production), Git/SCM (daily, production deployments), debugging/triage/regression testing (live production incident work), technical documentation. Python is genuinely in progress (daily hand-written practice from zero) — listed as learning, never as 1+ year experience. Gaps, named honestly: no C/C++ or Java; no embedded-systems or wireless/modem domain knowledge; no formal code-review experience in a team; no 1+ year of professional experience. The modem/embedded domain is the real distance in this role — his production work is web backend, not embedded.
 
