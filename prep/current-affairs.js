@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-26",
+  updated: "2026-10-27",
 
   items: [
     /* {
@@ -48,6 +48,54 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-26",
+      topic: "Urban",
+      headline: "Centre approves Hyderabad Metro Phase 2: Rs. 24,269 crore, 76.4 km, five corridors by 2029",
+      why: "The numbers are the askable set. The Centre has approved Hyderabad Metro Phase 2 — Rs. 24,269 crore for 76.4 km across five corridors, with completion targeted by 2029 and airport connectivity among the priorities. Remember: Phase 2, 76.4 km, five corridors, Rs. 24,269 crore, 2029.",
+      source: "Gulte",
+      url: "https://www.gulte.com/shorts/438297/hyderabad-metro-phase-2-gets-centres-green-signal",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Defence",
+      headline: "Defence Acquisition Council clears Rs. 2.12 lakh crore capital acquisition proposals; 82% from Indian industry",
+      why: "Figure + chair + share is the triple. The Defence Acquisition Council, chaired by Defence Minister Rajnath Singh, accorded Acceptance of Necessity on 26 October for capital acquisition proposals worth about Rs. 2,12,000 crore — nearly 82% of the procurements from Indian industry. Army: high-mobility vehicles, self-propelled tracked guns, light multi-role helicopters, VSHORADS and counter-UAS systems; Navy: Active Offboard Decoy System and major indigenous platforms; IAF: helicopters, air-defence systems and mobile X-band Doppler weather radar.",
+      source: "hi INDiA",
+      url: "https://hiindia.com/centre-okays-capital-acquisition-proposals-worth-rs-2-12-lakh-crore-for-defence-forces/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Schemes",
+      headline: "RELIEF initiative for exporters extended to 31 March 2027",
+      why: "Acronym + implementer + deadline is the set. The Department of Commerce extended Component II of RELIEF — Resilience & Logistics Intervention for Export Facilitation — until 31 March 2027, to support exporters hit by geopolitical tensions and maritime disruptions in West Asia. Launched 19 March 2026 under the Export Promotion Mission, it gives 95% risk coverage, and is implemented by ECGC (Export Credit Guarantee Corporation of India).",
+      source: "BankersAdda",
+      url: "https://www.bankersadda.com/daily-current-affairs-and-gk-updates-26th-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Science",
+      headline: "PM to inaugurate Emerging Science, Technology and Innovation Conclave 2026 on 27 October",
+      why: "Event facts: the three-day Emerging Science, Technology and Innovation Conclave 2026 runs 27–29 October at Bharat Mandapam, New Delhi, inaugurated by PM Narendra Modi at 5:30 PM on 27 October. Deliberations span 12 thematic areas — AI, biotechnology, advanced materials, manufacturing, healthcare, energy, climate and ocean sciences — with around 150 deep-tech startup stalls and a Global Connect networking event for 300+ participants.",
+      source: "India Education Diary",
+      url: "https://indiaeducationdiary.in/pm-to-inaugurate-emerging-science-technology-and-innovation-conclave-2026-on-27-october/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "Polity",
+      headline: "President gives assent to Frontier Nagaland Territorial Authority Bill 2026",
+      why: "Name + districts + structure is the set. President Droupadi Murmu gave assent to the Frontier Nagaland Territorial Authority (FNTA) Bill, 2026 — announced by CM Neiphiu Rio on 25 October — creating a decentralised self-governing authority for six eastern Nagaland districts: Tuensang, Mon, Longleng, Kiphire, Noklak and Shamator. The Authority will have 62 members (40 directly elected, one-third of seats reserved for women), an Executive Council of up to nine headed by a Chief Executive Member, and 46 subjects devolved — in the spirit of Article 371A. It follows the 5 February 2026 tripartite MoA with the Eastern Nagaland Peoples' Organisation; it comes into force on a date notified in the Gazette.",
+      source: "Nagaland Post",
+      url: "https://nagalandpost.com/president-murmu-gives-assent-to-fnta-bill-2026/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "Culture",
+      headline: "139th Mann Ki Baat: 12 years on, e-Sanjeevani nears 50 crore tele-consultations",
+      why: "Episode number + milestone numbers is the set. The 139th episode of Mann Ki Baat aired on 25 October 2026, marking 12 years since the programme began on Vijayadashami 2014. PM Modi said the e-Sanjeevani telemedicine service has delivered nearly 50 crore tele-consultations, spotlighted IIT Madras's Sudha Gopalakrishnan Brain Centre mapping 100 human brains, Punjab's Nav-Trinjan organic-cotton weaving initiative, restoration of the Heval river in Tehri Garhwal, and the millet resurgence in Meghalaya and Nagaland — with a 'Vocal for Local' push ahead of Diwali (Khadi sales crossed Rs. 28 crore on Gandhi Jayanti).",
+      source: "Indian Economic Observer",
+      url: "https://www.indianeconomicobserver.com/news/50-crore-e-sanjeevani-tele-consultations-northeasts-millet-resurgence-iit-madras-brain-research-pm-modi-outlines-key-milestones-in-139th-mann-ki-baat20261025121920/",
+    },
     {
       date: "2026-10-25",
       topic: "Schemes",
@@ -151,6 +199,14 @@ const CURRENT_AFFAIRS = {
       why: "Digital-agriculture milestones are asked as number + deadline. The Agriculture Ministry said on 24 October that 11 crore farmers now hold a digital Farmer ID, five months before the March 2027 deadline — a core agri-stack fact for the GS paper.",
       source: "Blitz India",
       url: "https://blitzindiamedia.com/news/india-weekly-news-diary-19-25-oct-2026-fta-economy-sports-blitz-india-media/",
+    },
+    {
+      date: "2026-10-23",
+      topic: "Defence",
+      headline: "MHA and Indian Army to train 600 Civil Defence Master Trainers across 12 States/UTs",
+      why: "Numbers + states + cascade is the set. Announced on 23 October, the Ministry of Home Affairs (through the Directorate General of Fire Services, Civil Defence and Home Guards) and the Indian Army launched a first-of-its-kind pilot to train 600 Civil Defence Master Trainers — 50 each from Jammu & Kashmir, Punjab, Rajasthan, Gujarat, Assam, Meghalaya, Sikkim, Delhi, Uttar Pradesh, Kerala, Karnataka and Tamil Nadu — in a three-day course by the second week of November 2026. Each master trainer then trains 100 volunteers, reaching 60,000 volunteers. Curriculum: threat awareness (hybrid warfare, drones, air-raid threats), protection and emergency response (CBRN, fire safety, casualty management), and communication and coordination.",
+      source: "GKToday",
+      url: "https://www.gktoday.in/centre-begins-nationwide-civil-defence-network-pilot/",
     },
     {
       date: "2026-10-23",
