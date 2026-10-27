@@ -1,20 +1,25 @@
 # Direct careers watch — company list
 
+
 Product-based companies only. No service-based mass recruiters (TCS/Infosys/Wipro/HCLTech),
 no consultancies. Each company is checked directly on its own official careers portal every
 morning — this is the fix for the Visa REF087844W (posted 6 Oct, gone by 27 Oct) and HPE
 1210218 (posted 1 Oct, filled by 27 Oct) misses: both closed before the Shrestha pull or
 the Feed ever surfaced them.
 
+
 **Who this is for:** Krupal — 2025 B.Tech CSE fresher, 0 years experience. Only
 fresher-eligible roles count: 0–2 years experience, or explicit new-grad / graduate /
 entry-level, no experience minimum. FULL-TIME only. India first: Bengaluru / Hyderabad /
 Remote, then any India location.
 
+
 **Search terms per company:** fresher / graduate / entry-level / new grad; 0–2 years;
 software / AI / ML / data roles; India locations.
 
+
 **Seen requisitions** live in `seen.json` in this folder — anything there is never re-flagged.
+
 
 | # | Company | Portal (official) | Check method |
 |---|---------|-------------------|--------------|
@@ -44,24 +49,34 @@ software / AI / ML / data roles; India locations.
 | 24 | Heizen | https://www.heizen.work/careers/associate-software-engineer | Careers page, Associate Software Engineer |
 | 25 | Auric AI | https://auric-ai.talismatic.com/jobs/JQEHMTC6T | Talismatic board, Junior Software Engineer |
 | 26 | Apple | https://jobs.apple.com/en-in/search?location=india-INDC | Careers search, India, Software Engineer / AI / ML, 0–2 yrs, fresher / entry-level |
+| 27 | Deltek | https://careers.deltek.com/ | Careers search (BrassRing board, partnerid 25397, siteid 5259), India, Associate / Trainee / Entry-level / Graduate Software Engineer, 0–2 yrs, full-time, India-remote or India-based |
+
 
 ## Not in this watch (deliberate)
 
 - **Accenture** — already covered by dedicated watches: `accenture-test-invite-watch`
   (daily 08:36) and `accenture-workday-weekly-check` (Mon 09:36). Do not re-add here.
+
 - **Anthropic, Atlassian** — checked 2026-10-23: no fresher roles in India (10+ yrs on
   every India role). Not worth a daily check; re-check only if their India hiring changes.
+
 - **Canonical** — single long-shot pack exists (Req 1371, ATS 40); tracked via the
   Shrestha pull, not this watch.
+
 - **C-DAC, HCLTech** — skipped by Krupal / service-based. Out.
+
 
 ## Rules for every check
 
 - Official portal only. Aggregators (Naukri, LinkedIn, Freshershunt, Glassdoor) never
   count as verification — a role is real only when the company's own posting is live.
+
 - A role counts as NEW only if its requisition / job ID is not in `seen.json`.
+
 - Verify before flagging: (1) posting live, (2) last date (if none, say so + "apply
   today, it can vanish without warning"), (3) Apply flow actually accepting applications.
+
 - Full-time only. No internships, apprenticeships, contracts, part-time.
+
 - Never submit an application, never send any outreach — the referral freeze is in force.
   Referral drafts only, inside the pack file.

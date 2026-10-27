@@ -210,6 +210,34 @@
       "role": "Software Engineer : AI",
       "status": "not-fit",
       "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Deltek",
+      "requisition": "10576BR",
+      "role": "Associate Software Engineer",
+      "status": "closed",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11277BR",
+      "role": "Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11265BR",
+      "role": "Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11188BR",
+      "role": "Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-27"
     }
   ],
   "updated": "2026-10-27"
