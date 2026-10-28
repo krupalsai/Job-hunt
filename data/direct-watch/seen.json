@@ -294,6 +294,13 @@
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
       "verifiedOn": "2026-10-28"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2020484",
+      "role": "ASIC Verification Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-28"
     }
   ],
   "updated": "2026-10-28"

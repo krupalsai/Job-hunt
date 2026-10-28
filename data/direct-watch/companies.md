@@ -27,7 +27,7 @@ software / AI / ML / data roles; India locations.
 | 2 | Google | https://www.google.com/about/careers/applications/jobs/results | Careers search, India, software engineer / AI, no experience minimum |
 | 3 | Microsoft | https://careers.microsoft.com/us/en/search-results | Careers search, India, software engineer, entry-level |
 | 4 | Meta | https://www.metacareers.com/jobs | Careers search, India, software engineer, university grad |
-| 5 | NVIDIA | https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite | Workday search, India, entry-level software |
+| 5 | NVIDIA | https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite | Workday search, India, entry-level software — NOT-FIT: ASIC Verification Engineer JR2020484 (Hyderabad, published 1 Jul 2026, live, no closing date): hardware/silicon verification role; mandatory core is C/C++ proficiency, SoC architecture, DMA/interrupt-engines/CPU/boot-devices/MMU/IOMMU, OS/device-driver concepts and bare-metal no-OS test frameworks. Honest ATS ~30. Do not pack future hardware-verification roles for this candidate; listed only so the verdict is recorded. |
 | 6 | Adobe | https://adobe.wd5.myworkdayjobs.com/en-US/ExternalCareerSite | Workday search, India, university / new grad. NOTE 27 Oct: text fetch returned HTTP 404 — re-check this URL in a live browser before trusting it. |
 | 7 | Oracle | https://www.oracle.com/careers/ | Careers search, India, entry-level software |
 | 8 | Salesforce | https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site | Workday search, India, early career |
