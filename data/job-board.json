@@ -136,7 +136,7 @@
     "experience": "No years minimum — Bachelor's CS + GenAI agent experience",
     "fit": "Eligible — long-shot",
     "location": "Bengaluru / Hyderabad (also Gurugram / Pune)",
-    "note": "Job ID 105109659337007814; Google Cloud — Gemini Enterprise / Agentic AI. Shipped GenAI voice agent is the core match; enterprise-customer + ADK/RAG/Gemini Enterprise experience missing. No closing date — can vanish without notice. Pack + resume ready, honest ATS 60.",
+    "note": "Job ID 105109659337007814; Google Cloud — Gemini Enterprise / Agentic AI. Shipped GenAI voice agent is the core match; enterprise-customer + ADK/RAG/Gemini Enterprise experience missing. No closing date — can vanish without notice. Pack + resume ready, honest ATS 68 (RAG + side builds added honestly 28 Oct).",
     "officialUrl": "https://www.google.com/about/careers/applications/jobs/results/105109659337007814-cloud-ai-engineer-english",
     "role": "Cloud AI Engineer (English)",
     "status": "Open — verified live",
@@ -235,6 +235,18 @@
     "note": "Job 344317. Application Software Engineer 1, Product and Research, IC1. Bachelor's CS/CE/SE/CA/CIS/IT/IS; SQL, PL/SQL, DBMS, Python/Java/C++, debugging, Git, unit testing, data analysis. Shifts 9 AM-6 PM. Posted 27 Oct 2026, no closing date — can vanish without warning. Pack + resume ready, honest ATS 78. Apply flow verified: APPLY NOW opens the real form (email + terms checkbox, no account needed).",
     "officialUrl": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/344317",
     "role": "Application Software Engineer 1",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-10-28",
+    "workMode": "Onsite"
+  },
+  {
+    "company": "L&T EduTech",
+    "experience": "0–2 years",
+    "fit": "Eligible — 0 years",
+    "location": "Chennai",
+    "note": "Requisition LNT/ET/1891936. Engineer Trainee (Platform Development), LEDT-Edutech. B.E./B.Tech CS/IT or related; JavaScript/TypeScript, React/Angular, Node.js, REST/GraphQL, MySQL/MongoDB, Git; Python/FastAPI, AI/LLM, RAG, Docker, AWS/Azure, CI/CD preferred. Posted 13 Oct 2026, closing date 11 Apr 2027. Pack + resume ready, honest ATS 70. Apply flow click-through not confirmed from text fetch — re-check in a live browser before submitting. Chennai = relocate decision.",
+    "officialUrl": "https://larsentoubrocareers.peoplestrong.com/job/detail/LNT_ET_1891936",
+    "role": "Engineer Trainee (Platform Development)",
     "status": "Open — verified live",
     "verifiedOn": "2026-10-28",
     "workMode": "Onsite"

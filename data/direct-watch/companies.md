@@ -53,6 +53,7 @@ software / AI / ML / data roles; India locations.
 | 28 | Trimble | https://trimble.wd1.myworkdayjobs.com/TrimbleCareers | Workday search, India (Chennai), AI/ML Engineer (P1), entry-level |
 | 29 | WSP | https://emit.fa.ca3.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001/ | Oracle Cloud careers, Bengaluru, AI Engineer — NOT-FIT: service-based professional-services consulting firm; fails product-based-only rule. Do not pack future WSP roles; listed only so the verdict is recorded. |
 | 30 | Invesco | https://invesco.wd1.myworkdayjobs.com/IVZ | Workday search, India (Hyderabad), Eng I, Eng Run |
+| 31 | L&T EduTech | https://larsentoubrocareers.peoplestrong.com/job/detail/LNT_ET_1891936 | PeopleStrong portal, req LNT/ET/1891936, Chennai, Engineer Trainee (Platform Development), 0–2 yrs, full-time |
 
 
 ## Not in this watch (deliberate)
