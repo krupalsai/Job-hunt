@@ -204,6 +204,18 @@
     "workMode": "Onsite"
   },
   {
+    "company": "Invesco",
+    "experience": "No experience minimum (internship/academic project/prior experience preferred)",
+    "fit": "Eligible — 0 years",
+    "location": "Hyderabad",
+    "note": "Requisition R-15795-1. Eng I, Eng Run. Bachelor's CS/IS/MIS/BA; production support, SQL, Python; internship/academic project/prior experience preferred, no minimum. Full-time, hybrid 4 days/week in office. Published 26 Oct 2026, no closing date — can vanish without warning. Pack + resume ready, honest ATS 65.",
+    "officialUrl": "https://invesco.wd1.myworkdayjobs.com/IVZ/job/Hyderabad-Telangana/Eng-I--Eng-Run_R-15795-1",
+    "role": "Eng I, Eng Run",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-10-28",
+    "workMode": "Hybrid"
+  },
+  {
     "company": "Trimble",
     "experience": "No years minimum — P1 entry level",
     "fit": "Eligible — 0 years",
@@ -214,5 +226,17 @@
     "status": "Open — verified live",
     "verifiedOn": "2026-10-28",
     "workMode": "Not stated"
+  },
+  {
+    "company": "Oracle",
+    "experience": "0 to 2+ years",
+    "fit": "Eligible — 0 years",
+    "location": "Bengaluru",
+    "note": "Job 344317. Application Software Engineer 1, Product and Research, IC1. Bachelor's CS/CE/SE/CA/CIS/IT/IS; SQL, PL/SQL, DBMS, Python/Java/C++, debugging, Git, unit testing, data analysis. Shifts 9 AM-6 PM. Posted 27 Oct 2026, no closing date — can vanish without warning. Pack + resume ready, honest ATS 78. Apply flow verified: APPLY NOW opens the real form (email + terms checkbox, no account needed).",
+    "officialUrl": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/344317",
+    "role": "Application Software Engineer 1",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-10-28",
+    "workMode": "Onsite"
   }
 ]
