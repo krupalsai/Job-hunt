@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-27",
+  updated: "2026-10-28",
 
   items: [
     /* {
@@ -48,6 +48,126 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-27",
+      topic: "Railways",
+      headline: "Railway travel insurance of 45 paise now available at PRS counters from 27 October",
+      why: "Premium + cover is the askable pair. From 27 October 2026, Indian Railways extended its Optional Travel Insurance Scheme to reserved tickets booked at PRS (Passenger Reservation System) counters — earlier it was only for e-tickets. Premium is 45 paise per passenger (including taxes), with cover of Rs. 10 lakh for death or permanent total disability, Rs. 7.5 lakh for permanent partial disability, up to Rs. 2 lakh for hospitalisation and Rs. 10,000 for transport of mortal remains.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Defence",
+      headline: "Air Marshal Vikram Gaur becomes first IAF officer appointed Additional Secretary in Department of Military Affairs",
+      why: "First-ever + post + service is the triple. Air Marshal Vikram Gaur (AVSM, VSM) was appointed Additional Secretary in the Department of Military Affairs under the Ministry of Defence on 27 October 2026 — the first Indian Air Force officer to hold the post; earlier holders were from the Army and Navy. The DMA, set up in January 2020 and headed by the Chief of Defence Staff, drives jointness among the three Services. Gaur, commissioned 15 December 1990, has over 3,200 flying hours, mostly on the Su-30MKI.",
+      source: "SSBCrack",
+      url: "https://www.ssbcrack.com/2026/10/air-marshal-vikram-gaur-appointed-additional-secretary-in-department-of-military-affairs-becomes-first-iaf-officer-to-hold-the-post.html",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Defence",
+      headline: "SSB chief Sanjay Singhal gets additional charge of ITBP as incumbent retires on 31 October",
+      why: "Name + both forces + date is the set. Senior IPS officer Sanjay Singhal, Director General of the Sashastra Seema Bal (SSB), will take additional charge as Director General of the Indo-Tibetan Border Police (ITBP) after incumbent Shatrujeet Singh Kapoor retires on 31 October 2026. The Union Home Ministry approved the arrangement on 27 October; Singhal (1993-batch, UP cadre) will head both CAPFs until a regular appointment is made. The ITBP guards India's border with China in high-altitude Himalayan terrain.",
+      source: "The New Indian Express",
+      url: "https://www.newindianexpress.com/india/2026/Oct/27/ssb-director-general-sanjay-singhal-given-additional-charge-of-indo-tibetan-border-police?utm_source=website&utm_medium=related-stories",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Environment",
+      headline: "NDMA hails HYDRAA: no flooding around six restored Hyderabad lakes this rainy season",
+      why: "Agency + numbers + model is the set. HYDRAA Commissioner A.V. Ranganath told the National Disaster Management Authority in New Delhi on 27 October 2026 that areas around six restored lakes in Hyderabad saw no flooding this rainy season, with desilting also improving the groundwater table. The NDMA appreciated the effort and said it could serve as a model for urban flood management across India; HYDRAA is now restoring 14 more lakes in a second phase plus four major lakes. Telangana also appointed Ranganath nodal officer for a national urban flood management conference in New Delhi on 27 October.",
+      source: "Newsmeter",
+      url: "https://newsmeter.in/hydraa/no-flooding-in-areas-around-6-restored-hyderabad-lakes-this-rainy-season-ndma-hails-hydraa-778148",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Schemes",
+      headline: "Telangana to distribute sewing machines to 1.90 lakh women from 9 December under BC welfare scheme",
+      why: "Numbers + date + scheme name is the set. BC Welfare and Transport Minister Ponnam Prabhakar, reviewing BC welfare schemes at the Secretariat on 27 October 2026, directed officials to prepare a plan to distribute sewing machines to 1.90 lakh women under the Indiramma Intinta Kuttu Machine scheme, with distribution from 9 December. The department has received about 4.80 lakh applications. He also pushed for Government Orders for 38 Atma Gaurava Bhavans for BC communities and faster BC welfare delivery.",
+      source: "IndToday",
+      url: "https://indtoday.com/telangana-sewing-machine-scheme-targets-1-90-lakh-women/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Polity",
+      headline: "Supreme Court Collegium recommends Justice Tapabrata Chakraborty as next Chief Justice of Telangana High Court",
+      why: "Name + from where + vacancy is the triple. The Supreme Court Collegium, at its meeting on 26 October 2026, recommended Justice Tapabrata Chakraborty of the Calcutta High Court for appointment as Chief Justice of the Telangana High Court, filling the vacancy left by the elevation of former CJ Aparesh Kumar Singh to the Supreme Court. The same meeting recommended Justice P. Sam Koshy (Acting CJ, Telangana) as CJ of Delhi High Court, Justice Manash Ranjan Pathak as CJ of Gujarat High Court and Justice Sudhir Singh as CJ of Uttarakhand High Court. Appointments take effect after the Centre processes them and the President approves.",
+      source: "Deccan Chronicle",
+      url: "https://www.deccanchronicle.com/southern-states/telangana/sc-picks-chakraborty-as-tg-cj-1999134",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Defence",
+      headline: "SWAVLAMBAN 2026: Rajnath Singh calls for 'Aatmanirbharta 2.0' at Navy's 5th innovation seminar",
+      why: "Edition + theme + numbers is the set. Raksha Mantri Rajnath Singh addressed the fifth edition of SWAVLAMBAN, the Indian Navy's Naval Innovation and Indigenisation Seminar, at the Manekshaw Centre, New Delhi, on 26 October 2026 (26–27 October), calling for 'Aatmanirbharta 2.0' in defence with focus on top-end technologies, R&D and resilient supply chains. Theme: 'Strength and Power through Innovation and Indigenisation'. Navy iDEX challenges have grown from 20 in 2022 to 229, drawing over 4,000 proposals; 41 AoN cases worth over Rs. 3,500 crore and 25 contracts worth over Rs. 1,900 crore have followed.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Energy",
+      headline: "MoRTH amends Central Motor Vehicles Rules to support E85/E100 flex fuel vehicles",
+      why: "Rule + fuel definitions is the pair. The Ministry of Road Transport and Highways notified amendments to the Central Motor Vehicles Rules, 1989, on 26 October 2026, expressly including E100 alongside E85 in emission certification provisions for flex fuel vehicles. E85 is a petrol-ethanol blend with up to 85% ethanol by volume; E100 is predominantly ethanol. Flex fuel vehicles run on a range of ethanol-petrol blends from one tank and are already used in Brazil and the United States; the change aims to cut crude-oil dependence and some exhaust pollutants.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Health",
+      headline: "Nadda launches training programme to train 10,000 drug de-addiction service providers by March 2029",
+      why: "Target + timeline + goal is the set. Union Health Minister J.P. Nadda launched a capacity-building training programme for medical and allied professionals in drug de-addiction services at Kartavya Bhawan-1, New Delhi, on 26 October 2026, reiterating the goal of a Nasha Mukt Bharat by 2029. Target: 10,000 service providers trained by March 2029 — 2,000 this financial year, 3,000 in 2027-28 and 5,000 in 2028-29 — under the Vision Document on Narcotic Control 2026–2029. Coordinating centre: NDDTC-AIIMS Ghaziabad, with NIMHANS Bengaluru, PGIMER Chandigarh, CIP Ranchi, Dr. RML Hospital and AIIMS Bhubaneswar as the six DDAP institutions.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Science",
+      headline: "Technology Development Board backs Manastu Space with Rs. 116 crore for green propulsion",
+      why: "Amount + company + technology is the triple. The Technology Development Board (TDB), under the Department of Science & Technology, signed an agreement on 26 October 2026 with Manastu Space Technologies, Navi Mumbai, for Rs. 116 crore under the Research Development and Innovation (RDI) Fund. The Rs. 277.63 crore project takes a hydrogen peroxide-based green propellant system — with an integrated engine and ultra-high-temperature ceramic catalyst — from TRL-6 to TRL-9, scalable for satellites and launch vehicles in the 5 mN to 300 N thrust class. The system has already been demonstrated in space.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Economy",
+      headline: "ASUSE 2027-28 moves to the financial year and will ask women entrepreneurs about gender-specific constraints for the first time",
+      why: "Survey + change + first is the triple. The National Statistics Office under MoSPI announced on 26 October 2026 that the Annual Survey of Unincorporated Sector Enterprises (ASUSE) 2027-28 will shift from the calendar year to the financial year (April 2027–March 2028), aligning it with surveys like the Annual Survey of Industries. For the first time it will ask about gender-specific constraints faced by women entrepreneurs, plus sources of electricity used and investment in fixed assets over a longer period. ASUSE has run since 2021–22; comments on the draft schedule are invited till 15 November 2026.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "International",
+      headline: "India and Canada hold first-ever Migration and Mobility Dialogue in New Delhi",
+      why: "First-ever + venue + co-chairs is the set. India and Canada held their inaugural Migration and Mobility Dialogue in New Delhi on 26 October 2026, co-chaired by Sripriya Ranganathan, Secretary (CPV & OIA) in the Ministry of External Affairs, and Ted Gallivan, Deputy Minister of Immigration, Refugees and Citizenship Canada. The two sides signed Terms of Reference, agreed to hold the dialogue annually with a Joint Working Group, and discussed mobility of students, skilled workers, professionals and business visitors plus migration management. The next round will be in Canada.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "International",
+      headline: "Lula da Silva wins record fourth term as Brazil's President, defeating Flavio Bolsonaro",
+      why: "Winner + margin + term start is the set. Luiz Inacio Lula da Silva won Brazil's presidential runoff on 25 October 2026, defeating Flavio Bolsonaro — son of former president Jair Bolsonaro — by 51.79% to 48.21%, a margin of about 4.4 million votes, becoming the first Brazilian elected president four times. Flavio had led the first round on 4 October (about 47% to 45%); Lula is the first president since 1985 to win after losing the first round. His new term begins 5 January 2027 and runs to 2030; he previously served 2003–2010 and again from January 2023. Brazil is a founding BRICS member.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "Sports",
+      headline: "Ahmedabad to host 2029 World Weightlifting Championships — first senior Worlds in India",
+      why: "City + year + first is the triple. The International Weightlifting Federation (IWF) Executive Board, meeting in Ningbo, China, on 25 October 2026, awarded the 2029 senior World Weightlifting Championships to Ahmedabad — the first time India hosts the senior Worlds. The 2030 senior Worlds go to Moscow; the 2028 Youth Worlds to Prishtina and 2028 Junior Worlds to Caracas. The Ningbo 2026 Worlds (27 October–8 November) are the first qualifying event for LA 2028, with a seven-member Indian team led by Olympic medallist Mirabai Chanu.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
+    {
+      date: "2026-10-25",
+      topic: "Sports",
+      headline: "Yuki Bhambri wins Almaty Open doubles title — his fifth ATP Tour title",
+      why: "Player + partner + title count is the set. India's Yuki Bhambri and Ryan Seggerman of the USA won the doubles title at the ATP 250 Almaty Open in Kazakhstan on 25 October 2026, beating Lucas Miedler and Neil Oberleitner 7-6(3), 6-7(1), [10-2] in the final — the pair's first title in their first tournament together, as fourth seeds beating the top seeds. It is Bhambri's fifth ATP Tour title and his first ATP doubles title of 2026; Seggerman's second ATP doubles title.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-27-october-2026/",
+    },
     {
       date: "2026-10-26",
       topic: "Urban",
