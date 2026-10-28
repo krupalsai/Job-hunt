@@ -153,42 +153,42 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-24"
+      "verifiedOn": "2026-10-28"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-27"
+      "verifiedOn": "2026-10-28"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-10-27"
+      "verifiedOn": "2026-10-28"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-27"
+      "verifiedOn": "2026-10-28"
     },
     {
       "company": "Razorpay",
       "requisition": "4747560005",
       "role": "Analyst, Financial Operations",
       "status": "open",
-      "verifiedOn": "2026-10-27"
+      "verifiedOn": "2026-10-28"
     },
     {
       "company": "Razorpay",
       "requisition": "4744950005",
       "role": "AI Builder",
       "status": "open",
-      "verifiedOn": "2026-10-27"
+      "verifiedOn": "2026-10-28"
     },
     {
       "company": "HPE",
@@ -238,7 +238,42 @@
       "role": "Software Engineer",
       "status": "not-fit",
       "verifiedOn": "2026-10-27"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1434341300",
+      "role": "Power Platform & AI Solutions Developer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-28"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200691504-1052",
+      "role": "Integration Engineering - Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-28"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200690641-1052",
+      "role": "Software Engineer - Agent Development",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-28"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200664425-0321",
+      "role": "ML Infrastructure Service Reliability Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-28"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15795-1",
+      "role": "Eng I, Eng Run",
+      "status": "open",
+      "verifiedOn": "2026-10-28"
     }
   ],
-  "updated": "2026-10-27"
+  "updated": "2026-10-28"
 }

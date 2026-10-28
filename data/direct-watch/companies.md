@@ -50,6 +50,7 @@ software / AI / ML / data roles; India locations.
 | 25 | Auric AI | https://auric-ai.talismatic.com/jobs/JQEHMTC6T | Talismatic board, Junior Software Engineer |
 | 26 | Apple | https://jobs.apple.com/en-in/search?location=india-INDC | Careers search, India, Software Engineer / AI / ML, 0–2 yrs, fresher / entry-level |
 | 27 | Deltek | https://careers.deltek.com/ | Careers search (BrassRing board, partnerid 25397, siteid 5259), India, Associate / Trainee / Entry-level / Graduate Software Engineer, 0–2 yrs, full-time, India-remote or India-based |
+| 28 | Invesco | https://invesco.wd1.myworkdayjobs.com/IVZ/job/Hyderabad-Telangana/Eng-I--Eng-Run_R-15795-1 | Workday search, India (Hyderabad), Eng I / Eng Run / entry-level, 0–2 yrs, full-time. First live role: Eng I, Eng Run R-15795-1 (verified live 28 Oct 2026, published 26 Oct, no close date). |
 
 
 ## Not in this watch (deliberate)
