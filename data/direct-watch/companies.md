@@ -51,6 +51,7 @@ software / AI / ML / data roles; India locations.
 | 26 | Apple | https://jobs.apple.com/en-in/search?location=india-INDC | Careers search, India, Software Engineer / AI / ML, 0–2 yrs, fresher / entry-level |
 | 27 | Deltek | https://careers.deltek.com/ | Careers search (BrassRing board, partnerid 25397, siteid 5259), India, Associate / Trainee / Entry-level / Graduate Software Engineer, 0–2 yrs, full-time, India-remote or India-based |
 | 28 | Trimble | https://trimble.wd1.myworkdayjobs.com/TrimbleCareers | Workday search, India (Chennai), AI/ML Engineer (P1), entry-level |
+| 29 | WSP | https://emit.fa.ca3.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001/ | Oracle Cloud careers, Bengaluru, AI Engineer — NOT-FIT: service-based professional-services consulting firm; fails product-based-only rule. Do not pack future WSP roles; listed only so the verdict is recorded. |
 
 
 ## Not in this watch (deliberate)
