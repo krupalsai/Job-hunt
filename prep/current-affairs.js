@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-28",
+  updated: "2026-10-29",
 
   items: [
     /* {
@@ -47,6 +47,119 @@ const CURRENT_AFFAIRS = {
        rather than given a plausible-looking date — an undated fact is not
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
+
+    {
+      date: "2026-10-28",
+      topic: "Recruitment",
+      headline: "TGPSC notifies 102 statistical officer posts; apply from 30 October to 27 November",
+      why: "Notification + posts + window is the set. The Telangana Public Service Commission (TGPSC) notified 102 posts of Mandal Planning and Statistical Officer and Assistant Statistical Officer in the Directorate of Economics and Statistics on 28 October 2026. Apply online at tgpsc.gov.in from 30 October to 27 November 2026. Zonal cadre posts, pay scale Rs. 36,750 to Rs. 1,06,990, age 18 to 44 as on 1 July 2026. The last general recruitment for these posts (2018) covered 474 posts.",
+      source: "Siasat",
+      url: "https://www.siasat.com/tgpsc-notifies-102-statistical-officer-posts-apply-from-oct-30-3566263/amp/",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Appointments",
+      headline: "Telangana reshuffles 12 IAS officers; Jayesh Ranjan moves to Environment, Forests, Science and Technology",
+      why: "Reshuffle + key postings is the set. The Telangana government transferred 12 IAS officers on 28 October 2026 (orders issued by Chief Secretary Sanjay Jaju). Jayesh Ranjan, Special Chief Secretary for Metropolitan Area and Urban Development, becomes Special Chief Secretary for Environment, Forests, Science and Technology with full additional charge as Director General of EPTRI. Vikas Raj moves from Transport, Roads and Buildings to Energy; Navin Mittal moves from Energy to Panchayat Raj and Rural Development; Ilambarithi K becomes Secretary, Transport, Roads and Buildings with additional charge as Transport Commissioner. M. Dana Kishore, retiring 31 October, is reappointed Special Chief Secretary to the Governor.",
+      source: "Telangana Today",
+      url: "https://telanganatoday.com/telangana-reshuffles-12-ias-officers-across-key-departments",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Environment",
+      headline: "Telangana CM orders expansion of treated water use, AI in sewage treatment plants",
+      why: "Directions + who oversees is the set. Chief Minister A. Revanth Reddy, reviewing sewage treatment plants and treated water management on 28 October 2026, directed officials to integrate AI into treated water treatment plants for consistent water quality, appoint a dedicated special officer for each plant, and connect plants to a central command control centre. HYDRAA will oversee the plants, all treated water tankers will be tracked, and a toll-free number plus a public awareness campaign are planned. Treated water use will be broadened for landscaping and road cleaning, including along the Outer Ring Road.",
+      source: "TeluguNow",
+      url: "https://telugunow.com/news-headlines/revanth-reddy-treated-water-expansion-telangana.html",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Environment",
+      headline: "Cyclone Arnab makes landfall on Andhra Pradesh coast; over 30,000 evacuated in Odisha",
+      why: "Cyclone + coast + namer is the triple. Cyclone Arnab made landfall along the Andhra Pradesh coast on 28 October 2026, bringing heavy rainfall and strong winds, with school closures in parts of Jharkhand and Odisha and more than 30,000 people evacuated from vulnerable areas in Odisha. The cyclone was named by Bangladesh. Keep with the IMD naming-list fact: cyclones in the North Indian Ocean are named in rotation by the 13 member countries of the WMO/ESCAP panel.",
+      source: "The Indian Express",
+      url: "https://indianexpress.com/article/education/today-news-headlines-for-school-assembly-october-29-2026-india-invites-pakistan-to-sco-meet-thousands-evacuated-as-cyclone-arnab-hits-eastern-india-10940497/",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Economy",
+      headline: "Union Cabinet approves 3% dearness allowance hike for central government employees, effective 1 July 2026",
+      why: "Percent + effective date + who benefits is the triple. The Union Cabinet approved a 3 percentage point increase in dearness allowance (DA) for central government employees and a matching increase in dearness relief (DR) for pensioners, effective from 1 July 2026. DA is revised twice a year (January and July) on the basis of the All-India Consumer Price Index for Industrial Workers.",
+      source: "The Indian Express",
+      url: "https://indianexpress.com/article/education/today-news-headlines-for-school-assembly-october-29-2026-india-invites-pakistan-to-sco-meet-thousands-evacuated-as-cyclone-arnab-hits-eastern-india-10940497/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Science",
+      headline: "PM inaugurates ESTIC 2026 at Bharat Mandapam; Rs. 24,000 crore new R&D commitment announced",
+      why: "Event + venue + numbers is the set. Prime Minister Narendra Modi inaugurated the Emerging Science, Technology and Innovation Conclave (ESTIC) 2026 at Bharat Mandapam, New Delhi, on 27 October 2026 (conclave 27-29 October), giving the slogan 'Jai Vigyan, Jai Anusandhan' and a concrete three-year target for Indian science. New R&D commitment of Rs. 24,000 crore in one year — Rs. 12,000 crore government plus Rs. 12,000 crore private — under the Rs. 1 lakh crore Research, Development and Innovation initiative. Annual patent filings grew from fewer than 50,000 ten years ago to nearly 1.5 lakh last year; the 500 MW Prototype Fast Breeder Reactor reached first criticality a few months ago.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Summits",
+      headline: "12th BRICS Parliamentary Forum ends in New Delhi with New Delhi Joint Declaration",
+      why: "Forum + outcome + theme is the triple. The 12th BRICS Parliamentary Forum, inaugurated by Lok Sabha Speaker Om Birla, concluded in New Delhi on 27 October 2026 with the adoption of the New Delhi Joint Declaration. Theme: 'Fostering Parliaments for People-Centric Development' (26-27 October). Members listed: Brazil, China, Egypt, Ethiopia, India, Indonesia, Iran, Russia, South Africa and the UAE. The declaration backed comprehensive UN reform including the Security Council, condemned cross-border terrorism and terror financing, and supported cooperation on Digital Public Infrastructure and ethical AI.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Highways",
+      headline: "Concessional Local Pass for residents within 20 km of NH fee plazas from 1 November: Rs. 1,500 or Rs. 3,000 a year",
+      why: "Distance + fees + start dates is the set. The Ministry of Road Transport and Highways announced on 27 October 2026 a Concessional Local Pass for non-commercial vehicles of people living within 20 km of a National Highway fee plaza, under the National Highways Fee (Determination of Rates and Collection) (Fifth Amendment) Rules, 2026. Annual fee: Rs. 1,500 at plazas outside municipal limits, Rs. 3,000 within municipal limits; a valid FASTag is required and the pass works only at that one plaza. Available at fee plazas from 1 November 2026 and on the Rajmargyatra app from 1 December 2026; not available on closed-system highways or where a service road exists. Compare: the existing monthly pass costs Rs. 360 (Rs. 4,320 a year).",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Environment",
+      headline: "ZSI discovers new Arabian Black Electric Ray Tetronarce ramanamurthyi in the southeastern Arabian Sea",
+      why: "Species + finder + first is the triple. Scientists of the Zoological Survey of India (ZSI) described a new deep-sea electric ray, Tetronarce ramanamurthyi — common name 'Arabian Black Electric Ray' — from the deep waters of the southeastern Arabian Sea, announced from Kolkata on 27 October 2026. It is the first confirmed record of the genus Tetronarce in the northern Indian Ocean. The work was done under the Deep Ocean Mission of the Ministry of Earth Sciences, is named after Dr M.V. Ramana Murthy (Mission Director, Deep Ocean Mission), was described from nine specimens and published in the journal Zootaxa.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Defence",
+      headline: "Navy's Next Generation Offshore Patrol Vessel 'Srishti' launched at Goa Shipyard",
+      why: "Ship + yard + meaning is the triple. The Indian Navy's Next Generation Offshore Patrol Vessel (NGOPV) 'Srishti' (Yard 1283) was launched at Goa Shipyard Limited on 27 October 2026 by Smt Sandeepa Sahay. 'Srishti' means 'Creation' in Sanskrit. NGOPVs are being built at Goa Shipyard Ltd and Garden Reach Shipbuilders & Engineers (GRSE), Kolkata, for coastal and offshore security, anti-piracy and maritime surveillance.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Defence",
+      headline: "11th India-Indonesia Exercise Garuda Shakti begins at Banyuwangi, runs to 6 November",
+      why: "Exercise + edition + venue is the triple. The 11th edition of the India-Indonesia Joint Special Forces Exercise GARUDA SHAKTI began at Banyuwangi, Indonesia, on 27 October 2026 and runs to 6 November 2026. The Indian contingent is from the Parachute Regiment (Special Forces); focus is special operations in jungle terrain, interoperability and sharing best practices. Other India-Indonesia exercises: Samudra Shakti (navies) and the coordinated patrol (CORPAT).",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Economy",
+      headline: "DPIIT launches National Startup Awards 6.0; applications open 27 October to 20 November",
+      why: "Edition + categories + prize is the triple. The Department for Promotion of Industry and Internal Trade (DPIIT) opened applications for the 6th National Startup Awards on 27 October 2026 (open to 20 November 2026), as Startup India completes 10 years (launched January 2016; awards began 2019). 20 sectoral categories (12 new, including Biomanufacturing, Defence & Security, Ocean & Blue Economy and Space-Tech) plus 3 special categories — Women-Led Startup of the Year, North-East Startup Excellence and the new Student Innovator / Aspiring Entrepreneur Award. Winning startups get Rs. 25 lakh per category; the student award carries a Rs. 25 lakh pool across four sub-categories.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-27",
+      topic: "Sports",
+      headline: "Asian Champions Trophy: India thrash Bangladesh 13-0 in Jalandhar opener",
+      why: "Scoreline + venue + scorer is the set. India began the defence of their title at the Hero Asian Champions Trophy Punjab 2026 (men) with a 13-0 win over Bangladesh at the Olympian Surjit Singh Hockey Stadium, Jalandhar, on 27 October 2026 — Mandeep Singh scored a hat-trick; Harmanpreet Singh, Dilpreet Singh and Hardik Singh scored two each. Six teams play a single round-robin; league matches in Jalandhar till 2 November, semi-finals 4 November and medal matches 5 November at Mohali. Nilakanta Sharma, who also scored, announced this tournament will be his last for India.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
+    {
+      date: "2026-10-26",
+      topic: "Culture",
+      headline: "Culture Ministry signs MoU with National Library of France under Gyan Bharatam Mission",
+      why: "Partners + place + five areas is the set. India's Ministry of Culture signed an MoU with the Bibliothèque nationale de France (BnF), the National Library of France, in Paris on 26 October 2026 under the Gyan Bharatam Mission for India's manuscript heritage. Signed by Culture Secretary Vivek Aggarwal and BnF President Gilles Pécout. Five areas: digitisation, cross-sharing on the National Digital Repository, technology exchange, conservation, and research and development. The National Archives of India and the National Library, Kolkata will also work with BnF, including identifying and digitising Indic-origin manuscripts held in Paris.",
+      source: "Question Paper 4 Exam",
+      url: "https://questionpaper4exam.com/daily-current-affairs-28-october-2026/",
+    },
 
     {
       date: "2026-10-27",
