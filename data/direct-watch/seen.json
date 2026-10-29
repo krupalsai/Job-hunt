@@ -180,8 +180,8 @@
       "company": "Razorpay",
       "requisition": "4747560005",
       "role": "Analyst, Financial Operations",
-      "status": "open",
-      "verifiedOn": "2026-10-28"
+      "status": "closed",
+      "verifiedOn": "2026-10-29"
     },
     {
       "company": "Razorpay",
@@ -301,7 +301,42 @@
       "role": "ASIC Verification Engineer",
       "status": "not-fit",
       "verifiedOn": "2026-10-28"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15795-1",
+      "role": "Eng I, Eng Run",
+      "status": "open",
+      "verifiedOn": "2026-10-29"
+    },
+    {
+      "company": "Cisco",
+      "requisition": "2015359",
+      "role": "Software Engineer (Evergreen)",
+      "status": "closed",
+      "verifiedOn": "2026-10-29"
+    },
+    {
+      "company": "Akamai",
+      "requisition": "3863",
+      "role": "Software Engineer (Delivery Experience / Control Center)",
+      "status": "closed",
+      "verifiedOn": "2026-10-29"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1217809",
+      "role": "Software Consulting Engineer",
+      "status": "closed",
+      "verifiedOn": "2026-10-29"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF089294W",
+      "role": "Software Engineer (Payment Fraud Disruption)",
+      "status": "closed",
+      "verifiedOn": "2026-10-29"
     }
   ],
-  "updated": "2026-10-28"
+  "updated": "2026-10-29"
 }
