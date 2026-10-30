@@ -336,7 +336,133 @@
       "role": "Software Engineer (Payment Fraud Disruption)",
       "status": "closed",
       "verifiedOn": "2026-10-29"
+    },
+    {
+      "company": "Oracle",
+      "requisition": "345521",
+      "role": "Application Software Engineer 1 (Oracle Health)",
+      "status": "open",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R58201",
+      "role": "Strategic Sales Executive - Logistics/SaaS",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15167",
+      "role": "Senior Analyst, Investment Management",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15442",
+      "role": "Analyst, Asset-Backed Investments",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15490",
+      "role": "Quantitative Analyst",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15405",
+      "role": "Reporting Analyst II",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Meta",
+      "requisition": "1503103504068487",
+      "role": "Software Engineer (University Grad)",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "3105696",
+      "role": "Software Development Engineer I",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10420813",
+      "role": "Software Development Engineer I",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3093629",
+      "role": "Engineer - Product Security",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3093806",
+      "role": "Engineer - Systems Test",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3095927",
+      "role": "Engineer, Associate - Systems Test",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR356580",
+      "role": "Software Engineering AMTS",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Microsoft",
+      "requisition": "200062074",
+      "role": "Software Engineer (Windows + Devices)",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF088484W",
+      "role": "Software Engineer",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF083874W",
+      "role": "Software Engineer",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1209282",
+      "role": "Software Systems Engineer-Devops",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-290797",
+      "role": "Software Engineer I - Java Backend",
+      "status": "closed",
+      "verifiedOn": "2026-10-30"
     }
   ],
-  "updated": "2026-10-29"
+  "updated": "2026-10-30"
 }
