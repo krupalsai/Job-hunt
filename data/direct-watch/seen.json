@@ -41,7 +41,7 @@
       "requisition": "105109659337007814",
       "role": "Cloud AI Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-26"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Microsoft",
@@ -75,8 +75,8 @@
       "company": "Intel",
       "requisition": "JR0288211",
       "role": "AI System Performance Engineer",
-      "status": "open",
-      "verifiedOn": "2026-10-24"
+      "status": "closed",
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Qualcomm",
@@ -138,43 +138,43 @@
       "company": "AMETEK",
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
-      "status": "open",
-      "verifiedOn": "2026-10-27"
+      "status": "closed",
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "JLL",
       "requisition": "REQ510700",
       "role": "Software Engineer I",
-      "status": "open",
-      "verifiedOn": "2026-10-25"
+      "status": "closed",
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Heizen",
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Razorpay",
@@ -188,7 +188,7 @@
       "requisition": "4744950005",
       "role": "AI Builder",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "HPE",
@@ -272,7 +272,7 @@
       "requisition": "R56671",
       "role": "AI/ML Engineer (P1)",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "WSP",
@@ -293,7 +293,7 @@
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "NVIDIA",
@@ -307,7 +307,7 @@
       "requisition": "R-15795-1",
       "role": "Eng I, Eng Run",
       "status": "open",
-      "verifiedOn": "2026-10-29"
+      "verifiedOn": "2026-10-31"
     },
     {
       "company": "Cisco",
@@ -462,7 +462,707 @@
       "role": "Software Engineer I - Java Backend",
       "status": "closed",
       "verifiedOn": "2026-10-30"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R56485",
+      "role": "Site Reliability Engineer (P1, Entry Level) - Global AI Site Reliability & Security Operations",
+      "status": "open",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R56012",
+      "role": "Site Reliablity Engineer II (Machine Learning Engineer, P2 early-career)",
+      "status": "open",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R54701",
+      "role": "Software Engineer II (API Developer, P2)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R55609",
+      "role": "Lead Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R55881",
+      "role": "Lead Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R55802",
+      "role": "Lead Software Engineer - Fullstack Dotnet",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R55955",
+      "role": "Lead Software Engineer - Fullstack Dotnet",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R55647",
+      "role": "Staff Software Architect",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R57776",
+      "role": "Engineering Management",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R57957",
+      "role": "Staff Agentic Artificial Intelligence Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R58064",
+      "role": "Staff Software Engineer (Fullstack React+.NET)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R53329",
+      "role": "Tools and Automation Software Engineer (US)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R57467",
+      "role": "Implementation Consultant Professional II",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R57687",
+      "role": "Lead Product Manager",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R57716",
+      "role": "Group Product Manager",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R56704",
+      "role": "Technical Customer Support Professional II",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R56351",
+      "role": "Channel Sales Manager",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Trimble",
+      "requisition": "R57341",
+      "role": "Professional Services Consulting Professional (US)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR307116",
+      "role": "Software Engineering AMTS (Futureforce University Recruiting)",
+      "status": "open",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1380396700",
+      "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
+      "status": "open",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10580014",
+      "role": "SDE I, Hyderabad (1+ yrs BQ)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10580008",
+      "role": "SDE I, Hyderabad (1+ yrs BQ)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10580013",
+      "role": "SDE I, Hyderabad (1+ yrs BQ)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10580009",
+      "role": "SDE I FTC, Hyderabad (12-month contract)",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10568545",
+      "role": "SDE Alexa AI, Bengaluru (2+ yrs BQ)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10593656",
+      "role": "SDE Customer Service, Hyderabad (3+ yrs, SDE-II)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10593690",
+      "role": "SDE Customer Service, Hyderabad (3+ yrs, SDE-II)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10530756",
+      "role": "Data Engineer SPS, Bengaluru (1+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10554991",
+      "role": "Data Scientist (2+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10408648",
+      "role": "Data Scientist (2+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10462523",
+      "role": "Business Analyst WHS Data (not software eng)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10513272",
+      "role": "Data Engineer I FTC Payfort, Chennai (contract)",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288519",
+      "role": "Robotics/Physical AI Developer Support Eng (5+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288298",
+      "role": "Low-Level SWE (2-6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287957",
+      "role": "LLM & Agentic AI Performance Eng (10+/8+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287966",
+      "role": "AI Software Solutions Eng (8+/6+/PhD3+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287726",
+      "role": "GPU SWE (8+/7+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287724",
+      "role": "GPU SWE (5+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287694",
+      "role": "Cloud SWE (4+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287693",
+      "role": "AI SWE (4-5+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287692",
+      "role": "Cloud SWE (4+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287256",
+      "role": "Software Enabling/Optimization Eng (4+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287283",
+      "role": "AI Platform/Agentic Eng (4+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286984",
+      "role": "Software Application Dev Eng (2-yr min)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288239",
+      "role": "BIOS Firmware (4+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287984",
+      "role": "Diagnostics Firmware (4+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288192",
+      "role": "AI System Performance Architect (8+/6+/PhD3+)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2023566",
+      "role": "Developer Technology Engineer - NCG 2027 (China only)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ542639",
+      "role": "Forward Deployed AI Engineer, Bengaluru (needs shipped prod agents)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ543333",
+      "role": "Tech Developer, Hyderabad (4-6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ543336",
+      "role": "Tech Developer, Hyderabad (4-6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ541775",
+      "role": "Staff Cloud Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ535667",
+      "role": "Senior SWE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ532088",
+      "role": "Senior SWE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ515170",
+      "role": "Senior SWE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ494020",
+      "role": "Senior SWE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ512294",
+      "role": "Senior Full Stack",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ504843",
+      "role": "Senior/Staff SWE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ526229",
+      "role": "Senior Manager SWE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ521038",
+      "role": "Lead System Engineering Architect",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ536568",
+      "role": "Senior Systems Integration Consultant",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ545133",
+      "role": "Assistant Manager Ground Transport Tech",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "JLL",
+      "requisition": "REQ543568",
+      "role": "Professional PDS Projects",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF088190W",
+      "role": "Associate Cybersecurity Analyst (security ops)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF088924W",
+      "role": "Safety/Security Specialist (workplace safety)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF081808W",
+      "role": "Data Scientist - VCA (2+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4745511005",
+      "role": "AI Builder (Senior Product Designer)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4746983005",
+      "role": "Senior SDE",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4744101005",
+      "role": "Lead DBA",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4746948005",
+      "role": "Lead Security Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4736959005",
+      "role": "Senior Business Analyst",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4736585005",
+      "role": "PM role (not fresher-eligible)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4729533005",
+      "role": "PM role (not fresher-eligible)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4746985005",
+      "role": "PM role (not fresher-eligible)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4748776005",
+      "role": "Designer (not fresher-eligible)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4741222005",
+      "role": "Designer (not fresher-eligible)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4727238005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4704952005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4748365005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4738319005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4748409005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4741281005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4736136005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4748774005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4740728005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4725604005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4746959005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4731671005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4746498005",
+      "role": "Non-fresher role (sales/alliances/finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15492",
+      "role": "Quantitative Analyst (finance)",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15775",
+      "role": "Prin. Solutions Architect",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15871",
+      "role": "Sr Analyst I-Cyber Defense",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-14923",
+      "role": "Sr. Quality Engineer I",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15711",
+      "role": "Sr. Engineer I",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-14908",
+      "role": "Sr. Eng. II",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15417",
+      "role": "Risk Analyst",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-11918",
+      "role": "Associate Director Private Markets Ops",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-13952",
+      "role": "Principal/Advanced II engineering",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-13551",
+      "role": "Principal/Advanced II engineering",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-14539",
+      "role": "Principal/Advanced II engineering",
+      "status": "not-fit",
+      "verifiedOn": "2026-10-31"
     }
   ],
-  "updated": "2026-10-30"
+  "updated": "2026-10-31"
 }
