@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-30",
+  updated: "2026-10-31",
 
   items: [
     /* {
@@ -48,6 +48,94 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-10-31",
+      topic: "Days",
+      headline: "Rashtriya Ekta Diwas 2026: 151st birth anniversary of Sardar Vallabhbhai Patel",
+      why: "Day + number + person is the set. 31 October 2026 was observed as Rashtriya Ekta Diwas (National Unity Day), marking the 151st birth anniversary of Sardar Vallabhbhai Patel, the Iron Man of India; the Prime Minister participated in the celebrations at Kevadia, Gujarat. Anniversary number and venue are the askable pair.",
+      source: "Observer Voice",
+      url: "https://observervoice.com/todays-school-assembly-news-headlines-31-october-243013/",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Schemes",
+      headline: "Telangana issues G.O.Rt.No.971 for Godavari Drinking Water Scheme Package II; Ramky-GVPR JV gets Rs. 7,360 crore contract",
+      why: "G.O. number + contractor + cost is the set. The Municipal Administration and Urban Development Department issued G.O.Rt.No.971 formalising 24 June 2026 as the Date of Appointment for Package II of the Godavari Drinking Water Supply Scheme, awarded to Ramky-GVPR JV. Sanctioned at Rs. 7,360 crore under the Hybrid Annuity Mode (40% state, 60% concessionaire), it lays pipelines connecting Ghanpur, Osmansagar, Muthangi and Himayathsagar, builds 120 MLD and 70 MLD treatment plants at Osmansagar and Himayathsagar, and aims to rejuvenate the Musi.",
+      source: "The Hans India",
+      url: "https://www.thehansindia.com/news/cities/hyderabad/ramky-gvpr-jv-to-execute-godavari-projects-package-ii-1137652",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Economy",
+      headline: "Singareni workers to get Diwali bonus up to Rs. 1,10,250; DA/DR of power staff raised to 21.815%",
+      why: "Amount + headcount + rate is the set. Deputy CM Bhatti Vikramarka announced a Diwali bonus of up to Rs. 1,10,250 each for about 38,000 eligible Singareni Collieries workers (Rs. 419 crore to be credited on 5 November), and directed power utilities to raise Dearness Allowance and Dearness Relief from 19.272% to 21.815% with effect from 1 July 2026 — a hike of 2.543 percentage points benefiting 71,360 people across four power utilities. Bonus applies to non-officer staff.",
+      source: "The Hans India",
+      url: "https://www.thehansindia.com/news/cities/hyderabad/singareni-workers-to-get-diwali-bonus-of-up-to-rs-110-lakh-1137663",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Schemes",
+      headline: "Telangana extends instant pension to widows of pensioners in vulnerable categories via Cheyutha portal",
+      why: "Scheme + categories + mechanism is the set. Panchayat Raj Minister Seethakka issued orders extending the instant-pension facility — earlier limited to wives of deceased old-age pensioners — to the wives of deceased male pensioners among persons with disabilities, toddy tappers, handloom weavers, dialysis patients, people living with HIV and filariasis patients. Applications go through the Cheyutha portal; if the widow is below 57 she gets a widow pension, at 57 and above an old-age pension.",
+      source: "The Times of India",
+      url: "https://timesofindia.indiatimes.com/city/hyderabad/telangana-govt-extends-instant-pension-facility-to-additional-categories-of-social-security-pension-beneficiaries/articleshow/135372891.cms",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Polity",
+      headline: "Telangana notifies GPSAP-2026: every gram panchayat must prepare 3-to-5-year integrated development plan",
+      why: "Plan + period + who issued is the set. The Panchayat Raj and Rural Development Department notified the Gram Panchayat Strategic Action Plan (GPSAP-2026) rules, under which every gram panchayat prepares an integrated development plan covering three to five years plus an annual action plan for each financial year, with a comprehensive village profile of population, employment, housing, landless labourers, vulnerable groups, livestock, assets and scheme beneficiaries. Issued by Special Chief Secretary M Dana Kishore and aligned with the Telangana Rising 2047 vision; the rules take effect from gazette publication.",
+      source: "The Daily Pioneer",
+      url: "https://dailypioneer.com/telangana/telangana-introduces-gpsap-2026-to-transform-villages-into-self-reliant-communities",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Polity",
+      headline: "Supreme Court appoints Justice Ranjana Desai as sole mediator for KG Basin gas dispute",
+      why: "Court + person + amount is the set. The Supreme Court appointed former judge Justice Ranjana Prakash Desai as sole mediator in the Rs. 14,750-crore dispute between Reliance Industries and the Centre over alleged gas extraction from ONGC's neighbouring block in the Krishna-Godavari Basin. The paper asks the mediator's name, the basin, and the parties — Reliance vs Centre.",
+      source: "Observer Voice",
+      url: "https://observervoice.com/todays-school-assembly-news-headlines-31-october-243013/",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Recruitment",
+      headline: "Tamil Nadu raises upper age limit for government jobs by five years; Group I general goes 32 to 37",
+      why: "State + years + numbers is the set. On 30 October 2026 CM C. Joseph Vijay ordered a five-year increase in the upper age limit for direct recruitment, in force for five years and over and above existing category concessions. Group I: general 32 to 37, reserved 37 to 42; Group II/IIA: general 30 to 35. Remember the in-force period (five years from 30 October 2026) alongside the numbers.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/tamil-nadu/tamil-nadu-raises-upper-age-limit-for-direct-recruitment-into-government-services-by-five-years/article71644573.ece",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Science",
+      headline: "GSLV-F18 lifts off with NVS-03 navigation satellite for NavIC from Sriharikota",
+      why: "Vehicle + satellite + constellation is the set. GSLV-F18 successfully lifted off at 11.51 pm on 30 October 2026 from the Second Launch Pad at the Satish Dhawan Space Centre, Sriharikota, carrying the 2,232-kg NVS-03 satellite into Geosynchronous Transfer Orbit. NVS-03 is the third of the second-generation NavIC satellites meant to restore the constellation toward four working satellites for standalone regional positioning.",
+      source: "Times Now",
+      url: "https://www.timesnownews.com/india/isro-launches-nvs03-satellite-to-strengthen-india-gps-system-watch-article-156438107",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Sports",
+      headline: "India beat China 5-2 in the Men's Asian Champions Trophy hockey in Jalandhar",
+      why: "Scoreline + tournament + venue is the set. India defeated China 5-2 in the Men's Asian Champions Trophy 2026 at Jalandhar. Pair with the earlier tournament item: India are the defending champions and opened the campaign by thrashing Bangladesh 13-0.",
+      source: "The Daily Jagran",
+      url: "https://www.thedailyjagran.com/education/news/todays-school-assembly-news-headline-october-31-2026-check-top-national-international-and-sports-news-here-10334588",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Sports",
+      headline: "Afghanistan's Rashid Khan becomes first bowler to take 200 T20I wickets",
+      why: "First-ever + player + number is the triple. Rashid Khan became the first bowler in men's cricket to claim 200 T20 International wickets. First-ever records are paper staples — remember the player, the country (Afghanistan), and the format (T20I).",
+      source: "The Daily Jagran",
+      url: "https://www.thedailyjagran.com/education/news/todays-school-assembly-news-headline-october-31-2026-check-top-national-international-and-sports-news-here-10334588",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Sports",
+      headline: "New Zealand beat India by 87 runs in the 4th T20I at Eden Park; India lead series 3-1",
+      why: "Margin + venue + series state is the set. New Zealand posted 259/7 and bowled India out for 172/9 at Eden Park, Auckland, to win the 4th T20I by 87 runs; India still lead the five-match series 3-1, with the final T20I at Hamilton on 1 November.",
+      source: "Jagran Josh",
+      url: "https://www.jagranjosh.com/lite/articles/school-assembly-news-headlines-october-31-2026-new-zealand-vs-india-pm-kisan-ins-vikrant-and-other-news-1800018430-1",
+    },
     {
       date: "2026-10-30",
       topic: "Schemes",
@@ -761,14 +849,7 @@ const CURRENT_AFFAIRS = {
       source: "FreeJobAlert",
       url: "https://www.freejobalert.com/articles/daily-current-affairs-22-october-2026-10470",
     },
-    {
-      date: "2026-10-22",
-      topic: "Science",
-      headline: "ISRO to launch NVS-03 navigation satellite on 30 October",
-      why: "NavIC constellation watch. NVS-03 is the next launch in ISRO's NVS series for the Navigation with Indian Constellation system — the paper asks launch dates, series names and what the constellation does (regional navigation). Remember: NVS-03, 30 October 2026, ISRO.",
-      source: "Adda247",
-      url: "https://currentaffairs.adda247.com/category/current-affairs/",
-    },
+
     {
       date: "2026-10-22",
       topic: "Science",
