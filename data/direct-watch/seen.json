@@ -138,8 +138,9 @@
       "company": "AMETEK",
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
-      "status": "closed",
-      "verifiedOn": "2026-10-31"
+      "status": "open",
+      "verifiedOn": "2026-10-31",
+      "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure."
     },
     {
       "company": "JLL",
