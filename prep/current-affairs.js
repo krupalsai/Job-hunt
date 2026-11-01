@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-10-31",
+  updated: "2026-11-01",
 
   items: [
     /* {
@@ -55,6 +55,62 @@ const CURRENT_AFFAIRS = {
       why: "Day + number + person is the set. 31 October 2026 was observed as Rashtriya Ekta Diwas (National Unity Day), marking the 151st birth anniversary of Sardar Vallabhbhai Patel, the Iron Man of India; the Prime Minister participated in the celebrations at Kevadia, Gujarat. Anniversary number and venue are the askable pair.",
       source: "Observer Voice",
       url: "https://observervoice.com/todays-school-assembly-news-headlines-31-october-243013/",
+    },
+    {
+      date: "2026-10-31",
+      topic: "States",
+      headline: "Telangana weighs subsidised grocery basket through ration shops from Sankranti",
+      why: "Proposal + basket contents + reach is the set. The Telangana government is considering a major PDS expansion: a basket of essential commodities (edible oil, pulses, sugar, chilli powder, salt, turmeric, wheat flour, tamarind) at subsidised rates through ration shops, possibly from Sankranti in January. Civil Supplies Minister N. Uttam Kumar Reddy confirmed officials were directed to prepare the procurement and outlay plan; it still needs cabinet approval. Mirrors the earlier 'Amma Hastham' programme and covers 3.42 crore PDS beneficiaries.",
+      source: "The Times of India",
+      url: "https://timesofindia.indiatimes.com/city/hyderabad/sankranti-boost-telangana-weighs-subsidised-grocery-basket-through-ration-shops/articleshow/135407935.cms",
+    },
+    {
+      date: "2026-10-31",
+      topic: "Diplomacy",
+      headline: "Jaishankar meets Rubio at G20 foreign ministers' meeting in Atlanta; Quad FMM reviews Indo-Pacific progress",
+      why: "Venue + meetings + sequence is the set. EAM S. Jaishankar met US Secretary of State Marco Rubio on the sidelines of the G20 Foreign Ministers' Meeting in Atlanta on 30-31 October 2026 (second bilateral in a month, after Rubio's India visit of 20-21 October). The Quad foreign ministers (India, US, Japan, Australia) also met in Atlanta — the third Quad FMM this year (after New Delhi in May and Manila in July) — ahead of a Quad leaders' summit in the Philippines next month. The US holds the G20 presidency; the G20 Leaders' Summit is in Miami on 14-15 December.",
+      source: "The New Indian Express",
+      url: "https://www.newindianexpress.com/world/2026/Oct/31/delivering-results-for-people-in-indo-pacific-rubio-hosts-quad-foreign-ministers",
+    },
+    {
+      date: "2026-10-31",
+      topic: "Defence",
+      headline: "Air Chief Marshal Ashutosh Dixit takes charge as 29th Chief of the Air Staff",
+      why: "Succession + tenure is the set. Air Chief Marshal Ashutosh Dixit took over as Chief of the Air Staff on 31 October 2026 for a two-year tenure, succeeding Air Chief Marshal A.P. Singh who superannuated after 42 years. Dixit was previously Vice Chief of the Air Staff and played a key role in Operation Sindoor. Tenure expected to push modernisation: new fighters, transport aircraft, air defence systems and another dedicated communication satellite.",
+      source: "Deccan Herald",
+      url: "https://www.deccanherald.com/india/air-chief-marshal-ashutosh-dixit-takes-charge-as-new-chief-of-air-staff-4202296",
+    },
+    {
+      date: "2026-10-30",
+      topic: "States",
+      headline: "Telangana CM seeks early nod for three high-speed rail corridors to Mumbai, Bengaluru and Chennai",
+      why: "Who asked + the three corridors + station is the set. CM A. Revanth Reddy met Railway Minister Ashwini Vaishnaw in New Delhi on 30 October 2026 seeking early approval and DPRs for high-speed rail corridors Hyderabad-Pune-Mumbai, Hyderabad-Chennai and Hyderabad-Bengaluru. All three would converge at a common Hyderabad HSR station at Shamshabad (400 acres earmarked), linked to the state's $3 trillion economy by 2047 target.",
+      source: "The New Indian Express",
+      url: "https://www.newindianexpress.com/states/telangana/2026/Oct/31/telangana-cm-seeks-early-nod-for-3-high-speed-rail-corridors",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Culture",
+      headline: "PM Modi inaugurates Bharat Parv 2026 at Ekta Nagar; festival runs to 15 November",
+      why: "Event + dates + theme is the set. Prime Minister Narendra Modi inaugurated Bharat Parv 2026 at Ekta Nagar in Gujarat's Narmada district (home of the Statue of Unity) on 30 October 2026, as part of the Rashtriya Ekta Diwas celebrations. Held under the theme 'Ek Bharat Shreshtha Bharat', the cultural festival showcases folk traditions, regional cuisines, handicrafts and tourism offerings of states and Union Territories, running until 15 November.",
+      source: "Republic World",
+      url: "https://www.republicworld.com/india/pm-modi-inaugurates-bharat-parv-ahead-of-sardar-patel-s-birth-anniversary-witnesses-play-on-bankim-chattopadhyays-anand-math-2026-10-30-140077",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Polity",
+      headline: "Supreme Court Collegium recommends 11 judges for Chhattisgarh and Madhya Pradesh High Courts",
+      why: "Body + split + process is the set. At its 30 October 2026 meeting under CJI Surya Kant, the Collegium approved 11 names: 4 advocates and 2 judicial officers for the Chhattisgarh High Court (sanctioned strength 22, 9 vacancies) and 5 judicial officers for the Madhya Pradesh High Court (sanctioned 53, 15 vacancies). Collegium recommendation is the first step; appointments follow after the Centre processes them and the President approves.",
+      source: "SCC Times",
+      url: "https://www.scconline.com/blog/post/2026/10/31/sc-collegium-recommends-11-judges-chhattisgarh-madhya-pradesh-high-courts/",
+    },
+    {
+      date: "2026-10-30",
+      topic: "Defence",
+      headline: "Air Marshal Inderpal Singh Walia appointed Vice Chief of the Air Staff from 1 November 2026",
+      why: "Name + post + date is the triple. The Defence Ministry announced on 30 October 2026 that Air Marshal Inderpal Singh Walia (AVSM, VM) will be Vice Chief of the Air Staff from 1 November 2026, succeeding Air Marshal Ashutosh Dixit. He currently leads the Eastern Air Command and was commissioned into the fighter stream in June 1988, flying MiG-21/23/27, Jaguar and Su-30MKI.",
+      source: "India Strategic",
+      url: "https://www.indiastrategic.in/air-marshal-inderpal-singh-walia-appointed-vice-chief-of-air-staff/",
     },
     {
       date: "2026-10-30",
@@ -143,6 +199,30 @@ const CURRENT_AFFAIRS = {
       why: "Instalment number + amount + headcount is the set. The Centre released the 24th instalment of the Pradhan Mantri Kisan Samman Nidhi on 30 October 2026, crediting Rs. 2,000 each to about 9.34 crore eligible farmers. Pair with the scheme's core pattern the paper asks: Rs. 6,000 per year in three instalments, direct benefit transfer to landholding farm families.",
       source: "The Economic Times",
       url: "https://economictimes.indiatimes.com/news/new-updates/school-assembly-headlines-for-october-30-top-national-international-sports-and-business-updates/articleshow/135304694.cms",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Economy",
+      headline: "Cabinet approves Container Manufacturing Promotion Scheme: Rs. 10,000 crore outlay over 13 years",
+      why: "Scheme + outlay + jobs is the set. The Union Cabinet on 28 October 2026 approved the Container Manufacturing Promotion Scheme with a Rs. 10,000 crore outlay up to FY 2039-40 to scale up domestic shipping-container production and curb import dependence. Greenfield projects need at least 1,00,000 TEU annual capacity; expected to generate ~3,000 direct and over 50,000 indirect jobs.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/cabinet-approves-3-hike-in-dearness-allowance-for-central-government-employees/article71635503.ece",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Schemes",
+      headline: "Pradhan Mantri Viksit Gram Swaraj Yojana approved as Centrally Sponsored Scheme: Rs. 7,395 crore for 2026-27 to 2030-31",
+      why: "Name + outlay + reach is the set. The Union Cabinet on 28 October 2026 approved PMVGSY as a Centrally Sponsored Scheme with a Rs. 7,395 crore outlay over five years, aiming to make panchayats empowered, self-reliant and high-performing institutions of local self-government under the Viksit Bharat vision. It covers more than 2.78 lakh rural local bodies across states and UTs, including non-Part IX areas.",
+      source: "Akashvani News",
+      url: "https://newsonair.gov.in/cabinet-approves-scheme-worth-rs-10000-cr-to-promote-domestic-manufacturing/",
+    },
+    {
+      date: "2026-10-28",
+      topic: "Sports",
+      headline: "Cabinet clears Khelo India Sports Goods Manufacturing Scheme: Rs. 1,856 crore over 8 years",
+      why: "Scheme + outlay + purpose is the set. The Union Cabinet on 28 October 2026 approved the Khelo India Sports Goods Manufacturing Scheme with an outlay of Rs. 1,856 crore over eight years (2026-27 to 2033-34), aiming to position India as a global hub for high-quality sports goods. Announced alongside the container-manufacturing scheme by Information and Broadcasting Minister Ashwini Vaishnaw.",
+      source: "The Indian Awaaz",
+      url: "https://theindianawaaz.com/cabinet-clears-major-push-for-manufacturing-rural-governance-da-hiked-by-3/",
     },
     {
       date: "2026-10-29",
