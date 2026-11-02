@@ -6,7 +6,7 @@
       "requisition": "10453457",
       "role": "Software Dev Engineer I (University Talent)",
       "status": "applied",
-      "verifiedOn": "2026-10-22"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Amazon",
@@ -41,7 +41,7 @@
       "requisition": "105109659337007814",
       "role": "Cloud AI Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Microsoft",
@@ -55,14 +55,15 @@
       "requisition": "342318",
       "role": "Support Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-10-24"
+      "verifiedOn": "2026-10-24",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Cisco",
       "requisition": "2028048",
       "role": "Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-10-23"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Cisco",
@@ -83,28 +84,32 @@
       "requisition": "3096962",
       "role": "Engineer, Modem Development",
       "status": "open",
-      "verifiedOn": "2026-10-27"
+      "verifiedOn": "2026-10-27",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Qualcomm",
       "requisition": "3089099",
       "role": "Engineer, Camera Systems (3A)",
       "status": "open",
-      "verifiedOn": "2026-10-23"
+      "verifiedOn": "2026-10-23",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Akamai",
       "requisition": "4073",
       "role": "Software Engineer, Network Operations Systems",
       "status": "open",
-      "verifiedOn": "2026-10-24"
+      "verifiedOn": "2026-10-24",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Mastercard",
       "requisition": "R-294544",
       "role": "Software Engineer I, Java Full Stack",
       "status": "open",
-      "verifiedOn": "2026-10-23"
+      "verifiedOn": "2026-10-23",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Visa",
@@ -132,14 +137,15 @@
       "requisition": "DEV-BE01",
       "role": "Backend Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-01",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "AMETEK",
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
       "status": "open",
-      "verifiedOn": "2026-11-01",
+      "verifiedOn": "2026-11-02",
       "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure. Re-confirmed open 2026-11-01 via direct official URL (keyword-search misses still not trusted)."
     },
     {
@@ -154,28 +160,28 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Razorpay",
@@ -189,7 +195,7 @@
       "requisition": "4744950005",
       "role": "AI Builder",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "HPE",
@@ -287,14 +293,14 @@
       "requisition": "344317",
       "role": "Application Software Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-10-28"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "L&T EduTech",
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "NVIDIA",
@@ -308,14 +314,16 @@
       "requisition": "R-15795-1",
       "role": "Eng I, Eng Run",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-01",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Cisco",
       "requisition": "2015359",
       "role": "Software Engineer (Evergreen)",
-      "status": "closed",
-      "verifiedOn": "2026-10-29"
+      "status": "open",
+      "verifiedOn": "2026-11-02",
+      "note": "REOPENED 2026-11-02 (was closed 2026-10-29): official careers.cisco.com page live; \"Bachelors + 0 years of previous experience\"; 12 India locations; Full Time; active Apply flow (4-step form opened live, nothing submitted). Evergreen India Engineering/UHR pool."
     },
     {
       "company": "Akamai",
@@ -343,7 +351,7 @@
       "requisition": "345521",
       "role": "Application Software Engineer 1 (Oracle Health)",
       "status": "open",
-      "verifiedOn": "2026-10-30"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Trimble",
@@ -595,14 +603,14 @@
       "requisition": "JR307116",
       "role": "Software Engineering AMTS (Futureforce University Recruiting)",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "AMETEK",
       "requisition": "1380396700",
       "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Amazon",
@@ -1169,14 +1177,15 @@
       "requisition": "10544197",
       "role": "Salesforce Developer and Admin, ISS",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02"
     },
     {
       "company": "Oracle",
       "requisition": "345517",
       "role": "Support Engineer 1 (officially listed 2026-11-01; location/experience/apply-flow UNVERIFIED — NOT a match, do not surface)",
       "status": "open",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-01",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
     },
     {
       "company": "Amazon",
@@ -2898,49 +2907,56 @@
       "requisition": "4709725005",
       "role": "Senior Manager, Sales (Singapore; senior sales)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: non-India, sales."
     },
     {
       "company": "Razorpay",
       "requisition": "4721391005",
       "role": "Solutions Consultant (Malaysia; not fresher software)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: non-India."
     },
     {
       "company": "Razorpay",
       "requisition": "4730552005",
       "role": "DevOps Engineer (Malaysia; outside India)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: non-India."
     },
     {
       "company": "Razorpay",
       "requisition": "4740737005",
       "role": "Group Manager, Banking Alliance (Mumbai; senior)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: manager-level business."
     },
     {
       "company": "Razorpay",
       "requisition": "4741226005",
       "role": "Analyst, Banking Alliances (Chennai; not software)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: business/alliances, non-engineering."
     },
     {
       "company": "Razorpay",
       "requisition": "4741230005",
       "role": "Regional Manager, Enterprise Sales (Mumbai; senior sales)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: sales."
     },
     {
       "company": "Razorpay",
       "requisition": "4742859005",
       "role": "Senior Audit Finance (Malaysia; senior finance)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-01"
+      "verifiedOn": "2026-11-02",
+      "note": "Greenhouse board scan 2026-11-02: non-India, finance."
     },
     {
       "company": "Invesco",
@@ -3011,6 +3027,86 @@
       "role": "Implementation & Servicing Lead (Dublin; not India)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
+    },
+    {
+      "company": "Cisco",
+      "requisition": "2015025",
+      "role": "Software Engineer (Silicon One Customer Engineering)",
+      "status": "open",
+      "verifiedOn": "2026-11-02",
+      "note": "NEW 2026-11-02. Verified live on official careers.cisco.com via live browser: Bangalore, min quals \"Bachelor of Science EE/CS combined with 0-1 year of related experience or Master of Science EE/CS\"; no closing date (apply today); Apply Now opens an active 4-step application form. Honest ATS 60 (customer-engineering + Python half fits; C++/networking/silicon gap). Pack: data/resume-drafts/cisco-software-engineer-silicon-one-2015025.md"
+    },
+    {
+      "company": "Oracle",
+      "requisition": "344739",
+      "role": "Support Engineer 1",
+      "status": "closed",
+      "verifiedOn": "2026-11-02",
+      "note": "Official Oracle portal says \"This job is no longer available\" (verified 2026-11-02)."
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR334858",
+      "role": "Software Engineering AMTS",
+      "status": "closed",
+      "verifiedOn": "2026-11-02",
+      "note": "Older AMTS req (2026 batch); aggregator-reported last date 29 Mar 2026; not portal re-checked."
+    },
+    {
+      "company": "Adobe",
+      "requisition": "R162950",
+      "role": "Adobe Intern - 2026 (Bangalore)",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-11-02",
+      "note": "Internship -> not full-time. Surfaced via search 2026-11-02 (Adobe Workday endpoint 404)."
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10551515",
+      "role": "Software Dev Engineer I FTC (Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-02",
+      "note": "12-month Amazon contract role (posted 17 Sep 2026); full-time-only rule excludes contracts."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1431819700",
+      "role": "Software Engineer (Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-02",
+      "note": "Requires \"at least two years of relevant experience\" (posted 20-Oct-2026)."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1420944700",
+      "role": "AI Platform Administrator (Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-02",
+      "note": "\"10+ years of overall IT administration experience, incl. 4 yrs AI/ML platform\" (posted 16-Oct-2026)."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000155166919",
+      "role": "Business Development Manager - NA (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-02",
+      "note": "Entry-level but sales role, not software. Freshworks migrated ATS: Lever board empty; SmartRecruiters API scanned 2026-11-02 (35 India postings)."
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11290BR",
+      "role": "Principal AI Applications Engineer (India Remote)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-02",
+      "note": "10+ years required (posted 19-Oct-2026, expires 19-Oct-2027). Verified live on official BrassRing board 2026-11-02."
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15863",
+      "role": "Unknown title (Hyderabad)",
+      "status": "open",
+      "verifiedOn": "2026-11-02",
+      "note": "New req on the Invesco board (posted ~2 days ago) but board cards render IDs only — title not readable via text fetch. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
     }
   ],
   "updated": "2026-11-01"

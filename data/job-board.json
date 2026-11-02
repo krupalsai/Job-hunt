@@ -32,7 +32,7 @@
     "officialUrl": "https://jobs.cisco.com/jobs/SearchJobs",
     "role": "Software Engineer",
     "status": "Open â verified live",
-    "verifiedOn": "2026-10-23",
+    "verifiedOn": "2026-11-02",
     "workMode": "Hybrid"
   },
   {
@@ -236,7 +236,7 @@
     "officialUrl": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/344317",
     "role": "Application Software Engineer 1",
     "status": "Open â verified live",
-    "verifiedOn": "2026-10-28",
+    "verifiedOn": "2026-11-02",
     "workMode": "Onsite"
   },
   {
@@ -259,7 +259,7 @@
     "location": "Bengaluru",
     "workMode": "Onsite",
     "status": "Open â verified live",
-    "verifiedOn": "2026-10-30",
+    "verifiedOn": "2026-11-02",
     "officialUrl": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/345521",
     "note": "Requisition 345521 (Oracle Health; distinct from 344317). Healthcare workflows, Millennium data model; SQL/PL-SQL, DBMS, Python, debugging, Git, unit testing, data analysis. Regular Employee (permanent full-time). No closing date published â apply today, it can vanish without warning. Pack + tailored resume ready, honest ATS 78; resume PDF is local-only until Krupal reviews it. Referral drafts only â freeze in force."
   },
@@ -271,9 +271,9 @@
     "location": "Hyderabad / Bangalore",
     "workMode": "Office Tech-Flexible",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-01",
+    "verifiedOn": "2026-11-02",
     "officialUrl": "https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Bangalore/Software-Engineering-AMTS_JR307116",
-    "note": "Requisition JR307116. Futureforce University Recruiting: B.E/B.Tech 2025 & 2026, CS/Electrical/Electronics, 7 CGPA+ no backlogs. Full-time. END DATE November 3, 2026 — 1 DAY LEFT TO APPLY (portal countdown, re-verified 2026-11-01). Pack + tailored resume ready, honest ATS 60; resume PDF is local-only until Krupal reviews it. Labeled long-shot on the CGPA bar per his rule. Referral drafts only — freeze in force."
+    "note": "Requisition JR307116. Futureforce University Recruiting: B.E/B.Tech 2025 & 2026, CS/Electrical/Electronics, 7 CGPA+ no backlogs. Full-time. END DATE November 3, 2026 — 1 DAY LEFT TO APPLY (portal countdown, re-verified 2026-11-01). Pack + tailored resume ready, honest ATS 60; resume PDF is local-only until Krupal reviews it. Labeled long-shot on the CGPA bar per his rule. Referral drafts only — freeze in force. Aggregator chatter claims a 2–3 Nov 2026 deadline — UNVERIFIED on the official portal (no closing date shown); treat as apply-immediately."
   },
   {
     "company": "Trimble",
@@ -307,7 +307,7 @@
     "location": "Bangalore",
     "workMode": "Onsite",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-01",
+    "verifiedOn": "2026-11-02",
     "officialUrl": "https://jobs.ametek.com/job/Bangalore-Embedded-Firmware-Engineer-UI-&-Web-Design-KA-560048/1380396700/",
     "note": "Requisition 1380396700. Entry-level embedded engineer (UI & Web Design); skills-based quals (HTML/CSS/JS, Qt/LVGL, embedded Linux, REST/WebSockets). Full-time. No closing date — apply today, it can vanish without warning. Pack + tailored resume ready, honest ATS 40; resume PDF is local-only until Krupal reviews it. AMETEK contacts from 27-Oct (Manoj Gowda T C connected; Rishikesh Kuttan, Pratibha Naganathan pending) — referral drafts only, freeze in force."
   },
@@ -322,5 +322,29 @@
     "note": "Job ID 10544197, ISS (International Seller Growth). BQ: Bachelor's CS/Engineering + programming-language experience (Python/JavaScript/Go/.Net/Java) — no years minimum. Full-time. Honest ATS 55 draft ready; Salesforce administration is the core gap (zero Salesforce experience, stated upfront on the resume); referrals LOCKED (ATS < 90 + freeze). No closing date — apply today, it can vanish without warning. Pack + tailored resume ready (PDF local-only until Krupal reviews it).",
     "status": "Open — verified live",
     "verifiedOn": "2026-11-01"
+  },
+  {
+    "company": "Cisco",
+    "role": "Software Engineer (Silicon One Customer Engineering)",
+    "location": "Bangalore",
+    "experience": "0-1 yr (BS EE/CS) or MS EE/CS",
+    "fit": "Eligible — 0 years",
+    "note": "Job ID 2015025 — NEW 2026-11-02. Verified live on official careers.cisco.com (live browser): min quals \"Bachelor of Science EE/CS combined with 0-1 year of related experience or Master of Science EE/CS\"; no closing date — apply today, it can vanish without warning; active Apply flow. Honest ATS 60 (customer-engineering + Python half fits; C++/networking/silicon gap). Pack: data/resume-drafts/cisco-software-engineer-silicon-one-2015025.md. Resume PDF built, awaiting his view before upload.",
+    "officialUrl": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2015025EXTERNALENGLOBAL/Software-Engineer",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-02",
+    "workMode": "Hybrid"
+  },
+  {
+    "company": "Cisco",
+    "role": "Software Engineer (Evergreen) — Full Time — India Engineering / UHR",
+    "location": "Bangalore, Chennai, Gurgaon, Hyderabad, Kolkata, Lucknow, Mumbai, New Delhi, Noida, Pune, Thane, Vijayawada",
+    "experience": "0 years (Bachelors)",
+    "fit": "Eligible — 0 years",
+    "note": "Job ID 2015359 — REOPENED 2026-11-02 (was marked closed 2026-10-29). Verified live on official careers.cisco.com (live browser): \"Bachelors + 0 years of previous experience\"; Full Time in title; no closing date — apply today; active Apply flow. Evergreen India Engineering/UHR graduate-talent pool. Honest ATS 70. Pack: data/resume-drafts/cisco-software-engineer-evergreen-2015359.md; uses the existing Cisco resume PDF.",
+    "officialUrl": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2015359EXTERNALENGLOBAL/Software-Engineering-Evergreen-Full-Time-India-Engineering-UHR",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-02",
+    "workMode": "Hybrid"
   }
 ]

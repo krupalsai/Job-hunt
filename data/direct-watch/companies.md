@@ -45,7 +45,7 @@ software / AI / ML / data roles; India locations.
 | 20 | JLL | https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers | Workday search, India, Software Engineer I |
 | 21 | Flipkart | https://www.flipkartcareers.com/ | Careers search, India, fresher / graduate engineering |
 | 22 | Zoho | https://careers.zoho.com/jobs | Careers search, India, fresher / graduate software |
-| 23 | Freshworks | https://jobs.lever.co/freshworks | Lever board, India, entry-level software |
+| 23 | Freshworks | https://jobs.lever.co/freshworks | ATS MIGRATED off Lever Nov 2026 — Lever board/API return empty. Use SmartRecruiters instead: api.smartrecruiters.com/v1/companies/Freshworks/postings?country=in, India, entry-level software |
 | 24 | Heizen | https://www.heizen.work/careers/associate-software-engineer | Careers page, Associate Software Engineer |
 | 25 | Auric AI | https://auric-ai.talismatic.com/jobs/JQEHMTC6T | Talismatic board, Junior Software Engineer |
 | 26 | Apple | https://jobs.apple.com/en-in/search?location=india-INDC | Careers search, India, Software Engineer / AI / ML, 0–2 yrs, fresher / entry-level |
