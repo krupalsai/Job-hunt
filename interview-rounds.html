@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Interview Rounds · Job Hunt</title>
+<meta name="description" content="Latest 2026 interview rounds and question types for every role applied: Google Cloud AI, Amazon SDE-I, Oracle, Accenture, AmEx — plus the zero-base foundation plan." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:20px; margin:0; line-height:1.25; }
+  .sub{ color:var(--muted); font-size:13.5px; line-height:1.5; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+  .pill{ display:inline-block; border:1px solid var(--panel-border); border-radius:999px;
+    padding:4px 10px; font-size:12px; font-weight:700; color:var(--muted); margin-bottom:8px; }
+  .jump{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px; }
+  .jump a{ display:inline-flex; align-items:center; min-height:44px; padding:0 14px;
+    border:1px solid var(--panel-border); border-radius:999px; background:var(--panel);
+    color:var(--accent-ink); font-size:13.5px; font-weight:700; text-decoration:none; }
+  .topic{ background:var(--panel); border:1px solid var(--panel-border);
+    border-radius:16px; padding:16px; margin:0 0 12px; }
+  .topic h2{ font-size:18px; margin:0 0 6px; }
+  .topic h3{ font-size:16px; margin:14px 0 4px; }
+  .topic p, .topic li{ font-size:14.5px; line-height:1.6; color:var(--text); }
+  .topic p.muted, .topic .muted{ color:var(--muted); }
+  .topic ul{ margin:6px 0 10px; padding-left:20px; }
+  .status{ display:inline-block; font-size:12.5px; font-weight:700; border-radius:999px;
+    padding:3px 10px; margin-bottom:8px; background:var(--accent-soft); color:var(--accent-ink);
+    border:1px solid var(--accent-line); }
+  details{ border-top:1px solid var(--panel-border); padding:10px 0 2px; margin-top:10px; }
+  details summary{ cursor:pointer; font-weight:700; font-size:15px; min-height:44px;
+    display:flex; align-items:center; }
+  .say{ background:var(--accent-soft); border:1px solid var(--accent-line);
+    border-radius:12px; padding:12px 14px; margin:12px 0 4px; }
+  .say b{ display:block; margin-bottom:2px; }
+  .say p{ margin:0; font-size:14px; }
+  .proof{ width:100%; border-collapse:collapse; margin:10px 0; font-size:13.5px; }
+  .proof td{ border-top:1px solid var(--panel-border); padding:9px 6px; vertical-align:top; line-height:1.5; }
+  .proof td:first-child{ font-weight:700; white-space:nowrap; }
+  .checks label{ display:flex; gap:10px; align-items:flex-start; padding:10px 0;
+    border-top:1px solid var(--panel-border); font-size:14.5px; line-height:1.5; cursor:pointer; }
+  .checks input{ width:20px; height:20px; flex-shrink:0; accent-color:var(--accent); margin-top:2px; }
+  .back{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .back a{ display:inline-flex; align-items:center; min-height:44px; padding:0 14px;
+    border:1px solid var(--panel-border); border-radius:999px; background:var(--panel);
+    color:var(--accent-ink); font-size:13.5px; font-weight:700; text-decoration:none; }
+  code{ font-size:13px; background:var(--surface-2); border:1px solid var(--panel-border);
+    border-radius:6px; padding:1px 6px; overflow-wrap:anywhere; }
+</style>
+</head>
+<body data-page="interview-rounds">
+<header><h1>Interview Rounds</h1></header>
+<main>
+<p class="pill">JOB HUNT · INTERVIEW INTEL</p>
+<h1>Interview rounds &amp; questions — latest 2026 formats</h1>
+<p class="sub">Researched 2 Nov 2026 from public interview reports (candidates sharing their 2026 loops). Formats change by team and over time — when a recruiter contacts you, confirm your exact rounds with them. This page names what each round tests and what to prepare, A to Z, for every role you have applied to.</p>
+
+<div class="jump">
+  <a href="#google">Google</a><a href="#amazon">Amazon</a><a href="#oracle">Oracle</a>
+  <a href="#accenture">Accenture</a><a href="#amex">AmEx</a><a href="#foundation">Foundation</a>
+  <a href="#proof">Your proof</a><a href="#daily">Daily plan</a>
+</div>
+
+<section class="topic" id="proof">
+  <h2>You are not starting from zero</h2>
+  <p>Six to seven months of real project work is interview fuel — but only if each piece is tied to a question type. Here is your work, mapped to where it scores:</p>
+  <table class="proof">
+    <tr><td>RAG assistant</td><td>Google GenAI round: embeddings, retrieval, chunking, evaluation. Your home ground.</td></tr>
+    <tr><td>Qwen fine-tune</td><td>Google/any AI round: what fine-tuning is, when to use it instead of RAG, overfitting.</td></tr>
+    <tr><td>Payments + webhooks</td><td>System design rounds + behavioral ownership stories. You verified signatures on live money.</td></tr>
+    <tr><td>PhonePe 90-day block</td><td>Amazon Bar Raiser failure-recovery story; Google behavioral. Problem → action → result.</td></tr>
+    <tr><td>Fake-receipt fraud</td><td>Amazon “Dive Deep”, Google behavioral: you understood the fraud before building the fix.</td></tr>
+    <tr><td>WhatsApp bot, 150+ users</td><td>Scale and ownership stories everywhere. Real users, real load.</td></tr>
+    <tr><td>AI-assisted building daily</td><td>The new 2026 AI-fluency rounds at Google and Amazon reward exactly how you already work.</td></tr>
+  </table>
+  <p class="muted">The doubt comes from unnamed work. Name each piece, tie it to a round, rehearse it out loud — that is the whole game.</p>
+</section>
+
+<section class="topic" id="google">
+  <p class="status">Applied 1 Nov · Referral accepted · Cloud AI Engineer</p>
+  <h2>Google — Cloud AI Engineer</h2>
+  <p><b>The loop:</b> recruiter screen → technical phone screen → onsite of 4–5 rounds → hiring committee decides. About 3–5 weeks once it starts. At least one round is now in person (2026 change).</p>
+  <h3>The 5 question types</h3>
+  <ul>
+    <li><b>Coding</b> — Python. Arrays, strings, hashmap, trees, graphs. Solved with no AI help. Explain your thinking, write the code, test it.</li>
+    <li><b>ML system design</b> — “Design an end-to-end ML system on Google Cloud”: where data lives, how the model trains, how it answers fast, how you watch it in production. They score tradeoffs, not buzzwords.</li>
+    <li><b>GenAI depth</b> — transformers, RAG, embeddings, fine-tuning, evaluation, agents. Your strongest round.</li>
+    <li><b>Behavioral (Googleyness)</b> — leadership, ambiguity, teamwork. Now includes technical grilling on your own past work.</li>
+    <li><b>AI fluency (new 2026)</b> — read and fix existing code with Gemini beside you. Judged on how you prompt, how you check its output, and how you catch its mistakes.</li>
+  </ul>
+  <details><summary>Skills checklist — tick as each becomes explainable</summary>
+  <ul>
+    <li>Python fluency: variables, loops, functions, dictionaries, classes</li>
+    <li>DSA: arrays, strings, hashmap, trees, graphs, basic DP</li>
+    <li>RAG end to end: chunking → embeddings → vector search → rerank → answer with citations</li>
+    <li>Fine-tuning: what LoRA changes, when RAG beats fine-tuning, overfitting, eval metrics</li>
+    <li>LLM basics: tokens, context window, temperature, structured output, cost per request</li>
+    <li>Agents: when an agent beats a fixed chain; tools; human-in-the-loop</li>
+    <li>ML system design vocabulary: data pipeline → training → serving → monitoring</li>
+    <li>Google Cloud names (learn the words, be honest you have not used them): Vertex AI = train/host models, BigQuery = data warehouse</li>
+    <li>Two-minute explanations: your RAG assistant, your fine-tune, one failure story</li>
+  </ul></details>
+  <div class="say"><b>Your starting point</b><p>GenAI depth first — it is your home ground and worth big marks. Coding runs daily in parallel; it is about 40% of prep for successful candidates.</p></div>
+</section>
+
+<section class="topic" id="amazon">
+  <p class="status">Applied 22 Oct · SDE-I 10453457 · OA watch active</p>
+  <h2>Amazon — SDE-I</h2>
+  <p><b>The loop:</b> online assessment → loop of 3–4 one-hour interviews, often back to back in one day → decision. About 4–8 weeks. Silence between rounds is normal, not a rejection.</p>
+  <h3>Online assessment (HackerRank, 2026 format)</h3>
+  <ul>
+    <li>1–2 DSA problems (arrays, sliding window, graphs are common)</li>
+    <li><b>Repo task with an AI assistant (new 2026)</b> — you get existing code plus an AI helper: read it, fix bugs, add a feature. Practice working <i>with</i> AI, not just solo coding.</li>
+    <li>Work simulation — real work scenarios, now weighed more heavily as a behavioral filter</li>
+    <li>Work style survey — answer as the principles describe, not as you wish work was</li>
+  </ul>
+  <h3>The loop</h3>
+  <ul>
+    <li><b>Coding #1 and #2</b> — DSA, second one harder. Verbalize time/space complexity.</li>
+    <li><b>Object-oriented design</b> — small design (e.g. a parking lot, a URL shortener): classes, how they talk, what breaks at scale.</li>
+    <li><b>Bar Raiser</b> — hardest round. An interviewer from outside the team with veto power. Deep Leadership Principle grilling.</li>
+    <li><b>Every round has ~2 Leadership Principle questions.</b> Coding skill alone does not clear the bar.</li>
+  </ul>
+  <details><summary>2026 changes to know</summary>
+  <ul>
+    <li>AI-assisted OA (above) — 2026 candidates confirm it</li>
+    <li>Bar Raiser now pushes for one cross-team conflict story and one project-failure-with-recovery story</li>
+    <li>GenAI fluency is appearing — one 2026 loop had a hiring-manager round mixing DSA, GenAI, and project discussion</li>
+    <li>Some loops back in person; most still virtual</li>
+  </ul></details>
+  <details><summary>Skills checklist</summary>
+  <ul>
+    <li>DSA mediums: arrays, strings, hashing, trees, graphs, DP basics — at 80%+ accuracy</li>
+    <li>OOP design: classes, interfaces, one small system designed cleanly</li>
+    <li>16 Leadership Principles as stories, STAR format: Ownership, Dive Deep, Bias for Action, Customer Obsession first</li>
+    <li>Two anchor stories ready: PhonePe block (failure → recovery) and fake-receipt fraud (dive deep)</li>
+    <li>Repo-task practice: take one of your own old files, find a bug in it with AI help, explain the fix</li>
+  </ul></details>
+  <div class="say"><b>Your starting point</b><p>Leadership Principle stories first — they decide more Amazon outcomes than one more DSA problem. Your PhonePe and fraud stories are already Bar-Raiser-grade raw material.</p></div>
+</section>
+
+<section class="topic" id="oracle">
+  <p class="status">Oracle Health ASE1 applied 30 Oct · Referral asks out</p>
+  <h2>Oracle — Associate Software Engineer</h2>
+  <p><b>The loop:</b> recruiter screen → HackerRank online assessment → 1–2 technical phone screens → virtual onsite of 3–5 rounds → reference checks → offer. Slow: 5–14 weeks total is normal.</p>
+  <ul>
+    <li><b>OA:</b> aptitude + OOP/OS/DBMS multiple-choice, plus 2–3 coding problems</li>
+    <li><b>Phone screens:</b> LeetCode-medium DSA with tradeoff discussion (Java preferred, not required)</li>
+    <li><b>Onsite:</b> coding, system design with enterprise-reliability framing (backups, SLAs, correctness), behavioral with an integrity focus, hiring-manager chat</li>
+  </ul>
+  <details><summary>Skills checklist</summary>
+  <ul>
+    <li>DSA mediums (same shared set as Amazon)</li>
+    <li>CS fundamentals in plain words: OOP (classes, inheritance), OS (process vs thread), DBMS (keys, joins, indexes), networking (what happens on a request)</li>
+    <li>SQL: SELECT, JOIN, GROUP BY — write 20 practice queries</li>
+    <li>Aptitude speed: percentages, ratios, time/work — overlaps your SI quant</li>
+    <li>6–8 STAR stories including one ethics or difficult-stakeholder example</li>
+  </ul></details>
+  <div class="say"><b>Your starting point</b><p>CS fundamentals + SQL. Oracle weights “does this person understand how computers actually work” more than the other loops. Your SI quant already covers the aptitude half.</p></div>
+</section>
+
+<section class="topic" id="accenture">
+  <p class="status">Applied 4 Oct · AI/ML Computational Science Associate · Awaiting test invite</p>
+  <h2>Accenture — AI/ML Associate</h2>
+  <p><b>The loop:</b> online assessment → technical interview → HR. The most fresher-friendly loop on this page — moderate difficulty, speed matters.</p>
+  <ul>
+    <li><b>Online assessment (60–90 min):</b> cognitive (aptitude, logical, verbal) + technical MCQ (OOP, DBMS, OS, DSA theory) + 1–2 Python coding problems, easy to medium</li>
+    <li><b>Technical interview:</b> Python fundamentals, OOP, SQL, DSA basics, your projects, basic AI/ML concepts (what is ML, overfitting, what an LLM does)</li>
+    <li><b>HR:</b> communication, shifts, joining, cultural fit</li>
+  </ul>
+  <details><summary>Skills checklist</summary>
+  <ul>
+    <li>Python basics solid: loops, functions, dicts, classes, file/JSON handling</li>
+    <li>OOP vocabulary: class, object, inheritance, polymorphism — one-line definitions</li>
+    <li>SQL basics: SELECT, WHERE, JOIN</li>
+    <li>AI/ML concepts in plain words: training vs using a model, overfitting, embeddings, RAG</li>
+    <li>Your project story: 2 minutes on the Student Platform + 1 minute on the RAG assistant</li>
+    <li>Aptitude practice — same material as SI quant</li>
+  </ul></details>
+  <div class="say"><b>Your starting point</b><p>Python + OOP definitions + your project story. The test invite can land any day — these three are the highest marks per hour.</p></div>
+</section>
+
+<section class="topic" id="amex">
+  <p class="status">Applied 16 Oct · Apprentice, Enterprise Technology Services</p>
+  <h2>AmEx — Apprentice (Technology)</h2>
+  <p><b>The loop:</b> resume screening → online assessment → technical interview → managerial/HR. Practical and predictable.</p>
+  <ul>
+    <li><b>OA:</b> ~3 coding problems, easy to medium (arrays, strings, basic DSA) + aptitude, 60–90 min</li>
+    <li><b>Technical:</b> OOP concepts, Python or Java fundamentals, basic DBMS, your academic/personal projects</li>
+    <li><b>HR:</b> behavioral questions aligned to AmEx “Blue Box Values”: integrity, customer-first thinking, continuous improvement</li>
+  </ul>
+  <details><summary>Skills checklist</summary>
+  <ul>
+    <li>Easy–medium DSA: arrays, strings, hashmap — solve cleanly, explain simply</li>
+    <li>OOP + DBMS one-line definitions (shared with Accenture prep)</li>
+    <li>Three short stories: one honest mistake, one customer helped, one thing you improved</li>
+  </ul></details>
+  <div class="say"><b>Your starting point</b><p>Covered by the same foundation as Accenture. No separate track needed — one foundation, two loops.</p></div>
+</section>
+
+<section class="topic" id="foundation">
+  <h2>Foundation first — the zero-base ladder</h2>
+  <p>Every loop above stands on the same base. This is the order the industry itself recommends for AI engineering in 2026 — and it is honest about where you stand:</p>
+  <ul>
+    <li><b>1. Python</b> — the non-negotiable. Named in 59% of AI-engineer job posts. Variables → loops → functions → dictionaries → classes.</li>
+    <li><b>2. DSA</b> — arrays → strings → hashmap → trees → graphs → DP basics. One pattern at a time.</li>
+    <li><b>3. OOP + SQL</b> — classes/objects/inheritance; SELECT/JOIN/GROUP BY. Oracle, Accenture, and AmEx all ask.</li>
+    <li><b>4. LLM APIs + structured output</b> — “the first skill interviewers test is reliable structured output”: tokens, context window, temperature, retries, cost.</li>
+    <li><b>5. RAG</b> — embeddings → vector DB → chunking → retrieval → citations. <span class="muted">You have already built this.</span></li>
+    <li><b>6. Agents + evals</b> — agents in 50% of AI job posts, evals in 56%. When an agent beats a fixed chain; how you measure answer quality.</li>
+    <li><b>7. Deploy + fine-tune concepts</b> — APIs, Docker basics; LoRA: what it changes, when RAG wins instead. <span class="muted">You have run the experiment.</span></li>
+  </ul>
+  <p class="muted">What the roadmaps get right: AI engineers build on existing models — they do not train foundation models. Software fundamentals outrank ML theory. Your ladder is steps 1–3 (build now) on top of steps 5 and 7 (already lived).</p>
+</section>
+
+<section class="topic" id="daily">
+  <h2>Daily plan — 2-hour side block</h2>
+  <ul>
+    <li><b>60 min — coding.</b> OA track: one DSA pattern, solve → explain → test. Serves every loop on this page.</li>
+    <li><b>30 min — one GenAI or system-design topic.</b> Google first: RAG pieces, evals, one design question.</li>
+    <li><b>30 min — one story out loud.</b> Pick a Leadership Principle or Googleyness prompt, answer in 2 minutes, record yourself, listen once.</li>
+  </ul>
+  <p class="muted">SI stays the main track. This block is the side quest — small, daily, compounding.</p>
+</section>
+
+<section class="topic" id="checks">
+  <h2>Prep checklist</h2>
+  <p class="muted" id="progressText">0 of 0 parts ticked.</p>
+  <div class="checks" id="checks">
+    <label><input type="checkbox" data-part="python" /> Python basics: I can write loops, functions, dicts, classes without help.</label>
+    <label><input type="checkbox" data-part="dsa" /> DSA: arrays, strings, hashmap, trees, graphs — I can solve easys and explain my approach.</label>
+    <label><input type="checkbox" data-part="oop-sql" /> OOP + SQL: one-line definitions ready; 20 practice SQL queries done.</label>
+    <label><input type="checkbox" data-part="rag" /> RAG: I can whiteboard my assistant end to end — chunking to citations.</label>
+    <label><input type="checkbox" data-part="finetune" /> Fine-tuning: LoRA explained; RAG-vs-finetune decision clear; overfitting defined.</label>
+    <label><input type="checkbox" data-part="llm" /> LLM basics: tokens, context window, temperature, structured output, cost.</label>
+    <label><input type="checkbox" data-part="agents" /> Agents + evals: when agents win; how I would measure answer quality.</label>
+    <label><input type="checkbox" data-part="mlsys" /> ML system design: data → train → serve → monitor, with one tradeoff defended.</label>
+    <label><input type="checkbox" data-part="lp" /> Amazon LP: 4+ STAR stories rehearsed out loud (Ownership, Dive Deep, Bias for Action + failure recovery).</label>
+    <label><input type="checkbox" data-part="googleyness" /> Googleyness: 3 stories on ambiguity, teamwork, and a technical deep-dive on my own work.</label>
+    <label><input type="checkbox" data-part="aifluency" /> AI fluency: I can debug code with an AI assistant while narrating my checks.</label>
+    <label><input type="checkbox" data-part="story60" /> 60-second self-intro + 2-minute project story, recorded and reviewed.</label>
+  </div>
+</section>
+
+<div class="back">
+  <a href="/">← Home</a>
+  <a href="/jobs.html">Daily Jobs board</a>
+  <a href="/interview-prep.html">Interview Prep: your project story</a>
+  <a href="/amazon-prep.html">Amazon Prep</a>
+</div>
+<p class="sub" style="margin-top:16px;">Compiled 2 Nov 2026 from public 2026 interview reports (candidate write-ups, prep guides). Rounds and formats change — confirm your exact loop with the recruiter who contacts you. No leaked questions are listed here; nothing here claims what any specific interviewer will ask.</p>
+</main>
+<script>
+(function () {
+  "use strict";
+  var KEY = "interview_rounds_done_v1";
+  function el(id){ return document.getElementById(id); }
+  var textEl = el("progressText");
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#checks input"));
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    if (textEl) textEl.textContent = done + " of " + boxes.length + " parts ticked.";
+    try {
+      localStorage.setItem(KEY, JSON.stringify(boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.getAttribute("data-part"); })));
+    } catch (e) {}
+  }
+  function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+      boxes.forEach(function (b) { b.checked = saved.indexOf(b.getAttribute("data-part")) !== -1; });
+    } catch (e) {}
+    update();
+  }
+  boxes.forEach(function (b) { b.addEventListener("change", update); });
+  load();
+})();
+</script>
+</body>
+</html>
