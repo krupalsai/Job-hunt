@@ -6,7 +6,7 @@
       "requisition": "10453457",
       "role": "Software Dev Engineer I (University Talent)",
       "status": "applied",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Amazon",
@@ -41,7 +41,7 @@
       "requisition": "105109659337007814",
       "role": "Cloud AI Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Microsoft",
@@ -56,14 +56,15 @@
       "role": "Support Engineer 1",
       "status": "open",
       "verifiedOn": "2026-10-24",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Oracle detail page had no extractable content 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Oracle detail page had no extractable content 2026-11-03. carried as last-known-open.] [2026-11-04: Oracle detail page returned only site shell 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Cisco",
       "requisition": "2028048",
       "role": "Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-03",
+      "note": "[2026-11-04: Cisco detail page rendered generic homepage, not job content, 2026-11-04 (rendering degraded). carried as last-known-open.]"
     },
     {
       "company": "Cisco",
@@ -85,7 +86,7 @@
       "role": "Engineer, Modem Development",
       "status": "open",
       "verifiedOn": "2026-10-27",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Qualcomm Eightfold portal gave no listings in text extract 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Qualcomm Eightfold portal gave no listings in text extract 2026-11-03. carried as last-known-open.] [2026-11-04: Qualcomm Eightfold portal gave no listings in text extract 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Qualcomm",
@@ -93,7 +94,7 @@
       "role": "Engineer, Camera Systems (3A)",
       "status": "open",
       "verifiedOn": "2026-10-23",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Qualcomm Eightfold portal gave no listings in text extract 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Qualcomm Eightfold portal gave no listings in text extract 2026-11-03. carried as last-known-open.] [2026-11-04: Qualcomm Eightfold portal gave no listings in text extract 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Akamai",
@@ -101,7 +102,7 @@
       "role": "Software Engineer, Network Operations Systems",
       "status": "open",
       "verifiedOn": "2026-10-24",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Akamai board 403 bot-block 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Akamai board 403 bot-block 2026-11-03. carried as last-known-open.] [2026-11-04: Akamai board 403 bot-block 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Mastercard",
@@ -109,7 +110,7 @@
       "role": "Software Engineer I, Java Full Stack",
       "status": "open",
       "verifiedOn": "2026-10-23",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Mastercard Phenom shell 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Mastercard Phenom shell 2026-11-03. carried as last-known-open.] [2026-11-04: Mastercard Phenom shell 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Visa",
@@ -138,14 +139,14 @@
       "role": "Backend Engineer",
       "status": "open",
       "verifiedOn": "2026-11-01",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Juspay portal JS-only; direct URL timed out 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Juspay portal JS-only; direct URL timed out 2026-11-03. carried as last-known-open.] [2026-11-04: Juspay portal JS-only; direct URL timed out 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "AMETEK",
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
       "status": "open",
-      "verifiedOn": "2026-11-03",
+      "verifiedOn": "2026-11-04",
       "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure. Re-confirmed open 2026-11-01 via direct official URL (keyword-search misses still not trusted)."
     },
     {
@@ -160,28 +161,28 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Razorpay",
@@ -193,9 +194,10 @@
     {
       "company": "Razorpay",
       "requisition": "4744950005",
-      "role": "AI Builder",
-      "status": "open",
-      "verifiedOn": "2026-11-03"
+      "role": "AI Builder (Bengaluru)",
+      "status": "closed",
+      "verifiedOn": "2026-11-04",
+      "note": "Absent from live Greenhouse API 2026-11-04 + direct job URL now renders the board index, not the job page. Closed between 2026-11-03 07:14 IST and 2026-11-04 07:17 IST. Application was approved 2 Nov but never submitted."
     },
     {
       "company": "HPE",
@@ -280,7 +282,7 @@
       "role": "AI/ML Engineer (P1)",
       "status": "open",
       "verifiedOn": "2026-11-01",
-      "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "WSP",
@@ -294,14 +296,14 @@
       "requisition": "344317",
       "role": "Application Software Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "L&T EduTech",
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "NVIDIA",
@@ -315,8 +317,8 @@
       "requisition": "R-15795-1",
       "role": "Eng I, Eng Run",
       "status": "open",
-      "verifiedOn": "2026-11-01",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Invesco: not on board page 1 on 2026-11-03 — UNCONFIRMED, kept as last-known-open. carried as last-known-open.]"
+      "verifiedOn": "2026-11-04",
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Invesco: not on board page 1 on 2026-11-03 — UNCONFIRMED, kept as last-known-open. carried as last-known-open.] [2026-11-04: re-verified live via browser — Eng I, Eng Run, Hyderabad FT, End Date November 30, 2026; no stated year count (internship/academic project/prior experience).]"
     },
     {
       "company": "Cisco",
@@ -324,7 +326,7 @@
       "role": "Software Engineer (Evergreen)",
       "status": "open",
       "verifiedOn": "2026-11-03",
-      "note": "REOPENED 2026-11-02 (was closed 2026-10-29): official careers.cisco.com page live; \"Bachelors + 0 years of previous experience\"; 12 India locations; Full Time; active Apply flow (4-step form opened live, nothing submitted). Evergreen India Engineering/UHR pool."
+      "note": "REOPENED 2026-11-02 (was closed 2026-10-29): official careers.cisco.com page live; \"Bachelors + 0 years of previous experience\"; 12 India locations; Full Time; active Apply flow (4-step form opened live, nothing submitted). Evergreen India Engineering/UHR pool. [2026-11-04: Cisco detail page rendered generic homepage, not job content, 2026-11-04 (rendering degraded). carried as last-known-open.]"
     },
     {
       "company": "Akamai",
@@ -352,7 +354,7 @@
       "requisition": "345521",
       "role": "Application Software Engineer 1 (Oracle Health)",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Trimble",
@@ -479,7 +481,7 @@
       "role": "Site Reliability Engineer (P1, Entry Level) - Global AI Site Reliability & Security Operations",
       "status": "open",
       "verifiedOn": "2026-11-01",
-      "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Trimble",
@@ -487,7 +489,7 @@
       "role": "Site Reliablity Engineer II (Machine Learning Engineer, P2 early-career)",
       "status": "open",
       "verifiedOn": "2026-11-01",
-      "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.]"
+      "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
       "company": "Trimble",
@@ -605,16 +607,16 @@
       "company": "Salesforce",
       "requisition": "JR307116",
       "role": "Software Engineering AMTS (Futureforce University Recruiting)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "[2026-11-03: full official text verified live — Hyderabad, 2025 & 2026 B.E/B.Tech CS/EE/ECE, 7 CGPA no backlogs; no closing date on official posting (aggregator Nov 2/3 deadline claims unverified — apply today).]"
+      "status": "closed",
+      "verifiedOn": "2026-11-04",
+      "note": "Official detail URL 404s with 'The page you are looking for doesn't exist.' (two direct fetches 2026-11-04). Posting gone from official portal after Nov 3 (matches aggregator Nov 2/3 deadline claims). Krupal never applied."
     },
     {
       "company": "AMETEK",
       "requisition": "1380396700",
       "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Amazon",
@@ -1181,7 +1183,7 @@
       "requisition": "10544197",
       "role": "Salesforce Developer and Admin, ISS",
       "status": "open",
-      "verifiedOn": "2026-11-03"
+      "verifiedOn": "2026-11-04"
     },
     {
       "company": "Oracle",
@@ -3038,7 +3040,7 @@
       "role": "Software Engineer (Silicon One Customer Engineering)",
       "status": "open",
       "verifiedOn": "2026-11-03",
-      "note": "NEW 2026-11-02. Verified live on official careers.cisco.com via live browser: Bangalore, min quals \"Bachelor of Science EE/CS combined with 0-1 year of related experience or Master of Science EE/CS\"; no closing date (apply today); Apply Now opens an active 4-step application form. Honest ATS 60 (customer-engineering + Python half fits; C++/networking/silicon gap). Pack: data/resume-drafts/cisco-software-engineer-silicon-one-2015025.md"
+      "note": "NEW 2026-11-02. Verified live on official careers.cisco.com via live browser: Bangalore, min quals \"Bachelor of Science EE/CS combined with 0-1 year of related experience or Master of Science EE/CS\"; no closing date (apply today); Apply Now opens an active 4-step application form. Honest ATS 60 (customer-engineering + Python half fits; C++/networking/silicon gap). Pack: data/resume-drafts/cisco-software-engineer-silicon-one-2015025.md [2026-11-04: Cisco detail page rendered generic homepage, not job content, 2026-11-04 (rendering degraded). carried as last-known-open.]"
     },
     {
       "company": "Oracle",
@@ -3107,10 +3109,10 @@
     {
       "company": "Invesco",
       "requisition": "R-15863",
-      "role": "Unknown title (Hyderabad)",
-      "status": "open",
-      "verifiedOn": "2026-11-02",
-      "note": "New req on the Invesco board (posted ~2 days ago) but board cards render IDs only — title not readable via text fetch. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match. [2026-11-03: Invesco board cards still ID-only 2026-11-03; follow-up candidate. carried as last-known-open.]"
+      "role": "Executive Secretary (C-Suite)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): Hong Kong, not Hyderabad; extensive EA/PA experience — non-engineering."
     },
     {
       "company": "Razorpay",
@@ -3259,51 +3261,411 @@
     {
       "company": "Apple",
       "requisition": "200691524-0321",
-      "role": "Junior SDET (Bengaluru)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "NEW ID 2026-11-03 (posted 2 Nov). Eligibility UNVERIFIED: detail page is JS-only. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
+      "role": "Junior Software Development Engineer in Test, Sales Engineering (Bengaluru)",
+      "status": "closed",
+      "verifiedOn": "2026-11-04",
+      "note": "Gone from jobs.apple.com: not in search results (185 India results) and direct detail URL returns 'Page not found. Sorry, this role does not exist or is no longer available.' Live-browser verified 2026-11-04. Eligibility was never verifiable (JS-only while live)."
     },
     {
       "company": "Apple",
       "requisition": "200678409-1052",
       "role": "Software Engineer - Distributed Systems (Hyderabad)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "NEW ID 2026-11-03 (posted 2 Nov). Eligibility UNVERIFIED: detail page is JS-only. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser): minimum quals require '3-7 years of Industry experience in building solutions with strong skills in Java/Spring'. Posted 2 Nov."
     },
     {
       "company": "Apple",
       "requisition": "200692393-0321",
       "role": "Applied AI Engineer (Bengaluru)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "NEW ID 2026-11-03 (posted 30 Oct). Eligibility UNVERIFIED: detail page is JS-only. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser): requires '3+ years of overall experience in software/platform development' + 1+ yr shipping production AI solutions. Posted 30 Oct."
     },
     {
       "company": "Invesco",
       "requisition": "R-15816",
-      "role": "Unknown title (Hyderabad, posted today)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "NEW ID 2026-11-03. Board cards render IDs only: title UNVERIFIED. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
+      "role": "Associate - GRE Operations (Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): 2-4 years client-reporting/fund-ops finance experience."
     },
     {
       "company": "Invesco",
       "requisition": "R-14841",
-      "role": "Unknown title (Hyderabad, posted today)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "NEW ID 2026-11-03. Board cards render IDs only: title UNVERIFIED. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
+      "role": "Senior Analyst, Client Analytics (Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): 3+ years data analytics; finance discipline."
     },
     {
       "company": "Invesco",
       "requisition": "R-15926",
-      "role": "Unknown title (3 locations, posted today)",
-      "status": "open",
-      "verifiedOn": "2026-11-03",
-      "note": "NEW ID 2026-11-03. Board cards render IDs only: title UNVERIFIED. FOLLOW-UP CANDIDATE for live-browser check, NOT a verified match."
+      "role": "Advanced Principal, ETF & Passive Portfolio Operations",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): US locations only; 5+ years securities experience."
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15461",
+      "role": "Associate - GRE Operations (Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): 2-4 years marketing-presentations/graphic-design experience."
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15643",
+      "role": "Sr. Analyst I, Infra CX (Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): no stated years but Infra CX (customer experience) — non-software function."
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15463",
+      "role": "Associate - GRE Operations (Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): 2-4 years client-reporting/fund-ops finance experience."
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-15011",
+      "role": "Senior Process Associate, PTP (Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): 4+ years accounting/accounts-payable experience."
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4731054005",
+      "role": "Frontend Engineer (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Greenhouse board scan 2026-11-04: official JD requires \"a minimum of 1+ years of relevant experience\". ID was on the board 3 Nov too, newly recorded."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1447142000",
+      "role": "Senior Engineer/Technical Lead - Hardware & PCB Design (Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Official jobs.ametek.com 2026-11-04: senior hardware/PCB delivery role (posted 3 Nov)."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1439860700",
+      "role": "AI - Technical Manager (Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Official jobs.ametek.com 2026-11-04: \"10+ years in software/product engineering/AI-ML, incl 3+ years leading teams\"."
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11288BR",
+      "role": "Sr Software Engineer (India-Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Official BrassRing board 2026-11-04: senior-level title (posted 3 Nov), not fresher-eligible."
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11192BR",
+      "role": "Accounting Customer Support Analyst (India Remote)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Official BrassRing board 2026-11-04: non-software customer-support role."
+    },
+    {
+      "company": "Deltek",
+      "requisition": "11219BR",
+      "role": "Sr Principal Compensation Analyst (India-Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Official BrassRing board 2026-11-04: HR/compensation, 8-10 years."
+    },
+    {
+      "company": "L&T EduTech",
+      "requisition": "LNT_IACM_1882264",
+      "role": "Commissioning/Site Acceptance Lead (radar sub-systems)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "Official PeopleStrong portal, verified live 2026-11-04: site/commissioning lead role, not software/AI/ML."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000159090559",
+      "role": "Senior Account Management (EX) - Top Tier NA, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000159089985",
+      "role": "Senior Account Executive - Inside Sales, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000158477994",
+      "role": "Senior Engineering Manager - Billing Platform, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, eng mgmt — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000158439546",
+      "role": "Lead - Account Management, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, sales — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000158438110",
+      "role": "Lead - Customer Success, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, CS — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000157974929",
+      "role": "Lead - Revenue Accounting, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, finance — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000157388914",
+      "role": "Field Marketing Specialist (Contract), Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, contract — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000155675855",
+      "role": "Staff Engineer - Machine Learning, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000155421099",
+      "role": "Senior Business Development Manager - MEA/India (Enterprise), Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000154351019",
+      "role": "Staff Engineer - Full Stack, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000154016769",
+      "role": "Lead - Workplace Management (Travel & Transport Ops), Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, ops — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000153405839",
+      "role": "Lead - Sales Commission, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, finance — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000152914589",
+      "role": "Principal Engineer - Machine Learning, Hyderabad",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: director — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000152895704",
+      "role": "Principal Engineer - Machine Learning, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: director — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000152411953",
+      "role": "Lead - Channel Sales, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, sales — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000151772990",
+      "role": "Lead Software Engineer - Site Reliability, Hyderabad",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000151400943",
+      "role": "Principal Engineer - Systems, Hyderabad",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: director — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000150937764",
+      "role": "Senior Staff Engineer - Systems, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000150936730",
+      "role": "Staff Product Manager, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, PM — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000150608630",
+      "role": "Lead Software Engineer - Full Stack, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000150067891",
+      "role": "Principal - Solution Engineering, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000150068499",
+      "role": "Principal - Solution Engineering, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000147910359",
+      "role": "Lead - Product Marketing, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, marketing — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000145701049",
+      "role": "Lead - Solution Engineer, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000145700849",
+      "role": "Lead - Solution Engineer, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000145469919",
+      "role": "Lead - Solution Engineer, Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000145469389",
+      "role": "Lead - Solution Engineer, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000144466115",
+      "role": "Deal Desk Strategist, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000142843669",
+      "role": "Solution Architect, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000141842029",
+      "role": "Lead - Business Systems Services, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000140882260",
+      "role": "Senior Analyst - Cybersecurity Risk & Compliance, Chennai",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: associate — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000139050259",
+      "role": "Lead - Business Systems Services (Workday Technical Lead), Bengaluru",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000137424679",
+      "role": "Lead Software Engineer - Full Stack, Hyderabad",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+    },
+    {
+      "company": "Freshworks",
+      "requisition": "744000134600399",
+      "role": "Staff Engineer - Full Stack, Hyderabad",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-04",
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
     }
   ],
-  "updated": "2026-11-03"
+  "updated": "2026-11-04"
 }
