@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-11-03",
+  updated: "2026-11-04",
 
   items: [
     /* {
@@ -48,6 +48,118 @@ const CURRENT_AFFAIRS = {
        usable in a hall, and a guessed date is worse than no entry because it
        looks checked. */
 
+    {
+      date: "2026-11-04",
+      topic: "Defence",
+      headline: "CRPF records zero casualties for 12 consecutive months, first time in 47 years",
+      why: "Number + record + first-ever is the set. Prime Minister Narendra Modi highlighted that the Central Reserve Police Force recorded zero casualties over 12 consecutive months — reportedly the first such achievement in 47 years of the force's history. The CRPF is India's largest central armed police force.",
+      source: "Rajkiya Result",
+      url: "https://www.rajkiyaresult.com/current-affairs/2026-11-04",
+    },
+    {
+      date: "2026-11-04",
+      topic: "Science",
+      headline: "IndiaAI Mission releases indigenous foundation models EKA-1, Dhīr 2B and Dhīr 5B",
+      why: "Names + makers + pillar is the set. Under the IndiaAI Innovation Centre pillar of the IndiaAI Mission (MeitY), indigenous foundation models were released: EKA-1 by Soket Labs, and Dhīr 2B and Dhīr 5B by ZenteiQ — a push for sovereign AI capabilities. The Union Cabinet approved the IndiaAI Mission on 7 March 2024 with seven pillars.",
+      source: "Rajkiya Result",
+      url: "https://www.rajkiyaresult.com/current-affairs/2026-11-04",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Defence",
+      headline: "MoD signs Rs 53,866.50 crore contracts with GRSE and Goa Shipyard for 8 next-generation corvettes",
+      why: "Value + yards + number is the set. The Ministry of Defence signed contracts worth approximately Rs 53,866.50 crore with Garden Reach Shipbuilders & Engineers and Goa Shipyard Limited for eight next-generation corvettes for the Indian Navy.",
+      source: "The Knowledge Library",
+      url: "https://www.theknowledgelibrary.in/daily-current-affairs-news-headlines-03-11-2026/",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Schemes",
+      headline: "Government notifies VB-G RAM G Grievance Redressal Rules, 2026",
+      why: "Rule + structure is the set. The Government notified the Viksit Bharat – Guarantee for Rozgar and Ajeevika Mission (Gramin): VB-G RAM G – Grievance Redressal Rules, 2026, establishing a structured, multi-tier and time-bound mechanism for addressing grievances in the scheme's implementation.",
+      source: "The Knowledge Library",
+      url: "https://www.theknowledgelibrary.in/daily-current-affairs-news-headlines-03-11-2026/",
+    },
+    {
+      date: "2026-11-03",
+      topic: "States",
+      headline: "Telangana sets single-day record under VB-G RAM G, employing 5,00,166 rural workers",
+      why: "Number + district topper + record context is the set. Telangana provided employment to 5,00,166 persons in a single day (Tuesday), nearly double the previous record of 2.54 lakh on 8 October. Nalgonda topped with 53,280 workers, followed by Medak (27,296) and Siddipet (23,845). The VB-G RAM G Act, 2025, which replaced MGNREGA, guarantees 125 days of wage employment per rural household per year.",
+      source: "Deccan Chronicle",
+      url: "https://www.deccanchronicle.com/southern-states/telangana/telangana-sets-single-day-record-under-vb-g-ram-g-employs-over-5-lakh-rural-workers-2001459",
+    },
+    {
+      date: "2026-11-03",
+      topic: "States",
+      headline: "Singareni invites re-employment applications from employees dismissed for absenteeism (2023–2025), last date 14 November",
+      why: "Window + last date + committee is the set. Singareni Collieries Company Limited decided to reconsider cases of former employees dismissed for unauthorised absence between 1 January 2023 and 31 December 2025, constituting a high-power committee to examine re-employment, following a directive from Deputy CM Bhatti Vikramarka; the last date for applications is 14 November 2026.",
+      source: "Hyderabad Mail",
+      url: "https://hyderabadmail.com/singareni-dismissed-employees-re-employment-2026/",
+    },
+    {
+      date: "2026-11-03",
+      topic: "States",
+      headline: "Telangana raises drought-relief demand to Rs 30,000 crore; 365 mandals declared drought-affected",
+      why: "Figure + mandal count + demand chain is the set. Telangana declared 365 mandals drought-affected on 27 October; the Assembly adopted a resolution on 18 September seeking Rs 20,000 crore in special assistance, and the state has since raised the demand to Rs 30,000 crore, also seeking a higher FRBM borrowing limit (from 3% to 3.5% of GSDP) for 2026–27.",
+      source: "The Siasat Daily",
+      url: "https://www.siasat.com/telangana-seeks-rs-30000-cr-drought-aid-gets-no-centre-meeting-3569148/",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Sports",
+      headline: "Dhinidhi Desinghu becomes first Indian female swimmer to win a medal at the Youth Olympics 2026",
+      why: "Name + first + venue is the set. Dhinidhi Desinghu became the first Indian female swimmer to win a medal at the Youth Olympics 2026, held in Dakar, Senegal.",
+      source: "The Knowledge Library",
+      url: "https://www.theknowledgelibrary.in/daily-current-affairs-news-headlines-03-11-2026/",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Polity",
+      headline: "Amit Shah directs Foreigners Regional Registration Offices in all state capitals by next year",
+      why: "Directive + current coverage is the set. Union Home Minister Amit Shah directed that Foreigners Regional Registration Offices (FRROs) be established in all state capitals by next year; FRRO offices currently exist in 20 states.",
+      source: "The Knowledge Library",
+      url: "https://www.theknowledgelibrary.in/daily-current-affairs-news-headlines-03-11-2026/",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Defence",
+      headline: "Indian Navy rescues hijacked fishing vessel 'Azini' off Somalia in 48-hour anti-piracy operation",
+      why: "Ship name + crew count + operation length is the set. The Indian Navy rescued the hijacked fishing vessel 'Azini' off the coast of Somalia and safely liberated all 20 crew members in a 48-hour anti-piracy operation.",
+      source: "TestMeNow",
+      url: "https://testmenow.in/current-affairs",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Science",
+      headline: "Aditya-L1's VELC reveals non-uniform, asymmetric expansion in coronal mass ejections",
+      why: "Instrument + finding + use is the set. The Visible Emission Line Coronagraph (VELC) onboard India's Aditya-L1 satellite revealed non-uniform, asymmetric expansion in coronal mass ejections (CMEs), providing inputs for space-weather forecasting.",
+      source: "TestMeNow",
+      url: "https://testmenow.in/current-affairs",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Infrastructure",
+      headline: "PM inaugurates and lays foundation for Pune Metro projects worth about Rs 21,800 crore",
+      why: "Value + connectivity is the set. Prime Minister Narendra Modi inaugurated and laid the foundation stone for Pune Metro projects worth around Rs 21,800 crore via video conferencing, improving connectivity to IT hubs like Hinjawadi and Shivajinagar. India's operational metro network has expanded from 248 km to nearly 1,200 km across 26 cities over the past 12 years.",
+      source: "TestMeNow",
+      url: "https://testmenow.in/current-affairs",
+    },
+    {
+      date: "2026-11-02",
+      topic: "States",
+      headline: "CM Revanth orders door-to-door garbage collection, green water tankers and traffic decongestion plans for Hyderabad",
+      why: "Meeting + three directions is the set. At a MAUD review on Monday, CM A. Revanth Reddy ordered continuous monitoring of sanitation with daily door-to-door garbage collection across residential areas, wider use of Green Water Tankers supplying treated wastewater for construction and gardening, and comprehensive plans for signal-free transit with underpasses and elevated corridors; HMWSSB MD K. Ashok Reddy was directed to ramp up treated-wastewater supply.",
+      source: "The New Indian Express",
+      url: "https://www.newindianexpress.com/amp/story/cities/hyderabad/2026/Nov/03/cm-revanth-orders-cleaner-roads-smoother-traffic-in-hyderabad",
+    },
+    {
+      date: "2026-11-02",
+      topic: "Environment",
+      headline: "HMWSSB supplies 11.07 lakh litres of treated sewage water through green water tankers in a single day",
+      why: "Quantity + trips + launch context is the set. HMWSSB supplied 11.07 lakh litres (1,107 kilolitres) of treated sewage water through 124 green-water-tanker trips from 18 STPs across Hyderabad, Cyberabad and Malkajgiri in a single day (Monday); 79 tankers were deployed under the programme launched on 1 November marking the water board's 37th Foundation Day, aimed at saving drinking water for non-potable uses.",
+      source: "Newsmeter",
+      url: "https://newsmeter.in/hyderabad/save-drinking-water-hmwssb-supplies-1107l-litres-of-treated-sewage-water-to-hyderabad-households-778623",
+    },
     {
       date: "2026-11-02",
       topic: "States",
