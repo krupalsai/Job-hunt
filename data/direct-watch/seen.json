@@ -6,7 +6,7 @@
       "requisition": "10453457",
       "role": "Software Dev Engineer I (University Talent)",
       "status": "applied",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Amazon",
@@ -41,7 +41,7 @@
       "requisition": "105109659337007814",
       "role": "Cloud AI Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Microsoft",
@@ -55,8 +55,8 @@
       "requisition": "342318",
       "role": "Support Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-10-24",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Oracle detail page had no extractable content 2026-11-03. carried as last-known-open.] [2026-11-04: Oracle detail page returned only site shell 2026-11-04. carried as last-known-open.]"
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: page now renders title \"Support Engineer 1\" (was shell-only 3-4 Nov); JD still not rendered \u2014 carried as last-known-open.]"
     },
     {
       "company": "Cisco",
@@ -146,7 +146,7 @@
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
       "status": "open",
-      "verifiedOn": "2026-11-04",
+      "verifiedOn": "2026-11-05",
       "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure. Re-confirmed open 2026-11-01 via direct official URL (keyword-search misses still not trusted)."
     },
     {
@@ -161,28 +161,28 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Razorpay",
@@ -196,8 +196,8 @@
       "requisition": "4744950005",
       "role": "AI Builder (Bengaluru)",
       "status": "closed",
-      "verifiedOn": "2026-11-04",
-      "note": "Absent from live Greenhouse API 2026-11-04 + direct job URL now renders the board index, not the job page. Closed between 2026-11-03 07:14 IST and 2026-11-04 07:17 IST. Application was approved 2 Nov but never submitted."
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: did NOT reappear on the live 26-job Greenhouse board scan; stays closed.]"
     },
     {
       "company": "HPE",
@@ -296,14 +296,16 @@
       "requisition": "344317",
       "role": "Application Software Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: official detail page rendered full JD again \u2014 entry-level ASE1, SQL/PL-SQL heavy, Oracle Health, no closing date; his strongest live direct-portal match.]"
     },
     {
       "company": "L&T EduTech",
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: PeopleStrong detail rendered full JD from 4-day-old cached copy; re-verified open.]"
     },
     {
       "company": "NVIDIA",
@@ -318,7 +320,7 @@
       "role": "Eng I, Eng Run",
       "status": "open",
       "verifiedOn": "2026-11-04",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Invesco: not on board page 1 on 2026-11-03 — UNCONFIRMED, kept as last-known-open. carried as last-known-open.] [2026-11-04: re-verified live via browser — Eng I, Eng Run, Hyderabad FT, End Date November 30, 2026; no stated year count (internship/academic project/prior experience).]"
+      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.] [2026-11-03: Invesco: not on board page 1 on 2026-11-03 \u2014 UNCONFIRMED, kept as last-known-open. carried as last-known-open.] [2026-11-04: re-verified live via browser \u2014 Eng I, Eng Run, Hyderabad FT, End Date November 30, 2026; no stated year count (internship/academic project/prior experience).]"
     },
     {
       "company": "Cisco",
@@ -354,7 +356,8 @@
       "requisition": "345521",
       "role": "Application Software Engineer 1 (Oracle Health)",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: page resolves, marketing shell only; carried as open.]"
     },
     {
       "company": "Trimble",
@@ -608,15 +611,15 @@
       "requisition": "JR307116",
       "role": "Software Engineering AMTS (Futureforce University Recruiting)",
       "status": "closed",
-      "verifiedOn": "2026-11-04",
-      "note": "Official detail URL 404s with 'The page you are looking for doesn't exist.' (two direct fetches 2026-11-04). Posting gone from official portal after Nov 3 (matches aggregator Nov 2/3 deadline claims). Krupal never applied."
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: stays closed (flipped 2026-11-04); aggregator posts corroborate the Nov 3 deadline; no Futureforce/AMTS replacement on the official board.]"
     },
     {
       "company": "AMETEK",
       "requisition": "1380396700",
       "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Amazon",
@@ -1183,15 +1186,15 @@
       "requisition": "10544197",
       "role": "Salesforce Developer and Admin, ISS",
       "status": "open",
-      "verifiedOn": "2026-11-04"
+      "verifiedOn": "2026-11-05"
     },
     {
       "company": "Oracle",
       "requisition": "345517",
-      "role": "Support Engineer 1 (officially listed 2026-11-01; location/experience/apply-flow UNVERIFIED — NOT a match, do not surface)",
+      "role": "Support Engineer 1 (officially listed 2026-11-01; location/experience/apply-flow UNVERIFIED \u2014 NOT a match, do not surface)",
       "status": "open",
-      "verifiedOn": "2026-11-01",
-      "note": "[2026-11-02: portal unverifiable via text fetch; carried as last-known-open.]"
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: page now renders title \"Support Engineer 1\"; JD still not rendered \u2014 stays UNVERIFIED / not-a-match (location, experience, apply-flow unverified).]"
     },
     {
       "company": "Amazon",
@@ -1245,1141 +1248,1141 @@
     {
       "company": "Amazon",
       "requisition": "10593974",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10592247",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10592055",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591316",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10590891",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10583673",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10585542",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10571791",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10571786",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10571784",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10571793",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10556180",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10565511",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10575326",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10575325",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10578772",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10580361",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10587759",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10586124",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10584599",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10584598",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10584600",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10439823",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10581433",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10582690",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10497207",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10582077",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10561007",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10578602",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10558895",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10561925",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10572202",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10553122",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10512590",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10571940",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10570254",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10570248",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10570197",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10563367",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10568413",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10568739",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10563217",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591184",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10569098",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10578193",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10572015",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10573003",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10581128",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10521287",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10593912",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10593707",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10593661",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10581082",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10565715",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10565717",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10565718",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10592289",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10592151",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591597",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10593265",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10471553",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10590988",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591021",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10578008",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10592159",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10562899",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10585996",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589608",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10585301",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10588688",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10491670",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589219",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10545175",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589829",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589588",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591199",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591189",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591201",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591095",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10582086",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10591513",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10530717",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10584462",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10572951",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576827",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576822",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576828",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10570108",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10565611",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10566722",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10563218",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576660",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10564262",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10579528",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10579529",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10578274",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10581088",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10580672",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10580670",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10580650",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10580066",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10583550",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10567547",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10571293",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576875",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10582818",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10582488",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576895",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10583561",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10576165",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10574438",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10570259",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10574424",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10575463",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10575476",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10574357",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10506707",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10575334",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10570107",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10497918",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10488478",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10502034",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589519",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10575929",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10553121",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10588284",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10587550",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10588063",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10587803",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10587573",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10586506",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10511509",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10585206",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10585096",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10459224",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10590296",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589005",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10588652",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10590307",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10463316",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10463314",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10581129",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10478694",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10375342",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10493791",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10579742",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10524238",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10558932",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10554371",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10469761",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10567650",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10544198",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10559134",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10501362",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10460975",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10562604",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589205",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589212",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589203",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589197",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10589217",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10581459",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
     {
       "company": "Amazon",
       "requisition": "10492686",
-      "role": "India software/data role — not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
+      "role": "India software/data role \u2014 not fresher-fit (senior/contract/exp-barred BQ per sweep 2026-11-01)",
       "status": "not-fit",
       "verifiedOn": "2026-11-01"
     },
@@ -3112,7 +3115,7 @@
       "role": "Executive Secretary (C-Suite)",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "Verified live 2026-11-04 (live browser on official Workday board): Hong Kong, not Hyderabad; extensive EA/PA experience — non-engineering."
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): Hong Kong, not Hyderabad; extensive EA/PA experience \u2014 non-engineering."
     },
     {
       "company": "Razorpay",
@@ -3263,8 +3266,8 @@
       "requisition": "200691524-0321",
       "role": "Junior Software Development Engineer in Test, Sales Engineering (Bengaluru)",
       "status": "closed",
-      "verifiedOn": "2026-11-04",
-      "note": "Gone from jobs.apple.com: not in search results (185 India results) and direct detail URL returns 'Page not found. Sorry, this role does not exist or is no longer available.' Live-browser verified 2026-11-04. Eligibility was never verifiable (JS-only while live)."
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: CLOSED with conclusive evidence \u2014 direct official URL now renders Apple's explicit not-found page (\"this role does not exist or is no longer available\"), corroborated by 2-day search absence while same-date postings remain visible.]"
     },
     {
       "company": "Apple",
@@ -3320,7 +3323,7 @@
       "role": "Sr. Analyst I, Infra CX (Hyderabad)",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "Verified live 2026-11-04 (live browser on official Workday board): no stated years but Infra CX (customer experience) — non-software function."
+      "note": "Verified live 2026-11-04 (live browser on official Workday board): no stated years but Infra CX (customer experience) \u2014 non-software function."
     },
     {
       "company": "Invesco",
@@ -3400,7 +3403,7 @@
       "role": "Senior Account Management (EX) - Top Tier NA, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3408,7 +3411,7 @@
       "role": "Senior Account Executive - Inside Sales, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3416,7 +3419,7 @@
       "role": "Senior Engineering Manager - Billing Platform, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, eng mgmt — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, eng mgmt \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3424,7 +3427,7 @@
       "role": "Lead - Account Management, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, sales — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, sales \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3432,7 +3435,7 @@
       "role": "Lead - Customer Success, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, CS — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, CS \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3440,7 +3443,7 @@
       "role": "Lead - Revenue Accounting, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, finance — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, finance \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3448,7 +3451,7 @@
       "role": "Field Marketing Specialist (Contract), Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, contract — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, contract \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3456,7 +3459,7 @@
       "role": "Staff Engineer - Machine Learning, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3464,7 +3467,7 @@
       "role": "Senior Business Development Manager - MEA/India (Enterprise), Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: associate, sales \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3472,7 +3475,7 @@
       "role": "Staff Engineer - Full Stack, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3480,7 +3483,7 @@
       "role": "Lead - Workplace Management (Travel & Transport Ops), Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, ops — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, ops \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3488,7 +3491,7 @@
       "role": "Lead - Sales Commission, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, finance — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, finance \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3496,7 +3499,7 @@
       "role": "Principal Engineer - Machine Learning, Hyderabad",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: director — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: director \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3504,7 +3507,7 @@
       "role": "Principal Engineer - Machine Learning, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: director — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: director \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3512,7 +3515,7 @@
       "role": "Lead - Channel Sales, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, sales — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, sales \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3520,7 +3523,7 @@
       "role": "Lead Software Engineer - Site Reliability, Hyderabad",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3528,7 +3531,7 @@
       "role": "Principal Engineer - Systems, Hyderabad",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: director — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: director \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3536,7 +3539,7 @@
       "role": "Senior Staff Engineer - Systems, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3544,7 +3547,7 @@
       "role": "Staff Product Manager, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, PM — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, PM \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3552,7 +3555,7 @@
       "role": "Lead Software Engineer - Full Stack, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3560,7 +3563,7 @@
       "role": "Principal - Solution Engineering, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3568,7 +3571,7 @@
       "role": "Principal - Solution Engineering, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3576,7 +3579,7 @@
       "role": "Lead - Product Marketing, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, marketing — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, marketing \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3584,7 +3587,7 @@
       "role": "Lead - Solution Engineer, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3592,7 +3595,7 @@
       "role": "Lead - Solution Engineer, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3600,7 +3603,7 @@
       "role": "Lead - Solution Engineer, Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3608,7 +3611,7 @@
       "role": "Lead - Solution Engineer, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3616,7 +3619,7 @@
       "role": "Deal Desk Strategist, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3624,7 +3627,7 @@
       "role": "Solution Architect, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3632,7 +3635,7 @@
       "role": "Lead - Business Systems Services, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3640,7 +3643,7 @@
       "role": "Senior Analyst - Cybersecurity Risk & Compliance, Chennai",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: associate — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: associate \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3648,7 +3651,7 @@
       "role": "Lead - Business Systems Services (Workday Technical Lead), Bengaluru",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3656,7 +3659,7 @@
       "role": "Lead Software Engineer - Full Stack, Hyderabad",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
     },
     {
       "company": "Freshworks",
@@ -3664,7 +3667,55 @@
       "role": "Staff Engineer - Full Stack, Hyderabad",
       "status": "not-fit",
       "verifiedOn": "2026-11-04",
-      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering — not fresher-eligible."
+      "note": "SmartRecruiters India API scan 2026-11-04: mid_senior, engineering \u2014 not fresher-eligible."
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4747985005",
+      "role": "Associate Manager, Startup Hunting",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-05",
+      "note": "Greenhouse board scan 2026-11-05: official JD requires \"4-7 years of B2B new-logo sales\"."
+    },
+    {
+      "company": "Razorpay",
+      "requisition": "4727236005",
+      "role": "Staff Product Manager",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-05",
+      "note": "Greenhouse board scan 2026-11-05: Staff-level PM, senior/non-entry."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1447702300",
+      "role": "Compliance Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-05",
+      "note": "jobs.ametek.com detail verified live 2026-11-05: requires 8+ yrs hardware engineering/compliance/EMI-EMC."
+    },
+    {
+      "company": "Apple",
+      "requisition": "200691522-1052",
+      "role": "Software Site Reliability Engineer - AI & Data Platforms",
+      "status": "open",
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: live in official search top-20 (Hyderabad, posted 28 Oct); eligibility UNVERIFIED \u2014 detail page does not render via text fetch; live-browser follow-up.]"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200691519-1052",
+      "role": "Software Site Reliability Engineer - AI & Data Platforms",
+      "status": "open",
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: live in official search top-20 (Hyderabad, posted 28 Oct); eligibility UNVERIFIED \u2014 detail page does not render via text fetch; live-browser follow-up.]"
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF089876W",
+      "role": "title unknown (IN-Bengaluru)",
+      "status": "open",
+      "verifiedOn": "2026-11-05",
+      "note": "[2026-11-05: new India req on official Workday board (\"Posted Today\"); card omits job title, detail URL needs slug \u2014 pending live-browser identification; NOT a match.]"
     }
   ],
   "updated": "2026-11-04"
