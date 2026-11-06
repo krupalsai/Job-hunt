@@ -29,7 +29,7 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-11-05",
+  updated: "2026-11-06",
 
   items: [
     {
@@ -47,6 +47,46 @@ const CURRENT_AFFAIRS = {
       why: "Date + theme + designating body + Indian centre is the set. 5 November is World Tsunami Awareness Day, designated by the UN General Assembly in December 2015 (Resolution A/RES/70/203), inspired by Japan's 1854 'Inamura-no-hi' story. India's Indian Tsunami Early Warning Centre (ITEWC) operates from INCOIS, Hyderabad - the Hyderabad link is the SI-paper hook.",
       source: "Vajiram & Ravi",
       url: "https://vajiramandravi.com/current-affairs/world-tsunami-awareness-day-2026/",
+    },
+    {
+      date: "2026-11-05",
+      topic: "Schemes",
+      headline: "Telangana Cabinet clears Indiramma Family Life Insurance: Rs.5 lakh cover for every family, launch on 19 November",
+      why: "Scheme + cover + launch date + application window is the set. The Telangana Cabinet on 5 November approved the Indiramma Family Life Insurance scheme giving Rs.5 lakh life cover to every eligible family in the state; it will be launched at Siddipet on 19 November, the birth anniversary of former PM Indira Gandhi, and Indiramma committees will collect applications in villages from 20 to 30 November. The same Cabinet meeting also cleared the second phase of Indiramma saree distribution.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/telangana/telangana-government-to-launch-family-insurance-scheme-on-november-19/article71671295.ece",
+    },
+    {
+      date: "2026-11-05",
+      topic: "Polity",
+      headline: "Telangana Cabinet approves separate SC and ST Commissions, 136 judicial posts and Fire Services Act ordinance",
+      why: "Body + structure + law changes is the set. The Telangana Cabinet on 5 November approved splitting the joint State Commission for SCs and STs (under the 2003 Act) into separate SC and ST Commissions, each with a chairperson and five members; sanctioned 136 posts for judicial institutions including new Junior Civil Judge courts at Kataram and Elkathurthy; cleared an ordinance amending the Telangana Fire Services Act, 1999; and cut the appeal window under Section 12(A) of the Telangana Survey and Boundaries Act, 1923 from 60 days to 30 days.",
+      source: "Metro India",
+      url: "https://www.metroindia.net/news/articlenews/telangana-cabinet-approves-separate-sc-st-commissions-46838",
+    },
+    {
+      date: "2026-11-04",
+      topic: "Defence",
+      headline: "Union Cabinet approves two-year extra engagement for Agniveers; 75% can now serve six years",
+      why: "Scheme + who benefits + pay is the set. The Union Cabinet on 4 November approved a two-year additional engagement for the 75% of Agniveers not retained after their initial four-year tenure, so they can serve up to six years and then apply for regular enrolment; the extended period pays Rs.43,500 in the first year and Rs.47,500 in the second, with an enhanced Seva Nidhi package. CDS General N.S. Raja Subramani announced the revision; the Agnipath scheme began in June 2022 with 25% retention after four years.",
+      source: "The Week",
+      url: "https://www.theweek.in/news/defence/2026/11/05/a-win-win-for-all-how-agniveers-and-armed-forces-benefit-from-agnipath-scheme-revision.html",
+    },
+    {
+      date: "2026-11-04",
+      topic: "Schemes",
+      headline: "Centre extends Swachh Bharat Mission (Grameen) Phase-II to March 2028 for ODF Plus target",
+      why: "Scheme + new end date + goal is the set. The Centre has extended Swachh Bharat Mission (Grameen) Phase-II to March 2028 so remaining villages can reach ODF Plus status and sanitation assets can be sustained; about Rs.7,000 crore is expected for the scheme in the 2027-28 Budget, and the Finance Ministry has said there will be no further extension beyond 31 March 2028. Phase-II began in 2020, focused on ODF sustainability and solid and liquid waste management.",
+      source: "Gyan Hi Gyan",
+      url: "https://gyanhigyan.com/national/government-extends-swachh-bharat-mission-(rural)-phase-ii/cid19490722.htm",
+    },
+    {
+      date: "2026-11-04",
+      topic: "Polity",
+      headline: "Supreme Court: laws penalising more than two children have lost relevance; refers Javed case to larger bench",
+      why: "Case + bench + numbers is the set. A Supreme Court bench of Justices P.S. Narasimha and Alok Aradhe held on 4 November that laws penalising families with more than two children 'have lost their relevance' because the fear of overpopulation behind them has crumbled, and referred the 2003 Javed v. State of Haryana ruling (which had upheld such disqualification from panchayat polls) to a larger bench. India's total fertility rate has fallen from about 3.0 in 2003 to 1.9, below the replacement rate of 2.1; the case was Mangala Bhimrao Ingle v. Additional Commissioner, Amravati.",
+      source: "The Hindu BusinessLine",
+      url: "https://www.thehindubusinessline.com/news/falling-fertility-rate-makes-two-child-penalties-outdated-in-india-says-sc-judgment/article71666517.ece",
     },
     {
       date: "2026-11-04",
@@ -143,6 +183,14 @@ const CURRENT_AFFAIRS = {
       why: "Cities + model is the set. Revenue Minister Ponguleti Srinivas Reddy announced on 4 November that G+5 Indiramma housing towers will come up in the Warangal, Nalgonda, Nizamabad and Karimnagar municipal corporations - extending the urban Indiramma Towers model beyond Hyderabad - under the 'Maa Indiramma Intlo Deepavali' initiative; beneficiary notification is expected by Deepavali. In the same announcement: 2,21,500 of 4.5 lakh phase-1 rural houses completed.",
       source: "The Hindu",
       url: "https://www.thehindu.com/news/national/telangana/g5-indiramma-housing-towers-in-nalgonda-warangal-nizamabad-and-karimangar-corporations-telangana-minister/article71666775.ece",
+    },
+    {
+      date: "2026-11-03",
+      topic: "Science",
+      headline: "QS Asia University Rankings 2026: IISc Bengaluru and five IITs in Asia's top 100; IIT Delhi best in India at 66th",
+      why: "Rank + who slipped is the set. In the QS Asia University Rankings 2026 announced on 3 November, IISc Bengaluru and five IITs made Asia's top 100, but all six slipped from last year: IIT Delhi remains India's highest-ranked at 66th (59th last year) and IISc Bengaluru at 79th (64th last year). India leads Asia on research output per faculty member.",
+      source: "ETV Bharat",
+      url: "https://www.etvbharat.com/en/bharat/iisc-bengaluru-and-5-iits-among-asia-top-100-universities-all-slip-ranks-since-last-year-according-to-qs-rankings-enn26110306681",
     },
     {
       date: "2026-11-03",
@@ -280,6 +328,14 @@ const CURRENT_AFFAIRS = {
       why: "Value + connectivity is the set. Prime Minister Narendra Modi inaugurated and laid the foundation stone for Pune Metro projects worth around Rs 21,800 crore via video conferencing, improving connectivity to IT hubs like Hinjawadi and Shivajinagar. India's operational metro network has expanded from 248 km to nearly 1,200 km across 26 cities over the past 12 years.",
       source: "TestMeNow",
       url: "https://testmenow.in/current-affairs",
+    },
+    {
+      date: "2026-11-02",
+      topic: "Science",
+      headline: "IIT Delhi and DRDO develop indigenous 2.2 kg lightweight firefighter suit, withstands 1,300°C",
+      why: "Developers + weight + heat rating + cost is the set. IIT Delhi and DRDO have developed an indigenous lightweight fire protection suit weighing just 2.2 kg that withstands heat up to 1,300°C, with a Thermal Protective Performance rating over 50 and under 3% burn injury in manikin tests; it costs an estimated Rs.30,000-40,000 against Rs.1-3 lakh for imported suits. Tested at DRDO's Skill Development Centre, Pilkhuwa, it is certified and in transfer-of-technology stage.",
+      source: "ETV Bharat",
+      url: "https://www.etvbharat.com/en/technology/firefighting-to-become-easy-with-indigenous-lightweight-suit-developed-by-iit-delhi-and-drdo-enn26110202523",
     },
     {
       date: "2026-11-02",
