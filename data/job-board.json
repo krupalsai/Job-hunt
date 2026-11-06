@@ -208,11 +208,11 @@
     "experience": "No experience minimum (internship/academic project/prior experience preferred)",
     "fit": "Eligible â 0 years",
     "location": "Hyderabad",
-    "note": "Requisition R-15795-1. Eng I, Eng Run. Bachelor's CS/IS/MIS/BA; production support, SQL, Python; internship/academic project/prior experience preferred, no minimum. Full-time, hybrid 4 days/week in office. Published 26 Oct 2026, no closing date â can vanish without warning. Pack + resume ready, honest ATS 65. [2026-11-04: re-verified live via browser; posting now shows End Date November 30, 2026 — no longer \"no closing date\".]",
+    "note": "Requisition R-15795-1. Eng I, Eng Run. Bachelor's CS/IS/MIS/BA; production support, SQL, Python; internship/academic project/prior experience preferred, no minimum. Full-time, hybrid 4 days/week in office. Published 26 Oct 2026, no closing date â can vanish without warning. Pack + resume ready, honest ATS 65. [2026-11-04: re-verified live via browser; posting now shows End Date November 30, 2026 — no longer \"no closing date\".] [2026-11-06: re-verified live via Workday API + detail JSON-LD; validThrough 2026-11-30 confirmed.]",
     "officialUrl": "https://invesco.wd1.myworkdayjobs.com/IVZ/job/Hyderabad-Telangana/Eng-I--Eng-Run_R-15795-1",
     "role": "Eng I, Eng Run",
     "status": "Open â verified live",
-    "verifiedOn": "2026-11-04",
+    "verifiedOn": "2026-11-06",
     "workMode": "Hybrid"
   },
   {
