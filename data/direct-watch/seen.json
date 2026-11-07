@@ -6,7 +6,7 @@
       "requisition": "10453457",
       "role": "Software Dev Engineer I (University Talent)",
       "status": "applied",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Amazon",
@@ -41,7 +41,7 @@
       "requisition": "105109659337007814",
       "role": "Cloud AI Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Microsoft",
@@ -54,9 +54,9 @@
       "company": "Oracle",
       "requisition": "342318",
       "role": "Support Engineer 1",
-      "status": "open",
-      "verifiedOn": "2026-11-06",
-      "note": "[2026-11-05: page now renders title \"Support Engineer 1\" (was shell-only 3-4 Nov); JD still not rendered — carried as last-known-open.]"
+      "status": "closed",
+      "verifiedOn": "2026-11-07",
+      "note": "[2026-11-05: page now renders title \"Support Engineer 1\" (was shell-only 3-4 Nov); JD still not rendered — carried as last-known-open.] [2026-11-07: official detail page now says 'This job is no longer available' - confirmed closed; was open through 2026-11-06.]"
     },
     {
       "company": "Cisco",
@@ -146,7 +146,7 @@
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure. Re-confirmed open 2026-11-01 via direct official URL (keyword-search misses still not trusted)."
     },
     {
@@ -161,28 +161,28 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Razorpay",
@@ -281,7 +281,7 @@
       "requisition": "R56671",
       "role": "AI/ML Engineer (P1)",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
@@ -296,7 +296,7 @@
       "requisition": "344317",
       "role": "Application Software Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-05: official detail page rendered full JD again — entry-level ASE1, SQL/PL-SQL heavy, Oracle Health, no closing date; his strongest live direct-portal match.]"
     },
     {
@@ -304,7 +304,7 @@
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-05: PeopleStrong detail rendered full JD from 4-day-old cached copy; re-verified open.]"
     },
     {
@@ -319,7 +319,7 @@
       "requisition": "R-15795-1",
       "role": "Eng I, Eng Run",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-06: still open; JSON-LD validThrough 2026-11-30 (posted 2026-10-26, Hyderabad, FULL_TIME) — first last date established; apply by 30 Nov 2026.]"
     },
     {
@@ -356,7 +356,7 @@
       "requisition": "345521",
       "role": "Application Software Engineer 1 (Oracle Health)",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-05: page resolves, marketing shell only; carried as open.]"
     },
     {
@@ -483,7 +483,7 @@
       "requisition": "R56485",
       "role": "Site Reliability Engineer (P1, Entry Level) - Global AI Site Reliability & Security Operations",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-06: still open; JD asks 2-3 yrs hands-on cloud/support/DevOps/SRE despite P1 Entry Level label — borderline for 0-exp; stays open.]"
     },
     {
@@ -491,7 +491,7 @@
       "requisition": "R56012",
       "role": "Site Reliablity Engineer II (Machine Learning Engineer, P2 early-career)",
       "status": "open",
-      "verifiedOn": "2026-11-06",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
@@ -619,7 +619,7 @@
       "requisition": "1380396700",
       "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Amazon",
@@ -1186,14 +1186,14 @@
       "requisition": "10544197",
       "role": "Salesforce Developer and Admin, ISS",
       "status": "open",
-      "verifiedOn": "2026-11-06"
+      "verifiedOn": "2026-11-07"
     },
     {
       "company": "Oracle",
       "requisition": "345517",
       "role": "Support Engineer 1 (officially listed 2026-11-01; location/experience/apply-flow UNVERIFIED — NOT a match, do not surface)",
       "status": "open",
-      "verifiedOn": "2026-11-05",
+      "verifiedOn": "2026-11-07",
       "note": "[2026-11-05: page now renders title \"Support Engineer 1\"; JD still not rendered — stays UNVERIFIED / not-a-match (location, experience, apply-flow unverified).]"
     },
     {
@@ -3697,9 +3697,9 @@
       "company": "Apple",
       "requisition": "200691522-1052",
       "role": "Software Site Reliability Engineer - AI & Data Platforms",
-      "status": "open",
-      "verifiedOn": "2026-11-06",
-      "note": "[2026-11-06: still in official search top-20; eligibility still UNVERIFIED — detail fetch blocked by no-retry directive; try curl payload method next sweep.]"
+      "status": "not-fit",
+      "verifiedOn": "2026-11-07",
+      "note": "[2026-11-06: still in official search top-20; eligibility still UNVERIFIED — detail fetch blocked by no-retry directive; try curl payload method next sweep.] [2026-11-07: eligibility VERIFIED not-fit - curl payload method: Minimum Qualifications require 3+ years in software SRE/software development roles; ICT3.]"
     },
     {
       "company": "Apple",
@@ -4620,7 +4620,55 @@
       "status": "not-fit",
       "verifiedOn": "2026-11-06",
       "note": "Official BrassRing board index 2026-11-06: not-fit — System Engineer, Identity, Philippines (Remote), posted 29-Sep-2026. NOT-FIT: 5+ years enterprise identity experience, non-India. (Distinct from seen 11237BR Sy"
+    },
+    {
+      "company": "Oracle",
+      "requisition": "345528",
+      "role": "Support Engineer 1",
+      "status": "closed",
+      "verifiedOn": "2026-11-07",
+      "note": "Official Oracle portal says 'This job is no longer available' (verified 2026-11-07). Aggregator-only probe from 2026-11-06, resolved conclusively."
+    },
+    {
+      "company": "Oracle",
+      "requisition": "339248",
+      "role": "Support Engineer 1, Bengaluru, 0-2 yrs",
+      "status": "closed",
+      "verifiedOn": "2026-11-07",
+      "note": "Official Oracle portal says 'This job is no longer available' (verified 2026-11-07). Aggregator-only probe from 2026-11-06, resolved conclusively."
+    },
+    {
+      "company": "Visa",
+      "requisition": "REF089997W",
+      "role": "Director (Technology Leader, Platform/Application Development, GenAI, Python, Java, 14-18 years exp.)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-07",
+      "note": "Workday API India scan 2026-11-07: Director-level role, 14-18 yrs experience - senior, not fresher-eligible."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1448543400",
+      "role": "Sr. Software Engineer (MOCON)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-07",
+      "note": "Detail verified live 2026-11-07: Sr. title + senior-scope responsibilities; no numeric experience bar stated - verdict on title/scope."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1430448700",
+      "role": "Sitecore Specialist",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-07",
+      "note": "Detail verified live 2026-11-07: requires 4-7 yrs Sitecore CMS experience."
+    },
+    {
+      "company": "Invesco",
+      "requisition": "R-16011",
+      "role": "Talent Acquisition Partner",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-07",
+      "note": "Workday API India scan 2026-11-07: recruiting role, not software eng; title-only verdict."
     }
   ],
-  "updated": "2026-11-04"
+  "updated": "2026-11-07"
 }
