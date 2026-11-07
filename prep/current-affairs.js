@@ -29,9 +29,49 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-11-06",
+  updated: "2026-11-07",
 
   items: [
+    {
+      date: "2026-11-06",
+      topic: "Summits",
+      headline: "Invest Telangana Global Summit 2026: six expos including Raksha Expo, Telangana Climate Conclave on 8 December",
+      why: "New facts beyond the 15 October announcement are the six expos + conclave date + venue. At the 6 November review, CM A. Revanth Reddy said the Invest Telangana Global Summit 2026 (7-9 December, Young India Skills University campus, Bharat Future City) will feature six exhibition halls - Raksha Expo (defence, aerospace, space, cyber, drones and robotics, with an air show), pharma and life sciences, education, India Joy, a start-up pavilion and agriculture - plus a Telangana Climate Conclave on 8 December on El Nino-linked climate change and drought; a dedicated liaison officer for every delegate, and the full arrangements plan by 15 November.",
+      source: "The Times of India",
+      url: "https://timesofindia.indiatimes.com/city/hyderabad/six-expos-to-be-part-of-telangana-global-summit-cm/articleshow/135584112.cms",
+    },
+    {
+      date: "2026-11-06",
+      topic: "Schemes",
+      headline: "Telangana expands minority overseas scholarships to Egypt and Saudi Arabia; Rs.25 crore cleared for Haj House extension",
+      why: "Scheme + new destinations + amount is the set. Deputy CM Mallu Bhatti Vikramarka announced on 6 November that Egypt and Saudi Arabia will be added to the approved destinations under the Minorities Overseas Scholarship scheme, and directed GHMC to release Rs.25 crore from Wakf Board land-acquisition dues to complete the multi-storeyed extension beside Nampally's Haj House; pending funds for minority schools and study circles will be released without delay, and Shaadi Mubarak, pre-matric scholarships and Rajiv Yuva Vikasam applications will be systematically examined.",
+      source: "NewsMeter",
+      url: "https://newsmeter.in/regional/telangana/overseas-scholarship-clearing-pending-funds-bhatti-announces-major-push-for-minority-welfare-778867",
+    },
+    {
+      date: "2026-11-06",
+      topic: "Awards",
+      headline: "First Chief Minister's State Child Bravery Award presented to six Uttarakhand children; Rs.51,000 each via DBT",
+      why: "First edition + number + prize is the set. Union Home Minister Amit Shah and Uttarakhand CM Pushkar Singh Dhami presented the inaugural Chief Minister's State Child Bravery Award to six children at Parade Ground, Dehradun, on 6 November; each received a medal, a citation and Rs.51,000 transferred directly to their bank accounts. Instituted for 2026-27 by the Department of Women Empowerment and Child Development, it recognised Divya, Deepika and Aarav Singh (bear attack, Chamoli, 22 December 2025) and Aaradhya of Dehradun (cloudburst alertness, 2 June 2026), among others.",
+      source: "The News Mill",
+      url: "https://thenewsmill.com/2026/11/amit-shah-and-cm-dhami-present-uttarakhand-child-bravery-awards-to-six/",
+    },
+    {
+      date: "2026-11-06",
+      topic: "Defence",
+      headline: "IAF's Software Development Institute signs MoA with IIT-Madras for indigenous airborne digital communication system",
+      why: "Partners + purpose + Atmanirbhar link is the set. The Indian Air Force's Software Development Institute (SDI) signed a memorandum of agreement with IIT-Madras and IITM Pravartak Technologies Foundation on 6 November for the joint design and development of an indigenous digital communication system for airborne applications, to cut reliance on imported systems; signed by Air Vice Marshal Sarabjit Singh (Commandant, SDI) and M. J. Shankar Raman (CEO, IITM Pravartak) in the presence of IIT-Madras Director V. Kamakoti.",
+      source: "Daily Excelsior",
+      url: "https://www.dailyexcelsior.com/iafs-sdi-partners-with-iit-madras-to-develop-indigenous-digital-communication-system/",
+    },
+    {
+      date: "2026-11-06",
+      topic: "Polity",
+      headline: "Amit Shah presides over Uttarakhand Police's Rashtrapati Nishan ceremony in Dehradun; President's Police Medal conferred",
+      why: "Ceremony + medal + occasion is the set. Union Home Minister Amit Shah presided over the Rashtrapati Nishan Alankaran Samaroh (President's Insignia Award Ceremony) in Dehradun on 6 November, conferring the President's Police Medal and the Commendable Service Medal on Uttarakhand Police officers and jawans, and released a special postal cover dedicated to Uttarakhand Police along with the force's police magazine.",
+      source: "NationPress",
+      url: "https://www.nationpress.com/national/shah-honours-uttarakhand-police-dehradun",
+    },
     {
       date: "2026-11-05",
       topic: "Sports",
@@ -63,6 +103,30 @@ const CURRENT_AFFAIRS = {
       why: "Body + structure + law changes is the set. The Telangana Cabinet on 5 November approved splitting the joint State Commission for SCs and STs (under the 2003 Act) into separate SC and ST Commissions, each with a chairperson and five members; sanctioned 136 posts for judicial institutions including new Junior Civil Judge courts at Kataram and Elkathurthy; cleared an ordinance amending the Telangana Fire Services Act, 1999; and cut the appeal window under Section 12(A) of the Telangana Survey and Boundaries Act, 1923 from 60 days to 30 days.",
       source: "Metro India",
       url: "https://www.metroindia.net/news/articlenews/telangana-cabinet-approves-separate-sc-st-commissions-46838",
+    },
+    {
+      date: "2026-11-05",
+      topic: "Infrastructure",
+      headline: "Telangana Cabinet clears Rs.4,193 crore to repair Kaleshwaram's three barrages by end of December",
+      why: "Amount + three barrages + authority is the set. The Telangana Cabinet on 5 November approved Rs.4,193 crore for the repair and rehabilitation of the Medigadda, Annaram and Sundilla barrages of the Kaleshwaram Lift Irrigation Project, following National Dam Safety Authority guidelines (with Central Water Commission inputs), aiming to restore the barrages by the end of December 2026.",
+      source: "Mirror Now",
+      url: "https://www.mirrornow.in/hyderabad-news/telangana-cabinet-approves-kaleshwaram-barrage-repairs-and-new-welfare-schemes-article-156471925",
+    },
+    {
+      date: "2026-11-05",
+      topic: "Energy",
+      headline: "Maharashtra ranked second behind Gujarat in national renewable-energy rankings; wins award at Bharat RE Summit",
+      why: "Rank + framework + presenter is the set. Maharashtra received a national award for renewable-energy performance at the closing session of the Bharat RE Summit and Expo 2026 (2-5 November, Bharat Mandapam, New Delhi), ranking second behind Gujarat among states in the general category under the Ministry of New and Renewable Energy's Renewable Energy State Assessment Framework (RE-SAF), developed with Power Finance Corporation; Vice-President C. P. Radhakrishnan presented the award and Union Minister Pralhad Joshi announced the rankings. The national target is 500 GW non-fossil capacity by 2030.",
+      source: "Free Press Journal",
+      url: "https://www.freepressjournal.in/corporate-gallery/maharashtra-wins-national-award-for-renewable-energy-performance",
+    },
+    {
+      date: "2026-11-05",
+      topic: "Summits",
+      headline: "Indo-Pacific Regional Dialogue 2026 concludes in New Delhi; theme was science, technology and academic cooperation",
+      why: "Forum + theme + who spoke is the set. The three-day Indo-Pacific Regional Dialogue 2026 (IPRD-2026), the Indian Navy's annual apex-level international strategic dialogue organised with the National Maritime Foundation, concluded on 5 November in New Delhi on the theme 'Science, Technology and Academic Cooperation in the Indo-Pacific'; CDS General N. S. Raja Subramani gave the special address on the concluding day and Defence Secretary Rajesh Kumar Singh delivered the valedictory address.",
+      source: "Aviation & Defence Universe",
+      url: "https://www.aviation-defence-universe.com/iprd-2026-concludes-with-focus-on-cooperative-ocean-governance-and-responsible-maritime-technologies/",
     },
     {
       date: "2026-11-04",
@@ -2500,6 +2564,14 @@ const CURRENT_AFFAIRS = {
       why: "Altitude + developer is the askable pair. The HAPS airship developed by ADRDE, Agra, reached about 21 km on 6 October and held 20 km for over 30 minutes — a milestone for stratospheric pseudo-satellite capability.",
       source: "FreeJobAlert",
       url: "https://www.freejobalert.com/articles/daily-current-affairs-14-october-2026-10464",
+    },
+    {
+      date: "2026-09-28",
+      topic: "Defence",
+      headline: "AMCA first prototype to fly in September 2028, LCA Mk2 in September 2027; HAL did not qualify to build AMCA prototypes",
+      why: "Timelines + who builds + what is undecided is the set. At the NDTV Defence Summit 2026 in New Delhi on 27 September, Defence Secretary Rajesh Kumar Singh said the indigenous Advanced Medium Combat Aircraft (AMCA), India's fifth-generation stealth fighter, is a national priority with its first prototype expected to fly in September 2028 (LCA Mk2 first flight September 2027); HAL did not qualify on technical grounds to build the AMCA prototypes - the first time it has been kept out of an indigenous fighter project - and no decision has yet been taken on acquiring Russia's Su-57.",
+      source: "NDTV",
+      url: "https://www.ndtv.com/india-news/ndtv-defence-summit-china-pakistan-from-6th-gen-fighters-to-ai-15-biggest-takeaways-from-ndtv-defence-summit-12111614",
     },
   ],
 
