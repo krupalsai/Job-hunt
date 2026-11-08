@@ -419,16 +419,28 @@
     "officialUrl": "https://www.google.com/about/careers/applications/jobs/results/101488204921610950",
     "note": "Job ID 101488204921610950; Google Cloud Consulting Professional Services. Min quals: Bachelor's + developing/troubleshooting data processing algorithms (Python/Java/Scala/Spark/Hadoop) + building ML/data science solutions; no numeric years minimum. No closing date — can vanish without notice. Already delivered to Krupal 2026-11-04 via digest (resume Krupal_Resume_Google_DataAI.pdf, honest ATS 58; Fenil referral slot 2/3, valid to 1 Dec 2026); boarded now after direct-watch verification. Application is his tap."
   },
-{
-  "company": "Salesforce",
-  "role": "System Analyst",
-  "experience": "0–3 yrs platform/systems support",
-  "fit": "Eligible — long-shot (Salesforce admin + certs gap)",
-  "location": "Hyderabad / Bangalore",
-  "workMode": "Office Tech-Flexible",
-  "status": "Open — verified live",
-  "verifiedOn": "2026-11-08",
-  "officialUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/India---Hyderabad/System-Analyst_JR367594",
-  "note": "Job ID JR367594; Data Foundations team — internal Salesforce data platforms + governance, Enterprise Technology & Infrastructure. Min quals: Bachelor's CS/business/related + 0–3 yrs platform/systems support (enterprise CRM/Salesforce). Must-have: Salesforce admin — Sales Cloud, Service Cloud, custom objects, workflows, Flow, approval processes, sharing/security; certs ADM-201/ADM-211/App Builder/Platform Dev I achieved or in pursuit (Krupal holds none — honest gap). Futureforce University Recruiting. END DATE Nov 11, 2026 — closes in ~3 days. Pack + tailored resume ready, honest ATS 50 (long-shot). Referral shortlist in pack."
-}
+  {
+    "company": "Salesforce",
+    "role": "System Analyst",
+    "experience": "0–3 yrs platform/systems support",
+    "fit": "Eligible — long-shot (Salesforce admin + certs gap)",
+    "location": "Hyderabad / Bangalore",
+    "workMode": "Office Tech-Flexible",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-08",
+    "officialUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/India---Hyderabad/System-Analyst_JR367594",
+    "note": "Job ID JR367594; Data Foundations team — internal Salesforce data platforms + governance, Enterprise Technology & Infrastructure. Min quals: Bachelor's CS/business/related + 0–3 yrs platform/systems support (enterprise CRM/Salesforce). Must-have: Salesforce admin — Sales Cloud, Service Cloud, custom objects, workflows, Flow, approval processes, sharing/security; certs ADM-201/ADM-211/App Builder/Platform Dev I achieved or in pursuit (Krupal holds none — honest gap). Futureforce University Recruiting. END DATE Nov 11, 2026 — closes in ~3 days. Pack + tailored resume ready, honest ATS 50 (long-shot). Referral shortlist in pack."
+  },
+  {
+    "company": "Stripe",
+    "role": "Software Engineer, New Grad",
+    "location": "Bengaluru",
+    "workMode": "100% office (Bengaluru Delivery Center)",
+    "experience": "0–18 months, degree by summer 2027",
+    "fit": "Eligible — long-shot (competitiveness)",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-08",
+    "officialUrl": "https://stripe.com/careers/listing/software-engineer-new-grad/8130876",
+    "note": "Job 8130876, published 2026-10-28. Min bar: Bachelor’s/Master’s CS or related, obtained by summer 2027; new grads ≤18 months professional experience (excl. internships). Stack: Java, Ruby, JavaScript, Scala, Go. JD names leveraging AI tools with rigorous review. No closing date; pay undisclosed (Stripe does not publish ranges in every country). Honest ATS 80. Corrected verdict: eligible on the written bar (2025 grad, 0 months experience) — earlier “2027-batch, not a clean fit” reading was wrong."
+  }
 ]
