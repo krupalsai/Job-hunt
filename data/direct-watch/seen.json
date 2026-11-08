@@ -6,7 +6,7 @@
       "requisition": "10453457",
       "role": "Software Dev Engineer I (University Talent)",
       "status": "applied",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Amazon",
@@ -41,7 +41,7 @@
       "requisition": "105109659337007814",
       "role": "Cloud AI Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Microsoft",
@@ -146,7 +146,7 @@
       "requisition": "1441296700",
       "role": "AI Engineer/Developer",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure. Re-confirmed open 2026-11-01 via direct official URL (keyword-search misses still not trusted)."
     },
     {
@@ -161,28 +161,28 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer-fullstack-app",
       "role": "Software Engineer (Fullstack + React Native)",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Heizen",
       "requisition": "software-engineer",
       "role": "Software Development Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Razorpay",
@@ -281,7 +281,7 @@
       "requisition": "R56671",
       "role": "AI/ML Engineer (P1)",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
@@ -296,7 +296,7 @@
       "requisition": "344317",
       "role": "Application Software Engineer 1",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-05: official detail page rendered full JD again — entry-level ASE1, SQL/PL-SQL heavy, Oracle Health, no closing date; his strongest live direct-portal match.]"
     },
     {
@@ -304,7 +304,7 @@
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-05: PeopleStrong detail rendered full JD from 4-day-old cached copy; re-verified open.]"
     },
     {
@@ -319,7 +319,7 @@
       "requisition": "R-15795-1",
       "role": "Eng I, Eng Run",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-06: still open; JSON-LD validThrough 2026-11-30 (posted 2026-10-26, Hyderabad, FULL_TIME) — first last date established; apply by 30 Nov 2026.]"
     },
     {
@@ -355,9 +355,9 @@
       "company": "Oracle",
       "requisition": "345521",
       "role": "Application Software Engineer 1 (Oracle Health)",
-      "status": "open",
-      "verifiedOn": "2026-11-07",
-      "note": "[2026-11-05: page resolves, marketing shell only; carried as open.]"
+      "status": "closed",
+      "verifiedOn": "2026-11-08",
+      "note": "Official detail page now renders 'This job is no longer available.' — closed between 2026-11-07 and 2026-11-08. Was open (Oracle Health ASE1); pack oracle-application-software-engineer-345521.md retained."
     },
     {
       "company": "Trimble",
@@ -483,7 +483,7 @@
       "requisition": "R56485",
       "role": "Site Reliability Engineer (P1, Entry Level) - Global AI Site Reliability & Security Operations",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-06: still open; JD asks 2-3 yrs hands-on cloud/support/DevOps/SRE despite P1 Entry Level label — borderline for 0-exp; stays open.]"
     },
     {
@@ -491,7 +491,7 @@
       "requisition": "R56012",
       "role": "Site Reliablity Engineer II (Machine Learning Engineer, P2 early-career)",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-03: Trimble Workday board JS-only, 2nd day 2026-11-03. carried as last-known-open.] [2026-11-04: Trimble Workday board JS-only (\"0 JOBS FOUND\" bot shell) 2026-11-04. carried as last-known-open.]"
     },
     {
@@ -619,7 +619,7 @@
       "requisition": "1380396700",
       "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Amazon",
@@ -1186,14 +1186,14 @@
       "requisition": "10544197",
       "role": "Salesforce Developer and Admin, ISS",
       "status": "open",
-      "verifiedOn": "2026-11-07"
+      "verifiedOn": "2026-11-08"
     },
     {
       "company": "Oracle",
       "requisition": "345517",
       "role": "Support Engineer 1 (officially listed 2026-11-01; location/experience/apply-flow UNVERIFIED — NOT a match, do not surface)",
       "status": "open",
-      "verifiedOn": "2026-11-07",
+      "verifiedOn": "2026-11-08",
       "note": "[2026-11-05: page now renders title \"Support Engineer 1\"; JD still not rendered — stays UNVERIFIED / not-a-match (location, experience, apply-flow unverified).]"
     },
     {
@@ -4668,7 +4668,3038 @@
       "status": "not-fit",
       "verifiedOn": "2026-11-07",
       "note": "Workday API India scan 2026-11-07: recruiting role, not software eng; title-only verdict."
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10403403",
+      "role": "Software Development Engineer II, Amazon (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10419476",
+      "role": "Software Development Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10477225",
+      "role": "Senior Software Development Engineer (Chennai, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10486982",
+      "role": "Software Development Engineer, FBA (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10502808",
+      "role": "Software Development Engineer II, Amazon (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10530754",
+      "role": "Software Development Engineer (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10531789",
+      "role": "Software Development Engineer II, TFS (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10546640",
+      "role": "Software Development Engineer, Amazon (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10554323",
+      "role": "Software Development Engineer, Amazon (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10555781",
+      "role": "Software Development Engineer II (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10555786",
+      "role": "Software Development Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10556600",
+      "role": "Software Development Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10556603",
+      "role": "Software Development Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10556606",
+      "role": "Software Development Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10560180",
+      "role": "Software Development Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10576171",
+      "role": "Software Development Engineer II (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10590907",
+      "role": "Software Development Engineer, RBS Tech (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10592249",
+      "role": "Software Development Engineer, Alexa Connections (Chennai, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10597850",
+      "role": "Software Development Engineer, DSP Tech (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10411242",
+      "role": "Software Development Engineer II, FGBS (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10425596",
+      "role": "Software Development Engineer, AFFS, Amazon (Pune, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "3151212",
+      "role": "Software Development Engineer - II (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "3172711",
+      "role": "Software Development Engineer II, Amazon (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "3187761",
+      "role": "Software Development Engineer (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "3193935",
+      "role": "Software Development Engineer, Amazon Books (Chennai, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10495544",
+      "role": "Data Engineer II, ISS Central Science and Analytics (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10497707",
+      "role": "Data Engineer, MIDAS, Digital Acceleration (Chennai, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10499657",
+      "role": "Data Engineer I, CMT (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10499545",
+      "role": "Data Engineer II, CMT (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10512619",
+      "role": "Data Engineer II, MIDAS, Digital Acceleration (Chennai, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10513733",
+      "role": "Data Engineer II, Compliance Shared Services, RISC (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10522120",
+      "role": "Sr. Data Engineer - Supply Chain Automation (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10467481",
+      "role": "Data Engineer, Amazon Ads Sales Analytics (DIGI) (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10452789",
+      "role": "Data Engineer II, GTS, GTS (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10456646",
+      "role": "Data Engineer, WW Returns & ReComm Tech& Inn (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10411011",
+      "role": "Data Engineer II, TSE Operations Analytics (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10424471",
+      "role": "Data Engineer, Alexa Smart Home (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10594153",
+      "role": "Data Engineer II (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10594179",
+      "role": "Data Engineer, ShipTech Analytics (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10597397",
+      "role": "Data Engineer I, SPIV Data Engineering (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10576634",
+      "role": "Data Engineer, IN Data Engineering & Analytics (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10577177",
+      "role": "Data Engineer II, Infra-Finance Business intelligence & Transformations (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10582732",
+      "role": "Data Engineer I (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10585975",
+      "role": "Data Engineer II (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10585976",
+      "role": "Data Engineer II (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10593262",
+      "role": "Data Engineer III, Data Engineering India (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10598396",
+      "role": "Data Engineer II, Alexa AI - ML Engineering (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10598398",
+      "role": "Data Engineer II, Alexa AI - ML Engineering (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10525238",
+      "role": "Data Engineer - II (FTC), DAVENGERS(Data Avengers) (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10536801",
+      "role": "Data Engineer, Flex Analytics (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10543425",
+      "role": "Data Engineer - II, LMAQ-DE (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10551531",
+      "role": "Data Engineer I, DSP Analytics (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10498825",
+      "role": "Applied Scientist, Alexa Edge AI (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10513309",
+      "role": "Senior Applied Scientist, International Machine Learning (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10515647",
+      "role": "Data Scientist II, International Machine Learning (Gurugram, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10516454",
+      "role": "Applied Scientist II, International Machine Learning (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10516455",
+      "role": "Applied Scientist II, International Machine Learning (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10437316",
+      "role": "Senior Applied Scientist, FinAuto (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10575107",
+      "role": "Applied Scientist, Alexa Edge AI (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10579254",
+      "role": "Senior Applied Scientist, (AiRES) (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10586531",
+      "role": "Applied Scientist, Minerva (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10591594",
+      "role": "Applied Scientist, Minerva (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10593286",
+      "role": "Applied Scientist (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10593555",
+      "role": "Applied Scientist (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10566353",
+      "role": "Applied Scientist, International Seller Services (Hyderabad, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10530900",
+      "role": "Applied Scientist II, CMT (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10539787",
+      "role": "Applied Scientist, Traffic Quality (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10563687",
+      "role": "Applied Scientist II, Amazon Shipping (Gurugram, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10565259",
+      "role": "Applied Scientist II, Alexa Ads (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10432006",
+      "role": "Applied Scientist, Alexa Edge AI (Bengaluru, India)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "3+/5+/7+ yrs or PhD/Master's — BQ-verified from official amazon.jobs search.json payload, 2026-11-08 sweep"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10506499",
+      "role": "Data Engineer I FTC Payfort",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-11-08",
+      "note": "Fixed-term contract (also 1+ yrs)"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10507927",
+      "role": "Applied Scientist I, CMT",
+      "status": "open",
+      "verifiedOn": "2026-11-08",
+      "note": "Chennai; BQ programming + SQL, no years minimum, no degree bar; posted 2026-08-20; pack amazon-applied-scientist-i-cmt-10507927.md, honest ATS 50, long-shot"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10458636",
+      "role": "Applied Scientist, International Machine Learning",
+      "status": "open",
+      "verifiedOn": "2026-11-08",
+      "note": "Bengaluru; BQ programming + SQL, no years minimum; PQ publications; posted 2026-06-25; pack amazon-applied-scientist-international-ml-10458636.md, honest ATS 48, long-shot"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10555817",
+      "role": "Applied Scientist, International Machine Learning",
+      "status": "open",
+      "verifiedOn": "2026-11-08",
+      "note": "Gurugram; BQ programming + SQL, no years minimum; PQ publications; posted 2026-09-22; pack amazon-applied-scientist-international-ml-10555817.md, honest ATS 48, long-shot"
+    },
+    {
+      "company": "Amazon",
+      "requisition": "10530901",
+      "role": "Applied Scientist, CMT",
+      "status": "open",
+      "verifiedOn": "2026-11-08",
+      "note": "Bengaluru; BQ programming + SQL + ML model building + deep-learning architecture/training/optimization/pruning, no numeric minimum; posted 2026-09-07; pack amazon-applied-scientist-cmt-10530901.md, honest ATS 40, long-shot (weakest of the four)"
+    },
+    {
+      "company": "Google",
+      "requisition": "101488204921610950",
+      "role": "Data and AI Engineer",
+      "status": "open",
+      "verifiedOn": "2026-11-08",
+      "note": "Bengaluru/Gurugram/Hyderabad; Bachelor's + data processing/ML experience, no numeric minimum. Already known: pack delivered 2026-11-04 via google-fresher-watch (resume Krupal_Resume_Google_DataAI.pdf, honest ATS 58; Fenil slot 2/3); keyed into direct-watch seen.json 2026-11-08. No duplicate pack/message."
+    },
+    {
+      "company": "Google",
+      "requisition": "108715629858431686",
+      "role": "Cloud Engineer, Data and AI",
+      "status": "open",
+      "verifiedOn": "2026-11-08",
+      "note": "Gurgaon/Hyderabad; Bachelor's + enterprise-grade cloud data platform architecture + Python/Scala/R + Gemini/ADK, no numeric minimum (5 yrs only in Preferred); pack google-cloud-engineer-data-ai-108715629858431686.md, honest ATS 45, long-shot (borderline)"
+    },
+    {
+      "company": "Google",
+      "requisition": "143561253581660870",
+      "role": "Software Engineer, Payments (Hyderabad, 1-yr bar)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "115807151561024198",
+      "role": "Cloud AI Engineer, Technical Onboarding Center (6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "132336339373695686",
+      "role": "AI Customer Engineer, GCP (6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "131995717597045446",
+      "role": "Staff Forward Deployed Engineer, Developer AI (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "113473879438959302",
+      "role": "AI Customer Engineer (6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "117117492127507142",
+      "role": "AI Customer Engineer (6 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "123542917821145798",
+      "role": "Staff SWE, Cloud AI Gemini Enterprise (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "128964164323287750",
+      "role": "AI Outcome Customer Engineer (7 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "127457591532888774",
+      "role": "Generative AI Forward Deployed Engineer (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "107722676369269446",
+      "role": "SoC Edge-AI Design Verification Engineer (4 yrs, hardware)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "104260191041528518",
+      "role": "Forward Deployed Engineering Manager (8 yrs + 2 yrs mgmt)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "131666108921848518",
+      "role": "SWE Manager, Engineering Productivity (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "127481196673147590",
+      "role": "Senior SWE, Full Stack, YouTube (5 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "107018346561446598",
+      "role": "PhD Early Career 2026 (PhD required)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "108281679147082438",
+      "role": "PhD Early Career 2026 (PhD required)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "120415858164933318",
+      "role": "PhD Early Career 2026 (PhD required)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "126485952255140550",
+      "role": "PhD Early Career 2026 (PhD required)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "127602843300307654",
+      "role": "PhD Early Career 2026 (PhD required)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "141496697866855110",
+      "role": "PhD Early Career 2026 (PhD required)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "113355370553844422",
+      "role": "Staff SWE, Enterprise Product Architecture (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "126645271483294406",
+      "role": "Staff SWE, Search Intelligence (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "137126335204991686",
+      "role": "Senior SWE, Full Stack (5 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "112072232559092422",
+      "role": "Staff SWE, Google Cloud (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Google",
+      "requisition": "133297092687733446",
+      "role": "Staff SWE, Infrastructure (8 yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR1993430",
+      "role": "Senior Solutions Architect - Generative AI (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2008156",
+      "role": "AI Developer Technology Engineer (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2009801",
+      "role": "Senior Developer Relations Manager (5 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2010160",
+      "role": "Senior System Software Engineer - Media and Broadcasting (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2011238",
+      "role": "Senior System Software Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2011677",
+      "role": "Senior System Software Engineer, DRIVE OS - Linux and QNX (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2012742",
+      "role": "Senior System Software Engineer - GPU Virtualization (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2014484",
+      "role": "Senior System Software Engineer - Automotive (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2014621",
+      "role": "Senior System Software Engineer - DRIVEOS Platform Team (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2014631",
+      "role": "Senior System Software Engineer, Deep Learning Accelerator  (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2015568",
+      "role": "Senior System Software Engineer, CUDA - Tegra (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2016077",
+      "role": "Senior Software Engineer, DriveAV - Autonomous Vehicles (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2018213",
+      "role": "Senior Developer Relations Manager (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2018442",
+      "role": "Software Solutions Engineer (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2019135",
+      "role": "Senior System Software Engineer, DRIVE OS - Linux and QNX (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2019139",
+      "role": "Senior System Software Engineer, DRIVE OS - Linux and QNX (3 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2019717",
+      "role": "Software Configuration Management Engineer – Hardware (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2020087",
+      "role": "Senior System Software Engineer, Speech AI (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2020625",
+      "role": "System Software Engineer - GPU Profiling (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021048",
+      "role": "Senior Platform Software Engineer, DriveAV - Autonomous Vehicles (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021050",
+      "role": "Solutions Architect, Data Center MEP (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021111",
+      "role": "Senior Software QA Test Developer - Windows Devices Validation (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021126",
+      "role": "Senior Systems Software Engineer (3 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021411",
+      "role": "Senior Software Engineer - Applied Research in Robotics (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021817",
+      "role": "Senior HPC Cluster Engineer - AI, ML (3 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021897",
+      "role": "Senior System Software Engineer - LocalAI (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021991",
+      "role": "Senior Developer Relations Manager (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2021999",
+      "role": "Senior Developer Relations Manager (3 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2022000",
+      "role": "Senior Developer Relations Manager, Robotics (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2022251",
+      "role": "Senior Platform Software Engineer - Platform Architect (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2022682",
+      "role": "System Software Engineer, GPU Development Tools (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2022975",
+      "role": "Senior Test Developer – Automotive Simulation Testing & Failure-Triage Lead (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2023131",
+      "role": "Senior Developer Relations Manager - FSI (India, Mumbai)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2023304",
+      "role": "Senior System Software Engineer - Boot SW Engineering (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2023337",
+      "role": "Systems Software Engineer, CPU Manageability Stack (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2023363",
+      "role": "Senior System Software Safety Engineer -  Halos Core and Robotics Platform (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024207",
+      "role": "Senior Solution Architect — Sales AI Applications (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024294",
+      "role": "Senior Software Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024489",
+      "role": "Architect – AI-Powered Performance Verification Automation (5 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024576",
+      "role": "Senior Manager, Software Engineering - Employee Productivity (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024594",
+      "role": "Data Center Infrastructure Specialist (5 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024609",
+      "role": "Senior System Software Engineer - GeForce NOW (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024696",
+      "role": "Manager, AI/HPC Infrastructure Technical Delivery — India (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024810",
+      "role": "Senior System Software Engineer - Local AI (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024864",
+      "role": "Senior MLOps Engineer - DSX Enablement (3 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024865",
+      "role": "Software Engineering Manager, Agentic Transformation for Graphics Systems (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025060",
+      "role": "Senior Solutions Architect, Generative AI (India, Gurugram)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025198",
+      "role": "Senior Solutions Architect, Generative AI (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025205",
+      "role": "System Software Engineer - Performance Verification Infrastructure (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025257",
+      "role": "Senior Software QA Test Developer - Embedded (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025421",
+      "role": "Senior System Software Engineer - Halos Core and Robotics Platform (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025441",
+      "role": "Senior System Software Engineer, Software Defined Networking (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025704",
+      "role": "Senior Platform Software Engineer, DriveAV - Autonomous Vehicles (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025828",
+      "role": "Senior Compute System Software Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025832",
+      "role": "Senior Compute System Software Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025927",
+      "role": "System Software Manager - Power Profiling and Infrastructure (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2025965",
+      "role": "Senior Software Engineer - NVEX (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026184",
+      "role": "Senior Software QA Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026267",
+      "role": "Senior Solutions Architect, Agentic AI - Public Sector (India, Gurugram)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026309",
+      "role": "Senior System Software Engineer - GPU MODS (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026342",
+      "role": "Senior System Software Engineer (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026345",
+      "role": "Senior System Software Engineer - Display (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026346",
+      "role": "Senior System Software Engineer (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026350",
+      "role": "Senior System Software Engineer - GPU Power Management (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026373",
+      "role": "Senior System Software Engineer - GPU and SOC (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026404",
+      "role": "Senior System Software Engineer (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026497",
+      "role": "SAP MM/PP Master Data Engineer - Enterprise Data Management (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026548",
+      "role": "Senior System Security Software Engineer (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026694",
+      "role": "Senior Forward Deployed Architect, Generative AI (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026872",
+      "role": "Senior Solutions Architect, Generative AI (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2026884",
+      "role": "Senior Physical Design AI Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027003",
+      "role": "Senior Software Solutions Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027113",
+      "role": "Senior Software Engineer - IT Infrastructure (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027290",
+      "role": "Senior Systems Software Engineer, CUDA Driver (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027697",
+      "role": "Senior Software Solutions Engineer (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027703",
+      "role": "System Software Engineer - Infrastructure (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027704",
+      "role": "Senior System Software Engineer - Local AI Automation (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027806",
+      "role": "Senior System Software Engineer - Local AI (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2027934",
+      "role": "Senior Engineering Technician – Local AI Automation (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2028109",
+      "role": "SWQA Test Developer Engineer (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2028136",
+      "role": "Senior System Software Engineer, GPU Firmware (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2028491",
+      "role": "Senior Software QA Engineer (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2028521",
+      "role": "Senior System Software Engineer (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2028565",
+      "role": "Senior System Software Engineer - Tegra MODS (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2028568",
+      "role": "Senior System Software Engineer - GPU (3 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2029048",
+      "role": "Senior AI Infrastructure Engineer - DGX Cloud (India, Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2029168",
+      "role": "Senior System Software Engineer – Accelerated Microservices and Libraries (2 Locations)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2029182",
+      "role": "Senior Software Engineer, AI Infrastructure Solutions (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2029365",
+      "role": "Manager, System Software Engineering - Infrastructure Engineering and Automation (India, Pune)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+    },
+    {
+      "company": "NVIDIA",
+      "requisition": "JR2024423",
+      "role": "PhD Intern, AI ML in Wireless L1/L2 (Bengaluru)",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-11-08",
+      "note": "Internship, PhD required — only entry-level-titled hit in the 247-posting India scan"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200691860-1052",
+      "role": "Engineering Project Manager, Hyderabad (10+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200691862-1052",
+      "role": "Engineering Project Manager, Hyderabad (10+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200692391-0321",
+      "role": "Senior Applied AI Engineer - AiDP, Bengaluru (8+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200692414-1052",
+      "role": "Engineering Manager - Finance Engineering, Hyderabad (12+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200692605-0321",
+      "role": "Business System Analyst, Bengaluru (5+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200692835-1936",
+      "role": "Strategy Lead, India, Mumbai (15+ yrs, marketing)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200692843-0321",
+      "role": "Payroll Operations Analyst, Bengaluru (non-software)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Apple",
+      "requisition": "200692905-0321",
+      "role": "Senior Machine Learning Engineer - Apple Store Online, Bengaluru (10+ yrs)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR338174",
+      "role": "Software Engineering LMTS - Backend Distributed Systems (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR367595",
+      "role": "Product Accessibility Engineer (India, Bangalore)",
+      "status": "not-fulltime",
+      "verifiedOn": "2026-11-08",
+      "note": "Fixed Term & Temporary; Futureforce intern, endDate 2026-11-10"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR367594",
+      "role": "System Analyst (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR363777",
+      "role": "User Interface/User Experience Designer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR362815",
+      "role": "Senior Analyst - Global Incentive Compensation Operations (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR365354",
+      "role": "Technical Architect- Salesforce Devops (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR362399",
+      "role": "Senior Technical Architect (Revenue/CPQ) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR359744",
+      "role": "Software Engineering PMTS (Apache, Kafka, Terraform) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR363804",
+      "role": "Solution Builder (Technical Builder) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR362385-1",
+      "role": "Solutions Builder (Strategic Builder) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR359537",
+      "role": "Full-Stack Developer — AI-Native Engineering (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR342430",
+      "role": "Territory Account Executive - IT/ITES (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR361157",
+      "role": "Manager/Senior Manager, Technical Consulting  (Salesforce Exp mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR364815-1",
+      "role": "Forward Deployed (Value Acceleration) Consultant / Senior Consultant-2 (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR330045-1",
+      "role": "Salesforce Success Architect - Gen AI & Agentforce (EST & PST Timezone) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR356515",
+      "role": "Associate Technical Support Engineer (French Speaking) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR365028-1",
+      "role": "Marketing Technology Operations Specialist (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366422",
+      "role": "Technical Business Analyst, Product & Pricing Operations (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR344397",
+      "role": "Director, Technical Consulting (Salesforce & Tableau Next) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR327146",
+      "role": "Salesforce Senior Technical Manager (Salesforce Technical Architect experience is mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR355013",
+      "role": "Senior Manager, Software Engineering (Observability, Kafka, Monitoring) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR364448",
+      "role": "VP, Success Management - Portfolio Leader (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR328379",
+      "role": "Data Cloud/Data 360 Architect (MC experience also required) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR365868",
+      "role": "Manager, Sales Development (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366421-1",
+      "role": "Sales Strategy Manager (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366093",
+      "role": "Technical Business Analyst, Product & Pricing Operations (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366703",
+      "role": "Regional Sales Director (India, Mumbai)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366705",
+      "role": "Regional Sales Director (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR343709-1",
+      "role": "Director - Technical Consulting  ( Financial Services Cloud  /Revenue Cloud / Comms Cloud  / Telecom ) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366109",
+      "role": "Director, Solutions Builder (Builder Portfolio Leader) (India, Gurgaon)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366091",
+      "role": "Technical Business Analyst, Product & Pricing Operations (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR354838",
+      "role": "Lead Software Engineer, Python/Flask (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR355536",
+      "role": "Named Account Executive - Automotive Industry (India, Mumbai)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR353282-1",
+      "role": "RVP , Global Program and Portfolio Management (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR356454",
+      "role": "Director, Technical Consulting (Salesforce Marketing & Data Cloud) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR328615",
+      "role": "Customer Service Representative (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR366292",
+      "role": "Assurance Engineering Platform Developer SMTS / LMTS (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR340414",
+      "role": "Director, Technical Consulting (Salesforce Principal Architect) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR357464",
+      "role": "Salesforce Technical Architect-Healthcare Domain (SF Tech Arch exp mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR355896",
+      "role": "Senior Salesforce Project Manager (Salesforce Implementation Experience Mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR354806",
+      "role": "Salesforce Architect Manager (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR355094",
+      "role": "Salesforce Success Architect - AMER Shifts (Salesforce Exp is mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR327810",
+      "role": "Salesforce Technical Architect, Consumer goods (REX or TPM or CG Cloud exp mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR363667",
+      "role": "Salesforce Technical Architect - B2B Commerce (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR364032",
+      "role": "Customer Success Manager – Informatica Implementation Experience (CDI / Data Governance/ MDM) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR364196",
+      "role": "Senior Technical Consultant — Analytics (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR365157",
+      "role": "Senior Technical Consultant - AI platform engineering and Salesforce project delivery (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR351410",
+      "role": "Success Guide - Informatica Product experience mandatory (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR331777",
+      "role": "Customer Success Manager (Salesforce Commerce Cloud / Demandware exp mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR336963",
+      "role": "Salesforce Technical Architect - (Life Sciences Industry exp mandate) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR327393",
+      "role": "Salesforce Technical Architect (Revenue Cloud Or Salesforce CPQ)/Healthcare/FINS (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR352696",
+      "role": "Success Architect-Service-FY27-Q3-5 (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR355019",
+      "role": "Senior Salesforce Technical Architect - Life Sciences (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR344881",
+      "role": "Principal, Account SE - IT/ITES (India, Mumbai)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR358505",
+      "role": "Senior Salesforce Technical Consultant – Life Sciences (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR363642",
+      "role": "Manager, Technical Consulting- Slack (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR347355",
+      "role": "Senior Technical Consultant (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR361950",
+      "role": "Senior Technical Consultant - Revenue/Fins/Communications/Health Cloud (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR283555",
+      "role": "Manager, Technical Consulting (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR353962",
+      "role": "Salesforce DevOps - Technical Architect (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR361172",
+      "role": "Senior Project Manager (Salesforce Exp Mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR334118",
+      "role": "Salesforce Technical Manager ( Salesforce Technical Architect exp is Manadatory ) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR326554-1",
+      "role": "Salesforce Technical Architect (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR362712",
+      "role": "Senior Partner Sales Manager (India, Mumbai)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR354108",
+      "role": "Salesforce Solution Architect / Senior Solution Architect - Lifesciences (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR358801",
+      "role": "Salesforce Technical Architect (Salesforce experience is Mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR364417",
+      "role": "Senior Salesforce Technical Consultant/Developer (Health Cloud/Health Exp mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR322959",
+      "role": "Salesforce Success Architect (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR353553",
+      "role": "Customer Success Manager - Marketing Cloud (India, Mumbai)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR354800",
+      "role": "Account Executive - Manufacturing Industry (India, Gurgaon)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR354799",
+      "role": "Territory Account Executive - Mid Market - Manufacturing Industry (India, Gurgaon)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR359325",
+      "role": "Manager, Technical Consulting (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR340412",
+      "role": "Director, Growth Multiplier (Salesforce Practice) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR340233",
+      "role": "Director, Strategy & Enablement (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR332873",
+      "role": "Manager Technical Consulting (Salesforce+ Tech arch+domain(Energy& Utilities Cloud or E & U domain Experience mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR357552",
+      "role": "Salesforce Solution Architect (Healthcare or Health Cloud exp mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR362083",
+      "role": "Senior Technical Consultant (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR344226",
+      "role": "Salesforce Field Service Architect (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR335227",
+      "role": "Zuora Revenue System -Senior Analyst (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR359305",
+      "role": "Senior Manager, Technical Consulting -Telecom/Comms domain (Salesforce Technical Architect exp mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR326098",
+      "role": "Manager, Technical Consulting-Health Domain (SF Tech Arch Exp mandatory) (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR346342",
+      "role": "Mulesoft Senior Technical Consultant (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR357535",
+      "role": "Senior Technical Consultant - B2B (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR323967",
+      "role": "Customer Success Manager (Salesforce technical exp mandatory) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR347031",
+      "role": "Salesforce Senior Technical Architect (CTA Aspirants) (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Salesforce",
+      "requisition": "JR342766",
+      "role": "Salesforce Technical Architect (India, Hyderabad)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 6 detail-verified, rest title-verdict (LMTS/PMTS/SMTS, Lead, Architect, Manager, Director, Senior, sales, support)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0283198",
+      "role": "Accountant (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0285257",
+      "role": "CPU DFT Manager (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0285850-1",
+      "role": "CPU Circuit Design Lead (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0284056-1",
+      "role": "IP RTL Senior Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286326",
+      "role": "SoC Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286525",
+      "role": "PDK Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286523",
+      "role": "PDK Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286567",
+      "role": "CPU Physical Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286602",
+      "role": "PERC Rule Deck Development Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286726",
+      "role": "DFT Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286727",
+      "role": "SoC Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286746-1",
+      "role": "LVS Runset Development Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286915",
+      "role": "Principal Engineer- CPU Circuit Design (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286973",
+      "role": "EDA Tools Hardware Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286977",
+      "role": "Analog Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286908",
+      "role": "GPU IP Integration Model Build Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287176",
+      "role": "Memory Layout Manager (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287107",
+      "role": "Analog Circuit Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287113",
+      "role": "GPU Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287106",
+      "role": "CPU Pre-Silicon Verification Lead (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287292",
+      "role": "AI Platform and Agentic Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287309",
+      "role": "CPU RTL Design Manager (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287263",
+      "role": "Board Level Power Delivery Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287598",
+      "role": "Emulation Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287602",
+      "role": "Platform Hardware Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287600",
+      "role": "Analog Circuit Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0286703",
+      "role": "Silicon Packaging Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287713",
+      "role": "Memory Electrical Validation Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287938",
+      "role": "Signal Integrity Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287499",
+      "role": "SoC Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287997",
+      "role": "SoC Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287501",
+      "role": "SoC Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287609",
+      "role": "Lead Simulation Architect (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287922",
+      "role": "Analog Circuit Design Engineering Manager (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287882",
+      "role": "Chassis IP Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0287883",
+      "role": "Chassis IP Senior Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288125",
+      "role": "GPU Senior Logic Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288124",
+      "role": "CPU Senior Floor Plan Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288134",
+      "role": "CPU Senior Floor Plan Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288129",
+      "role": "CPU Senior Clock Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288130-1",
+      "role": "CPU Clock Design Lead (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288117",
+      "role": "Senior Technical Lead - CPU Physical Design (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288131",
+      "role": "Senior CAD Engineer – Physical Design Signoff (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288128",
+      "role": "Senior CAD Engineer - Floor Plan (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288291",
+      "role": "Senior Platform Hardware Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288292",
+      "role": "Platform Hardware design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288104-1",
+      "role": "AI Model Optimization Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288389",
+      "role": "CPU Physical Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288288",
+      "role": "CPU Power Delivery Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288151",
+      "role": "CPU Performance Architect (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288132",
+      "role": "GPU Logic Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288284",
+      "role": "Mixed Signal IP Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288402",
+      "role": "SOC Design Engineer – RTL/Logic (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288325",
+      "role": "GPU Logic Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288285",
+      "role": "Silicon Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288330",
+      "role": "GPU Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288331",
+      "role": "GPU Logic Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288609",
+      "role": "Silicon Packaging Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288280",
+      "role": "Silicon Design Verification Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288629",
+      "role": "GPU Verification Engineer - AI SoC Development (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288619",
+      "role": "SoC FPGA prototyping (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288677",
+      "role": "Silicon Package Design Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288723",
+      "role": "OS Development Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288630-1",
+      "role": "Silicon Domain Architect (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288837",
+      "role": "GPU Validation Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288900",
+      "role": "AI Software Engineer - AI Frameworks (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Intel",
+      "requisition": "JR0288952",
+      "role": "SOC Functional Validation Engineer (India, Bangalore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Workday CXS India scan 2026-11-08; 4 detail-verified, rest title-verdict (hardware/silicon, verification, DFT, PDK, analog, packaging, validation, Accountant)"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-291997",
+      "role": "Legal Compliance Analyst (Salt Lake City)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-282261",
+      "role": "Director, Strategic Partnership Sales (Purchase)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-293461",
+      "role": "Senior Strategic Project Manager (Salt Lake City)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-291291",
+      "role": "Senior Software Engineer (Salt Lake City)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-292794",
+      "role": "Senior Specialist, Open Banking Mortgage Solutions (Salt Lake City)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-289701",
+      "role": "Director, Product Management (New York)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-291107",
+      "role": "Manager, Product Management (Purchase)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-293274",
+      "role": "Manager, Operations Command Center (Kansas City)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-292354",
+      "role": "Senior Software Engineer – Java Full Stack & AI (O'Fallon)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-294206",
+      "role": "Lead Software Engineer (O'Fallon)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "US-based, senior/director/lead"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1201873",
+      "role": "Senior Network Test Engineer (San Juan, Puerto Rico)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Non-India, senior/distinguished"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1208414",
+      "role": "Distinguished Technologist Mechanical Engineer (Sunnyvale)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Non-India, senior/distinguished"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1208121",
+      "role": "Marketing AI Workflow Architect (Houston)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Non-India, senior/distinguished"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1209717",
+      "role": "Spares Sourcing Intelligence Manager (Singapore)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Non-India, senior/distinguished"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1208632",
+      "role": "Federal Government Technical Service Advisor (Chippewa Falls, US)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Non-India, senior/distinguished"
+    },
+    {
+      "company": "HPE",
+      "requisition": "1200148",
+      "role": "Senior Systems Software Engineer (San Juan, Puerto Rico)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08",
+      "note": "Non-India, senior/distinguished"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1373025900",
+      "role": "Technical Lead, Power Electronics (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1405179800",
+      "role": "Technical Lead, Mechanical Design (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1415737300",
+      "role": "SAP Basis Architect (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1420477300",
+      "role": "Senior Technical Lead, Mechanical Design (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1426518700",
+      "role": "Account Manager (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1429490200",
+      "role": "Renewal Specialist (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1430453300",
+      "role": "Reporting Specialist (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1433314100",
+      "role": "Sourcing Quality Engineer (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1439394400",
+      "role": "Order Management Logistics Specialist (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1439866600",
+      "role": "Senior Engineer Tech Lead, Hardware (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1439866700",
+      "role": "Senior Engineer Tech Lead, Firmware (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1439898000",
+      "role": "Assistant Manager, R2R (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1442683800",
+      "role": "Ecommerce Specialist (3-5 yrs, detail-verified) (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1443031600",
+      "role": "Technical Lead, Mechanical Design (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1443452500",
+      "role": "Area Sales Manager (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1444437900",
+      "role": "Contracts Coordinator (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1444663300",
+      "role": "Email Marketing Specialist (Bengaluru)",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-08"
     }
   ],
-  "updated": "2026-11-07"
+  "updated": "2026-11-08"
 }
