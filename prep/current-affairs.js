@@ -29,9 +29,57 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-11-08",
+  updated: "2026-11-09",
 
   items: [
+    {
+      date: "2026-11-08",
+      topic: "Schemes",
+      headline: "Telangana launches Cheyutha pension scheme: 4.5 lakh new pensions, 3.5 lakh for single women and widows",
+      why: "Number + who + when is the set. CM A. Revanth Reddy formally launched the Telangana Cheyutha Pension Scheme on 8 November 2026 (Diwali) at Hakeempet, Kodangal, sanctioning pensions to 4.5 lakh new beneficiaries — 3.5 lakh single women and widows, plus weavers and toddy tappers on saturation mode; the pension amount will be deposited in accounts on 19 November, the birth anniversary of Indira Gandhi. Over six lakh people had applied; the launch had been postponed from Dussehra pending verification.",
+      source: "ETV Bharat",
+      url: "https://www.etvbharat.com/en/state/telangana-govt-extends-pension-benefits-to-over-4-lakh-people-enn26110803783",
+    },
+    {
+      date: "2026-11-08",
+      topic: "States",
+      headline: "Telangana CM sets target of one crore women millionaires by 2034 through self-help groups",
+      why: "Target + year + route is the set. CM A. Revanth Reddy said on 8 November 2026 that Telangana aims to make one crore women millionaires by 2034 by strengthening women's self-help groups; nearly 70 lakh women are already SHG members and the goal is one crore members. He cited Rs.79,000 crore in bank-linked loans to women's groups over 34 months, 8.5 lakh Indiramma houses registered in women's names, free bus travel under Mahalakshmi and 200 units of free electricity; one crore Indiramma sarees will be distributed on 19 November.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/telangana/revanth-sets-target-of-making-one-crore-women-millionaires-by-2034/article71680974.ece",
+    },
+    {
+      date: "2026-11-07",
+      topic: "Science",
+      headline: "India and EU conclude negotiations for India's association with Horizon Europe",
+      why: "What + status + what it opens is the set. India and the European Union concluded negotiations on 7 November 2026 for India's association with Horizon Europe, the EU's €93.5-billion research and innovation programme (2021–2027). Association is envisaged to begin in January 2027 after the agreement is signed and procedures completed — India is NOT yet a member. It will let Indian researchers, institutions and industry join Pillar II collaborative calls in health, digital tech, space, climate, energy and food/bioeconomy.",
+      source: "IANS",
+      url: "https://ianslive.in/india-eu-negotiations-to-join-horizon-europe-programme-completed--20261107113948",
+    },
+    {
+      date: "2026-11-06",
+      topic: "Sports",
+      headline: "Dhinidhi Desinghu becomes first Indian to win two medals at a Youth Olympics",
+      why: "First + event + times is the set. 16-year-old swimmer Dhinidhi Desinghu won bronze in the women's 200m freestyle (2:02.28) at the Dakar 2026 Youth Olympic Games on 6 November, adding to her 100m freestyle bronze (56.27s, a national record) on 2 November — the first Indian athlete to win multiple medals in individual events at a single Youth Olympics, and the first Indian swimmer to win a Youth Olympic medal. She was also an opening-ceremony flag-bearer.",
+      source: "The Bridge",
+      url: "https://thebridge.in/youth-olympics/youth-olympic-games-dhinidhi-desinghu-200m-bronze-58296",
+    },
+    {
+      date: "2026-11-06",
+      topic: "Sports",
+      headline: "GM Pranav Venkatesh wins FIDE World Junior Blitz Chess Championship in Al Ain",
+      why: "Title + score + venue is the set. 20-year-old Indian Grandmaster Pranav Venkatesh won the Open title at the FIDE World Junior Blitz Championship in Al Ain, UAE on 6 November 2026, scoring 10.5 points from 13 rounds — a full point clear of three players tied on 9.5. He had also won silver in the Rapid event (7/9) at the same championships; he was the FIDE World Junior (classical) champion in 2025.",
+      source: "Sportstar",
+      url: "https://sportstar.thehindu.com/chess/v-pranav-fide-world-junior-blitz-winner-2026-today-chess-rapid-silver-results/article71676004.ece",
+    },
+    {
+      date: "2026-11-06",
+      topic: "International",
+      headline: "Indian diplomat Shivani Gupta elected to UN budget advisory committee ACABQ for 2027–2029",
+      why: "Who + body + term is the set. Indian diplomat and chartered accountant Shivani Gupta was nominated unopposed by the UN General Assembly's Fifth Committee on 6 November 2026 to the Advisory Committee on Administrative and Budgetary Questions (ACABQ), the 21-member panel that reviews UN budgets and administration; she serves a three-year term from 2027 to 2029. She recently joined India's UN mission as a first secretary after serving as an under secretary for East Asia in the External Affairs Ministry.",
+      source: "Edex Live",
+      url: "https://www.edexlive.com/news/un-committee-nominates-indian-chartered-accountant-diplomat-to-budget-panel",
+    },
     {
       date: "2026-11-07",
       topic: "States",
