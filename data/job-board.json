@@ -20,7 +20,7 @@
     "officialUrl": "https://www.heizen.work/careers/associate-software-engineer",
     "role": "Associate Software Engineer",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Remote"
   },
   {
@@ -32,7 +32,7 @@
     "officialUrl": "https://jobs.cisco.com/jobs/SearchJobs",
     "role": "Software Engineer",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Hybrid"
   },
   {
@@ -68,7 +68,7 @@
     "officialUrl": "https://www.amazon.jobs",
     "role": "Software Dev Engineer I (University Talent)",
     "status": "Applied 2026-10-22",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Not stated"
   },
   {
@@ -116,7 +116,7 @@
     "officialUrl": "https://auric-ai.talismatic.com/jobs/JQEHMTC6T",
     "role": "Junior Software Engineer",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Onsite"
   },
   {
@@ -164,7 +164,7 @@
     "officialUrl": "https://www.heizen.work/careers/software-engineer-fullstack-app",
     "role": "Software Engineer (Fullstack + React Native)",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Remote"
   },
   {
@@ -176,7 +176,7 @@
     "officialUrl": "https://www.heizen.work/careers/software-engineer",
     "role": "Software Development Engineer",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Remote"
   },
   {
@@ -212,7 +212,7 @@
     "officialUrl": "https://invesco.wd1.myworkdayjobs.com/IVZ/job/Hyderabad-Telangana/Eng-I--Eng-Run_R-15795-1",
     "role": "Eng I, Eng Run",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Hybrid"
   },
   {
@@ -248,7 +248,7 @@
     "officialUrl": "https://larsentoubrocareers.peoplestrong.com/job/detail/LNT_ET_1891936",
     "role": "Engineer Trainee (Platform Development)",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Onsite"
   },
   {
@@ -332,7 +332,7 @@
     "note": "Job ID 2015025 — NEW 2026-11-02. Verified live on official careers.cisco.com (live browser): min quals \"Bachelor of Science EE/CS combined with 0-1 year of related experience or Master of Science EE/CS\"; no closing date — apply today, it can vanish without warning; active Apply flow. Honest ATS 60 (customer-engineering + Python half fits; C++/networking/silicon gap). Pack: data/resume-drafts/cisco-software-engineer-silicon-one-2015025.md. Resume PDF built, awaiting his view before upload.",
     "officialUrl": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2015025EXTERNALENGLOBAL/Software-Engineer",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-04",
+    "verifiedOn": "2026-11-10",
     "workMode": "Hybrid"
   },
   {
@@ -344,7 +344,7 @@
     "note": "Job ID 2015359 — REOPENED 2026-11-02 (was marked closed 2026-10-29). Verified live on official careers.cisco.com (live browser): \"Bachelors + 0 years of previous experience\"; Full Time in title; no closing date — apply today; active Apply flow. Evergreen India Engineering/UHR graduate-talent pool. Honest ATS 70. Pack: data/resume-drafts/cisco-software-engineer-evergreen-2015359.md; uses the existing Cisco resume PDF.",
     "officialUrl": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2015359EXTERNALENGLOBAL/Software-Engineering-Evergreen-Full-Time-India-Engineering-UHR",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "workMode": "Hybrid"
   },
   {
@@ -427,7 +427,7 @@
     "location": "Hyderabad / Bangalore",
     "workMode": "Office Tech-Flexible",
     "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "verifiedOn": "2026-11-10",
     "officialUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/India---Hyderabad/System-Analyst_JR367594",
     "note": "Job ID JR367594; Data Foundations team — internal Salesforce data platforms + governance, Enterprise Technology & Infrastructure. Min quals: Bachelor's CS/business/related + 0–3 yrs platform/systems support (enterprise CRM/Salesforce). Must-have: Salesforce admin — Sales Cloud, Service Cloud, custom objects, workflows, Flow, approval processes, sharing/security; certs ADM-201/ADM-211/App Builder/Platform Dev I achieved or in pursuit (Krupal holds none — honest gap). Futureforce University Recruiting. END DATE Nov 11, 2026 — closes in ~3 days. Pack + tailored resume ready, honest ATS 50 (long-shot). Referral shortlist in pack."
   },
@@ -486,10 +486,10 @@
     "fit": "Eligible — 0 years",
     "location": "Bangalore",
     "workMode": "Hybrid",
-    "status": "Open — verified live",
-    "verifiedOn": "2026-11-09",
+    "status": "Closed — verified 2026-11-10 (HTTP 410 on official careers.cisco.com detail URL; 'We are not accepting new applications for this role at this time')",
+    "verifiedOn": "2026-11-10",
     "officialUrl": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2027198EXTERNALENGLOBAL/Software-Engineer",
-    "note": "Job ID 2027198; posted 6 Nov 2026. Min quals verbatim: Bachelor's (0 to 4 years Experience) or Master's degree in CS or related field (0 years of experience). DSA, Java/Python/Golang/C/C++, system design; AI coding assistants (Claude, GitHub Copilot) valued. Full-time. No closing date — can vanish without notice. Board role disambiguated with the req ID — plain 'Software Engineer' is 2028048. Pack + tailored resume ready, honest ATS 55 (borderline); resume PDF local-only until Krupal reviews it. Referral drafts only — any ask needs his approval of exact recipients + text. NOTE: a 7 Nov follow-up for this req was stopped — nothing sent."
+    "note": "Job ID 2027198; posted 6 Nov 2026. Min quals verbatim: Bachelor's (0 to 4 years Experience) or Master's degree in CS or related field (0 years of experience). DSA, Java/Python/Golang/C/C++, system design; AI coding assistants (Claude, GitHub Copilot) valued. Full-time. No closing date — can vanish without notice. Board role disambiguated with the req ID — plain 'Software Engineer' is 2028048. Pack + tailored resume ready, honest ATS 55 (borderline); resume PDF local-only until Krupal reviews it. Referral drafts only — any ask needs his approval of exact recipients + text. NOTE: a 7 Nov follow-up for this req was stopped — nothing sent. [2026-11-10: CLOSED — official detail URL returns HTTP 410, confirmed by parent browser.open + coordinator direct ID check. The cisco-2027198 reply watch runs to 14 Nov and 8 connection requests went out 9 Nov for this req — a referral can no longer proceed on a closed req.]"
   },
   {
     "company": "Juspay",
@@ -514,5 +514,41 @@
     "verifiedOn": "2026-11-09",
     "officialUrl": "https://joinus.juspay.in",
     "note": "Job ID DS01; Mumbai, Full-Time, opening_status true (official careers API). JD has ZERO numeric year mentions and no 'minimum' anywhere — data scientists/engineers/researchers/systems thinkers; workstreams JusTrust (real-time fraud detection under 100 ms, Agentic AI), Code Generalization (AI/RL), Xyne Spaces, Algebraic Accounting (open-source Python). CAVEAT: structured experience_year is 1, not 0; his background is data pipelines/SQL, not data science. No closing date — can vanish without notice. Pack + tailored resume ready, honest ATS 42 (long-shot); resume PDF local-only until Krupal reviews it. No verified Juspay contact — no referral draft possible; do not cold-message."
+  },
+  {
+    "company": "Qualcomm",
+    "role": "Associate Engineer - RF SW",
+    "experience": "0–1 years (fresh grads explicitly welcome)",
+    "fit": "Eligible — long-shot",
+    "location": "Hyderabad",
+    "workMode": "Flexible Location",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-10",
+    "officialUrl": "https://careers.qualcomm.com/careers?start=0&location=India&sort_by=timestamp&filter_include_remote=0&filter_include_relocation=0&filter_seniority=Entry",
+    "note": "Job ID 3095630; Hyderabad, Flexible Location, posted 5 days ago. Min quals verbatim: Bachelor's degree in Engineering/IS/CS or related field. JD: 'Modem-RF Wireless SW engineers at levels with 0-1 yrs of experience'; 'Fresh grads need to have a good understanding of C and/or C++, Software Engineering concepts with focus on embedded software, Digital/Wireless Communications, ECE fundamentals and RF Theory.' Apply Now present. No closing date — can vanish without notice. Pack + tailored resume ready, honest ATS 40 (long-shot, weakest of today's three on domain fit — modem/RF embedded C/C++ is outside his background). Referral drafts only — Qualcomm referral stop order (23 Oct) still in force; resume PDF local-only until Krupal reviews it."
+  },
+  {
+    "company": "Qualcomm",
+    "role": "Associate Engineer- Camera",
+    "experience": "No years minimum (1+ yr only in Preferred)",
+    "fit": "Eligible — long-shot",
+    "location": "Hyderabad",
+    "workMode": "Onsite",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-10",
+    "officialUrl": "https://careers.qualcomm.com/careers?start=0&location=India&sort_by=timestamp&filter_include_remote=0&filter_include_relocation=0&filter_seniority=Entry",
+    "note": "Job ID 3095831; Hyderabad, posted a day ago. Min quals verbatim: Bachelor's degree in Engineering/IS/CS or related field — NO years stated in Minimum Qualifications (1+ yr only in Preferred: C/C++/Python, Computer Vision/Image Processing/ML). Apply Now present. No closing date — can vanish without notice. Pack + tailored resume ready, honest ATS 45 (long-shot — preferred bar is CV/image processing in C/C++; his ML work is retrieval/LLM integration). Referral drafts only — Qualcomm referral stop order (23 Oct) still in force; resume PDF local-only until Krupal reviews it."
+  },
+  {
+    "company": "Google",
+    "role": "Software Engineer II, Corp Eng",
+    "experience": "1 year minimum (0 years held — long-shot)",
+    "fit": "Eligible — long-shot",
+    "location": "Hyderabad",
+    "workMode": "Onsite",
+    "status": "Open — verified live",
+    "verifiedOn": "2026-11-10",
+    "officialUrl": "https://www.google.com/about/careers/applications/jobs/results/138674961899233990-software-engineer-ii-corp-eng",
+    "note": "Job ID 138674961899233990; Hyderabad. Min quals verbatim: Bachelor's degree or equivalent practical experience + '1 year of experience with software development in one or more programming languages (e.g., Python, C, C++, Java, JavaScript).' Preferred: Master's/PhD. No closing date — can vanish without notice. Older posting surfaced on pages 2–3 of the India SWE search; the seen list never captured it. Pack + tailored resume ready, honest ATS 50 (long-shot, same profile as SWE Payments ATS 52). Referral drafts only — Google referral work is closed (Fenil's slot 2/3 is attached to the Data and AI Engineer role, NOT this one); resume PDF local-only until Krupal reviews it."
   }
 ]

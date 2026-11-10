@@ -6,7 +6,7 @@
       "requisition": "10453457",
       "role": "Software Dev Engineer I (University Talent)",
       "status": "applied",
-      "verifiedOn": "2026-11-09"
+      "verifiedOn": "2026-11-10"
     },
     {
       "company": "Amazon",
@@ -63,15 +63,16 @@
       "requisition": "2028048",
       "role": "Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-09",
+      "verifiedOn": "2026-11-10",
       "note": "[2026-11-04: Cisco detail page rendered generic homepage, not job content, 2026-11-04 (rendering degraded). carried as last-known-open.]"
     },
     {
       "company": "Cisco",
       "requisition": "2014481",
       "role": "Software Engineer Apprentice",
-      "status": "not-fulltime",
-      "verifiedOn": "2026-10-23"
+      "status": "closed",
+      "verifiedOn": "2026-11-10",
+      "note": "CLOSED 2026-11-10: direct ID check returns HTTP 410, same 'not accepting new applications' message. Was an apprentice role (not-fulltime) in any case."
     },
     {
       "company": "Intel",
@@ -161,14 +162,14 @@
       "requisition": "associate-software-engineer",
       "role": "Associate Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-09"
+      "verifiedOn": "2026-11-10"
     },
     {
       "company": "Auric AI",
       "requisition": "JQEHMTC6T",
       "role": "Junior Software Engineer",
       "status": "open",
-      "verifiedOn": "2026-11-09"
+      "verifiedOn": "2026-11-10"
     },
     {
       "company": "Heizen",
@@ -304,7 +305,7 @@
       "requisition": "LNT/ET/1891936",
       "role": "Engineer Trainee (Platform Development)",
       "status": "open",
-      "verifiedOn": "2026-11-09",
+      "verifiedOn": "2026-11-10",
       "note": "Full JD rendered fresh; Apply flow still not observed — live-browser confirmation still outstanding."
     },
     {
@@ -319,7 +320,7 @@
       "requisition": "R-15795-1",
       "role": "Eng I, Eng Run",
       "status": "open",
-      "verifiedOn": "2026-11-09",
+      "verifiedOn": "2026-11-10",
       "note": "Closing validThrough 2026-11-30 re-confirmed."
     },
     {
@@ -327,7 +328,7 @@
       "requisition": "2015359",
       "role": "Software Engineer (Evergreen)",
       "status": "open",
-      "verifiedOn": "2026-11-09",
+      "verifiedOn": "2026-11-10",
       "note": "REOPENED 2026-11-02 (was closed 2026-10-29): official careers.cisco.com page live; \"Bachelors + 0 years of previous experience\"; 12 India locations; Full Time; active Apply flow (4-step form opened live, nothing submitted). Evergreen India Engineering/UHR pool. [2026-11-04: Cisco detail page rendered generic homepage, not job content, 2026-11-04 (rendering degraded). carried as last-known-open.]"
     },
     {
@@ -3042,7 +3043,7 @@
       "requisition": "2015025",
       "role": "Software Engineer (Silicon One Customer Engineering)",
       "status": "open",
-      "verifiedOn": "2026-11-03",
+      "verifiedOn": "2026-11-10",
       "note": "NEW 2026-11-02. Verified live on official careers.cisco.com via live browser: Bangalore, min quals \"Bachelor of Science EE/CS combined with 0-1 year of related experience or Master of Science EE/CS\"; no closing date (apply today); Apply Now opens an active 4-step application form. Honest ATS 60 (customer-engineering + Python half fits; C++/networking/silicon gap). Pack: data/resume-drafts/cisco-software-engineer-silicon-one-2015025.md [2026-11-04: Cisco detail page rendered generic homepage, not job content, 2026-11-04 (rendering degraded). carried as last-known-open.]"
     },
     {
@@ -3274,7 +3275,7 @@
       "requisition": "200678409-1052",
       "role": "Software Engineer - Distributed Systems (Hyderabad)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-04",
+      "verifiedOn": "2026-11-10",
       "note": "Verified live 2026-11-04 (live browser): minimum quals require '3-7 years of Industry experience in building solutions with strong skills in Java/Spring'. Posted 2 Nov."
     },
     {
@@ -3282,7 +3283,7 @@
       "requisition": "200692393-0321",
       "role": "Applied AI Engineer (Bengaluru)",
       "status": "not-fit",
-      "verifiedOn": "2026-11-04",
+      "verifiedOn": "2026-11-10",
       "note": "Verified live 2026-11-04 (live browser): requires '3+ years of overall experience in software/platform development' + 1+ yr shipping production AI solutions. Posted 30 Oct."
     },
     {
@@ -6250,7 +6251,7 @@
       "requisition": "JR367594",
       "role": "System Analyst (India, Hyderabad)",
       "status": "open",
-      "verifiedOn": "2026-11-09",
+      "verifiedOn": "2026-11-10",
       "note": "Still listed in today's Workday CXS India scan (40 hits in salesforce-all.json); closes 11 Nov 2026. NOTE: seen.json still carries it as not-fit (yesterday's title-verdict) while the board lists it open with a pack — parent to reconcile."
     },
     {
@@ -8683,9 +8684,9 @@
       "company": "Cisco",
       "requisition": "2027198",
       "role": "Software Engineer",
-      "status": "open",
-      "verifiedOn": "2026-11-09",
-      "note": "NEW MATCH. Official careers.cisco.com Phenom payload fetched live 2026-11-09: Full time, Bangalore, India, posted 2026-11-06; Min quals verbatim: \"Bachelor's (0 to 4 years Experience) or Master's degree in Computer Science or related field (0 years of experience).\"; Apply URL https://cisco.wd5.myworkdayjobs.com/Cisco_Careers/job/Bangalore-India/Software-Engineer_2027198/apply; no closing date listed. Not in seen.json."
+      "status": "closed",
+      "verifiedOn": "2026-11-10",
+      "note": "CLOSED 2026-11-10: official careers.cisco.com detail URL returns HTTP 410 (confirmed by parent browser.open + coordinator direct ID check: page text 'We are not accepting new applications for this role at this time'). Board flipped too. NOTE: the cisco-2027198 reply watch runs to 14 Nov and 8 connection requests went out 9 Nov for this req — a referral can no longer proceed on a closed req."
     },
     {
       "company": "Flipkart",
@@ -11544,7 +11545,95 @@
       "status": "not-fit",
       "verifiedOn": "2026-11-09",
       "note": "Not fresher-eligible: Senior/staff/manager/architect seniority (title-level)."
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3095630",
+      "role": "Associate Engineer - RF SW",
+      "status": "open",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official careers.qualcomm.com (India/Entry search + detail view): Hyderabad, Flexible Location, posted 5 days ago. Min quals verbatim: Bachelor's degree in Engineering/IS/CS or related field. JD: 'Modem-RF Wireless SW engineers at levels with 0-1 yrs of experience'; 'Fresh grads need to have a good understanding of C and/or C++, Software Engineering concepts with focus on embedded software, Digital/Wireless Communications, ECE fundamentals and RF Theory.' Apply Now present. No closing date — can vanish without warning. Pack built, honest ATS 45 (long-shot)."
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3095831",
+      "role": "Associate Engineer- Camera",
+      "status": "open",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official careers.qualcomm.com (India/Entry search + detail view): Hyderabad, posted a day ago. Min quals verbatim: Bachelor's degree in Engineering/IS/CS or related field — NO years stated in Minimum Qualifications (1+ yr only in Preferred Qualifications: C/C++/Python, Computer Vision/Image Processing/ML). Apply Now present. No closing date — can vanish without warning. Pack built, honest ATS 45 (long-shot)."
+    },
+    {
+      "company": "Google",
+      "requisition": "138674961899233990",
+      "role": "Software Engineer II, Corp Eng",
+      "status": "open",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 by parent on official Google Careers detail page: Hyderabad. Min quals verbatim: Bachelor's degree or equivalent practical experience + '1 year of experience with software development in one or more programming languages (e.g., Python, C, C++, Java, JavaScript).' Preferred: Master's/PhD. No closing date shown. 1-yr minimum = long-shot for a 0-yr candidate (same profile as SWE Payments, ATS 52). Pack built, honest ATS 50 (long-shot). Surfaced on pages 2-3 of India SWE search — older posting the seen list never captured."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1449062000",
+      "role": "Software Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official jobs.ametek.com: Bangalore, posted 9 Nov 2026. Min quals require 'Experience designing, developing, testing, and maintaining software applications' + architecture/design scope (evaluate tools/frameworks, cross-platform Windows/iOS/Android, legacy migrations) and C#/C++/Dart/TypeScript. No entry-level/new-grad language anywhere. Experienced-hire scope for a 0-yr candidate; stack mismatch. Not packed."
+    },
+    {
+      "company": "AMETEK",
+      "requisition": "1449060000",
+      "role": "Sr. Industrial Software Integration Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official jobs.ametek.com: Bangalore, posted 9 Nov 2026. Requires 5+ years of professional software development experience. Not packed."
+    },
+    {
+      "company": "Oracle",
+      "requisition": "340730",
+      "role": "Core Java Developer",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official Oracle Careers (CX_45001): Bengaluru, published 28 Oct 2026, entry-level wording throughout ('under guidance of senior engineers', 'foundational understanding'), no years minimum. NOT-FIT: Core Java Developer role — Krupal never learned Java (standing rule: no Java anywhere). Not packed."
+    },
+    {
+      "company": "Mastercard",
+      "requisition": "R-278159",
+      "role": "Data Scientist I",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official Mastercard Workday: Pune, published 9 Oct 2026, Level I, no years minimum stated. NOT-FIT: bar is production GenAI — RAG pipelines, LLM fine-tuning, MLOps, LangChain/LangGraph, computer vision; Pune office with no listed salary (location rule: far office only if salary is big). Honest ATS ~40, below the bar set 9 Nov. Not packed."
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3099122",
+      "role": "Voice AI Systems Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official careers.qualcomm.com: Hyderabad, posted 4 days ago. Min quals Bachelor's only, BUT the Educational Qualifications section states 'Master's or PhD degree in Engineering, Electronics and Communication, Electrical, Computer Science, or related field' and Requirements ask for 'Proven experience in developing, implementing, and debugging audio algorithms using both signal processing and ML approaches'. Master's/PhD bar + proven audio-algorithm experience — not a 0-yr B.Tech fit. Not packed."
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3095428",
+      "role": "Engineer - Audio DSP",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official careers.qualcomm.com: Hyderabad, posted 5 days ago. General Summary verbatim: 'Experience of 1+ years on any DSP/Embedded processor based development in C, C++ is required.' 1+ yr DSP/embedded minimum — Krupal has 0 and no DSP background. Not packed."
+    },
+    {
+      "company": "Qualcomm",
+      "requisition": "3091745",
+      "role": "Automotive Audio Systems Engineer",
+      "status": "not-fit",
+      "verifiedOn": "2026-11-10",
+      "note": "Verified live 2026-11-10 on official careers.qualcomm.com: Hyderabad. Minimum: Bachelor's + 2+ years of relevant Audio Systems Engineering work experience (or Master's + 1 yr). 2-yr minimum — not a 0-yr fit. Not packed."
+    },
+    {
+      "company": "Akamai",
+      "requisition": "4418",
+      "role": "Software Development Engineer in Test",
+      "status": "open",
+      "verifiedOn": "2026-11-10",
+      "note": "Live on official jobs.akamai.com (India Remote, Bengaluru, posted 11/06/2026, APPLY NOW present) but the DESCRIPTION DOES NOT RENDER anywhere — direct page, search preview and listing card all show no description, no experience requirement, no R- number, no employment-type field. Eligibility UNVERIFIABLE — not a confirmed match, no pack. Re-check when the description renders; do not re-flag as new."
     }
   ],
-  "updated": "2026-11-09"
+  "updated": "2026-11-10"
 }
