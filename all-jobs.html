@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>All Jobs · Job Hunt</title>
+<meta name="description" content="Every job opening ever delivered, in one place — salary-wise, remote-wise, MNC-wise. Tap any role for its skills, score and what it takes to apply. Below-bar roles are shown too, marked." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:17px; margin:0; }
+  .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+
+  /* ── Filter rows: one row per question — work mode, company, pay, status ── */
+  .frow{ display:flex; align-items:center; gap:6px; margin:10px 0 0; flex-wrap:wrap; }
+  .frow .lbl{ font-size:11px; font-weight:700; color:var(--dim); text-transform:uppercase;
+    letter-spacing:.05em; width:52px; flex:0 0 auto; }
+  .chip{ font-size:12px; font-weight:650; padding:6px 12px; border-radius:20px;
+    border:1px solid var(--panel-border); background:var(--panel); color:var(--text);
+    cursor:pointer; }
+  .chip.on{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line); }
+  .sortrow{ display:flex; align-items:center; gap:8px; margin:12px 0 4px; }
+  .sortrow label{ font-size:11px; font-weight:700; color:var(--dim); text-transform:uppercase; letter-spacing:.05em; }
+  .sortrow select{ font-size:13px; padding:6px 8px; border-radius:9px; border:1px solid var(--panel-border);
+    background:var(--panel); color:var(--text); font-family:inherit; }
+
+  .job{ display:block; width:100%; background:var(--panel); text-align:left;
+    border:1px solid var(--panel-border); border-radius:14px; padding:13px 15px; margin-bottom:10px;
+    color:var(--text); cursor:pointer; font-family:inherit; }
+  .job .row1{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .job .co{ font-size:14.5px; font-weight:700; }
+  .job .role{ font-size:12.5px; color:var(--dim); margin-top:3px; line-height:1.4; }
+  .job .meta{ font-size:11.5px; color:var(--dim); margin-top:6px; line-height:1.5; }
+  .job .meta b{ color:var(--text); font-weight:650; }
+  .job .tags{ display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .tag{ font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px; border:1px solid var(--panel-border); color:var(--dim); }
+  .tag-remote{ background:var(--ok-soft); color:var(--ok); border-color:transparent; }
+  .tag-mnc{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line); }
+  .tag-below{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad-line); }
+  .tag-above{ background:var(--ok-soft); color:var(--ok); border-color:transparent; }
+  .job .detail{ display:none; margin-top:12px; border-top:1px solid var(--panel-border); padding-top:10px; }
+  .job.open .detail{ display:block; }
+  .job .detail h4{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--dim); margin:10px 0 4px; }
+  .job .detail h4:first-child{ margin-top:0; }
+  .job .detail p, .job .detail li{ font-size:12.5px; color:var(--text); line-height:1.55; margin:0; }
+  .job .detail ul{ margin:0; padding-left:18px; }
+  .job .detail .stale{ color:var(--warn); font-weight:650; }
+  .job .linkrow{ display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .job .ver{ font-size:11px; color:var(--dim); }
+
+  .fit{ flex:0 0 auto; font-size:10.5px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px 10px; border-radius:20px; border:1px solid transparent; }
+  .fit-eligible{ background:var(--ok-soft); color:var(--ok); }
+  .fit-applied{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line); }
+  .fit-longshot{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn-line); }
+  .fit-closed{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad-line); }
+
+  .empty{ text-align:center; color:var(--dim); font-size:13.5px; padding:40px 20px; line-height:1.6; }
+  .count{ font-size:12px; color:var(--dim); margin:12px 0 4px 2px; }
+  a{ color:var(--accent-ink); }
+</style>
+</head>
+<body data-page="all-jobs">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">All Jobs</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+<main>
+  <p class="sub">Every opening ever delivered, in one place — including the ones below the pay bar, marked. Tap any role for its skills, your score, and what it would take to improve. The ₹10 LPA bar decides what to apply to, not what is shown.</p>
+
+  <div class="frow" data-group="work"><span class="lbl">Work</span>
+    <button class="chip on" data-v="all">All</button>
+    <button class="chip" data-v="remote">Remote</button>
+    <button class="chip" data-v="office">Office</button>
+    <button class="chip" data-v="hybrid">Hybrid</button>
+  </div>
+  <div class="frow" data-group="company"><span class="lbl">Company</span>
+    <button class="chip on" data-v="all">All</button>
+    <button class="chip" data-v="mnc">MNC</button>
+    <button class="chip" data-v="other">Other</button>
+  </div>
+  <div class="frow" data-group="pay"><span class="lbl">Pay</span>
+    <button class="chip on" data-v="all">All</button>
+    <button class="chip" data-v="above10">₹10 LPA and above</button>
+    <button class="chip" data-v="belowbar">Below bar</button>
+    <button class="chip" data-v="notstated">Not stated</button>
+  </div>
+  <div class="frow" data-group="status"><span class="lbl">Status</span>
+    <button class="chip on" data-v="all">All</button>
+    <button class="chip" data-v="open">Open now</button>
+    <button class="chip" data-v="check">Needs a check</button>
+    <button class="chip" data-v="applied">Applied</button>
+    <button class="chip" data-v="closed">Closed / dead</button>
+  </div>
+  <div class="sortrow">
+    <label for="sort">Sort</label>
+    <select id="sort">
+      <option value="smart">Remote first, then salary</option>
+      <option value="salary">Salary — high to low</option>
+      <option value="score">Score — high to low</option>
+      <option value="verified">Recently verified</option>
+    </select>
+  </div>
+
+  <p class="count" id="count"></p>
+  <div id="list"><div class="empty">Loading every opening…</div></div>
+</main>
+<script>
+(function () {
+  "use strict";
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  var listEl = document.getElementById("list"),
+      countEl = document.getElementById("count"),
+      sortEl = document.getElementById("sort");
+  var items = [];
+  var state = { work: "all", company: "all", pay: "all", status: "all" };
+
+  /* ── Status groups: what each filter chip means ── */
+  function statusGroup(j) {
+    var s = j.st || "";
+    if (s === "open") return "open";
+    if (s === "unverified" || s === "unclear") return "check";
+    if (s === "applied") return "applied";
+    return "closed"; /* closed, dead, rejected, none */
+  }
+  function fitClass(fit) {
+    var f = String(fit || "");
+    if (f.indexOf("Eligible") === 0) return "fit-eligible";
+    if (f.indexOf("Applied") === 0 || f.indexOf("Rejected") === 0) return "fit-applied";
+    if (f.indexOf("Long-shot") === 0) return "fit-longshot";
+    return "fit-closed";
+  }
+  function fmtDay(iso) {
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    return isNaN(d.getTime()) ? iso
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+  function daysSince(iso) {
+    if (!iso) return null;
+    var d = new Date(iso + "T00:00:00").getTime();
+    if (isNaN(d)) return null;
+    return Math.floor((Date.now() - d) / 86400000);
+  }
+  function daysLeft(iso) {
+    if (!iso) return null;
+    var d = new Date(iso + "T00:00:00").getTime();
+    if (isNaN(d)) return null;
+    return Math.ceil((d - Date.now()) / 86400000);
+  }
+  function belowBar(j) { return j.payLpa != null && j.payLpa < 10; }
+
+  function matches(j) {
+    if (state.work !== "all") {
+      var m = String(j.mode || "").toLowerCase();
+      if (state.work === "remote" && m !== "remote") return false;
+      if (state.work === "office" && m !== "office") return false;
+      if (state.work === "hybrid" && m !== "hybrid") return false;
+    }
+    if (state.company === "mnc" && !j.mnc) return false;
+    if (state.company === "other" && j.mnc) return false;
+    if (state.pay === "above10" && !(j.payLpa != null && j.payLpa >= 10)) return false;
+    if (state.pay === "belowbar" && !belowBar(j)) return false;
+    if (state.pay === "notstated" && j.payLpa != null) return false;
+    if (state.status !== "all" && statusGroup(j) !== state.status) return false;
+    return true;
+  }
+
+  function sortJobs(a, b) {
+    var mode = sortEl.value;
+    if (mode === "salary") return (a.payLpa == null) - (b.payLpa == null) || (b.payLpa || 0) - (a.payLpa || 0);
+    if (mode === "score") return (a.score == null) - (b.score == null) || (b.score || 0) - (a.score || 0);
+    if (mode === "verified") return String(b.ver || "") < String(a.ver || "") ? -1 : 1;
+    /* smart: remote first, then salary high to low, then most recently verified */
+    var ra = a.mode === "Remote" ? 0 : 1, rb = b.mode === "Remote" ? 0 : 1;
+    if (ra !== rb) return ra - rb;
+    if ((b.payLpa == null) !== (a.payLpa == null)) return (a.payLpa == null) - (b.payLpa == null);
+    if ((b.payLpa || 0) !== (a.payLpa || 0)) return (b.payLpa || 0) - (a.payLpa || 0);
+    return String(b.ver || "") < String(a.ver || "") ? -1 : 1;
+  }
+
+  function cardHtml(j) {
+    var loc = esc(j.loc || "");
+    if (j.mode && j.mode !== "—") loc += " · " + esc(j.mode);
+    var tags = "";
+    if (j.mode === "Remote") tags += '<span class="tag tag-remote">Remote</span>';
+    if (j.mnc) tags += '<span class="tag tag-mnc">MNC</span>';
+    if (belowBar(j)) tags += '<span class="tag tag-below">Below bar</span>';
+    if (j.payLpa != null && j.payLpa >= 10) tags += '<span class="tag tag-above">₹10 LPA+</span>';
+
+    var dl = "";
+    if (j.dl) {
+      var left = daysLeft(j.dl);
+      dl = "<br><b>Closes:</b> " + esc(fmtDay(j.dl)) +
+        (left != null ? (left < 0 ? " — deadline passed" : left === 0 ? " — closes today" : " — " + left + " days left") : "");
+    }
+    var since = daysSince(j.ver);
+    var stale = (j.st === "open" && since != null && since > 7)
+      ? ' <span class="stale">Re-check before applying — last checked ' + since + " days ago.</span>" : "";
+
+    var skills = (j.skills && j.skills.length)
+      ? "<ul>" + j.skills.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>"
+      : "<p>Skills are listed on the official posting — tap the link below.</p>";
+    var gaps = (j.gaps && j.gaps.length)
+      ? "<ul>" + j.gaps.map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("") + "</ul>"
+      : "<p>Nothing recorded.</p>";
+
+    var html = '<button class="job" data-id="' + esc(j.id) + '">' +
+      '<div class="row1"><span class="co">' + esc(j.co) + "</span>" +
+      '<span class="fit ' + fitClass(j.fit) + '">' + esc(j.fit) + "</span></div>" +
+      '<div class="role">' + esc(j.role) + (loc ? " · " + loc : "") + "</div>" +
+      '<div class="meta"><b>Pay:</b> ' + esc(j.pay || "Not stated") +
+      "<br><b>Score:</b> " + (j.score != null ? esc(j.score) + " / 100 (honest ATS)" : "Not scored yet") +
+      "<br><b>Experience:</b> " + esc(j.exp || "Not stated") + dl + "</div>" +
+      (tags ? '<div class="tags">' + tags + "</div>" : "") +
+      '<div class="detail">' +
+      "<h4>Skills required</h4>" + skills +
+      "<h4>Where you stand</h4>" + gaps +
+      "<h4>Can the score improve?</h4><p>" + esc(j.imp || "—") + "</p>" +
+      '<div class="linkrow">' +
+      (j.url ? '<a class="btn btn-sm" href="' + esc(j.url) + '" target="_blank" rel="noopener">Official posting ↗</a>' : "") +
+      (j.ver ? '<span class="ver">Last checked ' + esc(fmtDay(j.ver)) + "." + stale + "</span>" : "") +
+      "</div></div></button>";
+    return html;
+  }
+
+  function render() {
+    var shown = items.filter(matches).sort(sortJobs);
+    var open = items.filter(function (j) { return j.st === "open"; }).length;
+    var remote = items.filter(function (j) { return j.mode === "Remote"; }).length;
+    var above = items.filter(function (j) { return j.payLpa != null && j.payLpa >= 10; }).length;
+    countEl.textContent = items.length
+      ? items.length + " roles · " + open + " open · " + remote + " remote · " + above + " at ₹10 LPA or above" +
+        (shown.length !== items.length ? " — showing " + shown.length : "")
+      : "";
+    listEl.innerHTML = shown.length
+      ? shown.map(cardHtml).join("")
+      : '<div class="empty">Nothing matches these filters.<br>Loosen one filter to see the rest.</div>';
+  }
+
+  document.querySelectorAll(".frow").forEach(function (row) {
+    row.addEventListener("click", function (e) {
+      var btn = e.target.closest(".chip");
+      if (!btn) return;
+      state[row.getAttribute("data-group")] = btn.getAttribute("data-v");
+      row.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("on", c === btn); });
+      render();
+    });
+  });
+  sortEl.addEventListener("change", render);
+  listEl.addEventListener("click", function (e) {
+    var link = e.target.closest("a");
+    if (link) return; /* let the official-posting link work */
+    var card = e.target.closest(".job");
+    if (card) card.classList.toggle("open");
+  });
+
+  /* Job data is never cached — a stale board would show a closed role as if
+     it were open. Same rule as every other job feed in this app. */
+  fetch("/data/all-jobs.json", { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function (data) {
+      items = data && Array.isArray(data.jobs) ? data.jobs : [];
+      render();
+    })
+    .catch(function () {
+      countEl.textContent = "";
+      listEl.innerHTML = '<div class="empty">Could not load All Jobs.<br>Check your connection and pull to refresh.</div>';
+    });
+})();
+</script>
+</body>
+</html>

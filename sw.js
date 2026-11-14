@@ -160,7 +160,12 @@
    #basics view and only scrolled to it, so the tap appeared to do nothing.
    The roadmap now routes to #basics via the hash — the app's own way in —
    before scrolling. THE BUMP IS LOAD-BEARING — see the v11/v12 notes. */
-const CACHE = 'jobhunt-v48';
+/* v49 adds the All Jobs tab (/all-jobs.html) to the precache list.
+   Same rule as Daily Jobs: the page is static and safe offline; its data
+   (/data/all-jobs.json) is job data and is NEVER cached — a stale board
+   would show a closed role as open.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v49';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.
@@ -237,6 +242,10 @@ const PREP_ASSETS = [
      and safe offline; its data (/data/job-board.json) is job data and is
      NEVER cached — a stale board would show a closed role as open. */
   '/jobs.html',
+  /* The All Jobs tab's shell. Same rule as Daily Jobs: the page is static
+     and safe offline; its data (/data/all-jobs.json) is job data and is
+     NEVER cached — a stale board would show a closed role as open. */
+  '/all-jobs.html',
   '/amazon-prep.html',
   '/interview-rounds.html',
   /* Typography is the phone's own face now — nothing to cache, and nothing to

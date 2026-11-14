@@ -1,0 +1,2228 @@
+{
+ "jobs": [
+  {
+   "co": "Evaboot",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Eligible",
+   "gaps": [
+    "No stated experience bar — the bar is output, not years"
+   ],
+   "id": "evaboot-agentic-python",
+   "imp": "YES — small: ship one more agentic project to show output.",
+   "loc": "Remote — worldwide",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "$60–120K/yr (~₹53L–₹1.05Cr)",
+   "payLpa": 53,
+   "role": "Agentic Python Engineer",
+   "score": 60,
+   "skills": [
+    "Python",
+    "Agentic coding workflows",
+    "Shipped production software end to end",
+    "Written English and communication"
+   ],
+   "st": "open",
+   "url": "https://www.python.org/jobs/8188/",
+   "ver": "2026-11-14"
+  },
+  {
+   "co": "Infisical",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Eligible",
+   "gaps": [
+    "Pay not stated on the official page — the $100K–$180K figure online belongs to a different Infisical role"
+   ],
+   "id": "infisical-fullstack",
+   "imp": "YES — small: full-stack depth on the live platform.",
+   "loc": "Remote — India-eligible, US hours",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Full Stack Engineer",
+   "score": 50,
+   "skills": [
+    "Full-stack engineering",
+    "TypeScript/JavaScript",
+    "Production web apps"
+   ],
+   "st": "open",
+   "url": "https://infisical.com/careers/full-stack-engineer",
+   "ver": "2026-11-14"
+  },
+  {
+   "co": "Akamai",
+   "dl": null,
+   "exp": "0.6+ yrs (Python/Go/shell, Linux)",
+   "fit": "Eligible",
+   "gaps": [
+    "Official portal is JS-heavy — live status not confirmed from the portal itself; aggregators still list it"
+   ],
+   "id": "akamai-swe-4073",
+   "imp": "NO — the score is already high; the open question is only whether the posting is still live.",
+   "loc": "India (Remote)",
+   "mnc": true,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (Job ID 4073, Network Operations Systems)",
+   "score": 80,
+   "skills": [
+    "Python/Go/shell",
+    "Linux/Unix",
+    "Bachelor's/Master's CS"
+   ],
+   "st": "unverified",
+   "url": "https://jobs.akamai.com/en/sites/CX_1/job/4073",
+   "ver": "2026-10-24"
+  },
+  {
+   "co": "Fluid AI",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "Docker/Kubernetes depth",
+    "Enterprise scale"
+   ],
+   "id": "fluidai-python-ai",
+   "imp": "YES — small: the LangGraph gap is already partly closed (production since 12 Nov).",
+   "loc": "Remote — India",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "₹4–9 LPA (reel claim, unconfirmed)",
+   "payLpa": 4,
+   "role": "Python AI Engineer — Autonomous Agents",
+   "score": 70,
+   "skills": [
+    "Python",
+    "FastAPI",
+    "LangGraph / agentic AI",
+    "Docker/Kubernetes"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Confer Solutions",
+   "dl": "2026-11-11",
+   "exp": "Junior",
+   "fit": "Closed",
+   "gaps": [
+    "None scored — the role's bar is his exact story"
+   ],
+   "id": "confer-junior-ai",
+   "imp": "NO — nothing to improve; the deadline passed unsubmitted.",
+   "loc": "India (Remote)",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Junior AI Engineer — Forward-Deployed / Agentic Systems",
+   "score": 88,
+   "skills": [
+    "AI agents in production",
+    "Debugging agent-written code",
+    "System design before coding",
+    "MCP servers"
+   ],
+   "st": "dead",
+   "url": "https://confersolutions.ai/careers/junior-ai-engineer",
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Heizen",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Closed — Heizen told us 28 Oct they are only hiring Founder Office Intern + Staff SWE"
+   ],
+   "id": "heizen-assoc-swe",
+   "imp": "NO — closed and below the bar.",
+   "loc": "Remote • Hyderabad",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "₹6–8 LPA",
+   "payLpa": 6,
+   "role": "Associate Software Engineer",
+   "score": 85,
+   "skills": [
+    "Python/Java/JS",
+    "OOP/DSA basics",
+    "SQL/NoSQL + REST APIs",
+    "Git"
+   ],
+   "st": "closed",
+   "url": "https://www.heizen.work/careers/associate-software-engineer",
+   "ver": "2026-10-28"
+  },
+  {
+   "co": "Heizen",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Closed — same Heizen reply, 28 Oct"
+   ],
+   "id": "heizen-fullstack-rn",
+   "imp": "NO — closed.",
+   "loc": "Remote • Hyderabad",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (Fullstack + React Native)",
+   "score": null,
+   "skills": [
+    "React Native",
+    "Full-stack engineering"
+   ],
+   "st": "closed",
+   "url": "https://www.heizen.work/careers/software-engineer-fullstack-app",
+   "ver": "2026-10-28"
+  },
+  {
+   "co": "Heizen",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Closed — same Heizen reply, 28 Oct"
+   ],
+   "id": "heizen-sde",
+   "imp": "NO — closed.",
+   "loc": "Remote • Hyderabad",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Development Engineer",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "Production systems"
+   ],
+   "st": "closed",
+   "url": "https://www.heizen.work/careers/software-engineer",
+   "ver": "2026-10-28"
+  },
+  {
+   "co": "Spektra Systems",
+   "dl": null,
+   "exp": "Trainee",
+   "fit": "Closed",
+   "gaps": [
+    "Trainee role — fails the full-time-only rule"
+   ],
+   "id": "spektra-ai-native-trainee",
+   "imp": "NO — trainee, not a full-time role.",
+   "loc": "Remote — India",
+   "mnc": false,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI-Native Software Engineer Trainee",
+   "score": 80,
+   "skills": [
+    "AI coding assistants",
+    "Git",
+    "Next.js/React",
+    "Cloud deploys (Vercel)"
+   ],
+   "st": "closed",
+   "url": "https://builtin.com/job/ai-native-web-developer-trainee/11669737",
+   "ver": "2026-11-03"
+  },
+  {
+   "co": "TriNet",
+   "dl": null,
+   "exp": "0–1 yr (freshers encouraged)",
+   "fit": "Eligible",
+   "gaps": [
+    "Regression/classification/clustering/forecasting at fundamentals only",
+    "No production ML modelling yet",
+    "R not known"
+   ],
+   "id": "trinet-ads-3004048",
+   "imp": "YES — small ML project (regression + classification + validation), 2–3 days. R not needed.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "₹12 LPA",
+   "payLpa": 12,
+   "role": "Associate Data Scientist",
+   "score": 65,
+   "skills": [
+    "Python",
+    "SQL/PostgreSQL",
+    "Statistics (foundational)",
+    "NLP/LLM and GenAI (LangChain + LangGraph RAG in production)",
+    "Exploratory data analysis",
+    "Git"
+   ],
+   "st": "open",
+   "url": "https://jobs.trinet.com/careers?query=Associate+Data+Scientist&start=0&pid=44396454&sort_by=relevance",
+   "ver": "2026-11-14"
+  },
+  {
+   "co": "Reliance Jio",
+   "dl": null,
+   "exp": "0–3 yrs",
+   "fit": "Eligible",
+   "gaps": [
+    "Java/Spring depth",
+    "DSA depth",
+    "Formal QA experience"
+   ],
+   "id": "jio-sde-i-87405934",
+   "imp": "YES — small: DSA practice. Java/Spring will not move in days.",
+   "loc": "Mumbai",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "₹10 LPA (estimate)",
+   "payLpa": 10,
+   "role": "Software Development Engineer I",
+   "score": 78,
+   "skills": [
+    "Java",
+    "Spring",
+    "DSA",
+    "SQL",
+    "REST APIs"
+   ],
+   "st": "open",
+   "url": "https://careers.jio.com/frmjobdescription.aspx?JBTITLE=GYpjIV6g5Rnvxz3ZmAQ0uQ%3D%3D&jbID=F5RFpENriB5V6Dj1LJ7E9w%3D%3D&funcCode=am1AraTXtX4%2FW%2FEJK6dzzw%3D%3D?",
+   "ver": "2026-11-14"
+  },
+  {
+   "co": "Google",
+   "dl": "2026-11-24",
+   "exp": "University graduate",
+   "fit": "Long-shot",
+   "gaps": [
+    "No internship or teaching-assistantship",
+    "No presentation record"
+   ],
+   "id": "google-apm-2027",
+   "imp": "NO — needs an internship/TA and a presentation record; ceiling 60–65.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Associate Product Manager (University Graduate 2027 Start)",
+   "score": 60,
+   "skills": [
+    "Product sense",
+    "Analytical thinking",
+    "Communication",
+    "Presentation"
+   ],
+   "st": "open",
+   "url": "https://careers.google.com/jobs/results/",
+   "ver": "2026-11-14"
+  },
+  {
+   "co": "Google",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "Cloud depth",
+    "Professional data-engineering experience"
+   ],
+   "id": "google-cloud-eng-data-ai",
+   "imp": "NO — needs real cloud + data experience.",
+   "loc": "Gurgaon / Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Cloud Engineer, Data and AI (108715629858431686)",
+   "score": 45,
+   "skills": [
+    "Cloud (GCP)",
+    "Data engineering",
+    "Python",
+    "AI/ML fundamentals"
+   ],
+   "st": "open",
+   "url": "https://www.google.com/about/careers/applications/jobs/results/108715629858431686",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Google",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Rejected",
+   "gaps": [
+    "Referred 1 Nov, application rejected 6 Nov — closed for him"
+   ],
+   "id": "google-cloud-ai-eng",
+   "imp": "NO — rejected.",
+   "loc": "Bengaluru / Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Cloud AI Engineer (105109659337007814)",
+   "score": null,
+   "skills": [
+    "Cloud AI",
+    "ML engineering",
+    "Python"
+   ],
+   "st": "rejected",
+   "url": "https://www.google.com/about/careers/applications/jobs/results/105109659337007814-cloud-ai-engineer-english",
+   "ver": "2026-11-06"
+  },
+  {
+   "co": "Google",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Closed 13 Nov, before submission"
+   ],
+   "id": "google-data-ai-eng",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru / Gurugram / Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Data and AI Engineer (101488204921610950)",
+   "score": null,
+   "skills": [
+    "Data engineering",
+    "AI/ML",
+    "Python",
+    "SQL"
+   ],
+   "st": "closed",
+   "url": "https://careers.google.com/jobs/results/101488204921610950",
+   "ver": "2026-11-13"
+  },
+  {
+   "co": "Google",
+   "dl": null,
+   "exp": "SWE II bar",
+   "fit": "Long-shot",
+   "gaps": [
+    "SWE II needs professional experience"
+   ],
+   "id": "google-swe-ii-corp-eng",
+   "imp": "NO — experience bar.",
+   "loc": "Not stated",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer II, Corporate Engineering (138674961899233990)",
+   "score": 50,
+   "skills": [
+    "Software engineering",
+    "Systems design",
+    "Python/Java"
+   ],
+   "st": "open",
+   "url": "https://careers.google.com/jobs/results/138674961899233990",
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Apple",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Professional experience",
+    "Systems at scale"
+   ],
+   "id": "apple-sre-200690092",
+   "imp": "NO — needs professional experience and systems scale.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Site Reliability Engineer (200690092)",
+   "score": 45,
+   "skills": [
+    "Linux/systems",
+    "Scripting",
+    "Monitoring",
+    "On-call operations"
+   ],
+   "st": "open",
+   "url": "https://jobs.apple.com/en-us/details/200690092",
+   "ver": "2026-11-13"
+  },
+  {
+   "co": "Apple",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Professional experience",
+    "Test automation depth"
+   ],
+   "id": "apple-junior-sdet-200682312",
+   "imp": "NO — needs professional experience.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Junior SDET (200682312)",
+   "score": 45,
+   "skills": [
+    "Test automation",
+    "Scripting",
+    "QA fundamentals"
+   ],
+   "st": "open",
+   "url": "https://jobs.apple.com/en-us/details/200682312",
+   "ver": "2026-11-13"
+  },
+  {
+   "co": "Apple",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Professional experience",
+    "Systems at scale"
+   ],
+   "id": "apple-junior-app-support-sre-200682322",
+   "imp": "NO — needs professional experience.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Junior Application Support & SRE (200682322)",
+   "score": 45,
+   "skills": [
+    "Application support",
+    "SRE fundamentals",
+    "Scripting"
+   ],
+   "st": "open",
+   "url": "https://jobs.apple.com/en-us/details/200682322",
+   "ver": "2026-11-13"
+  },
+  {
+   "co": "Apple",
+   "dl": null,
+   "exp": "Was 0 yrs — bar raised to 8–14 yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Bar raised to 8–14 years — no longer fresher-eligible"
+   ],
+   "id": "apple-pay-swe-200694246",
+   "imp": "NO — dead for him.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer — Apple Pay (WPC) (200694246)",
+   "score": 55,
+   "skills": [
+    "Java/Kotlin",
+    "Spring",
+    "Payments domain",
+    "Distributed systems"
+   ],
+   "st": "dead",
+   "url": "https://jobs.apple.com/en-us/details/200694246-1052/software-engineer-apple-pay-wpc",
+   "ver": "2026-11-13"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth — months of work"
+   ],
+   "id": "amazon-applied-scientist-buyer-risk",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist I — Buyer Risk Prevention",
+   "score": 48,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-11-12"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-cmt-chennai",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Chennai",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist I, CMT (10507927)",
+   "score": 50,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs/en/jobs/10507927/applied-scientist-i-cmt",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-intl-ml-blr",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist, International ML (10458636)",
+   "score": 48,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs/en/jobs/10458636/applied-scientist-international-machine-learning",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-intl-ml-gurugram",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Gurugram",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist, International ML (10555817)",
+   "score": 48,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs/en/jobs/10555817/applied-scientist-international-machine-learning",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-cmt-blr",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist, CMT (10530901)",
+   "score": 40,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs/en/jobs/10530901/applied-scientist-cmt",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-shipping-gurugram",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Gurugram",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist I, Amazon Shipping (10557374)",
+   "score": 48,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-eu-intech-blr",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist, EU INTech PGX (10595199)",
+   "score": 45,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "ML/statistics depth"
+   ],
+   "id": "amazon-applied-scientist-iss-blr-hyd",
+   "imp": "NO — needs ML/stats depth.",
+   "loc": "Bengaluru / Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Applied Scientist I, International Seller Services (10595857)",
+   "score": 40,
+   "skills": [
+    "Machine learning",
+    "Statistics",
+    "Research",
+    "Python"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "No-minimum BQ per pack",
+   "fit": "Long-shot",
+   "gaps": [
+    "SDE II bar — professional experience"
+   ],
+   "id": "amazon-sde-ii-payment-chennai",
+   "imp": "NO — experience bar.",
+   "loc": "Chennai",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Dev Engineer II, Amazon Payment Services",
+   "score": 55,
+   "skills": [
+    "Java",
+    "Systems design",
+    "Distributed systems"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-11-11"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "No-minimum BQ per pack",
+   "fit": "Eligible",
+   "gaps": [
+    "Ops depth at scale"
+   ],
+   "id": "amazon-sys-dev-eng-i-chennai",
+   "imp": "YES — small: Linux/ops practice.",
+   "loc": "Chennai",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "System Development Engineer I",
+   "score": 68,
+   "skills": [
+    "Linux",
+    "Scripting",
+    "Systems operations",
+    "Networking basics"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-11-11"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "No experience floor",
+   "fit": "Eligible",
+   "gaps": [
+    "Salesforce (no CRM config/admin experience, no Apex/LWC)",
+    "AWS depth",
+    ".NET/Java/Go"
+   ],
+   "id": "amazon-salesforce-dev-admin-iss",
+   "imp": "YES — small: Salesforce admin basics. The day-to-day is Salesforce config + AWS admin/ops.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Salesforce Developer and Admin, ISS (10544197)",
+   "score": 60,
+   "skills": [
+    "Python",
+    "JavaScript",
+    "REST APIs",
+    "PostgreSQL/SQL",
+    "Git",
+    "Linux ops"
+   ],
+   "st": "open",
+   "url": "https://www.amazon.jobs/en/jobs/10544197/salesforce-developer-and-admin-iss",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Amazon",
+   "dl": null,
+   "exp": "University talent",
+   "fit": "Applied",
+   "gaps": [
+    "Applied 22 Oct — board record; resume version check still pending (Amazon Jobs login)"
+   ],
+   "id": "amazon-sde-i-university-talent",
+   "imp": "—",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Dev Engineer I (University Talent)",
+   "score": null,
+   "skills": [
+    "Java",
+    "DSA",
+    "Systems fundamentals"
+   ],
+   "st": "applied",
+   "url": "https://www.amazon.jobs",
+   "ver": "2026-10-22"
+  },
+  {
+   "co": "Stripe",
+   "dl": null,
+   "exp": "0–18 months",
+   "fit": "Eligible",
+   "gaps": [
+    "Interview bar is high — DSA depth"
+   ],
+   "id": "stripe-swe-new-grad-8130876",
+   "imp": "YES — small: DSA practice.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated (new-grad band, above the bar)",
+   "payLpa": null,
+   "role": "Software Engineer, New Grad (8130876)",
+   "score": 80,
+   "skills": [
+    "Software engineering",
+    "DSA",
+    "Systems fundamentals"
+   ],
+   "st": "open",
+   "url": "https://stripe.com/careers/listing/software-engineer-new-grad/8130876",
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "Cisco",
+   "dl": null,
+   "exp": "0 years OK (Bachelor's 0–2 yrs)",
+   "fit": "Eligible",
+   "gaps": [
+    "DSA depth"
+   ],
+   "id": "cisco-swe-2028048",
+   "imp": "YES — small: DSA practice.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Hybrid",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (2028048)",
+   "score": null,
+   "skills": [
+    "DSA",
+    "Coding assessment",
+    "AI coding assistants (Claude, GitHub Copilot)"
+   ],
+   "st": "open",
+   "url": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2028048EXTERNALENGLOBAL/Software-Engineer",
+   "ver": "2026-11-02"
+  },
+  {
+   "co": "Cisco",
+   "dl": null,
+   "exp": "0 yrs",
+   "fit": "Eligible",
+   "gaps": [
+    "Evergreen pool — no single team or date"
+   ],
+   "id": "cisco-swe-evergreen-uhr",
+   "imp": "—",
+   "loc": "Bangalore + 11 more cities",
+   "mnc": true,
+   "mode": "Hybrid",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (Evergreen) — Full Time, India UHR",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "DSA",
+    "Systems fundamentals"
+   ],
+   "st": "open",
+   "url": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2015359EXTERNALENGLOBAL/Software-Engineering-Evergreen-Full-Time-India-Engineering-UHR",
+   "ver": "2026-11-04"
+  },
+  {
+   "co": "Cisco",
+   "dl": null,
+   "exp": "0–1 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Silicon/SDK domain depth"
+   ],
+   "id": "cisco-swe-silicon-one-2015025",
+   "imp": "NO — domain depth.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Hybrid",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer, Silicon One Customer Engineering (2015025)",
+   "score": null,
+   "skills": [
+    "SDKs",
+    "P4",
+    "Silicon One ASICs",
+    "C/C++"
+   ],
+   "st": "open",
+   "url": "https://careers.cisco.com/global/en/job/CISCISGLOBAL2015025EXTERNALENGLOBAL/Software-Engineer",
+   "ver": "2026-11-04"
+  },
+  {
+   "co": "Cisco",
+   "dl": null,
+   "exp": "Bachelor's 0–4 yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Closed 10 Nov — application dead"
+   ],
+   "id": "cisco-swe-2027198",
+   "imp": "NO — closed.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Hybrid",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (Req 2027198, Bangalore Hybrid)",
+   "score": 55,
+   "skills": [
+    "Software engineering",
+    "DSA"
+   ],
+   "st": "closed",
+   "url": "https://careers.cisco.com",
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Qualcomm",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "C/C++/Java",
+    "Embedded software / wireless / modem domain",
+    "1+ year professional experience"
+   ],
+   "id": "qualcomm-modem-dev",
+   "imp": "NO — modem domain + experience.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "₹25 LPA",
+   "payLpa": 25,
+   "role": "Engineer — Modem Development",
+   "score": 65,
+   "skills": [
+    "Python",
+    "APIs",
+    "SQL/PostgreSQL",
+    "Git/SCM",
+    "Debugging and testing"
+   ],
+   "st": "open",
+   "url": "https://careers.qualcomm.com/careers?query=Engineer+-+Modem&start=0&location=Hyderabad%2C+India&pid=446721275984&sort_by=relevance&filter_distance=80&filter_include_remote=0&filter_include_relocation=0",
+   "ver": "2026-10-26"
+  },
+  {
+   "co": "Qualcomm",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "Embedded/camera domain"
+   ],
+   "id": "qualcomm-camera-3a-3089099",
+   "imp": "NO — domain depth.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Engineer, Camera Systems (3A) (3089099)",
+   "score": null,
+   "skills": [
+    "Embedded C/C++",
+    "Python",
+    "Camera systems"
+   ],
+   "st": "open",
+   "url": "https://careers.qualcomm.com",
+   "ver": "2026-10-23"
+  },
+  {
+   "co": "Qualcomm",
+   "dl": null,
+   "exp": "Associate (entry)",
+   "fit": "Long-shot",
+   "gaps": [
+    "Embedded/camera domain"
+   ],
+   "id": "qualcomm-camera-3095831",
+   "imp": "NO — domain depth.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Associate Engineer — Camera (3095831)",
+   "score": 45,
+   "skills": [
+    "Embedded C/C++",
+    "Python",
+    "Camera systems"
+   ],
+   "st": "open",
+   "url": "https://careers.qualcomm.com",
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Qualcomm",
+   "dl": null,
+   "exp": "Associate (entry)",
+   "fit": "Long-shot",
+   "gaps": [
+    "RF/wireless domain",
+    "Embedded depth"
+   ],
+   "id": "qualcomm-rf-software-3095630",
+   "imp": "NO — domain depth.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Associate Engineer — RF Software (3095630)",
+   "score": 40,
+   "skills": [
+    "C/C++",
+    "Python",
+    "RF/wireless fundamentals"
+   ],
+   "st": "open",
+   "url": "https://careers.qualcomm.com",
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Oracle",
+   "dl": null,
+   "exp": "0 to 2+ yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Java/C++",
+    "Oracle PL/SQL",
+    "Healthcare/Millennium domain",
+    "BI tools",
+    "CCL"
+   ],
+   "id": "oracle-ase1-344317",
+   "imp": "NO — gaps are Java/C++, PL/SQL and the healthcare domain; a 78 needs no fabrication.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Application Software Engineer 1 (344317)",
+   "score": 78,
+   "skills": [
+    "SQL + PostgreSQL",
+    "DBMS / schema design",
+    "Debugging",
+    "Git",
+    "Unit testing",
+    "Data analysis"
+   ],
+   "st": "open",
+   "url": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/344317",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Trimble",
+   "dl": "2026-11-25",
+   "exp": "P1 entry level, no years minimum",
+   "fit": "Long-shot",
+   "gaps": [
+    "Python proficiency",
+    "ML theory depth",
+    "NumPy/pandas/scikit-learn unproven",
+    "Cloud account-only",
+    "No PyTorch/TensorFlow",
+    "No MLOps",
+    "No formal ML training"
+   ],
+   "id": "trimble-ai-ml-p1-r56671",
+   "imp": "YES — small: scikit-learn project + cloud deploy demo.",
+   "loc": "Chennai",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI/ML Engineer P1 (R56671)",
+   "score": 65,
+   "skills": [
+    "RAG with LangChain + ChromaDB (6/6 retrieval tests)",
+    "GenAI/LLM awareness",
+    "Python",
+    "Data engineering on real data",
+    "Git",
+    "Live production platform + GitHub portfolio"
+   ],
+   "st": "open",
+   "url": "https://trimble.wd1.myworkdayjobs.com/TrimbleCareers/job/India---Chennai/Site-Reliablity-Engineer_R56671",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Trimble",
+   "dl": "2026-11-25",
+   "exp": "Early-career",
+   "fit": "Long-shot",
+   "gaps": [
+    "Python proficiency",
+    "ML theory depth",
+    "NumPy/pandas/scikit-learn unproven",
+    "No PyTorch/TensorFlow",
+    "No MLOps"
+   ],
+   "id": "trimble-ml-eng-r56012",
+   "imp": "YES — small: scikit-learn project.",
+   "loc": "Chennai",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Machine Learning Engineer, early-career (R56012)",
+   "score": 60,
+   "skills": [
+    "RAG with LangChain + ChromaDB (6/6 retrieval tests)",
+    "GenAI/LLM awareness",
+    "Python",
+    "Git",
+    "Live production platform + GitHub portfolio"
+   ],
+   "st": "open",
+   "url": "https://trimble.wd1.myworkdayjobs.com/TrimbleCareers/details/Development-and-Operations-Engineer_R56012",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Cognizant",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Long-shot",
+   "gaps": [
+    "Agentic AI on Azure is a stretch for a fresher"
+   ],
+   "id": "cognizant-ai-engineer",
+   "imp": "YES — small: Azure + agentic AI; LangGraph now live in production helps.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI Engineer",
+   "score": null,
+   "skills": [
+    "Azure",
+    "Agentic AI",
+    "LangChain + LangGraph RAG",
+    "Python"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "HCLTech",
+   "dl": null,
+   "exp": "Band E1",
+   "fit": "Long-shot",
+   "gaps": [
+    "Python proficiency is the must-have gap"
+   ],
+   "id": "hcltech-genai-analyst-166721",
+   "imp": "YES — small: the LangChain/LangGraph gap is already partly closed (production 12 Nov).",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Analyst — Generative AI (166721, Band E1)",
+   "score": 65,
+   "skills": [
+    "Generative AI",
+    "Python",
+    "LangChain / LangGraph",
+    "Prompt engineering"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-11-10"
+  },
+  {
+   "co": "Virtusa",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Robot Framework — the JD's core tool, zero exposure",
+    "Selenium or any test-automation framework",
+    "Formal QA-role experience",
+    "Test/defect-tracking tools"
+   ],
+   "id": "virtusa-testing-creq260048",
+   "imp": "YES — small: Robot Framework basics + a demo.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated (reel claims up to ₹7 LPA; aggregators ₹4–8 LPA — likely below the bar)",
+   "payLpa": null,
+   "role": "Software Testing Engineer (Associate) (CREQ260048)",
+   "score": 50,
+   "skills": [
+    "Python",
+    "SQL/PostgreSQL",
+    "Git",
+    "REST APIs",
+    "Unit testing",
+    "Manual verification of live flows"
+   ],
+   "st": "open",
+   "url": "https://www.virtusa.com/careers/job-search/global/en/job/CREQ260048/Associate",
+   "ver": "2026-11-12"
+  },
+  {
+   "co": "HPE",
+   "dl": null,
+   "exp": "1–2 yrs bar (borderline for a 0-yr fresher)",
+   "fit": "Long-shot",
+   "gaps": [
+    "1–2 years experience bar"
+   ],
+   "id": "hpe-fullstack-blr",
+   "imp": "YES — small: full-stack depth on the live platform.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Fullstack Developer",
+   "score": 60,
+   "skills": [
+    "Full-stack engineering",
+    "JavaScript/TypeScript",
+    "REST APIs",
+    "Production web apps"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-11-11"
+  },
+  {
+   "co": "AMETEK",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Eligible",
+   "gaps": [
+    "Python proficiency (building, not proven)",
+    "Document pipelines at small scale, not enterprise"
+   ],
+   "id": "ametek-ai-engineer",
+   "imp": "YES — small: Python depth + a bigger document pipeline.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI Engineer / Developer",
+   "score": 70,
+   "skills": [
+    "RAG with LangChain + ChromaDB (6/6 retrieval tests)",
+    "ML/LLM fundamentals",
+    "Prompt engineering",
+    "Document-processing pipelines",
+    "Python",
+    "REST APIs",
+    "Git"
+   ],
+   "st": "open",
+   "url": "https://jobs.ametek.com/job/Bangalore-AI-Engineer-Developer-KA-560048/1441296700/",
+   "ver": "2026-10-27"
+  },
+  {
+   "co": "AMETEK",
+   "dl": null,
+   "exp": "Entry-level",
+   "fit": "Long-shot",
+   "gaps": [
+    "Embedded Linux development (none)",
+    "Qt/QML/LVGL/Flutter/GTK+ (none)",
+    "Firmware/C/C++ embedded work (none)"
+   ],
+   "id": "ametek-embedded-firmware-1380396700",
+   "imp": "NO — embedded domain.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Embedded Firmware Engineer — UI & Web Design (1380396700)",
+   "score": 40,
+   "skills": [
+    "HTML/CSS/JavaScript (React/Next.js)",
+    "REST/WebSockets",
+    "Linux command-line basics",
+    "Git"
+   ],
+   "st": "open",
+   "url": "https://jobs.ametek.com/job/Bangalore-Embedded-Firmware-Engineer-UI-&-Web-Design-KA-560048/1380396700/",
+   "ver": "2026-10-31"
+  },
+  {
+   "co": "Advance Sensing",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Eligible",
+   "gaps": [
+    "Machine-vision domain depth"
+   ],
+   "id": "advance-sensing-swe",
+   "imp": "YES — small: machine-vision basics.",
+   "loc": "Bengaluru",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (machine vision / industrial sensing)",
+   "score": 70,
+   "skills": [
+    "Software engineering",
+    "Python",
+    "Machine vision fundamentals"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-10-22"
+  },
+  {
+   "co": "Elements Energy",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Eligible",
+   "gaps": [
+    "Startup — pay unstated, likely below the bar"
+   ],
+   "id": "elements-energy-swe",
+   "imp": "—",
+   "loc": "Chennai",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Developer (IIT-M-incubated climate-tech startup)",
+   "score": null,
+   "skills": [
+    "Software development",
+    "0–2 yrs band"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-10-21"
+  },
+  {
+   "co": "Invesco",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Eligible",
+   "gaps": [
+    "Engineering-run / ops depth"
+   ],
+   "id": "invesco-eng-i-run",
+   "imp": "YES — small: ops depth on the live platform.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Hybrid",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Eng I, Eng Run",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "Production operations",
+    "Linux"
+   ],
+   "st": "open",
+   "url": "https://invesco.wd1.myworkdayjobs.com/IVZ/job/Hyderabad-Telangana/Eng-I--Eng-Run_R-15795-1",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Auric AI",
+   "dl": null,
+   "exp": "Junior",
+   "fit": "Eligible",
+   "gaps": [
+    "Startup — pay unstated"
+   ],
+   "id": "auric-ai-junior-swe",
+   "imp": "YES — small: full-stack depth.",
+   "loc": "Bengaluru / Mumbai",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Junior Software Engineer",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "JavaScript",
+    "Production web apps"
+   ],
+   "st": "open",
+   "url": "https://auric-ai.talismatic.com/jobs/JQEHMTC6T",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Mastercard",
+   "dl": null,
+   "exp": "Entry-level",
+   "fit": "Eligible",
+   "gaps": [
+    "Java full-stack depth"
+   ],
+   "id": "mastercard-swe-i-java-fullstack",
+   "imp": "YES — small: Java + React depth.",
+   "loc": "Pune",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer I, Java Full Stack React/Angular (R-294544)",
+   "score": null,
+   "skills": [
+    "Java",
+    "React/Angular",
+    "Full-stack engineering"
+   ],
+   "st": "open",
+   "url": "https://careers.mastercard.com/us/en/job/R-294544/Software-Engineer-I-Java-Full-Stack-React-Angular",
+   "ver": "2026-10-23"
+  },
+  {
+   "co": "Salesforce",
+   "dl": "2026-11-11",
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Deadline 11 Nov passed, not submitted"
+   ],
+   "id": "salesforce-system-analyst-jr367594",
+   "imp": "NO — deadline passed.",
+   "loc": "Hyderabad / Bangalore",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "System Analyst (JR367594)",
+   "score": null,
+   "skills": [
+    "Systems analysis",
+    "CRM fundamentals"
+   ],
+   "st": "dead",
+   "url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/India---Hyderabad/System-Analyst_JR367594",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Accenture",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Pay ~₹4.5 LPA — below the bar"
+   ],
+   "id": "accenture-custom-swe",
+   "imp": "NO — below the bar.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "~₹4.5 LPA (fresher band) — BELOW BAR",
+   "payLpa": 4.5,
+   "role": "Custom Software Engineer (0–2 yrs)",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "Cloud fundamentals"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-10-18"
+  },
+  {
+   "co": "Accenture",
+   "dl": null,
+   "exp": "0–2 yrs, GenAI",
+   "fit": "Long-shot",
+   "gaps": [
+    "Pay likely below the bar"
+   ],
+   "id": "accenture-decision-science-assoc",
+   "imp": "NO — below the bar.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Likely below the bar",
+   "payLpa": null,
+   "role": "Decision Science Practitioner Associate (GenAI)",
+   "score": 70,
+   "skills": [
+    "Data science",
+    "GenAI",
+    "Python",
+    "Statistics"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-10-21"
+  },
+  {
+   "co": "Accenture",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Long-shot",
+   "gaps": [
+    "Pay likely below the bar"
+   ],
+   "id": "accenture-custom-swe-cloud-cc",
+   "imp": "NO — below the bar.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Likely below the bar",
+   "payLpa": null,
+   "role": "Custom Software Engineer, Cloud Contact Center (ATCI-5349571-S1958852)",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "Cloud contact centre"
+   ],
+   "st": "open",
+   "url": null,
+   "ver": "2026-10-27"
+  },
+  {
+   "co": "Juspay",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Careers board empty 12 Nov — dead"
+   ],
+   "id": "juspay-sde-backend-dev-be03",
+   "imp": "NO — dead.",
+   "loc": "Mumbai",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "SDE Backend (DEV-BE03)",
+   "score": 55,
+   "skills": [
+    "Backend engineering",
+    "Java/Scala",
+    "Systems design"
+   ],
+   "st": "dead",
+   "url": "https://juspay.in/careers",
+   "ver": "2026-11-12"
+  },
+  {
+   "co": "Juspay",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Same board empty 12 Nov — dead"
+   ],
+   "id": "juspay-data-scientist-ds01",
+   "imp": "NO — dead.",
+   "loc": "Mumbai",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Data Scientist (DS01)",
+   "score": 42,
+   "skills": [
+    "Data science",
+    "Python",
+    "Statistics",
+    "ML fundamentals"
+   ],
+   "st": "dead",
+   "url": "https://juspay.in/careers",
+   "ver": "2026-11-12"
+  },
+  {
+   "co": "Salesforce",
+   "dl": "2026-11-03",
+   "exp": "Futureforce",
+   "fit": "Closed",
+   "gaps": [
+    "Posting gone after 3 Nov; never applied"
+   ],
+   "id": "salesforce-amts-jr307116",
+   "imp": "NO — closed.",
+   "loc": "Hyderabad / Bangalore",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineering AMTS (JR307116, Futureforce)",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "Systems fundamentals"
+   ],
+   "st": "closed",
+   "url": "https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Bangalore/Software-Engineering-AMTS_JR307116",
+   "ver": "2026-11-04"
+  },
+  {
+   "co": "TCS",
+   "dl": "2026-11-12",
+   "exp": "NQT",
+   "fit": "Closed",
+   "gaps": [
+    "Registration closed 12 Nov 23:59"
+   ],
+   "id": "tcs-ion-nqt",
+   "imp": "NO — closed.",
+   "loc": "Not stated",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "iON NQT (exam 24 Nov)",
+   "score": null,
+   "skills": [
+    "Aptitude",
+    "Reasoning",
+    "Coding basics"
+   ],
+   "st": "closed",
+   "url": null,
+   "ver": "2026-11-12"
+  },
+  {
+   "co": "NatWest",
+   "dl": "2026-11-07",
+   "exp": "6-month contract",
+   "fit": "Closed",
+   "gaps": [
+    "Closed 7 Nov; also a contract, not full-time permanent"
+   ],
+   "id": "natwest-aiml-trainee",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru / Chennai / Gurugram",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI ML Trainee (6-month contract, R00287403)",
+   "score": null,
+   "skills": [
+    "AI/ML fundamentals",
+    "Python"
+   ],
+   "st": "closed",
+   "url": null,
+   "ver": "2026-11-07"
+  },
+  {
+   "co": "Cisco",
+   "dl": null,
+   "exp": "0 yrs, NATS",
+   "fit": "Closed",
+   "gaps": [
+    "Apprenticeship — fails the full-time-only rule"
+   ],
+   "id": "cisco-trainee-apprentice-nats",
+   "imp": "NO — apprenticeship.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer Trainee, Technical Graduate Apprentice (NATS)",
+   "score": null,
+   "skills": [
+    "Software engineering basics"
+   ],
+   "st": "closed",
+   "url": "https://jobs.cisco.com/jobs/SearchJobs",
+   "ver": "2026-10-25"
+  },
+  {
+   "co": "Discover Dollar",
+   "dl": null,
+   "exp": "0–1 yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Internship — fails the full-time-only rule"
+   ],
+   "id": "discover-dollar-ai-intern",
+   "imp": "NO — internship.",
+   "loc": "Bangalore",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI Engineer Intern (agentic AI)",
+   "score": null,
+   "skills": [
+    "Agentic AI",
+    "Python"
+   ],
+   "st": "closed",
+   "url": null,
+   "ver": "2026-10-18"
+  },
+  {
+   "co": "Zycus",
+   "dl": null,
+   "exp": "0–1 yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Internship — fails the full-time-only rule"
+   ],
+   "id": "zycus-ai-intern",
+   "imp": "NO — internship.",
+   "loc": "Bangalore (hybrid)",
+   "mnc": false,
+   "mode": "Hybrid",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI Engineer Intern",
+   "score": null,
+   "skills": [
+    "AI engineering",
+    "Python"
+   ],
+   "st": "closed",
+   "url": null,
+   "ver": "2026-10-18"
+  },
+  {
+   "co": "Akamai",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Closed 22 Oct"
+   ],
+   "id": "akamai-swe-3863",
+   "imp": "NO — closed.",
+   "loc": "India (Remote)",
+   "mnc": true,
+   "mode": "Remote",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (Job ID 3863)",
+   "score": null,
+   "skills": [
+    "Python/Go/shell",
+    "Linux/Unix"
+   ],
+   "st": "closed",
+   "url": "https://jobs.akamai.com",
+   "ver": "2026-10-22"
+  },
+  {
+   "co": "Intel",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Absent from the live Intel Workday listing; detail endpoint 404"
+   ],
+   "id": "intel-ai-system-perf-jr0288211",
+   "imp": "NO — closed.",
+   "loc": "Bangalore",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI System Performance Engineer (JR0288211)",
+   "score": null,
+   "skills": [
+    "AI systems",
+    "Performance engineering"
+   ],
+   "st": "closed",
+   "url": "https://intel.wd1.myworkdayjobs.com/External/job/India-Bangalore/AI-System-Performance-Engineer_JR0288211/",
+   "ver": "2026-10-31"
+  },
+  {
+   "co": "Razorpay",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Absent from the live Greenhouse API; posting URL redirects away"
+   ],
+   "id": "razorpay-data-analyst-bf",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Data Analyst, Business Finance",
+   "score": null,
+   "skills": [
+    "Data analysis",
+    "Finance fundamentals",
+    "SQL"
+   ],
+   "st": "closed",
+   "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4744129005",
+   "ver": "2026-10-27"
+  },
+  {
+   "co": "Razorpay",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Absent from the live Greenhouse API listing"
+   ],
+   "id": "razorpay-analyst-finops",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Analyst, Financial Operations",
+   "score": null,
+   "skills": [
+    "Financial operations",
+    "Analysis"
+   ],
+   "st": "closed",
+   "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4747560005",
+   "ver": "2026-11-01"
+  },
+  {
+   "co": "Razorpay",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Closed between 3 Nov and 4 Nov; the approved application was never submitted"
+   ],
+   "id": "razorpay-ai-builder",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "AI Builder",
+   "score": null,
+   "skills": [
+    "AI-assisted building",
+    "Python"
+   ],
+   "st": "closed",
+   "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4744950005",
+   "ver": "2026-11-04"
+  },
+  {
+   "co": "Oracle",
+   "dl": null,
+   "exp": "0 to 2+ yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Official detail page now renders 'This job is no longer available'"
+   ],
+   "id": "oracle-ase1-health-345521",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Application Software Engineer 1 (Oracle Health) (345521)",
+   "score": null,
+   "skills": [
+    "Java",
+    "SQL",
+    "Healthcare systems"
+   ],
+   "st": "closed",
+   "url": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/345521",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "JLL",
+   "dl": null,
+   "exp": "0–2 yrs",
+   "fit": "Closed",
+   "gaps": [
+    "Search for REQ510700 returns 0; detail endpoint 404"
+   ],
+   "id": "jll-swe-i-req510700",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer I (REQ510700)",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "0–2 yrs band"
+   ],
+   "st": "closed",
+   "url": "https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Bengaluru-KA/Software-Engineer-I_REQ510700",
+   "ver": "2026-11-01"
+  },
+  {
+   "co": "L&T EduTech",
+   "dl": null,
+   "exp": "Trainee",
+   "fit": "Closed",
+   "gaps": [
+    "Trainee role — fails the full-time-only rule"
+   ],
+   "id": "lnt-edutech-engineer-trainee",
+   "imp": "NO — trainee.",
+   "loc": "Chennai",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Engineer Trainee (Platform Development)",
+   "score": null,
+   "skills": [
+    "Platform development",
+    "Software engineering"
+   ],
+   "st": "closed",
+   "url": "https://larsentoubrocareers.peoplestrong.com/job/detail/LNT_ET_1891936",
+   "ver": "2026-11-08"
+  },
+  {
+   "co": "Anthropic",
+   "dl": null,
+   "exp": "—",
+   "fit": "Closed",
+   "gaps": [
+    "Checked 23 Oct — no fresher role open in India"
+   ],
+   "id": "anthropic-no-fresher-role",
+   "imp": "—",
+   "loc": "India roles checked (Bangalore/Mumbai)",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "—",
+   "payLpa": null,
+   "role": "No fresher role open",
+   "score": null,
+   "skills": [],
+   "st": "none",
+   "url": "https://www.anthropic.com/careers/jobs",
+   "ver": "2026-10-23"
+  },
+  {
+   "co": "Atlassian",
+   "dl": null,
+   "exp": "—",
+   "fit": "Closed",
+   "gaps": [
+    "Checked 23 Oct — no fresher role open in India"
+   ],
+   "id": "atlassian-no-fresher-role",
+   "imp": "—",
+   "loc": "India roles checked",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "—",
+   "payLpa": null,
+   "role": "No fresher role open",
+   "score": null,
+   "skills": [],
+   "st": "none",
+   "url": "https://www.atlassian.com/company/careers",
+   "ver": "2026-10-23"
+  },
+  {
+   "co": "Rubrik",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Closed",
+   "gaps": [
+    "Roles closed 9 Nov"
+   ],
+   "id": "rubrik-swe-bangalore",
+   "imp": "NO — closed.",
+   "loc": "Bengaluru",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer, Bangalore",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "Cloud / SaaS"
+   ],
+   "st": "closed",
+   "url": "https://www.rubrik.com/company/careers",
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "Accenture",
+   "dl": null,
+   "exp": "AI/ML Associate",
+   "fit": "Applied",
+   "gaps": [
+    "Submitted 4 Oct, awaiting the online test invite"
+   ],
+   "id": "accenture-aiml-assoc",
+   "imp": "—",
+   "loc": "Not stated",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated (fresher band, below the bar — applied before the bar)",
+   "payLpa": null,
+   "role": "AI/ML Computational Science Associate (AIOC-S01665345)",
+   "score": 72,
+   "skills": [
+    "AI/ML fundamentals",
+    "Python",
+    "Data analysis",
+    "Computational science"
+   ],
+   "st": "applied",
+   "url": null,
+   "ver": "2026-10-04"
+  },
+  {
+   "co": "American Express",
+   "dl": null,
+   "exp": "Apprentice",
+   "fit": "Applied",
+   "gaps": [
+    "Submitted 16 Oct"
+   ],
+   "id": "amex-apprentice-ets",
+   "imp": "—",
+   "loc": "Not stated",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Apprentice",
+   "score": 90,
+   "skills": [
+    "Software engineering",
+    "Java",
+    "Testing"
+   ],
+   "st": "applied",
+   "url": null,
+   "ver": "2026-10-16"
+  },
+  {
+   "co": "Microsoft",
+   "dl": null,
+   "exp": "Software Engineer",
+   "fit": "Rejected",
+   "gaps": [
+    "Applied 5 Nov, rejected 9 Nov"
+   ],
+   "id": "microsoft-swe-200064597",
+   "imp": "NO — rejected.",
+   "loc": "Hyderabad",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer (200064597)",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "DSA",
+    "Systems fundamentals"
+   ],
+   "st": "rejected",
+   "url": "https://apply.careers.microsoft.com/careers?query=200064597",
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "AiPrise",
+   "dl": null,
+   "exp": "Not stated",
+   "fit": "Applied",
+   "gaps": [
+    "Applied; referral invite sent to Saransh Bansal"
+   ],
+   "id": "aiprise-swe-i",
+   "imp": "—",
+   "loc": "Bengaluru",
+   "mnc": false,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Software Engineer I",
+   "score": null,
+   "skills": [
+    "Software engineering",
+    "AI/ML fundamentals"
+   ],
+   "st": "applied",
+   "url": null,
+   "ver": "2026-11-09"
+  },
+  {
+   "co": "Trimble",
+   "dl": "2026-11-03",
+   "exp": "P1, entry level",
+   "fit": "Long-shot",
+   "gaps": [
+    "No Kubernetes/container orchestration",
+    "No cloud infrastructure (AWS account only)",
+    "No formal SRE practices (SLIs/SLOs, runbooks at scale)",
+    "No monitoring/observability tooling",
+    "Python at building level"
+   ],
+   "id": "trimble-sre-r56485",
+   "imp": "NO — needs SRE depth at scale.",
+   "loc": "Chennai",
+   "mnc": true,
+   "mode": "Office",
+   "pay": "Not stated",
+   "payLpa": null,
+   "role": "Site Reliability Engineer P1, Entry Level (R56485)",
+   "score": 45,
+   "skills": [
+    "Live production ownership (150+ users)",
+    "Linux daily ops (SSH, logs, systemd)",
+    "Vercel deployments",
+    "Live incident triage",
+    "Git"
+   ],
+   "st": "unclear",
+   "url": "https://trimble.wd1.myworkdayjobs.com/TrimbleCareers/details/Site-Reliability-Engineer_R56485",
+   "ver": "2026-11-08"
+  }
+ ],
+ "note": "Every role ever delivered to Krupal, in one place — including below-bar, closed and dead roles. The Rs.10 LPA bar governs what to APPLY to, not what is SHOWN. Salary sort uses payLpa (low end of the stated range); null means the official page does not state pay. Remote first is the default order: remote roles, then office, each by pay high to low.",
+ "updated": "2026-11-14"
+}
