@@ -238,6 +238,8 @@
       sub: "Every opportunity's behind-the-scenes — checks, referrals, responses" },
     { id: "all-jobs", label: "All Jobs", icon: null, href: "/all-jobs.html", plain: true,
       sub: "Every opening in one place — salary, remote, MNC, tap for skills and score" },
+    { id: "dashboard", label: "Dashboard", icon: null, href: "/dashboard.html", plain: true,
+      sub: "Student Platform money — collected, still to collect, paid vs unpaid by batch" },
     { id: "amazon-prep", label: "Amazon Prep", icon: null, href: "/amazon-prep.html", plain: true,
       sub: "Leadership Principles, Python basics, DP, Trees, Graphs — one topic at a time" },
   ];
@@ -245,7 +247,7 @@
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
     "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", feed: "spark", pipeline: "jobs", "all-jobs": "jobs", "amazon-prep": "book" };
+    syllabus: "exam", feed: "spark", pipeline: "jobs", "all-jobs": "jobs", "dashboard": "stats", "amazon-prep": "book" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */

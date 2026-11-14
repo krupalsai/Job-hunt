@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Dashboard · Job Hunt</title>
+<meta name="description" content="Student Platform money — how much is collected, how much is still to collect, and paid vs unpaid by batch." />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101826" media="(prefers-color-scheme: dark)" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<script src="/nav.js" defer></script>
+<link rel="stylesheet" href="/fonts/fonts.css" />
+<link rel="stylesheet" href="/ui.css" />
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--font-ui); background:var(--bg); color:var(--text);
+    padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  header{ padding:10px 12px; position:sticky; top:0; z-index:10;
+    background:var(--header-bg); backdrop-filter:blur(8px); border-bottom:1px solid var(--panel-border); }
+  h1{ font-size:17px; margin:0; }
+  .sub{ color:var(--dim); font-size:11.5px; line-height:1.35; }
+  main{ max-width:720px; margin:0 auto; padding:12px 12px 40px; }
+  a{ color:var(--accent-ink); }
+
+  /* ── Big numbers ── */
+  .bigs{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 4px; }
+  .big{ background:var(--panel); border:1px solid var(--panel-border); border-radius:14px;
+    padding:14px 15px; }
+  .big .k{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--dim); }
+  .big .v{ font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px;
+    font-variant-numeric:tabular-nums; }
+  .big .v small{ font-size:14px; font-weight:700; color:var(--dim); }
+  .big .m{ font-size:12px; color:var(--dim); margin-top:4px; line-height:1.4; }
+  .big.is-good .v{ color:var(--ok); }
+  .big.is-wait .v{ color:var(--warn); }
+  .strip{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 4px; }
+  .stat{ font-size:12.5px; font-weight:650; padding:6px 12px; border-radius:20px;
+    background:var(--panel); border:1px solid var(--panel-border); color:var(--text); }
+  .stat b{ font-weight:800; }
+
+  /* ── Chart cards ── */
+  .card{ background:var(--panel); border:1px solid var(--panel-border); border-radius:14px;
+    padding:14px 15px; margin-top:12px; }
+  .card h2{ font-size:15px; font-weight:800; margin:0 0 2px; letter-spacing:-.01em; }
+  .card .cap{ font-size:12px; color:var(--dim); line-height:1.45; margin:0 0 12px; }
+  .row{ margin-bottom:12px; }
+  .row:last-child{ margin-bottom:0; }
+  .row-top{ display:flex; justify-content:space-between; gap:8px; font-size:13px; margin-bottom:5px; }
+  .row-top .nm{ font-weight:700; }
+  .row-top .vl{ font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .row-top .vl span{ font-weight:600; color:var(--dim); }
+  .track{ height:14px; border-radius:999px; background:var(--surface-3); overflow:hidden; }
+  .track i{ display:block; height:100%; border-radius:999px; background:var(--accent); }
+  .track i.paid{ background:var(--ok); }
+  .track i.unpaid{ background:var(--warn); }
+  .track i.enr{ background:var(--accent); }
+  /* Stacked paid + unpaid: one track, two fills side by side. */
+  .stack{ display:flex; height:14px; border-radius:999px; background:var(--surface-3); overflow:hidden; }
+  .stack i{ display:block; height:100%; }
+  .stack i.paid{ background:var(--ok); }
+  .stack i.unpaid{ background:var(--warn); }
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--dim); margin-top:8px; }
+  .legend .dot{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+  .dot.ok{ background:var(--ok); } .dot.warn{ background:var(--warn); }
+  .dot.acc{ background:var(--accent); } .dot.bad{ background:var(--bad); }
+  .dot.grey{ background:var(--faint); }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+  .pair:last-child{ margin-bottom:0; }
+  .pair .pl{ grid-column:1 / -1; font-size:13px; font-weight:700; }
+  .pair .track{ height:10px; }
+  .pair .pv{ font-size:12px; font-weight:700; color:var(--dim); font-variant-numeric:tabular-nums; }
+
+  /* Donut: conic-gradient ring with the headline in the middle. */
+  .donut-wrap{ display:flex; gap:16px; align-items:center; }
+  .donut{ flex:0 0 auto; width:132px; height:132px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; }
+  .donut-in{ width:84px; height:84px; border-radius:50%; background:var(--panel);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .donut-in b{ font-size:22px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; }
+  .donut-in span{ font-size:10.5px; color:var(--dim); margin-top:3px; line-height:1.2; }
+  .donut-legend{ flex:1; min-width:0; display:flex; flex-direction:column; gap:7px; font-size:13px; }
+  .donut-legend .dl{ display:flex; justify-content:space-between; gap:8px; }
+  .donut-legend .dl b{ font-variant-numeric:tabular-nums; }
+
+  .line{ width:100%; height:auto; display:block; }
+  .note{ font-size:12.5px; color:var(--dim); line-height:1.55; margin:12px 2px 0; }
+  .note b{ color:var(--text); }
+  .snap{ font-size:12px; color:var(--dim); margin:14px 2px 0; line-height:1.5; }
+  .empty{ text-align:center; color:var(--dim); font-size:13.5px; padding:40px 20px; line-height:1.6; }
+</style>
+</head>
+<body data-page="dashboard">
+<header>
+  <div class="nav-bar">
+    <button class="nav-burger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-title">
+      <h1 id="screen-title">Dashboard</h1>
+      <div class="nav-exam" id="nav-exam"></div>
+    </div>
+  </div>
+</header>
+<main>
+  <p class="sub">Student Platform money — what is collected, what is still to collect, and who has paid, by batch. Batch totals only; no student names, phone numbers or email addresses are shown anywhere here.</p>
+
+  <div id="dash"><div class="empty">Loading the dashboard…</div></div>
+  <p class="snap" id="snap"></p>
+</main>
+<script>
+(function () {
+  "use strict";
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function inr(n) { return "₹" + Number(n || 0).toLocaleString("en-IN"); }
+  function fmtDay(iso) {
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    return isNaN(d.getTime()) ? iso
+      : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+  var dashEl = document.getElementById("dash"),
+      snapEl = document.getElementById("snap");
+
+  /* Horizontal bar rows: value as a share of the biggest bar. */
+  function barRows(items, valueKey, labelFn) {
+    var max = 0;
+    items.forEach(function (it) { max = Math.max(max, Number(it[valueKey]) || 0); });
+    return items.map(function (it) {
+      var v = Number(it[valueKey]) || 0;
+      var pct = max > 0 ? (v / max * 100) : 0;
+      return '<div class="row"><div class="row-top"><span class="nm">' + esc(it.batch) + "</span>" +
+        '<span class="vl">' + labelFn(it) + "</span></div>" +
+        '<div class="track"><i style="width:' + pct.toFixed(1) + '%"></i></div></div>';
+    }).join("");
+  }
+
+  function render(d) {
+    var t = d.totals, batches = d.batches || [], monthly = d.monthly || [], status = d.status || [];
+    var attempts = 0;
+    status.forEach(function (s) { attempts += Number(s.count) || 0; });
+
+    var html = "";
+    /* ── Big numbers ── */
+    html += '<div class="bigs">' +
+      '<div class="big is-good"><div class="k">Collected</div><div class="v">' + esc(inr(t.collected_inr)) + "</div>" +
+      '<div class="m">Fees actually received, across all batches.</div></div>' +
+      '<div class="big is-wait"><div class="k">Still to collect</div><div class="v">' + esc(inr(t.still_to_collect_inr)) + "</div>" +
+      '<div class="m">Enrolled students who have not paid yet.</div></div></div>' +
+      '<div class="strip">' +
+      '<span class="stat"><b>' + esc(t.paid) + "</b> paid of <b>" + esc(t.enrolled) + "</b> enrolled</span>" +
+      '<span class="stat"><b>' + esc(attempts) + "</b> payment attempts</span>" +
+      '<span class="stat">Expected total <b>' + esc(inr(t.expected_inr)) + "</b></span></div>";
+
+    /* ── Money collected by batch ── */
+    html += '<section class="card"><h2>Money collected by batch</h2>' +
+      '<p class="cap">Fees actually received, per batch. GNITC Batch 2 is ₹0 — see the note below.</p>' +
+      barRows(batches, "collected_inr", function (b) {
+        return inr(b.collected_inr) + ' <span>of ' + inr(b.expected_inr) + "</span>";
+      }) + "</section>";
+
+    /* ── Paid vs unpaid by batch (stacked) ── */
+    var stackRows = batches.map(function (b) {
+      var paid = Number(b.paid) || 0, unpaid = Number(b.unpaid) || 0, tot = paid + unpaid;
+      if (!tot) {
+        return '<div class="row"><div class="row-top"><span class="nm">' + esc(b.batch) + "</span>" +
+          '<span class="vl">No students enrolled yet</span></div>' +
+          '<div class="stack"></div></div>';
+      }
+      return '<div class="row"><div class="row-top"><span class="nm">' + esc(b.batch) + "</span>" +
+        '<span class="vl">' + paid + " paid · " + unpaid + " unpaid</span></div>" +
+        '<div class="stack"><i class="paid" style="width:' + (paid / tot * 100).toFixed(1) + '%"></i>' +
+        '<i class="unpaid" style="width:' + (unpaid / tot * 100).toFixed(1) + '%"></i></div></div>';
+    }).join("");
+    html += '<section class="card"><h2>Paid vs unpaid by batch</h2>' +
+      '<p class="cap">Every enrolled student, split by whether they have paid. The unpaid side is the follow-up list.</p>' +
+      stackRows +
+      '<div class="legend"><span><i class="dot ok"></i>Paid</span>' +
+      '<span><i class="dot warn"></i>Unpaid</span></div></section>';
+
+    /* ── Money over time (line) ── */
+    var W = 360, H = 170, PL = 8, PR = 8, PT = 26, PB = 30;
+    var maxM = 0;
+    monthly.forEach(function (m) { maxM = Math.max(maxM, Number(m.collected_inr) || 0); });
+    maxM = Math.max(maxM, 1);
+    var pts = monthly.map(function (m, i) {
+      var x = monthly.length === 1 ? W / 2
+        : PL + (W - PL - PR) * i / (monthly.length - 1);
+      var y = PT + (H - PT - PB) * (1 - (Number(m.collected_inr) || 0) / maxM);
+      return { x: x, y: y, m: m };
+    });
+    var line = pts.map(function (p, i) { return (i ? "L" : "M") + p.x.toFixed(1) + " " + p.y.toFixed(1); }).join(" ");
+    var dots = pts.map(function (p) {
+      return '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="5" fill="var(--accent)"/>' +
+        '<text x="' + p.x.toFixed(1) + '" y="' + (p.y - 10).toFixed(1) +
+        '" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">' +
+        esc(inr(p.m.collected_inr)) + "</text>" +
+        '<text x="' + p.x.toFixed(1) + '" y="' + (H - 8) +
+        '" text-anchor="middle" font-size="12" fill="var(--muted)">' +
+        esc(p.m.label) + " · " + esc(p.m.payments) + " payments</text>";
+    }).join("");
+    html += '<section class="card"><h2>Money over time</h2>' +
+      '<p class="cap">Collections came in two waves — July and September 2026. No payments in the months between.</p>' +
+      '<svg class="line" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Money collected by month">' +
+      '<line x1="' + PL + '" y1="' + (H - PB) + '" x2="' + (W - PR) + '" y2="' + (H - PB) +
+      '" stroke="var(--line-2)" stroke-width="1"/>' +
+      '<polyline points="' + esc(line) + '" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>' +
+      dots + "</svg></section>";
+
+    /* ── Payment results (donut) ── */
+    var colors = { approved: "var(--ok)", pg_failed: "var(--bad)", pg_pending: "var(--warn)", rejected: "var(--faint)" };
+    var total = attempts || 1, acc = 0, stops = [];
+    status.forEach(function (s) {
+      var share = (Number(s.count) || 0) / total * 100;
+      stops.push((colors[s.status] || "var(--faint)") + " " + acc.toFixed(1) + "% " + (acc + share).toFixed(1) + "%");
+      acc += share;
+    });
+    var approved = status.find(function (s) { return s.status === "approved"; });
+    var legend = status.map(function (s) {
+      var cls = s.status === "approved" ? "ok" : s.status === "pg_failed" ? "bad"
+        : s.status === "pg_pending" ? "warn" : "grey";
+      return '<span class="dl"><span><i class="dot ' + cls + '"></i>' + esc(s.label) +
+        "</span><b>" + esc(s.count) + "</b></span>";
+    }).join("");
+    html += '<section class="card"><h2>Payment results</h2>' +
+      '<p class="cap">Every payment attempt, by its final status. Most failures were gateway failures, not students refusing to pay.</p>' +
+      '<div class="donut-wrap"><div class="donut" style="background:conic-gradient(' + stops.join(", ") + ')">' +
+      '<div class="donut-in"><b>' + esc(approved ? approved.count : 0) + "</b><span>approved<br>of " + esc(attempts) + " attempts</span></div></div>" +
+      '<div class="donut-legend">' + legend + "</div></div></section>";
+
+    /* ── Enrolled vs paid by batch (clustered) ── */
+    var maxE = 0;
+    batches.forEach(function (b) { maxE = Math.max(maxE, Number(b.enrolled) || 0); });
+    var pairRows = batches.map(function (b) {
+      var enr = Number(b.enrolled) || 0, paid = Number(b.paid) || 0;
+      var ep = maxE > 0 ? enr / maxE * 100 : 0, pp = maxE > 0 ? paid / maxE * 100 : 0;
+      return '<div class="pair"><div class="pl">' + esc(b.batch) + "</div>" +
+        '<div><div class="track"><i class="enr" style="width:' + ep.toFixed(1) + '%"></i></div>' +
+        '<div class="pv">Enrolled ' + enr + "</div></div>" +
+        '<div><div class="track"><i class="paid" style="width:' + pp.toFixed(1) + '%"></i></div>' +
+        '<div class="pv">Paid ' + paid + "</div></div></div>";
+    }).join("");
+    html += '<section class="card"><h2>Enrolled vs paid by batch</h2>' +
+      '<p class="cap">How many enrolled in each batch, and how many of them have paid. The gap is the follow-up.</p>' +
+      pairRows +
+      '<div class="legend"><span><i class="dot acc"></i>Enrolled</span>' +
+      '<span><i class="dot ok"></i>Paid</span></div></section>';
+
+    /* ── Notes ── */
+    html += '<p class="note"><b>GNITC Batch 2 shows 0 paid:</b> its only 2 paid students were refunded on 14 Nov 2026, so their payments now read “rejected”. That is why the collected total is ₹1,29,800, not ₹1,34,200.</p>' +
+      '<p class="note"><b>Enrolled</b> means a complete student profile; <b>registered</b> means a profile exists, complete or not. GNIT Batch 2 has 63 registered profiles but only 25 enrolled.</p>';
+
+    dashEl.innerHTML = html;
+    snapEl.textContent = "Snapshot of " + fmtDay(d.snapshot) + " — Student Platform database. " +
+      "When more students pay, ask Muse for fresh files; these numbers are not hand-edited.";
+  }
+
+  /* Dashboard data is never cached — a stale snapshot would show old money
+     as if it were today's. Same rule as every other data file in this app. */
+  fetch("/data/dashboard/dashboard.json", { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function (data) { render(data); })
+    .catch(function () {
+      dashEl.innerHTML = '<div class="empty">Could not load the dashboard.<br>Check your connection and pull to refresh.</div>';
+    });
+})();
+</script>
+</body>
+</html>
