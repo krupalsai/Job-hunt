@@ -165,7 +165,11 @@
    (/data/all-jobs.json) is job data and is NEVER cached — a stale board
    would show a closed role as open.
    THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
-const CACHE = 'jobhunt-v49';
+/* v50 is the menu cleanup: nav.js drops Change exam, Focus, Interview Prep
+   and Interview Rounds from the drawer (14 Nov 2026). The pages still exist
+   and stay precached; only the menu changes.
+   THE BUMP IS LOAD-BEARING — see the v11/v12 notes above for why. */
+const CACHE = 'jobhunt-v50';
 
 // The prep shell: safe to serve offline because it is static and versioned by
 // the cache name, which changes on every deploy of this file.

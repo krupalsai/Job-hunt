@@ -14,8 +14,11 @@
    One name each, and the name in the menu is the title of the screen it opens:
 
        Home · Study · Test · Progress          the bottom bar, always visible
-       ☰ → Change exam · 47-day plan · All lessons · Current affairs
-           · Syllabus · Focus · Instinct · About you  everything else
+       ☰ → All lessons · Topics · Current affairs · Syllabus
+           · Instinct · Pipeline · All Jobs · Amazon Prep · About you
+      (Change exam, Focus, Interview Prep and Interview Rounds were removed
+       from the menu 14 Nov 2026 — unused; the pages still exist and the exam
+       picker still runs on first open.)
        + Alex, the floating voice button on every screen
            (+ the TS SI 47-day plan, when Study is another exam's)
 
@@ -219,8 +222,6 @@
      Named on the row exactly as they are titled on the screen they open.
      Pages (plain:true) are real links; the rest are sections of the prep page. */
   const MENU_DESTS = [
-    { id: "interview-prep", label: "Interview Prep", icon: null, href: "/interview-prep/", plain: true,
-      sub: "Practise your project story, technical questions and checklist" },
     { id: "si-plan", label: "TS SI 47-day plan", icon: null, href: "/si.html", plain: true,
       sub: "Today's tasks, the paper decoded, your mock scores" },
     { id: "lessons", label: "All lessons", icon: null,
@@ -231,10 +232,6 @@
       sub: "What has been written in, and today's live feeds" },
     { id: "syllabus", label: "Syllabus", icon: null,
       sub: "Pattern, marking, time budget, exam-hall tactics" },
-    /* Focus is its own page (focus.html) — plain:true keeps it a real page
-       link, never a prep-page section. */
-    { id: "focus", label: "Focus", icon: null, href: "/focus.html", plain: true,
-      sub: "Learning time vs scrolling time, side by side" },
     { id: "feed", label: "Instinct", icon: null, href: "/feed.html", plain: true,
       sub: "Lessons, quizzes and job lists as they are sent" },
     { id: "pipeline", label: "Pipeline", icon: null, href: "/pipeline.html", plain: true,
@@ -243,14 +240,12 @@
       sub: "Every opening in one place — salary, remote, MNC, tap for skills and score" },
     { id: "amazon-prep", label: "Amazon Prep", icon: null, href: "/amazon-prep.html", plain: true,
       sub: "Leadership Principles, Python basics, DP, Trees, Graphs — one topic at a time" },
-    { id: "interview-rounds", label: "Interview Rounds", icon: null, href: "/interview-rounds.html", plain: true,
-      sub: "Latest 2026 rounds & questions per company — Google, Amazon, Oracle, Accenture, AmEx" },
   ];
   /* Icons are attached here rather than inline so the lists above read as a
      plain table of names. */
   const ICON_FOR = { home: "home", study: "study", test: "test", progress: "stats",
-    "interview-prep": "book", "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
-    syllabus: "exam", feed: "spark", focus: "timer", pipeline: "jobs", "all-jobs": "jobs", "amazon-prep": "book", "interview-rounds": "book" };
+    "si-plan": "target", lessons: "book", topics: "study", plan: "cal", "current-affairs": "news",
+    syllabus: "exam", feed: "spark", pipeline: "jobs", "all-jobs": "jobs", "amazon-prep": "book" };
   DESTS.concat(MENU_DESTS).forEach(d => { d.icon = ICON[ICON_FOR[d.id]] || ICON.book; });
 
   /** A URL onto the prep page, carrying the exam so the syllabus matches. */
@@ -503,10 +498,6 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
         '<button type="button" class="nav-drawer-close" id="nav-close" aria-label="Close menu">' + ICON.close + "</button>" +
       "</div>" +
 
-      '<button type="button" class="nav-row" id="nav-change-exam">' + ICON.swap +
-        '<span class="nav-row-main"><span>Change exam</span>' +
-        '<span class="nav-row-sub">Rebuilds the whole app around another exam</span></span></button>' +
-
       '<div class="nav-group">Go to</div>' +
       MENU_DESTS.map(d =>
         '<a class="nav-row' + (activeId === d.id ? " is-on" : "") + '" data-goto="' + d.id + '"' +
@@ -700,7 +691,6 @@ nav#nav-bottom .nav-item:hover{ text-decoration:none; }
     if (!t || !t.closest) return;
     if (t.closest("#nav-hamburger")) { e.preventDefault(); setDrawer(!drawerOpen); return; }
     if (t.closest("#nav-close"))     { e.preventDefault(); closeAll(); return; }
-    if (t.closest("#nav-change-exam")) { e.preventDefault(); openPicker("change"); return; }
   });
 
   /* ── The exam screen ─────────────────────────────────────────────────── */
