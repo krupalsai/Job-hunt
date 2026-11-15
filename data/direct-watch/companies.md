@@ -20,24 +20,26 @@ software / AI / ML / data roles; India locations.
 
 **Seen requisitions** live in `seen.json` in this folder — anything there is never re-flagged.
 
+**15 Nov 2026:** Workday wd1/wd5 tenants recovered from the 14 Nov HTTP 521 outage (NVIDIA, Intel, Trimble, Invesco, JLL, HPE all scanning again); Visa CXS also recovered. Meta HTTP 400 (5th day) and ServiceNow (15th day) still need a live-browser check.
+
 
 | # | Company | Portal (official) | Check method |
 |---|---------|-------------------|--------------|
 | 1 | Amazon | https://www.amazon.jobs | amazon.jobs search, Software Development Engineer, India, University Talent / new-grad |
 | 2 | Google | https://www.google.com/about/careers/applications/jobs/results | Careers search, India, software engineer / AI, no experience minimum |
 | 3 | Microsoft | https://careers.microsoft.com/us/en/search-results | Careers search, India, software engineer, entry-level |
-| 4 | Meta | https://www.metacareers.com/jobs | Careers search, India, software engineer, university grad |
+| 4 | Meta | https://www.metacareers.com/jobs | Careers search, India, software engineer, university grad. NOTE 15 Nov: metacareers.com/jobs HTTP 400 for 5 straight days (11–15 Nov) — needs a live-browser check. |
 | 5 | NVIDIA | https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite | Workday search, India, entry-level software — NOT-FIT: ASIC Verification Engineer JR2020484 (Hyderabad, published 1 Jul 2026, live, no closing date): hardware/silicon verification role; mandatory core is C/C++ proficiency, SoC architecture, DMA/interrupt-engines/CPU/boot-devices/MMU/IOMMU, OS/device-driver concepts and bare-metal no-OS test frameworks. Honest ATS ~30. Do not pack future hardware-verification roles for this candidate; listed only so the verdict is recorded. |
 | 6 | Adobe | https://careers.adobe.com/us/en/search-results | Careers search, India, university / new grad. NOTE 10 Nov: Workday portal DECOMMISSIONED (wd5 URL redirects to community.workday.com/invalid-url; wd1 shows maintenance) — current official portal is careers.adobe.com (271 jobs, 36 India); Experience Level filter offers only "Experienced" + "University Intern", no entry-level full-time category. |
 | 7 | Oracle | https://www.oracle.com/careers/ | Careers search, India, entry-level software |
 | 8 | Salesforce | https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site | Workday search, India, early career |
-| 9 | ServiceNow | https://servicenow.wd5.myworkdayjobs.com/en-US/NowCareers | Workday search, India, early career / entry-level. NOTE 27 Oct: text fetch returned HTTP 500 (3 attempts) — portal may need a live-browser check. |
-| 10 | Cisco | https://jobs.cisco.com/jobs/SearchJobs | Careers search, India, Software Engineer, 0–2 yrs |
+| 9 | ServiceNow | https://servicenow.wd5.myworkdayjobs.com/en-US/NowCareers | Workday search, India, early career / entry-level. NOTE 27 Oct: text fetch returned HTTP 500 (3 attempts) — portal may need a live-browser check. NOTE 15 Nov: UNCHECKED 15th day (CXS 422, careers root 403, wd5 root 500). |
+| 10 | Cisco | https://jobs.cisco.com/jobs/SearchJobs | Careers search, India, Software Engineer, 0–2 yrs | NOTE 14 Nov: jobs.cisco.com now 302-redirects to careers.cisco.com — use careers.cisco.com/global/en/job/<id>/Software-Engineer for detail payloads (postingStatus OPEN confirmed 14 Nov for 2015025/2015359/2028048). |
 | 11 | Intel | https://intel.wd1.myworkdayjobs.com/External | Workday search, India, college graduate |
 | 12 | Qualcomm | https://careers.qualcomm.com/careers | Careers search, India, 0–2 yrs engineering |
 | 13 | Akamai | https://jobs.akamai.com/en/sites/CX_1/jobs | Careers search, India / Remote, 0–2 yrs |
 | 14 | Mastercard | https://careers.mastercard.com/us/en/search-results | Careers search, India, Software Engineer I, entry-level |
-| 15 | Visa | https://visa.wd5.myworkdayjobs.com/Visa | Workday jobs API (searchText = requisition ID), India |
+| 15 | Visa | https://visa.wd5.myworkdayjobs.com/Visa | Workday jobs API (searchText = requisition ID), India. NOTE 15 Nov: CXS API recovered from 14 Nov HTTP 521 block — flaky Cloudflare behaviour; a 521 day means UNCHECKED, not empty. |
 | 16 | HPE | https://careers.hpe.com/us/en/search-results | Careers search, India, Graduate Software Engineer |
 | 17 | Razorpay | https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited | Greenhouse public API: api.greenhouse.io/v1/boards/razorpaysoftwareprivatelimited/jobs |
 | 18 | Juspay | https://joinus.juspay.in | Careers page / application form, entry-level engineering |
