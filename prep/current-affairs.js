@@ -29,9 +29,25 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-11-15",
+  updated: "2026-11-16",
 
   items: [
+    {
+      date: "2026-11-15",
+      topic: "Culture",
+      headline: "PM Modi unveils 246 tribal projects worth about Rs.3,000 crore on Janjatiya Gaurav Diwas, Birsa Munda's 151st birth anniversary",
+      why: "Number + amount + occasion is the set. On 15 November, the 151st birth anniversary of tribal freedom fighter Bhagwan Birsa Munda, Prime Minister Narendra Modi addressed the Janjatiya Gaurav Diwas programme at Gadchiroli, Maharashtra, via video conference and inaugurated 173 projects and laid foundation stones for 73 more - 246 projects worth about Rs.3,000 crore in all, covering education, healthcare, livelihoods and community infrastructure. Among them were 38 Eklavya Model Residential Schools and 100 Multi-Purpose Centres under PM-JANMAN, plus the Tribal Research Institute building at Itanagar and the Ropuiliani Tribal Freedom Fighter Museum at Aizawl. The programme closed the Janjatiya Gaurav Pakhwada observed 1-15 November.",
+      source: "Daily Flash",
+      url: "https://dailyflash.in/a/pm-modi-unveils-3-000-crore-tribal-projects-on-janjatiya-gaurav-diwas",
+    },
+    {
+      date: "2026-11-15",
+      topic: "Irrigation",
+      headline: "Telangana CM meets PM Modi, seeks Rs.5,000 crore for irrigation projects; Khelo India Youth Games in Hyderabad 11-22 December",
+      why: "Ask + projects + dates is the set. On 15 November Chief Minister A. Revanth Reddy met Prime Minister Narendra Modi in New Delhi and sought an additional Rs.5,000 crore under the Scheme for Special Assistance to States for Capital Investment to complete irrigation projects that are 70-90% complete, plus faster clearances for the Palamuru-Rangareddy, Sitarama Sagar and Dindi lift schemes and Maharashtra's consent for the Tummidihatti project on the Pranahita at 152 metres. He also invited the PM to the opening and closing ceremonies of the Khelo India Youth Games 2026, to be held in Hyderabad from 11 to 22 December.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/news/national/telangana/revanth-urges-modi-to-expedite-clearances-for-telangana-irrigation-projects/article71705336.ece",
+    },
     {
       date: "2026-11-14",
       topic: "Schemes",
@@ -73,6 +89,22 @@ const CURRENT_AFFAIRS = {
       url: "https://saachibaat.com/politics/todays-top-news-14-november-2026/",
     },
     {
+      date: "2026-11-14",
+      topic: "Education",
+      headline: "Telangana announces AI-based child malnutrition tracking, six adoption agencies and four childline centres on Children's Day",
+      why: "Initiatives + places is the set. At Children's Day celebrations on 14 November, Women and Child Welfare Minister Seethakka announced four child welfare initiatives: an AI-based system to monitor children with severe and moderate acute malnutrition, six specialised adoption agencies, four new childline help centres at Hyderabad, Mahabubnagar, Medak and Rangareddy, and a 100-day campaign against child marriage.",
+      source: "Urban Acres",
+      url: "https://urbanacres.in/telangana-child-welfare-initiatives-add-ai-tracking-childline-centres/",
+    },
+    {
+      date: "2026-11-14",
+      topic: "Education",
+      headline: "Arunachal Pradesh cabinet clears Rs.1,500-crore school upgrade and government jobs for medal-winning sportspersons",
+      why: "Amount + scheme + who benefits is the set. On 14 November the Arunachal Pradesh cabinet cleared a Rs.1,500-crore school infrastructure upgrade under the second phase of Mission Shikshit Arunachal, to be completed by 2029, and the Chief Minister's Sports Talent Appointment and Recognition Scheme (CM-STARS), giving direct government jobs to athletes who win medals at the Olympic and Paralympic Games, Asian Games, Asian Para Games and Commonwealth Games.",
+      source: "NE Now",
+      url: "https://nenow.in/north-east-news/arunachal-pradesh/arunachal-cabinet-approves-rs-1500-crore-school-upgrade-govt-jobs-for-medal-winning-athletes.html",
+    },
+    {
       date: "2026-11-13",
       topic: "Awards",
       headline: "President presents National Sports Awards 2025: 17 Arjuna Awards, no Khel Ratna for the first time since 2014",
@@ -97,12 +129,44 @@ const CURRENT_AFFAIRS = {
       url: "https://thesouthfirst.com/karnataka/pink-line-metro-led-planetarium-vande-bharat-express-pm-modi-inaugurates-projects-worth-rs-15600-crore-in-karnataka/",
     },
     {
+      date: "2026-11-13",
+      topic: "Defence",
+      headline: "Exercise MITRA SHAKTI 2026 begins: 12th India-Sri Lanka army exercise at Maduru Oya, 13-26 November",
+      why: "Edition + place + dates is the set. A 170-member Indian Defence Forces contingent, mainly from the Rajputana Rifles, left for Sri Lanka on 13 November for the 12th edition of the annual India-Sri Lanka joint military exercise MITRA SHAKTI, held at the Army Training School, Maduru Oya, from 13 to 26 November 2026. The 14-day exercise builds joint capability for counter-terrorism operations in a semi-urban environment under a United Nations mandate.",
+      source: "PIB",
+      url: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2335826&reg=48&lang=1",
+    },
+    {
+      date: "2026-11-13",
+      topic: "Education",
+      headline: "Telangana issues GO 157 reversing GO 97, restoring polytechnic ECET lateral entry and SBTET certification",
+      why: "Order + reversal + what it restores is the set. The Telangana government issued GO 157 on 13 November reversing GO 97 of 16 June, ending a 150-day standoff with polytechnic students over ECET lateral entry, SBTET certification, fees and scholarships. The reversal restores the earlier position for diploma students seeking lateral entry into engineering.",
+      source: "The Hans India",
+      url: "https://www.thehansindia.com/news/cities/hyderabad/brs-leader-demands-withdrawal-of-cases-against-polytechnic-students-1142590",
+    },
+    {
       date: "2026-11-12",
       topic: "Health",
       headline: "Telangana CM sets June 2027 deadline for TIMS hospitals at Alwal and LB Nagar, Warangal super speciality hospital and NIMS expansion",
       why: "Deadline + hospitals is the set. Chief Minister A. Revanth Reddy on 12 November directed officials to complete the TIMS hospitals at Alwal and LB Nagar, the Warangal Super Speciality Hospital and the expansion works at NIMS by 2 June 2027, and to procure medical equipment and recruit doctors and staff under a unified recruitment policy; the new Osmania General Hospital complex is to be completed by December 2027.",
       source: "The New Indian Express",
       url: "https://www.newindianexpress.com/states/telangana/2026/Nov/13/cm-revanth-sets-june-2027-deadline-for-tims-warangal-hospital?utm_source=website&utm_medium=related-stories",
+    },
+    {
+      date: "2026-11-12",
+      topic: "Health",
+      headline: "AIIMS New Delhi performs India's first open foetal surgery, repairing spina bifida in the womb at 25 weeks",
+      why: "First + place + condition is the set. On 12 November doctors at AIIMS New Delhi performed India's first open foetal surgery, a six-hour operation at the Neurosciences Centre repairing a lumbosacral myelomeningocele - the most severe form of spina bifida - in a foetus at 25 weeks of pregnancy. The neurosurgical team was led by Professor Deepak Gupta with Professors Neena Malhotra and K. Aparna Sharma leading maternal-foetal medicine and obstetrics; the procedure was provided free under the Janani Shishu Suraksha Karyakram.",
+      source: "The Indian Express",
+      url: "https://indianexpress.com/article/cities/delhi/india-first-fetal-repair-aiims-doctors-surgery-10963283/",
+    },
+    {
+      date: "2026-11-12",
+      topic: "Economy",
+      headline: "NITI Aayog releases PLI impact assessment: 14 sectors, nearly 70% of segments on track, Rs.2.40 lakh crore invested by March 2026",
+      why: "Report + findings + numbers is the set. On 12 November NITI Aayog, with IIM Ahmedabad as knowledge partner, released the mid-course Impact Assessment of PLI Schemes covering all 14 sectors. By March 2026 the schemes had drawn Rs.2,40,138 crore of investment and generated Rs.22,66,412 crore of production and sales, with 8,49,069 jobs and Rs.35,354 crore of incentives paid - 18.51% of the Rs.1,91,049 crore outlay. Nearly 70% of targeted segments were broadly on track, led by large-scale electronics, pharmaceutical drugs, telecom and food products; employment was only 28% of its target.",
+      source: "Daily GK Update",
+      url: "https://dailygkupdate.in/niti-aayog-pli-impact-assessment-2026-14-sectors-results/",
     },
     {
       date: "2026-11-11",
