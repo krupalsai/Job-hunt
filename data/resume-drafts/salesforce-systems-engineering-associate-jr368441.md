@@ -6,7 +6,7 @@
 **Location:** Hyderabad, India
 **Official posting:** https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Systems-Engineering-Associate_JR368441
 **Posted:** 15 Nov 2026 ("Posted Today" on the 16 Nov scan)
-**Closing date: NONE listed** — no closing date on the posting; apply today, it can vanish without warning.
+**Closing date: November 19, 2026** — shown on the live rendered posting ("End Date: November 19, 2026", 2 days left as of 16 Nov); apply today, it can vanish without warning.
 **Employment type:** Full-time (Futureforce new-graduate hiring)
 **Work mode:** Office, Hyderabad (posting does not list remote)
 **Job category:** Software Engineering
@@ -87,9 +87,9 @@ Justification: degree + graduation-year + adjacent configure/develop/test + data
 
 ## Application steps (his tap each)
 
-1. Re-verify the posting live immediately before submitting (verify-at-delivery — Workday pages can close without notice; no closing date listed).
+1. Re-verify the posting live immediately before submitting (verify-at-delivery — closes 19 Nov 2026; Workday pages can close without notice).
 2. Workday Apply flow on the official URL above. Workday account creation is his step if the flow asks (email + password — never auto-created).
 3. Upload `Krupal_Resume_Salesforce_Systems_Engineering_JR368441.pdf`.
 4. Email + phone (9000800802) in the form fields ONLY — never on the resume.
 5. After submit: acknowledgement + application number, else UNCONFIRMED.
-6. No closing date — submit today; do not wait on a referral (referral runs in parallel, never gates the application).
+6. Closes 19 Nov 2026 — submit today; do not wait on a referral (referral runs in parallel, never gates the application).
