@@ -29,9 +29,41 @@
 const CURRENT_AFFAIRS = {
   /* When a run last wrote to this file. Shown on screen, so the age of what
      you are reading is never a guess. */
-  updated: "2026-11-17",
+  updated: "2026-11-18",
 
   items: [
+    {
+      date: "2026-11-17",
+      topic: "Summits",
+      headline: "ASEAN-India Summit: PM Modi unveils nine initiatives — free e-visas for ASEAN tourists, maritime plan, space hackathon; Quad launches Business Forum",
+      why: "Editions + announcements is the set. At the 23rd ASEAN-India Summit and 21st East Asia Summit in Manila on 17 November, PM Modi announced nine initiatives including free e-visas for ASEAN tourists, a long-term ASEAN-India Maritime Cooperation Plan, joint cyber forensics training, nuclear energy exchanges, an ASEAN-India Space Hackathon and critical-minerals cooperation, and leaders adopted the ASEAN-India Joint Statement on Cooperation in Disaster Management. At the 7th Quad Leaders' Summit the same day, leaders launched a Quad Business Forum — India offered to host it in the first quarter of 2027 — plus Indo-Pacific Maritime Surveillance and the Quad Partnership for Cable Connectivity and Resilience.",
+      source: "DD India",
+      url: "https://ddindia.co.in/2026/11/india-asean-announce-maritime-cybersecurity-and-space-initiatives-during-pm-modis-manila-visit/",
+    },
+    {
+      date: "2026-11-17",
+      topic: "Schemes",
+      headline: "Telangana extends Indiramma Family Insurance to one crore families: Rs.5 lakh life cover, applications open at Siddipet on 19 November",
+      why: "Number + cover + date is the set. At a review meeting on 17 November, Chief Minister A. Revanth Reddy directed that the Indiramma Family Insurance scheme — Rs.5 lakh life insurance cover per family — be extended to one crore families, bringing all existing insurance schemes run by various departments under one umbrella and raising life cover from Rs.2 lakh to Rs.5 lakh; the application process launches at a public meeting in Siddipet on 19 November, the birth anniversary of Indira Gandhi.",
+      source: "The Hans India",
+      url: "https://www.thehansindia.com/news/cities/hyderabad/1-cr-families-will-get-rs-5-lakh-insurance-cm-revanth-1143110",
+    },
+    {
+      date: "2026-11-17",
+      topic: "Environment",
+      headline: "NGT refuses to stay environmental clearance for Musi Riverfront Development Project; next hearing 3 December",
+      why: "Forum + decision + next date is the set. The National Green Tribunal's Southern Zone bench in Chennai on 17 November refused to stay the environmental clearance granted on 5 August to Telangana's Musi Riverfront Development Project, declining to suspend it pending final disposal of a petition challenging it; the bench issued notices to the state government and posted the case to 3 December.",
+      source: "The Hans India",
+      url: "https://www.thehansindia.com/news/cities/hyderabad/ntg-refuses-to-stay-musi-riverfront-project-seeks-state-govts-response-1143124",
+    },
+    {
+      date: "2026-11-17",
+      topic: "States",
+      headline: "Telangana police promotions: DGP C. V. Anand clears path for 54 DSPs to become Additional SPs",
+      why: "Number + posts is the set. Director General of Police C. V. Anand held a meeting on 17 November to clear long-pending Telangana police promotions stalled by seniority disputes and court cases; the first phase could cover 54 Deputy Superintendents of Police for promotion to Additional Superintendent of Police, with 34 more Additional SP posts expected by August 2027, and 12 non-cadre SP posts also to be filled. Final orders still need government approval.",
+      source: "ap7am",
+      url: "https://www.ap7am.com/en/139591/good-news-for-telangana-police-long-pending-promotions-cleared",
+    },
     {
       date: "2026-11-17",
       topic: "Environment",
@@ -39,6 +71,22 @@ const CURRENT_AFFAIRS = {
       why: "Storm + districts + dates is the set. The IMD Hyderabad centre has issued an orange alert for heavy to very heavy rain at isolated places in Bhadradri Kothagudem, Khammam, Suryapet and Mahabubabad districts on 21 November as cyclone Akvan approaches, with thunderstorms, lightning and squally winds of 50-60 kmph gusting to 70 kmph; rain is expected across Telangana during 20-22 November.",
       source: "The Hans India",
       url: "https://www.thehansindia.com/news/cities/hyderabad/telangana-on-rain-alert-as-cyclone-threat-looms-1142809",
+    },
+    {
+      date: "2026-11-16",
+      topic: "Appointments",
+      headline: "Devesh Chaturvedi takes charge as first chairperson of National Sports Board; Pushpendra Kumar Garg joins as member",
+      why: "Person + post + law is the set. Retired IAS officer Devesh Chaturvedi assumed office on 16 November as chairperson of the National Sports Board, with Commodore (Retd.) Pushpendra Kumar Garg joining as a member; the Appointments Committee of the Cabinet approved both appointments. The Board was set up under the National Sports Governance Act, 2025, and is India's apex authority for granting recognition to national sports bodies and enforcing governance, financial and ethical standards.",
+      source: "Rediff",
+      url: "https://www.rediff.com/sports/report/devesh-chaturvedi-pushpendra-garg-take-charge-of-nsb/20261116.htm",
+    },
+    {
+      date: "2026-11-16",
+      topic: "Polity",
+      headline: "Census 2027 Phase II self-enumeration opens in Goa, Punjab, Uttar Pradesh and non-snow-bound Uttarakhand",
+      why: "States + window + portal is the set. Self-enumeration for the Population Enumeration phase of Census 2027 — India's first digital census — opened on 16 November for Goa, Punjab, Uttar Pradesh and the non-snow-bound areas of Uttarakhand, running to 30 November through the portal se.census.gov.in with 40 notified questions in 16 languages; house-to-house enumeration in these areas runs 1 December 2026 to 4 January 2027, with the reference date 00:00 hours on 5 January 2027. Enumeration in Manipur has been deferred.",
+      source: "Business Today",
+      url: "https://www.businesstoday.in/amp/india/story/census-2027-self-enumeration-begins-in-up-punjab-goa-and-uttarakhand-check-how-to-fill-your-household-details-online-what-happens-next-567794-2026-11-17",
     },
     {
       date: "2026-11-16",
@@ -95,6 +143,14 @@ const CURRENT_AFFAIRS = {
       why: "Number + record is the set. Wholesale price inflation in October was recorded at 12.29 per cent, the highest in the new Wholesale Price Index series with base year 2022-23, driven mainly by costlier fuel and power and non-food items.",
       source: "Mathrubhumi",
       url: "https://english.mathrubhumi.com/amp/education/news/november-17-school-assembly-news-headlines-national-international-sports-ix8znx60",
+    },
+    {
+      date: "2026-11-15",
+      topic: "Sports",
+      headline: "Mirra Andreeva, 19, beats Elina Svitolina 7-5, 6-3 to win WTA Finals on debut without dropping a set",
+      why: "Winner + score + record is the set. Russian teenager Mirra Andreeva beat Ukraine's Elina Svitolina 7-5, 6-3 in the WTA Finals final at Indian Wells on 15 November, winning the season-ending championship on debut without dropping a set in five matches — the first teenager to win it since Maria Sharapova in 2004; she took home $3.37 million and the Billie Jean King Trophy and rose to a career-high world No. 2.",
+      source: "The Hindu",
+      url: "https://www.thehindu.com/sport/tennis/mirra-andreeva-beats-elina-svitolina-to-win-wta-finals-ascends-to-no-2-in-rankings/article71706751.ece",
     },
     {
       date: "2026-11-15",
