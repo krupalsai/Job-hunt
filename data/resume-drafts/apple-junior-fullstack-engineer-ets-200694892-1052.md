@@ -37,7 +37,7 @@ linkedin.com/in/krupal-sai · github.com/krupalsai
 
 - **Frontend:** React / Next.js — web UIs in daily production use (registration, document submission, fee payment, case tracking); responsive, accessible interfaces for non-technical users
 - **Backend:** Python — daily hands-on practice, used in production (retrieval assistant, query agent, automation scripts); Node.js — 148 API route-handler files designed and operated; RESTful APIs with HMAC-signed webhook verification and idempotent approval (Razorpay live)
-- **LLM & Retrieval:** LangChain RAG retrieval assistant over a hand-written corpus (6/6 retrieval tests); LLM APIs, prompting, tool use and retrieval in production; LLM-powered query agent answering from real platform records
+- **LLM & Retrieval:** LangChain + LangGraph RAG retrieval assistant over the platform's own FAQ; LLM APIs, prompting, tool use and retrieval in production; LLM-powered query agent answering from real platform records
 - **Data & SQL:** PostgreSQL via Supabase — relational schema design, SQL queries, 90+ migrations operated in production; payment reconciliation and fee verification
 - **Fundamentals:** Data structures and algorithms in daily use (arrays, strings, hashmaps); Git/GitHub version control; Vercel hosting and cron; Linux daily operations (SSH, logs, systemd services) on an Oracle Cloud Linux VM
 - **Quality:** Playwright end-to-end browser checks and API verification run against the live platform before every release; validators for data and payment flows; verify-before-claiming discipline — nothing called done without live evidence
@@ -48,7 +48,7 @@ linkedin.com/in/krupal-sai · github.com/krupalsai
 
 - Operate a live student-services web platform (Next.js frontend, Node.js API routes, PostgreSQL database, Vercel hosting) used by **150+ students** across 2 colleges: registration, document submission, fee payment, no-due certificates, High Court case tracking with hearing alerts.
 - **Fullstack:** own the whole stack — React/Next.js frontend, Node.js API routes, PostgreSQL schema and migrations, Vercel deploys and cron; adapt to new technologies quickly as the platform's needs change.
-- **AI-powered features:** built a retrieval-augmented support assistant (LangChain + ChromaDB) and an LLM-powered query agent answering from real records; WhatsApp/Telegram support bot with conversation context, 1,300+ real user messages handled.
+- **AI-powered features:** built a retrieval-augmented support assistant (LangChain + LangGraph chain over the platform's own FAQ) and an LLM-powered query agent answering from real records; WhatsApp/Telegram support bot with conversation context, 400+ real user messages handled.
 - **Support operations:** first point of contact for real users' technical issues; live debugging and incident triage daily; fixes verified on the live site with real data.
 
 ## Education

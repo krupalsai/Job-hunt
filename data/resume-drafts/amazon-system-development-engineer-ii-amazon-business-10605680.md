@@ -38,7 +38,7 @@ linkedin.com/in/krupal-sai · github.com/krupalsai
 - **Infrastructure Automation & Deployment:** Git-based CI/CD pipelines (deploy, verify on live, roll back); Vercel hosting and cron; environment and release management for a live production service
 - **Linux/Unix:** Daily operations on an Oracle Cloud Linux VM — SSH, logs, systemd services, process and disk management
 - **Languages:** Python — daily hands-on practice, used in production (automation scripts, retrieval assistant, query agent); JavaScript/TypeScript — working knowledge, used daily in production
-- **Monitoring & Incident Triage:** Production incident triage from logs and real user reports; fixes verified on the live site with real data before anything is called done; support bot handling 1,300+ real user messages
+- **Monitoring & Incident Triage:** Production incident triage from logs and real user reports; fixes verified on the live site with real data before anything is called done; support bot handling 400+ real user messages
 - **Backend & Data:** PostgreSQL via Supabase — relational schema design, SQL queries, 90+ migrations operated in production; Node.js (Next.js API routes — 148 route-handler files designed and operated); RESTful APIs; HMAC-signed webhook verification with idempotent approval (Razorpay live)
 - **Reliability Practices:** Payment reconciliation and fee verification; validators for data and payment flows; verify-before-claiming discipline — nothing called done without live evidence
 
@@ -48,7 +48,7 @@ linkedin.com/in/krupal-sai · github.com/krupalsai
 
 - Operate a live student-services web platform (Next.js frontend, Node.js API routes, PostgreSQL database, Vercel hosting) used by **150+ students** across 2 colleges: registration, document submission, fee payment, no-due certificates, High Court case tracking with hearing alerts.
 - **Infrastructure & operations:** automate, deploy and support the full stack — Linux VM operations, Git-based CI/CD, Vercel deploys and cron, Supabase/PostgreSQL operations (schema, migrations, backups discipline), webhook-verified payment flows with reconciliation.
-- **Support operations:** WhatsApp/Telegram support bot with conversation context; 1,300+ real user messages handled; first point of contact for real users' technical issues; live debugging and incident triage daily.
+- **Support operations:** WhatsApp/Telegram support bot with conversation context; 400+ real user messages handled; first point of contact for real users' technical issues; live debugging and incident triage daily.
 - **Data & ML systems:** designed the data flows for registration, fee payment and document submission end to end; built a retrieval-augmented support assistant and an LLM-powered query agent answering from real records.
 
 ## Education
