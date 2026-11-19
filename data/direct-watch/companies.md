@@ -26,18 +26,20 @@ software / AI / ML / data roles; India locations.
 
 **18 Nov 2026:** Meta HTTP 400 (8th day), ServiceNow (18th day), Zoho TLS (17th day), Deltek sjobs 500 (16th day) still need a live-browser check. 2 new matches verified live in browser incl. Apply flow: Amazon SysDE II 10605680 (Bengaluru, ATS 48 long-shot, no numeric years minimum) + Apple Junior Fullstack Engineer - ETS 200694892-1052 (Hyderabad, ATS 58, 0-2 yrs, LLM preferred). Salesforce JR368441 closes 19 Nov (tomorrow). Apple edited the MIN bar on 200682312-0321 + 200682322-0321 ("1-2 years" -> "1+ years"); both still fresher-eligible.
 
+**19 Nov 2026:** Meta HTTP 400 (9th day), ServiceNow (19th day), Zoho TLS (18th day), Deltek sjobs 500 (17th day) still need a live-browser check. 0 new matches. 2 board roles flipped closed, both browser-verified 07:35 IST: Amazon SysDE II 10605680 (yesterday's new match, lived ~2 days) + Salesforce JR368441 (reached its endDate today). Oracle NOT re-checked — portal serving a Planned Outage splash page (10th day); 345517 detail 404 is outage behaviour, not closure evidence. Fresh Salesforce live control: JR368588. Apple MIN bars on 200682312-0321 + 200682322-0321 byte-identical to 18 Nov.
+
 
 | # | Company | Portal (official) | Check method |
 |---|---------|-------------------|--------------|
 | 1 | Amazon | https://www.amazon.jobs | amazon.jobs search, Software Development Engineer, India, University Talent / new-grad |
 | 2 | Google | https://www.google.com/about/careers/applications/jobs/results | Careers search, India, software engineer / AI, no experience minimum |
 | 3 | Microsoft | https://careers.microsoft.com/us/en/search-results | Careers search, India, software engineer, entry-level |
-| 4 | Meta | https://www.metacareers.com/jobs | Careers search, India, software engineer, university grad. NOTE 18 Nov: metacareers.com/jobs HTTP 400 for 8 straight days (11–18 Nov) — needs a live-browser check. |
+| 4 | Meta | https://www.metacareers.com/jobs | Careers search, India, software engineer, university grad. NOTE 19 Nov: metacareers.com/jobs HTTP 400 for 9 straight days (11–19 Nov) — needs a live-browser check. |
 | 5 | NVIDIA | https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite | Workday search, India, entry-level software — NOT-FIT: ASIC Verification Engineer JR2020484 (Hyderabad, published 1 Jul 2026, live, no closing date): hardware/silicon verification role; mandatory core is C/C++ proficiency, SoC architecture, DMA/interrupt-engines/CPU/boot-devices/MMU/IOMMU, OS/device-driver concepts and bare-metal no-OS test frameworks. Honest ATS ~30. Do not pack future hardware-verification roles for this candidate; listed only so the verdict is recorded. |
 | 6 | Adobe | https://careers.adobe.com/us/en/search-results | Careers search, India, university / new grad. NOTE 10 Nov: Workday portal DECOMMISSIONED (wd5 URL redirects to community.workday.com/invalid-url; wd1 shows maintenance) — current official portal is careers.adobe.com (271 jobs, 36 India); Experience Level filter offers only "Experienced" + "University Intern", no entry-level full-time category. |
 | 7 | Oracle | https://www.oracle.com/careers/ | Careers search, India, entry-level software |
 | 8 | Salesforce | https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site | Workday search, India, early career |
-| 9 | ServiceNow | https://servicenow.wd5.myworkdayjobs.com/en-US/NowCareers | Workday search, India, early career / entry-level. NOTE 27 Oct: text fetch returned HTTP 500 (3 attempts) — portal may need a live-browser check. NOTE 18 Nov: UNCHECKED 18th day (CXS 422, careers root 403, wd5 root 500). |
+| 9 | ServiceNow | https://servicenow.wd5.myworkdayjobs.com/en-US/NowCareers | Workday search, India, early career / entry-level. NOTE 27 Oct: text fetch returned HTTP 500 (3 attempts) — portal may need a live-browser check. NOTE 19 Nov: UNCHECKED 19th day (CXS 422, careers root 403, wd5 root 500). |
 | 10 | Cisco | https://jobs.cisco.com/jobs/SearchJobs | Careers search, India, Software Engineer, 0–2 yrs | NOTE 14 Nov: jobs.cisco.com now 302-redirects to careers.cisco.com — use careers.cisco.com/global/en/job/<id>/Software-Engineer for detail payloads (postingStatus OPEN confirmed 14 Nov for 2015025/2015359/2028048). |
 | 11 | Intel | https://intel.wd1.myworkdayjobs.com/External | Workday search, India, college graduate |
 | 12 | Qualcomm | https://careers.qualcomm.com/careers | Careers search, India, 0–2 yrs engineering |
