@@ -6,7 +6,7 @@
    "requisition": "10453457",
    "role": "Software Dev Engineer I (University Talent)",
    "status": "applied",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Detail page HTTP 200 + Apply now; search-index quirk persists (0 search.json hits) — detail page is authoritative] [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Status applied (submitted 2026-10-22). Search-index quirk persists (0 search.json hits; detail page authoritative).] [2026-11-13: SDE I University Talent (applied). Detail HTTP 200 + Apply now; no closing date. Search-index quirk persists (0 search.json hits; detail page authoritative).] [2026-11-14: SDE I University Talent (applied). Detail HTTP 200 after 302, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10453457 HTTP 200 + Apply now present, no closed language, no closing date.]"
   },
   {
@@ -65,7 +65,7 @@
    "requisition": "2028048",
    "role": "Software Engineer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: parent live-browser check 07:38-07:48 IST — renders live with full JD + Apply Now; Apply opens live Step 1 form; the expired-job card in raw HTML is a hidden template, NOT the rendered state. Canonical URL now careers.cisco.com/global/en/job/<id>/...] [2026-11-12: Detail HTTP 200, Phenom postingStatus OPEN, postedDate 2026-11-05. Rendered-text extract TODAY (browser.open) shows full JD, NO expired banner. applyUrl empty in payload; Apply flow not re-proven in browser.] [2026-11-13: Software Engineer, Bangalore. Phenom payload postingStatus OPEN, published 2026-11-05; browser-rendered text shows full JD with NO expired banner.] [2026-11-13 evening: Evening re-verification 2026-11-13: Phenom payload postingStatus OPEN + full JD embedded; JD states 'with 0-2 years of experience'. Still open.] [2026-11-14: Phenom payload postingStatus OPEN, posted 2026-11-05, via new careers.cisco.com detail URL.] [2026-11-18: Detail page https://careers.cisco.com/global/en/job/2028048/Software-Engineer HTTP 200, Phenom payload postingStatus OPEN.]"
   },
   {
@@ -141,7 +141,7 @@
    "requisition": "DEV-BE01",
    "role": "Backend Engineer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Confirmed live via official API for the first time in 8 days (opening_status true, experience_year 0). [2026-11-11: Official API ?limit=100: opening_status true] [2026-11-12: Official API opening_status true; exp 0, Bangalore.] [2026-11-13: Software Development Engineer Backend, Bangalore, exp 0. Official API opening_status true.] [2026-11-13 evening: Evening re-verification 2026-11-13: Juspay official API opening_status=true. Still open.] [2026-11-14: Software Development Engineer Backend, exp 0, Bangalore, Full-Time, opening_status true via official API.] [2026-11-18: Official API allJobs: opening_status true, experience_year 0, Bangalore, Full-Time.]"
   },
   {
@@ -149,7 +149,7 @@
    "requisition": "1441296700",
    "role": "AI Engineer/Developer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Closure claim from portal keyword-search disproven 2026-10-31 ~09:40 IST: direct official URL loads the full JD live. Search-index misses do not prove closure. Re-confirmed open 2026-11-01 via direct official URL (keyword-search misses still not trusted). [2026-11-11: Direct official URL HTTP 200, full JD + Apply present. Still absent from the India search listing — search-index miss, not closure (same as 2026-11-09).] [2026-11-12: Direct official URL HTTP 200, full JD + Apply present. Still absent from the India search listing (search-index miss, as on 2026-11-09/11) — search absence is not closure evidence.] [2026-11-13: Re-verified live via direct URL https://jobs.ametek.com/job/ai-engineer-developer/1441296700/ — HTTP 200, full JD + Apply now link present. Still absent from the India search listing (search-index miss, as on 2026-11-09/11/12).] [2026-11-14: Re-verified live via direct URL https://jobs.ametek.com/job/ai-engineer-developer/1441296700/ — HTTP 200, full JD + Apply now link present. Still absent from the India search listing (search-index miss, as on 2026-11-09/11/12/13).] [2026-11-18: Direct URL https://jobs.ametek.com/job/ai-engineer-developer/1441296700/ HTTP 200, full JD + Apply present, no closed language. MIN now reads '0 to 2 years of experience, including internships, academic or personal projects in AI/ML' (posted Oct 19, 2026). Still absent from the India search listing — known search-index miss, not closure.]"
   },
   {
@@ -164,7 +164,7 @@
    "requisition": "associate-software-engineer",
    "role": "Associate Software Engineer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Detail HTTP 200, '0-2 years of software engineering experience', Apply present] [2026-11-12: Detail HTTP 200 + Apply present; '0-2 years of software engineering experience'.] [2026-11-13: Associate Software Engineer. Detail HTTP 200, Apply present; '0-2 years of software engineering experience' unchanged.] [2026-11-14: Detail HTTP 200, Apply present, experience text unchanged: 0-2 years of software engineering experience.] [2026-11-18: Detail page https://www.heizen.work/careers/associate-software-engineer HTTP 200 + Apply present; Requirements text verbatim: '0-2 years of software engineering experience'.]"
   },
   {
@@ -172,7 +172,7 @@
    "requisition": "JQEHMTC6T",
    "role": "Junior Software Engineer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Detail HTTP 200, '0–2 years of professional experience' verbatim, active application form present] [2026-11-12: Detail HTTP 200 + active application form; '0–2 years of professional experience or a strong portfolio of shipped personal or academic projects'. Board page is a JS shell (does not list the job in HTML) — detail page authoritative.] [2026-11-13: Junior Software Engineer, Bengaluru/Mumbai. Detail HTTP 200; '0–2 years of professional experience or a strong portfolio of shipped personal or academic projects' verbatim; Apply present. Page bytes differ from yesterday only by Next.js chunk ordering — job content identical.] [2026-11-14: Junior Software Engineer, Bengaluru/Mumbai onsite. Detail HTTP 200 + rendered page: 0-2 years of professional experience or a strong portfolio verbatim, resume-upload Apply form present.] [2026-11-18: Detail page https://auric-ai.talismatic.com/jobs/JQEHMTC6T HTTP 200; rendered text verbatim: '0-2 years of professional experience or a strong portfolio of shipped personal or academic projects'; resume-upload Apply form present.]"
   },
   {
@@ -180,7 +180,7 @@
    "requisition": "software-engineer-fullstack-app",
    "role": "Software Engineer (Fullstack + React Native)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Detail HTTP 200, '0-2 years of software engineering experience (fresh graduates welcome)', Apply present] [2026-11-12: Detail HTTP 200 + Apply present; '0-2 years of software engineering experience (fresh graduates welcome...'.] [2026-11-13: Software Engineer (Fullstack + React Native). Detail HTTP 200, Apply present; '0-2 years of software engineering experience (fresh graduates welcome)' unchanged.] [2026-11-14: Detail HTTP 200, Apply present, experience text unchanged: 0-2 years, fresh graduates welcome.] [2026-11-18: Detail page https://www.heizen.work/careers/software-engineer-fullstack-app HTTP 200 + Apply present; Requirements text verbatim: '0-2 years of software engineering experience'.]"
   },
   {
@@ -188,7 +188,7 @@
    "requisition": "software-engineer",
    "role": "Software Development Engineer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Detail HTTP 200, '0+ years of software engineering experience (fresh graduates welcome)', Apply present] [2026-11-12: Detail HTTP 200 + Apply present; '0+ years of software engineering experience (fresh graduates welcome...'.] [2026-11-13: Software Development Engineer. Detail HTTP 200, Apply present; '0+ years of software engineering experience (fresh graduates welcome)' unchanged.] [2026-11-14: Detail HTTP 200, Apply present, experience text unchanged: 0+ years, fresh graduates welcome.] [2026-11-18: Detail page https://www.heizen.work/careers/software-engineer HTTP 200 + Apply present; Requirements text verbatim: '0+ years of software engineering experience'.]"
   },
   {
@@ -288,7 +288,7 @@
    "requisition": "R56671",
    "role": "AI/ML Engineer (P1)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW closing date from JSON-LD validThrough 2026-11-25 (first time recorded). [2026-11-11: Detail page HTTP 200 + JSON-LD live 2026-11-11; validThrough 2026-11-25; no numeric experience minimum in JD. Chennai, FULL_TIME.] [2026-11-12: Detail page live HTTP 200 + JSON-LD 2026-11-12; validThrough 2026-11-25; Chennai, FULL_TIME. (Payload title 'Site Reliablity Engineer'; description is the AI/ML Engineer P1 role — known quirk.)] [2026-11-13: Detail live 2026-11-13 (exact-ID CXS probe total 1 + detail JSON-LD); validThrough 2026-11-25; AI/ML Engineer (P1), Chennai, FULL_TIME.] [2026-11-18: In today's CXS scan (Site Reliablity Engineer, India - Chennai) + probe control total 1. validThrough 2026-11-25 (per 15 Nov detail) — 7 days left.]"
   },
   {
@@ -311,7 +311,7 @@
    "requisition": "LNT/ET/1891936",
    "role": "Engineer Trainee (Platform Development)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Full JD rendered fresh; Apply flow still not observed — live-browser confirmation still outstanding. [2026-11-11: Fresh crawl 2026-11-11 01:53 UTC: full JD rendered again (Role Overview, Key Responsibilities, Required Skills, Preferred Skills, Desired Competencies). B.E./B.Tech CS/IT, React/Angular + Node.js, REST/GraphQL, MongoDB/MySQL. No closing date listed. Apply flow STILL not observed — no Apply element in the 70-line render; live-browser confirmation still outstanding.] [2026-11-14: Full JD renders again via browser.open (fresh crawl 2026-11-14 01:52 UTC, 70 lines): Engineer Trainee, Platform Development — B.E./B.Tech CS/IT, React/Angular + Node.js, REST/GraphQL, MongoDB/MySQL. No closing date listed. Apply flow STILL not observed — no Apply element in the render.]"
   },
   {
@@ -326,7 +326,7 @@
    "requisition": "R-15795-1",
    "role": "Eng I, Eng Run",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Closing validThrough 2026-11-30 re-confirmed. [2026-11-11: Still live: present in today's CXS scan (49 Hyderabad postings) and exact-ID probe 'R-15795' total=1. Hyderabad, posted 15 days ago; closing 30 Nov per JSON-LD validThrough recorded 6 Nov.] [2026-11-12: Exact-ID CXS probe 'R-15795' total 1 (title 'Eng I, Eng Run') 2026-11-12; present in today's scan (48 Hyderabad postings). Hyderabad, closing 30 Nov per JSON-LD validThrough recorded 6 Nov.] [2026-11-13: Exact-ID CXS probe (base R-15795) total 1, title 'Eng I, Eng Run', 2026-11-13; present in today's scan (41 Hyderabad postings). Closing 30 Nov per JSON-LD validThrough recorded 6 Nov.] [2026-11-18: In today's CXS scan as base R-15795 (Eng I, Eng Run, Hyderabad) + probe control total 1.]"
   },
   {
@@ -334,7 +334,7 @@
    "requisition": "2015359",
    "role": "Software Engineer (Evergreen)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: parent live-browser check 07:38-07:48 IST — renders live with full JD + Apply Now; Apply opens live Step 1 form; the expired-job card in raw HTML is a hidden template, NOT the rendered state. Canonical URL now careers.cisco.com/global/en/job/<id>/...] [2026-11-12: Detail HTTP 200, Phenom postingStatus OPEN, postedDate 2026-09-10. Rendered-text extract TODAY (browser.open) shows full JD, NO expired banner. applyUrl empty in payload; Apply flow not re-proven in browser.] [2026-11-13: Software Engineer (Evergreen) Full Time India. Phenom payload postingStatus OPEN, published 2026-09-10; browser-rendered text shows full JD with NO expired banner.] [2026-11-13 evening: Evening re-verification 2026-11-13: Phenom payload postingStatus OPEN + full JD embedded. Still open.] [2026-11-14: Phenom payload postingStatus OPEN, posted 2026-09-10, via new careers.cisco.com detail URL.] [2026-11-18: Detail page https://careers.cisco.com/global/en/job/2015359/Software-Engineer HTTP 200, Phenom payload postingStatus OPEN.]"
   },
   {
@@ -493,7 +493,7 @@
    "requisition": "R56485",
    "role": "Site Reliability Engineer (P1, Entry Level) - Global AI Site Reliability & Security Operations",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Closing date corrected: validThrough 2026-12-03 (board note still says END DATE Nov 3, 2026 — stale). JD still asks 2–3 yrs despite P1 Entry Level label. [2026-11-11: Detail page HTTP 200 + JSON-LD live 2026-11-11; validThrough 2026-12-03; JD still asks 'Experience: 2–3 years of hands-on experience in cloud technical support, system...' despite P1 Entry Level label. Chennai, FULL_TIME.] [2026-11-12: Detail page live HTTP 200 + JSON-LD 2026-11-12; validThrough 2026-12-03; JD still asks 'Experience: 2–3 years of hands-on experience in cloud technical support, system...'. Chennai, FULL_TIME.] [2026-11-13: Detail live 2026-11-13 (exact-ID CXS probe total 1 + detail JSON-LD); validThrough 2026-12-03; JD still asks 'Experience: 2-3 years of hands-on experience in cloud technical support, systems administration, DevOps, or site reliability'. Chennai, FULL_TIME.] [2026-11-18: In today's CXS scan (Site Reliability Engineer, India - Chennai). validThrough 2026-12-03 (per 15 Nov detail).]"
   },
   {
@@ -501,7 +501,7 @@
    "requisition": "R56012",
    "role": "Site Reliablity Engineer II (Machine Learning Engineer, P2 early-career)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Closing date corrected: validThrough 2026-12-03 (board note still says END DATE Nov 25, 2026 — stale). [2026-11-11: Detail page HTTP 200 + JSON-LD live 2026-11-11; validThrough 2026-12-03; early-career ML role, no numeric minimum in JD excerpts. Chennai, FULL_TIME.] [2026-11-12: Detail page live HTTP 200 + JSON-LD 2026-11-12; validThrough 2026-12-03; early-career ML role, no numeric minimum in JD excerpts. Chennai, FULL_TIME.] [2026-11-13: Detail live 2026-11-13 (exact-ID CXS probe total 1 + detail JSON-LD); validThrough 2026-12-03; early-career ML role, no numeric minimum in JD excerpts. Chennai, FULL_TIME.] [2026-11-18: In today's CXS scan (Site Reliablity Engineer II, India - Chennai). validThrough 2026-12-03 (per 15 Nov detail).]"
   },
   {
@@ -639,7 +639,7 @@
    "requisition": "1380396700",
    "role": "Embedded Firmware Engineer - UI & Web Design (Entry-Level)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Direct official URL HTTP 200, full JD + Apply present; also present in today's India search listing.] [2026-11-12: Direct official URL HTTP 200, full JD + Apply present; also present in today's India search listing.] [2026-11-13: Re-verified live via direct URL https://jobs.ametek.com/job/embedded-firmware-engineer-ui-web-design-entry-level/1380396700/ — HTTP 200, full JD + Apply now link present.] [2026-11-14: Re-verified live via direct URL https://jobs.ametek.com/job/embedded-firmware-engineer-ui-web-design-entry-level/1380396700/ — HTTP 200, full JD + Apply now link present. Still absent from the India search listing (search-index miss, as on 2026-11-09/11/12/13).] [2026-11-18: Direct URL https://jobs.ametek.com/job/x/1380396700/ HTTP 200, full JD + Apply present, no closed language. Embedded Firmware Engineer - UI & Web Design (Entry-Level), Bangalore, posted Oct 28, 2026. Present in today's India search listing.]"
   },
   {
@@ -1223,7 +1223,7 @@
    "requisition": "10544197",
    "role": "Salesforce Developer and Admin, ISS",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-11: Detail page HTTP 200 + Apply now] [2026-11-12: Detail HTTP 200 + Apply now; no closing date.] [2026-11-13: Salesforce Developer and Admin ISS. Detail HTTP 200 + Apply now; no closing date. Not in search sweep again (search-index quirk); detail page authoritative.] [2026-11-14: Salesforce Developer and Admin ISS. Detail HTTP 200 after 302, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10544197 HTTP 200 + Apply now present, no closed language, no closing date. Absent from search sweep again (search-index quirk); detail page authoritative.]"
   },
   {
@@ -5309,7 +5309,7 @@
    "requisition": "10458636",
    "role": "Applied Scientist, International Machine Learning",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Bengaluru; BQ programming + SQL, no years minimum; PQ publications; posted 2026-06-25; pack amazon-applied-scientist-international-ml-10458636.md, honest ATS 48, long-shot [2026-11-11: Detail page HTTP 200 + Apply now; present in today's sweep] [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Also present in today's search sweep.] [2026-11-13: Applied Scientist Intl ML. Detail HTTP 200 + Apply now; in search sweep.] [2026-11-14: Applied Scientist, International Machine Learning. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10458636 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -5317,7 +5317,7 @@
    "requisition": "10555817",
    "role": "Applied Scientist, International Machine Learning",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Gurugram; BQ programming + SQL, no years minimum; PQ publications; posted 2026-09-22; pack amazon-applied-scientist-international-ml-10555817.md, honest ATS 48, long-shot [2026-11-11: Detail page HTTP 200 + Apply now; present in today's sweep] [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Also present in today's search sweep.] [2026-11-13: Applied Scientist Intl ML. Detail HTTP 200 + Apply now; in search sweep.] [2026-11-14: Applied Scientist, International Machine Learning. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10555817 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -5341,7 +5341,7 @@
    "requisition": "108715629858431686",
    "role": "Cloud Engineer, Data and AI",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "Gurgaon/Hyderabad; Bachelor's + enterprise-grade cloud data platform architecture + Python/Scala/R + Gemini/ADK, no numeric minimum (5 yrs only in Preferred); pack google-cloud-engineer-data-ai-108715629858431686.md, honest ATS 45, long-shot (borderline) [2026-11-11: Detail page HTTP 200, correct title, Apply present, no closed language (did not surface in first-page search results — pagination limit, not closure)] [2026-11-12: Detail HTTP 200, correct title, Apply present; no closed language (same false-positive note as above).] [2026-11-13: Cloud Engineer, Data and AI. Detail HTTP 200, correct title, Apply present; no closed language; also surfaced in today's search sweep.] [2026-11-14: Cloud Engineer, Data and AI. Detail HTTP 200, correct title, Apply present, no closed language.] [2026-11-18: Detail page https://www.google.com/about/careers/applications/jobs/results/108715629858431686 HTTP 200, exact title present, Apply present, no 'Job not found'; present in today's 46-job sweep.]"
   },
   {
@@ -5652,9 +5652,9 @@
    "company": "NVIDIA",
    "requisition": "JR2020087",
    "role": "Senior System Software Engineer, Speech AI (India, Pune)",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-08",
-   "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Senior/Manager/Architect/Principal by title, or 2-5+ yrs on detail page (8 detail-verified); India scan 2026-11-08 [2026-11-23: CLOSED — Absent from today's full NVIDIA CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "NVIDIA",
@@ -8250,7 +8250,7 @@
    "role": "Applied Scientist I, Amazon Shipping",
    "location": "Gurugram, India",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH. Detail HTTP 200 + Apply now present. BQ verbatim: Experience programming in Java, C++, Python or related language; Experience with SQL and an RDBMS (e.g., Oracle) or Data Warehouse. No years minimum, no degree bar. PQ (preferred only): publications at top-tier peer-reviewed conferences or journals. No closing date listed. [2026-11-11: Detail page HTTP 200 + Apply now; present in today's sweep] [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Also present in today's search sweep.] [2026-11-13: Applied Scientist I Amazon Shipping. Detail HTTP 200 + Apply now; in search sweep.] [2026-11-14: Applied Scientist I, Amazon Shipping. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10557374 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -8538,7 +8538,7 @@
    "role": "Applied Scientist I, International Seller Services",
    "location": "Bengaluru, India",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH. Detail HTTP 200 + Apply now present. BQ verbatim: Experience programming in Java, C++, Python or related language; Experience with SQL and an RDBMS (e.g., Oracle) or Data Warehouse. No years minimum, no degree bar. PQ (preferred only): publications at top-tier peer-reviewed conferences or journals. No closing date listed. [2026-11-11: Detail page HTTP 200 + Apply now; present in today's sweep] [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Also present in today's search sweep.] [2026-11-13: Applied Scientist I Intl Seller Services. Detail HTTP 200 + Apply now; in search sweep.] [2026-11-14: Applied Scientist I, International Seller Services. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10595857 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -9695,7 +9695,7 @@
    "requisition": "DEV-BE03",
    "role": "Software Development Engineer Backend (Mumbai)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "exp 1, Mumbai. Candidate match - see report. [2026-11-11: Official API ?limit=100: opening_status true] [2026-11-12: Official API opening_status true; exp 1, Mumbai.] [2026-11-13: Software Development Engineer Backend, Mumbai, exp 1. Official API opening_status true.] [2026-11-13 evening: Evening re-verification 2026-11-13: Juspay official API opening_status=true. Still open.] [2026-11-14: Software Development Engineer Backend, exp 1, Mumbai, Full-Time, opening_status true via official API.] [2026-11-18: Official API allJobs: opening_status true, experience_year 1, Mumbai, Full-Time.]"
   },
   {
@@ -9743,7 +9743,7 @@
    "requisition": "DS01",
    "role": "Data Scientist (Mumbai)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "exp 1, Mumbai. Candidate match - see report. [2026-11-11: Official API ?limit=100: opening_status true] [2026-11-12: Official API opening_status true; exp 1, Mumbai.] [2026-11-13: Data Scientist, Mumbai, exp 1. Official API opening_status true.] [2026-11-13 evening: Evening re-verification 2026-11-13: Juspay official API opening_status=true. Still open.] [2026-11-14: Data Scientist, exp 1, Mumbai, Full-Time, opening_status true via official API.] [2026-11-18: Official API allJobs: opening_status true, experience_year 1, Mumbai, Full-Time.]"
   },
   {
@@ -12234,7 +12234,7 @@
    "requisition": "10522139",
    "role": "System Development Engineer I, Amazon (Chennai)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH — BQ has no numeric years minimum; detail HTTP 200 + Apply now; no closing date listed [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Yesterday's NEW match, re-verified live today. Ops slant (infra/DevOps) noted in 11-11 report.] [2026-11-13: System Development Engineer I. Detail HTTP 200 + Apply now; in search sweep.] [2026-11-14: System Development Engineer I. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10522139 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -12490,7 +12490,7 @@
    "requisition": "10558766",
    "role": "Software Dev Engineer II, Amazon Payment Services (Chennai)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH — BQ has no numeric years minimum; detail HTTP 200 + Apply now; no closing date listed [2026-11-12: Detail HTTP 200 + Apply now; no closing date. Yesterday's NEW match, re-verified live today.] [2026-11-13: SDE II Amazon Payment Services. Detail HTTP 200 + Apply now; in search sweep.] [2026-11-14: SDE II, Amazon Payment Services. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10558766 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -13233,9 +13233,10 @@
    "company": "JLL",
    "requisition": "REQ547295",
    "role": "Facility Coordinator-Soft Services",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Bengaluru, KA"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Bengaluru, KA",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -14731,9 +14732,10 @@
    "company": "JLL",
    "requisition": "REQ541588",
    "role": "Professional, PDS Projects",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Pune, MH"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Pune, MH",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -15026,9 +15028,10 @@
    "company": "JLL",
    "requisition": "REQ541609",
    "role": "Soft Service Manager",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Bengaluru, KA"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Bengaluru, KA",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -15179,9 +15182,10 @@
    "company": "JLL",
    "requisition": "REQ545598",
    "role": "Assistant Manager Compliance",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Gurugram, HR"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Gurugram, HR",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -15325,9 +15329,10 @@
    "company": "JLL",
    "requisition": "REQ541334",
    "role": "Fire Officer",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Bengaluru, KA"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Bengaluru, KA",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -15711,9 +15716,10 @@
    "company": "JLL",
    "requisition": "REQ520021",
    "role": "Senior Project Lead",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Mumbai, MH"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Mumbai, MH",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -15879,9 +15885,10 @@
    "company": "JLL",
    "requisition": "REQ540733",
    "role": "Business Support, Health, Safety, Security & Environment",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Chennai, TN"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Chennai, TN",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -15964,9 +15971,10 @@
    "company": "JLL",
    "requisition": "REQ541603",
    "role": "Project Lead-MEP",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-11",
-   "location": "Pune, MH"
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "location": "Pune, MH",
+   "note": "[2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -18648,7 +18656,7 @@
    "requisition": "1210369",
    "role": "Fullstack Developer",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "[2026-11-12: parent live-browser check 07:20-07:22 IST — renders live (Bengaluru, Full time, Onsite, req 1210369, Posted 30+ Days Ago); green Apply button opens a real 6-step flow (Step 1 Create Account/Sign In — nothing filled or submitted); no closing date. Bar verbatim: '1-2 yrs of experinece is required.'] [2026-11-13: Detail page live HTTP 200 + JSON-LD 2026-11-13; bar still verbatim '1-2 yrs of experinece is required'; FULL_TIME, Bengaluru, posted 2026-09-15, no closing date - apply today, it can vanish without warning. Apply flow still NOT observed in static HTML (Workday renders Apply via JS) - needs live-browser confirmation at delivery. Borderline match stands.] [2026-11-13 evening: Evening re-verification 2026-11-13: CXS probe total 1 (control), bar verbatim unchanged '1-2 yrs of experinece is required'. Still open, FULL_TIME, Bengaluru, no closing date.] [2026-11-18: In today's CXS scan (Fullstack Developer, Bengaluru) + probe control total 1.]",
    "location": "Bengaluru, Karnataka, India"
   },
@@ -21134,7 +21142,7 @@
    "requisition": "10596351",
    "role": "Applied Scientist I, Buyer Risk Prevention (BRP)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH. Bengaluru, posted 2026-11-11. BQ (entire): 'Experience programming in Java, C++, Python or related language; Experience with SQL and an RDBMS (e.g., Oracle) or Data Warehouse'. No years minimum, no degree bar in BQ. Detail https://www.amazon.jobs/en/jobs/10596351/ HTTP 200 + Apply now; search.json exact-ID 1 hit; no closing date listed — apply today, it can vanish without warning. Apply: https://account.amazon.jobs/jobs/10596351/apply [2026-11-13: Applied Scientist I, Buyer Risk Prevention (BRP), Bengaluru — yesterday's new match. Detail HTTP 200 + Apply now; in search sweep; no closing date.] [2026-11-14: Applied Scientist I, Buyer Risk Prevention. Detail HTTP 200, Apply now present, no closed language, no closing date listed.] [2026-11-18: Detail page https://www.amazon.jobs/en/jobs/10596351 HTTP 200 + Apply now present; present in today's search sweep.]"
   },
   {
@@ -21972,9 +21980,9 @@
    "company": "Salesforce",
    "requisition": "JR327156",
    "role": "Mulesoft Technical Manager",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-13",
-   "note": "Title verdict (2026-11-13): Mulesoft Technical Manager - not fresher-eligible software/AI/ML. Posted Posted Today, 3 Locations, FULL_TIME."
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Title verdict (2026-11-13): Mulesoft Technical Manager - not fresher-eligible software/AI/ML. Posted Posted Today, 3 Locations, FULL_TIME. [2026-11-23: CLOSED — Absent from today's full Salesforce CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "Salesforce",
@@ -22140,9 +22148,9 @@
    "company": "JLL",
    "requisition": "REQ548724",
    "role": "Help Desk Executive",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-13",
-   "note": "Title verdict (2026-11-13): Help Desk Executive - not fresher-eligible software/AI/ML. Posted Posted Today, Bengaluru, KA, FULL_TIME."
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Title verdict (2026-11-13): Help Desk Executive - not fresher-eligible software/AI/ML. Posted Posted Today, Bengaluru, KA, FULL_TIME. [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -22837,7 +22845,7 @@
    "requisition": "200690092-1052",
    "role": "Site Reliability Engineer, Hyderabad",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "MATCH (stretch): posted Oct 19 2026, Standard full-time, Software and Services team, Hyderabad. MIN verbatim: \"Experience: 1-2 years of combined work experience in Site Reliability Engineering (SRE), Application Production Support (APS), DevOps, or Systems Engineering.\" Bachelor's in CS/CE/IT or related. Krupal has 0 yrs — 1-2 yr bar is inside the 0-2 band but a stretch. Apply flow: Apple ID sign-in gated (not directly observed). No last date listed — apply today, it can vanish without warning. [2026-11-13 evening: Evening re-verification 2026-11-13: detail payload re-fetched, MIN bar unchanged (1-2 yrs SRE/APS/DevOps/Systems Eng). Still open, no closing date.] [2026-11-14: Detail payload re-fetched 2026-11-14; Minimum Qualifications byte-identical to 2026-11-13 payload: 'Experience: 1-2 years of combined work experience in Site Reliability Engineering (SRE), Application Production Support (APS), DevOps, or Systems Engineering.' Still live, Standard full-time, Hyderabad, posted Oct 19 2026, no last date.] [2026-11-18: Detail payload live; MIN byte-identical to 2026-11-17: 'Experience: 1–2 years of combined work experience in Site Reliability Engineering (SRE), Application Production Support (APS), DevOps, or Systems Engineering.' Site Reliability Engineer, Hyderabad, posted Oct 19, 2026.]"
   },
   {
@@ -23069,7 +23077,7 @@
    "requisition": "200682312-0321",
    "role": "Junior Software Development Engineer in Test, Retail Engineering - IS&T, Bengaluru",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "MATCH (stretch): posted Sep 11 2026, Standard full-time, Bengaluru. MIN verbatim: \"1-2 years experience in software quality engineering.\" Bachelor's in CS/Engineering or related; Playwright/Selenium/Appium, Java/JS-TS/Python. Krupal has 0 yrs — 1-2 yr bar is inside the 0-2 band but a stretch. Apply flow: Apple ID sign-in gated (not directly observed). No last date listed — apply today, it can vanish without warning. [2026-11-13 evening: Evening re-verification 2026-11-13: detail payload re-fetched, MIN bar unchanged (1-2 yrs software quality engineering). Still open, no closing date.] [2026-11-14: Detail payload re-fetched 2026-11-14; Minimum Qualifications byte-identical to 2026-11-13 payload: '1-2 years experience in software quality engineering.' Still live, Standard full-time, Bengaluru, posted Sep 11 2026, no last date.] [2026-11-18: Detail payload live; MIN CHANGED since 2026-11-17: '1-2 years experience in software quality engineering' is now '1+ years experience in software quality engineering' (Apple edited the posting; rest of MIN identical). Junior SDET, Bengaluru, posted Sep 11, 2026. Still open, still fresher-eligible.]"
   },
   {
@@ -23077,7 +23085,7 @@
    "requisition": "200682322-0321",
    "role": "Junior Application Support & Site Reliability Engineer - Sales Engineering, IS&T, Bengaluru",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "MATCH (stretch): posted Sep 16 2026, Standard full-time, Bengaluru. MIN verbatim: \"Experience: 1 to 2 years of combined work experience in Application Production Support (APS), DevOps, Systems Engineering, or Site Reliability Engineering (SRE).\" Bachelor's in CS/CE/IT or related. Krupal has 0 yrs — 1-2 yr bar is inside the 0-2 band but a stretch. Apply flow: Apple ID sign-in gated (not directly observed). No last date listed — apply today, it can vanish without warning. [2026-11-13 evening: Evening re-verification 2026-11-13: detail payload re-fetched, MIN bar unchanged (1-2 yrs APS/DevOps/Systems/SRE). Still open, no closing date.] [2026-11-14: Detail payload re-fetched 2026-11-14; Minimum Qualifications byte-identical to 2026-11-13 payload: 'Experience: 1 to 2 years of combined work experience in Application Production Support (APS), DevOps, Systems Engineering, or Site Reliability Engineering (SRE).' Still live, Standard full-time, Bengaluru, posted Sep 16 2026, no last date.] [2026-11-18: Detail payload live; MIN CHANGED since 2026-11-17: 'Experience: 1 to 2 years of combined work experience in Application Production Support (APS), DevOps, Systems Engineering, or Site Reliability Engineering (SRE)' is now 'Experience: 1+ years of combined work experience...' (Apple edited the posting; rest of MIN identical). Junior App Support & SRE, Bengaluru, posted Sep 16, 2026. Still open, still fresher-eligible.]"
   },
   {
@@ -24172,9 +24180,9 @@
    "company": "Salesforce",
    "requisition": "JR356385",
    "role": "Agentforce Technical Manager (Salesforce experience mandatory)",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-14",
-   "note": "Manager title + 'Salesforce experience mandatory', Hyderabad; experienced hire."
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Manager title + 'Salesforce experience mandatory', Hyderabad; experienced hire. [2026-11-23: CLOSED — Absent from today's full Salesforce CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "Salesforce",
@@ -24476,9 +24484,9 @@
    "company": "JLL",
    "requisition": "REQ532322",
    "role": "Subject Matter Expert (SME), Investment Modeling",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-15",
-   "note": "Title verdict: 'Subject Matter Expert (SME), Investment Modeling' — facilities/property/finance/operations role at a real-estate services firm; no software/AI/ML role and no entry-level/graduate signal. Official JLL Workday CXS scan 2026-11-15, posted Posted Yesterday."
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Title verdict: 'Subject Matter Expert (SME), Investment Modeling' — facilities/property/finance/operations role at a real-estate services firm; no software/AI/ML role and no entry-level/graduate signal. Official JLL Workday CXS scan 2026-11-15, posted Posted Yesterday. [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -24540,9 +24548,9 @@
    "company": "JLL",
    "requisition": "REQ540408",
    "role": "Analyst, Compliance & Risk Management",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-15",
-   "note": "Title verdict: 'Analyst, Compliance & Risk Management' — facilities/property/finance/operations role at a real-estate services firm; no software/AI/ML role and no entry-level/graduate signal. Official JLL Workday CXS scan 2026-11-15, posted Posted Yesterday."
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Title verdict: 'Analyst, Compliance & Risk Management' — facilities/property/finance/operations role at a real-estate services firm; no software/AI/ML role and no entry-level/graduate signal. Official JLL Workday CXS scan 2026-11-15, posted Posted Yesterday. [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -24652,9 +24660,9 @@
    "company": "JLL",
    "requisition": "REQ546605",
    "role": "Specialist, Bid Centre of Excellence",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-15",
-   "note": "Title verdict: 'Specialist, Bid Centre of Excellence' — facilities/property/finance/operations role at a real-estate services firm; no software/AI/ML role and no entry-level/graduate signal. Official JLL Workday CXS scan 2026-11-15, posted Posted Yesterday."
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Title verdict: 'Specialist, Bid Centre of Excellence' — facilities/property/finance/operations role at a real-estate services firm; no software/AI/ML role and no entry-level/graduate signal. Official JLL Workday CXS scan 2026-11-15, posted Posted Yesterday. [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]"
   },
   {
    "company": "JLL",
@@ -24925,7 +24933,7 @@
    "requisition": "REF089081W",
    "role": "SW Engineer (Python, Product Reliability / DB Reliability Eng - 1 to 2 years' exp only)",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH. Live in Visa's official Workday CXS India scan today (posted 'Today'); title itself states '1 to 2 years' exp only' — fresher-eligible. Bengaluru, India. No closing date listed — apply today, it can vanish without warning. CAVEAT: full description + Apply-flow render could not be confirmed via text fetch — Workday detail pages return a JS shell with zero job content and CXS detail endpoints return 404/422/405. Parent must confirm the Apply flow in a live browser before treating this as safely open. [2026-11-18: Present in today's official Workday CXS India scan (97 jobs); title still 'SW Engineer (Python, Product Reliability / DB Reliability Eng - 1 to 2 years' exp only)'.]",
    "location": "Bengaluru, India"
   },
@@ -25338,9 +25346,9 @@
    "company": "JLL",
    "requisition": "REQ527158",
    "role": "Assistant Facilities Manager - Technical",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Mumbai, MH"
   },
   {
@@ -25428,9 +25436,9 @@
    "company": "JLL",
    "requisition": "REQ534163",
    "role": "Senior Analyst - HR Operations",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Gurugram, HR"
   },
   {
@@ -25455,18 +25463,18 @@
    "company": "JLL",
    "requisition": "REQ536521",
    "role": "Sr.Technical Executive",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Noida, UP"
   },
   {
    "company": "JLL",
    "requisition": "REQ536577",
    "role": "Analyst - Abstractions",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Gurugram, HR"
   },
   {
@@ -25509,9 +25517,9 @@
    "company": "JLL",
    "requisition": "REQ543207",
    "role": "Facility Executive - Technical",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Kolkata, WB"
   },
   {
@@ -25527,9 +25535,9 @@
    "company": "JLL",
    "requisition": "REQ543479",
    "role": "Transportation Project Manager",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Bengaluru, KA"
   },
   {
@@ -25617,9 +25625,9 @@
    "company": "JLL",
    "requisition": "REQ546736",
    "role": "Engineering Program Manager",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Bengaluru, KA"
   },
   {
@@ -25644,9 +25652,9 @@
    "company": "JLL",
    "requisition": "REQ547007",
    "role": "Asst Manager - Soft Services",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Gurugram, HR"
   },
   {
@@ -25680,18 +25688,18 @@
    "company": "JLL",
    "requisition": "REQ547382",
    "role": "Helpdesk Executive / CRE",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "New Delhi, DL"
   },
   {
    "company": "JLL",
    "requisition": "REQ547678",
    "role": "Senior Analyst, Research",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Gurugram, HR"
   },
   {
@@ -25707,9 +25715,9 @@
    "company": "JLL",
    "requisition": "REQ548267",
    "role": "Specialist - PMO & Client Intelligence",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Gurugram, HR"
   },
   {
@@ -25725,18 +25733,18 @@
    "company": "JLL",
    "requisition": "REQ548436",
    "role": "Soft Service Executive",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Bengaluru, KA"
   },
   {
    "company": "JLL",
    "requisition": "REQ548487",
    "role": "Facilities Executive - Soft Services",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Bengaluru, KA"
   },
   {
@@ -25779,9 +25787,9 @@
    "company": "JLL",
    "requisition": "REQ548781",
    "role": "Assistant Manager - Fire and Safety",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-17",
-   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done).",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "New in today's CXS India scan (posted Posted Today). Title verdict: not fresher-eligible (see report for detail checks where done). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Gurugram, HR"
   },
   {
@@ -26167,9 +26175,9 @@
    "requisition": "REQ489785",
    "role": "Director, Specialist Advisory - Business Development",
    "location": "Bengaluru, KA",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26221,9 +26229,9 @@
    "requisition": "REQ529568",
    "role": "Cost Lead",
    "location": "Hyderabad, TS",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26401,9 +26409,9 @@
    "requisition": "REQ540360",
    "role": "Junior Analyst- General Accounting",
    "location": "Gurugram, HR",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26473,9 +26481,9 @@
    "requisition": "REQ542563",
    "role": "Director, Facility Projects",
    "location": "Bengaluru, KA",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26500,9 +26508,9 @@
    "requisition": "REQ543921",
    "role": "Technical Manager",
    "location": "Bengaluru, KA",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26581,18 +26589,18 @@
    "requisition": "REQ547021",
    "role": "Assistant Manager - Intercompany",
    "location": "Gurugram, HR",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
    "requisition": "REQ547257",
    "role": "Workplace Technical Assistant Manager",
    "location": "Mumbai, MH",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26626,9 +26634,9 @@
    "requisition": "REQ547667",
    "role": "Technical Facility Executive",
    "location": "Bengaluru, KA",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26653,9 +26661,9 @@
    "requisition": "REQ547895",
    "role": "F&B Executive",
    "location": "Pune, MH",
-   "status": "not-fit",
-   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title).",
-   "verifiedOn": "2026-11-18"
+   "status": "closed",
+   "note": "Title verdict: not fresher-eligible (senior/experienced/hardware/facilities/sales title). [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "JLL",
@@ -26880,7 +26888,7 @@
    "requisition": "200694892-1052",
    "role": "Junior Fullstack Engineer - ETS",
    "status": "open",
-   "verifiedOn": "2026-11-22"
+   "verifiedOn": "2026-11-23"
   },
   {
    "company": "Apple",
@@ -27102,9 +27110,9 @@
    "company": "HPE",
    "requisition": "1205988",
    "role": "System Software Engineer III (Python Automation testing, EVPN-VXLAN)",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-19",
-   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. System Software Engineer III (network test automation, EVPN-VXLAN) — level III experienced test role; not fresher. Detail: https://hpe.wd5.myworkdayjobs.com/en-US/Jobsathpe/job/Bengaluru-Karntaka-India/System-Software-Engineer-III--Python-Automation-testing--L2-L3-Protocols-_1205988-2",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. System Software Engineer III (network test automation, EVPN-VXLAN) — level III experienced test role; not fresher. Detail: https://hpe.wd5.myworkdayjobs.com/en-US/Jobsathpe/job/Bengaluru-Karntaka-India/System-Software-Engineer-III--Python-Automation-testing--L2-L3-Protocols-_1205988-2 [2026-11-23: CLOSED — Absent from today's full HPE CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Bengaluru, Karnātaka, India"
   },
   {
@@ -27489,9 +27497,9 @@
    "company": "JLL",
    "requisition": "REQ545463",
    "role": "Assistant Manager - Security",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-19",
-   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. Assistant Manager - Security — 5+ yrs security operations; not software. Detail: https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Mumbai-MH/Assistant-Manager---Security_REQ545463",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. Assistant Manager - Security — 5+ yrs security operations; not software. Detail: https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Mumbai-MH/Assistant-Manager---Security_REQ545463 [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Mumbai, MH"
   },
   {
@@ -27534,18 +27542,18 @@
    "company": "JLL",
    "requisition": "REQ547312",
    "role": "Cost Manager- Civil",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-19",
-   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. Cost Manager - Civil — construction cost management, not software. Detail: https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Mumbai-MH/Cost-Manager--Civil_REQ547312",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. Cost Manager - Civil — construction cost management, not software. Detail: https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Mumbai-MH/Cost-Manager--Civil_REQ547312 [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Mumbai, MH"
   },
   {
    "company": "JLL",
    "requisition": "REQ547651",
    "role": "Intern India",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-19",
-   "note": "Posted Posted Today. Experience bar: 'Intern - Architecture About the Role We are looking for a motivated Architecture Intern to support our design and project team'. Intern India (Architecture Intern) — internship, excluded by rule. Detail: https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Pune-MH/Intern-India_REQ547651",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'Intern - Architecture About the Role We are looking for a motivated Architecture Intern to support our design and project team'. Intern India (Architecture Intern) — internship, excluded by rule. Detail: https://jll.wd1.myworkdayjobs.com/en-GB/jllcareers/job/Pune-MH/Intern-India_REQ547651 [2026-11-23: CLOSED — Absent from today's full JLL CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "Pune, MH"
   },
   {
@@ -27705,9 +27713,9 @@
    "company": "Salesforce",
    "requisition": "JR367435",
    "role": "Manager - Controllership Data Stewardship & Insights Enablement",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-19",
-   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. Manager, Controllership Data Stewardship — management/finance role; no fresher bar. Detail: https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Manager---Controllership-Data-Stewardship---Insights-Enablement_JR367435",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: '(no explicit years bar found in JD snippet)'. Manager, Controllership Data Stewardship — management/finance role; no fresher bar. Detail: https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Manager---Controllership-Data-Stewardship---Insights-Enablement_JR367435 [2026-11-23: CLOSED — Absent from today's full Salesforce CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "India - Hyderabad"
   },
   {
@@ -28615,7 +28623,7 @@
    "requisition": "200694886-0321",
    "role": "Junior Software Development Engineer in Test, Sales Engineering",
    "status": "open",
-   "verifiedOn": "2026-11-22",
+   "verifiedOn": "2026-11-23",
    "note": "NEW MATCH. Posted Nov 20, 2026 (live page; detail payload says Nov 19). Employment type Standard (full-time), Weekly Hours 40. Team: Software and Services (Sales and Operations Engineering, IS&T). MIN verbatim: '1 to 2 years of combined work experience in Software Development Engineer in Test/Quality Engineering'; test strategies/scenarios/cases for UI (Web and Mobile apps), API/Web Services, DB workflows; functional, system, integration and exploratory testing; exposure to automation, performance, software quality testing tools and CI/CD; Java, JavaScript, TypeScript. Preferred: 'Exposure to GenAI solutions and AI models'. No closing date listed — apply today, it can vanish without warning. Detail payload verified live 2026-11-20 via jobs.apple.com/en-in/details/200694886-0321; parent live-browser verify 07:42–07:50 IST (posting live, Submit CV present, Apple ID sign-in gate, nothing submitted). First browser load showed a different MIN line ('1-3 years of experience in software quality assurance, testing, and software development'); fresh re-load showed the 1–2 year line matching the payload — treated as a stale/variant render. Re-post of closed 200691524-0321. Honest ATS 45, labeled stretch/long-shot. Pack: data/resume-drafts/apple-junior-software-development-engineer-in-test-sales-engineering-200694886-0321.md. Resume PDF local-only until Krupal reviews it.",
    "location": "Bengaluru, Karnataka, India"
   },
@@ -29307,9 +29315,9 @@
    "company": "Salesforce",
    "requisition": "JR367123",
    "role": "Salesforce Experience Architect",
-   "status": "not-fit",
-   "verifiedOn": "2026-11-21",
-   "note": "Posted Posted Today. Experience bar: 'What We Are Looking For 14+ years'. Experienced/senior role (10-14+ yrs) — above the 0-2 yr fresher bar Detail: https://salesforce.wd12.myworkdayjobs.com/job/India---Bangalore/Salesforce-Experience-Architect_JR367123",
+   "status": "closed",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'What We Are Looking For 14+ years'. Experienced/senior role (10-14+ yrs) — above the 0-2 yr fresher bar Detail: https://salesforce.wd12.myworkdayjobs.com/job/India---Bangalore/Salesforce-Experience-Architect_JR367123 [2026-11-23: CLOSED — Absent from today's full Salesforce CXS board scan AND exact-ID CXS probe total 0; live control + nonsense control passed on the same tenant]",
    "location": "India - Bangalore"
   },
   {
@@ -29392,7 +29400,97 @@
    "verifiedOn": "2026-11-22",
    "note": "Posted 2026-11-17. Experience bar: '2-5 years of experience'. Not software engineering (ecommerce lead acquisition / marketing role: SEO, email nurturing, ecommerce growth) and the 2-5 yr experience bar exceeds the 0-2 yr fresher rule. Detail: https://jobs.ametek.com/job/x/1451254800/",
    "location": "Bangalore, KA, IN, 560048"
+  },
+  {
+   "company": "Amazon",
+   "requisition": "10607231",
+   "role": "Software Dev Engineer II - Advertising",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Experience bar: '3+ years of non-internship professional software development experience; 2+ years of non-internship design or architecture of new and existing systems'. amazon.jobs search.json sweep 2026-11-23 (378 India jobs) + detail https://www.amazon.jobs/en/jobs/10607231 HTTP 200, Apply now present, posted 22 Nov 2026. Basic Qualifications verbatim: '3+ years of non-internship professional software development experience' and '2+ years of non-internship design or architecture (design patterns, reliability and scaling) of new and existing systems experience'. Senior role, exceeds 0-2 yr rule.",
+   "location": "Bengaluru"
+  },
+  {
+   "company": "HPE",
+   "requisition": "1218647",
+   "role": "Senior Cloud Developer in Test",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'No numeric years bar in the JD. 'Significant experience' + 'Strong automation experience'; requires strong knowledge of AI infrastructure, private cloud platforms, Kubernetes, GPU-accelerated platform validation and AI/ML workload validation (Senior Cloud Developer in Test)'. Senior Cloud Developer in Test — senior-titled role requiring significant experience in AI infrastructure / GPU-accelerated platform validation; no fresher/entry-level marker Detail: https://hpe.wd5.myworkdayjobs.com/job/Bengaluru-Karntaka-India/Senior-Cloud-Developer-in-Test_1218647-1",
+   "location": "Bengaluru, Karnātaka, India"
+  },
+  {
+   "company": "HPE",
+   "requisition": "1218649",
+   "role": "Cloud Developer",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'Approximately 2–5 years of relevant experience (Cloud Developer)'. Cloud Developer, approximately 2–5 years of relevant experience — floor 2 yrs (Krupal has 0) and ceiling 5 yrs, above the 0-2 yr fresher bar Detail: https://hpe.wd5.myworkdayjobs.com/job/Bengaluru-Karntaka-India/Cloud-Developer_1218649-2",
+   "location": "Bengaluru, Karnātaka, India"
+  },
+  {
+   "company": "HPE",
+   "requisition": "1218650",
+   "role": "Cloud Developer",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'No numeric years bar in the JD. 'What you need to bring' demands enterprise storage technologies, networking and network troubleshooting, Linux and Windows, virtualization and hypervisor technologies, infrastructure lifecycle management, high availability and disaster/failure recovery, performance/scale/resiliency, automation architecture and reusable framework development (Cloud Developer)'. Cloud Developer — no numeric years bar and no new-grad/graduate/entry-level marker; JD content is experienced-level (enterprise storage, networking, virtualization, Kubernetes, infrastructure lifecycle management, HA/DR, automation architecture). Closest call: kept not-fit because nothing marks it fresher-eligible Detail: https://hpe.wd5.myworkdayjobs.com/job/Bengaluru-Karntaka-India/Cloud-Developer_1218650-3",
+   "location": "Bengaluru, Karnātaka, India"
+  },
+  {
+   "company": "HPE",
+   "requisition": "1218651",
+   "role": "Cloud Developer",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'No numeric years bar in the JD. Identical JD to 1218650 (same 8,946-char description): enterprise storage, networking, virtualization, Kubernetes, infrastructure lifecycle management, HA/DR, automation architecture (Cloud Developer)'. Cloud Developer — no numeric years bar and no new-grad/graduate/entry-level marker; JD content is experienced-level (enterprise storage, networking, virtualization, Kubernetes, infrastructure lifecycle management, HA/DR, automation architecture). Closest call: kept not-fit because nothing marks it fresher-eligible Detail: https://hpe.wd5.myworkdayjobs.com/job/Bengaluru-Karntaka-India/Cloud-Developer_1218651-2",
+   "location": "Bengaluru, Karnātaka, India"
+  },
+  {
+   "company": "HPE",
+   "requisition": "1218688",
+   "role": "Cloud Developer",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'Typically, 2-4 years of relevant experience (Cloud Developer)'. Cloud Developer, typically 2-4 years of relevant experience — floor 2 yrs (Krupal has 0), above the 0-2 yr fresher bar Detail: https://hpe.wd5.myworkdayjobs.com/job/Bengaluru-Karntaka-India/Cloud-Developer_1218688-2",
+   "location": "Bengaluru, Karnātaka, India"
+  },
+  {
+   "company": "HPE",
+   "requisition": "1218689",
+   "role": "Cloud Developer",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'Approximately 2–5 years of relevant experience (Cloud Developer)'. Cloud Developer, approximately 2–5 years of relevant experience — floor 2 yrs (Krupal has 0) and ceiling 5 yrs, above the 0-2 yr fresher bar Detail: https://hpe.wd5.myworkdayjobs.com/job/Bengaluru-Karntaka-India/Cloud-Developer_1218689-2",
+   "location": "Bengaluru, Karnātaka, India"
+  },
+  {
+   "company": "Intel",
+   "requisition": "JR0289411",
+   "role": "Software Technical Consulting Engineer",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: '5 years of experience in customer-facing technical support or support engineering, ideation and design of complex solutions (Software Technical Consulting Engineer)'. Software Technical Consulting Engineer, 5 years of experience in customer-facing technical support/support engineering — above the 0-2 yr fresher bar Detail: https://intel.wd1.myworkdayjobs.com/job/India-Bangalore/Software-Technical-Consulting-Engineer_JR0289411",
+   "location": "India, Bangalore"
+  },
+  {
+   "company": "Salesforce",
+   "requisition": "JR366419",
+   "role": "Director, Engagement Delivery (Salesforce & BFSI Exp. Mandatory)",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Posted Posted Today. Experience bar: 'Experience and domain: You have 15+ years of experience in Salesforce and BFSI (Director, Engagement Delivery)'. Director, Engagement Delivery (Salesforce & BFSI experience mandatory), 15+ years experience — senior director role, far above the 0-2 yr fresher bar Detail: https://salesforce.wd12.myworkdayjobs.com/job/India---Mumbai/Director--Engagement-Delivery--Salesforce---BFSI-Exp-Mandatory-_JR366419",
+   "location": "2 Locations"
+  },
+  {
+   "company": "Apple",
+   "requisition": "200696416-0321",
+   "role": "Audio Software Development Engineer — Apple Products",
+   "status": "not-fit",
+   "verifiedOn": "2026-11-23",
+   "note": "Experience bar: '5–7 years of experience in audio software development'. NEW vs seen-baseline.json; live on Apple India search (totalRecords 191, up from 190; only ID entered today). Detail payload fetched 2026-11-23 (raw/group-c-apple_200696416-0321.html, 178,817 bytes). MIN verbatim: \"Bachelor's degree in Engineering — Electronics, Electrical, or Computer Science (or equivalent). / 5–7 years of experience in audio software development. / Hands-on experience developing audio software solutions for a variety of embedded systems. / Strong signal processing concepts, with practical experience applying DSP to audio solutions.\" PostingDate Nov 22, 2026; employmentType Standard. Not-fit: 5–7 yr minimum far exceeds the 0–2 yr fresher rule; embedded audio/DSP role.",
+   "location": "Bengaluru"
   }
  ],
- "updated": "2026-11-22"
+ "updated": "2026-11-23"
 }
